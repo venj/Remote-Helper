@@ -1,0 +1,13 @@
+PODS:
+  - AFNetworking (1.2.1)
+  - InAppSettingsKit (1.1)
+
+DEPENDENCIES:
+  - AFNetworking (~> 1.2)
+  - InAppSettingsKit (~> 1.1)
+
+SPEC CHECKSUMS:
+  AFNetworking: a44069e3c9c89867544f6639482f155c7e5f9b41
+  InAppSettingsKit: cf2c4193c3269d6acf996f7975f310d18a5e1e3c
+
+COCOAPODS: 0.20.2

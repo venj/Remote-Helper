@@ -16,6 +16,7 @@
 		252DFA921753784400FF8199 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 252DFA911753784400FF8199 /* Default.png */; };
 		252DFA941753784400FF8199 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 252DFA931753784400FF8199 /* Default@2x.png */; };
 		252DFA961753784400FF8199 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 252DFA951753784400FF8199 /* Default-568h@2x.png */; };
+		2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2581D48717544A4C00EF3867 /* InAppSettings.bundle */; };
 		25B0AA7217537A9D00141B0E /* VPFileListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B0AA7117537A9D00141B0E /* VPFileListViewController.m */; };
 		25B0AA7417537B2D00141B0E /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7317537B2D00141B0E /* MediaPlayer.framework */; };
 		25B0AA7A1753A66C00141B0E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA791753A66C00141B0E /* SystemConfiguration.framework */; };
@@ -37,6 +38,7 @@
 		252DFA911753784400FF8199 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		252DFA931753784400FF8199 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		252DFA951753784400FF8199 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		2581D48717544A4C00EF3867 /* InAppSettings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InAppSettings.bundle; sourceTree = "<group>"; };
 		25B0AA7017537A9D00141B0E /* VPFileListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VPFileListViewController.h; sourceTree = "<group>"; };
 		25B0AA7117537A9D00141B0E /* VPFileListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VPFileListViewController.m; sourceTree = "<group>"; };
 		25B0AA7317537B2D00141B0E /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
@@ -113,6 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				25B0AA7517537D2500141B0E /* Common.h */,
+				2581D4891754534400EF3867 /* Images */,
 				252DFA871753784400FF8199 /* Video Player-Info.plist */,
 				252DFA881753784400FF8199 /* InfoPlist.strings */,
 				252DFA8B1753784400FF8199 /* main.m */,
@@ -120,8 +123,16 @@
 				252DFA911753784400FF8199 /* Default.png */,
 				252DFA931753784400FF8199 /* Default@2x.png */,
 				252DFA951753784400FF8199 /* Default-568h@2x.png */,
+				2581D48717544A4C00EF3867 /* InAppSettings.bundle */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2581D4891754534400EF3867 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Images;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -181,6 +192,7 @@
 				252DFA921753784400FF8199 /* Default.png in Resources */,
 				252DFA941753784400FF8199 /* Default@2x.png in Resources */,
 				252DFA961753784400FF8199 /* Default-568h@2x.png in Resources */,
+				2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

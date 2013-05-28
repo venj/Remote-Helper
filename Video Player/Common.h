@@ -12,5 +12,6 @@
 #define ServerHostKey @"kServerHostKey"
 #define ServerPortKey @"kServerPortKey"
 #define ServerPathKey @"kServerPathKey"
+#define ServerSetupDone @"kServerSetupDone"
 
 #endif

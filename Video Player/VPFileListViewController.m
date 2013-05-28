@@ -33,9 +33,15 @@
 {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"Movies List", @"Movies List");
-    [self loadMovieList:nil];
     UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Settings", @"Settings") style:UIBarButtonItemStyleBordered target:self action:@selector(showSettings:)];
     self.navigationItem.leftBarButtonItem = leftButton;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults boolForKey:ServerSetupDone]) {
+        [self loadMovieList:nil];
+    }
+    else {
+        [self showSettings:nil];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -90,14 +96,16 @@
 - (void)loadMovieList:(id)sender {
     [self showActivityIndicatorInBarButton:YES];
     __block VPFileListViewController *blockSelf = self;
-    NSURL *movieListURL = [[NSURL alloc] initWithString:[self fileLinkWithPath:@"/"]];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *path = [defaults objectForKey:ServerPathKey];
+    NSURL *movieListURL = [[NSURL alloc] initWithString:[self fileLinkWithPath:path]];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:movieListURL];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         blockSelf.movieFiles = JSON;
         [blockSelf.tableView reloadData];
         [self showActivityIndicatorInBarButton:NO];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[error description] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Connection failed." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
         [self showActivityIndicatorInBarButton:NO];
     }];
@@ -107,7 +115,10 @@
 #pragma mark - IASKSettingsDelegate
 - (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController *)sender {
     [self.navigationController dismissViewControllerAnimated:YES completion:^{
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setBool:YES forKey:ServerSetupDone];
         [sender synchronizeSettings];
+        [self loadMovieList:nil];
     }];
 }
 
@@ -139,7 +150,7 @@
     if (!port) port = @"80";
     if (!path)
         path = @"/";
-    else if (![[path substringToIndex:0] isEqualToString:@"/"])
+    else if (![[path substringToIndex:1] isEqualToString:@"/"])
         path = [[NSString alloc]  initWithFormat:@"/%@", path];
     NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@%@", host, port, path];
     return link;

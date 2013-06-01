@@ -79,9 +79,12 @@
 {
     NSString *moviePath = [self fileLinkWithPath:[self.movieFiles[indexPath.row] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [[NSURL alloc] initWithString:moviePath];
-    self.mpViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:url];
+    if (self.mpViewController)
+        self.mpViewController.moviePlayer.contentURL = url;
+    else
+        self.mpViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:url];
     
-    [self.navigationController presentMoviePlayerViewControllerAnimated:self.mpViewController];
+    [self presentMoviePlayerViewControllerAnimated:self.mpViewController];
 }
 
 #pragma mark - Action methods
@@ -90,7 +93,7 @@
     UINavigationController *settingsNavigationController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
     settingsViewController.delegate = self;
     settingsViewController.showCreditsFooter = NO;
-    [self.navigationController presentViewController:settingsNavigationController animated:YES completion:^{}];
+    [self presentViewController:settingsNavigationController animated:YES completion:^{}];
 }
 
 - (void)loadMovieList:(id)sender {
@@ -103,22 +106,23 @@
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         blockSelf.movieFiles = JSON;
         [blockSelf.tableView reloadData];
-        [self showActivityIndicatorInBarButton:NO];
+        [blockSelf showActivityIndicatorInBarButton:NO];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Connection failed." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
-        [self showActivityIndicatorInBarButton:NO];
+        [blockSelf showActivityIndicatorInBarButton:NO];
     }];
     [operation start];
 }
 
 #pragma mark - IASKSettingsDelegate
 - (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController *)sender {
+    VPFileListViewController *blockSelf = self;
     [self.navigationController dismissViewControllerAnimated:YES completion:^{
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setBool:YES forKey:ServerSetupDone];
         [sender synchronizeSettings];
-        [self loadMovieList:nil];
+        [blockSelf loadMovieList:nil];
     }];
 }
 

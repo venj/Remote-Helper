@@ -33,7 +33,10 @@
 {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"Movies List", @"Movies List");
-    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Settings", @"Settings") style:UIBarButtonItemStyleBordered target:self action:@selector(showSettings:)];
+    __block VPFileListViewController *blockSelf = self;
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Settings", @"Settings") style:UIBarButtonItemStyleBordered handler:^(id sender) {
+        [blockSelf showSettings:sender];
+    }];
     self.navigationItem.leftBarButtonItem = leftButton;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if ([defaults boolForKey:ServerSetupDone]) {
@@ -70,7 +73,7 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     }
-    cell.textLabel.text = self.movieFiles[indexPath.row];
+    cell.textLabel.text = [[self.movieFiles[indexPath.row] componentsSeparatedByString:@"/"] lastObject];
     return cell;
 }
 

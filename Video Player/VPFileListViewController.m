@@ -96,7 +96,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *fileName = [self.movieFiles[indexPath.row] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%2F"];
+    fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
     __block VPFileListViewController *blockSelf = self;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *path = [defaults objectForKey:ServerPathKey];

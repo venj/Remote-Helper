@@ -8,6 +8,12 @@
 
 #import "AppDelegate.h"
 #import "VPFileListViewController.h"
+#import "VPFileInfoViewController.h"
+#import "Common.h"
+
+@interface AppDelegate () <UISplitViewControllerDelegate>
+
+@end
 
 @implementation AppDelegate
 
@@ -16,9 +22,19 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     VPFileListViewController *fileListViewController = [[VPFileListViewController alloc] initWithStyle:UITableViewStylePlain];
-    UINavigationController *rootViewContriller = [[UINavigationController alloc] initWithRootViewController:fileListViewController];
-    self.window.rootViewController = rootViewContriller;
-    self.window.backgroundColor = [UIColor whiteColor];
+    UINavigationController *fileListNavController = [[UINavigationController alloc] initWithRootViewController:fileListViewController];
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        self.window.rootViewController = fileListNavController;
+    }
+    else {
+        self.fileInfoViewController = [[VPFileInfoViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        UINavigationController *fileInfoNavController = [[UINavigationController alloc] initWithRootViewController:self.fileInfoViewController];
+        UISplitViewController *rootViewController = [[UISplitViewController alloc] init];
+        rootViewController.delegate = self;
+        rootViewController.viewControllers = @[fileListNavController, fileInfoNavController];
+        self.window.rootViewController = rootViewController;
+    }
+    
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -48,6 +64,48 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark - Singleton
+
++ (AppDelegate *)shared {
+    return (AppDelegate *)[UIApplication sharedApplication].delegate;
+}
+
+#pragma mark - UISplitViewController Delegate
+- (BOOL)splitViewController:(UISplitViewController *)svc shouldHideViewController:(UIViewController *)vc inOrientation:(UIInterfaceOrientation)orientation {
+    return NO;
+}
+
+#pragma mark - Helper Methods
+- (NSString *)fileLinkWithPath:(NSString *)path {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *host = [defaults objectForKey:ServerHostKey];
+    if (!host) host = @"192.168.1.1";
+    NSString *port = [defaults objectForKey:ServerPortKey];
+    if (!port) port = @"80";
+    if (!path)
+        path = @"/";
+    else if (![[path substringToIndex:1] isEqualToString:@"/"])
+        path = [[NSString alloc]  initWithFormat:@"/%@", path];
+    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@%@", host, port, path];
+    return link;
+}
+
+- (NSString *)fileInfoWithPath:(NSString *)path fileName:(NSString *)fileName {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *host = [defaults objectForKey:ServerHostKey];
+    if (!host) host = @"192.168.1.1";
+    NSString *port = [defaults objectForKey:ServerPortKey];
+    if (!port) port = @"80";
+    if (!path)
+        path = @"/";
+    else if (![[path substringToIndex:1] isEqualToString:@"/"])
+        path = [[NSString alloc]  initWithFormat:@"/%@", path];
+    else if (![[path substringFromIndex:[path length] - 1] isEqualToString:@"/"])
+        path = [[NSString alloc]  initWithFormat:@"%@/", path];
+    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@%@info/%@", host, port, path, fileName];
+    return link;
 }
 
 @end

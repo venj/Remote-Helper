@@ -12,6 +12,8 @@
 #import <IASKAppSettingsViewController.h>
 #import <IASKSettingsReader.h>
 #import "Common.h"
+#import "VPFileInfoViewController.h"
+#import "AppDelegate.h"
 
 @interface VPFileListViewController () <IASKSettingsDelegate>
 @property (nonatomic, strong) NSArray *movieFiles;
@@ -73,14 +75,16 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     }
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+    }
     cell.textLabel.text = [[self.movieFiles[indexPath.row] componentsSeparatedByString:@"/"] lastObject];
     return cell;
 }
 
 #pragma mark - Table view delegate
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSString *moviePath = [self fileLinkWithPath:[self.movieFiles[indexPath.row] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    NSString *moviePath = [[AppDelegate shared] fileLinkWithPath:[self.movieFiles[indexPath.row] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [[NSURL alloc] initWithString:moviePath];
     if (self.mpViewController)
         self.mpViewController.moviePlayer.contentURL = url;
@@ -90,12 +94,43 @@
     [self presentMoviePlayerViewControllerAnimated:self.mpViewController];
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *fileName = [self.movieFiles[indexPath.row] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%2F"];
+    __block VPFileListViewController *blockSelf = self;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *path = [defaults objectForKey:ServerPathKey];
+    NSString *movieInfoPath = [[AppDelegate shared] fileInfoWithPath:path fileName:fileName];
+    NSURL *movieInfoURL = [[NSURL alloc] initWithString:movieInfoPath];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:movieInfoURL];
+    
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+            VPFileInfoViewController *fileInfoViewController = [[VPFileInfoViewController alloc] initWithStyle:UITableViewStyleGrouped];
+            fileInfoViewController.fileInfo = JSON;
+            [blockSelf.navigationController pushViewController:fileInfoViewController animated:YES];
+        }
+        else {
+            [[AppDelegate shared] fileInfoViewController].fileInfo = JSON;
+            [[[AppDelegate shared] fileInfoViewController].tableView reloadData];
+        }
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Connection failed." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }];
+    [operation start];
+}
+
 #pragma mark - Action methods
 - (void)showSettings:(id)sender {
     IASKAppSettingsViewController *settingsViewController = [[IASKAppSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
     UINavigationController *settingsNavigationController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
     settingsViewController.delegate = self;
     settingsViewController.showCreditsFooter = NO;
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        settingsNavigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+    }
     [self presentViewController:settingsNavigationController animated:YES completion:^{}];
 }
 
@@ -104,7 +139,7 @@
     __block VPFileListViewController *blockSelf = self;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *path = [defaults objectForKey:ServerPathKey];
-    NSURL *movieListURL = [[NSURL alloc] initWithString:[self fileLinkWithPath:path]];
+    NSURL *movieListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] fileLinkWithPath:path]];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:movieListURL];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         blockSelf.movieFiles = JSON;
@@ -147,20 +182,6 @@
         rightButtom = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(loadMovieList:)];
     }
     self.navigationItem.rightBarButtonItem = rightButtom;
-}
-
-- (NSString *)fileLinkWithPath:(NSString *)path {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *host = [defaults objectForKey:ServerHostKey];
-    if (!host) host = @"192.168.1.1";
-    NSString *port = [defaults objectForKey:ServerPortKey];
-    if (!port) port = @"80";
-    if (!path)
-        path = @"/";
-    else if (![[path substringToIndex:1] isEqualToString:@"/"])
-        path = [[NSString alloc]  initWithFormat:@"/%@", path];
-    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@%@", host, port, path];
-    return link;
 }
 
 @end

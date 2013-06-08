@@ -78,6 +78,36 @@
 }
 
 #pragma mark - Helper Methods
+- (NSString *)torrentsListPath {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *host = [defaults objectForKey:ServerHostKey];
+    if (!host) host = @"192.168.1.1";
+    NSString *port = [defaults objectForKey:ServerPortKey];
+    if (!port) port = @"80";
+    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@/torrents", host, port];
+    return link;
+}
+
+- (NSString *)searchPathWithKeyword:(NSString *)keyword {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *host = [defaults objectForKey:ServerHostKey];
+    if (!host) host = @"192.168.1.1";
+    NSString *port = [defaults objectForKey:ServerPortKey];
+    if (!port) port = @"80";
+    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@/search/%@", host, port, keyword];
+    return link;
+}
+
+- (NSString *)addTorrentWithName:(NSString *)name {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *host = [defaults objectForKey:ServerHostKey];
+    if (!host) host = @"192.168.1.1";
+    NSString *port = [defaults objectForKey:ServerPortKey];
+    if (!port) port = @"80";
+    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@/lx/%@", host, port, name];
+    return link;
+}
+
 - (NSString *)fileLinkWithPath:(NSString *)path {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *host = [defaults objectForKey:ServerHostKey];

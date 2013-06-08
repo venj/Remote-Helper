@@ -17,4 +17,7 @@
 + (AppDelegate *)shared;
 - (NSString *)fileLinkWithPath:(NSString *)path;
 - (NSString *)fileInfoWithPath:(NSString *)path fileName:(NSString *)fileName;
+- (NSString *)torrentsListPath;
+- (NSString *)searchPathWithKeyword:(NSString *)keyword;
+- (NSString *)addTorrentWithName:(NSString *)name;
 @end

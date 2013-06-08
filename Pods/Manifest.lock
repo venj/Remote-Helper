@@ -5,18 +5,29 @@ PODS:
   - BlocksKit (1.5.2):
     - A2DynamicDelegate
   - InAppSettingsKit (1.1)
-  - libffi (3.0.11)
+  - libffi (3.0.13)
+  - MBProgressHUD (0.6)
+  - MWPhotoBrowser (1.0.1):
+    - MBProgressHUD
+    - SDWebImage (< 3.0.0)
+  - SDWebImage (2.7.4):
+    - SDWebImage/Main
+  - SDWebImage/Main (2.7.4)
 
 DEPENDENCIES:
   - AFNetworking (~> 1.2)
   - BlocksKit (~> 1.5.2)
   - InAppSettingsKit (~> 1.1)
+  - MWPhotoBrowser (~> 1.0.1)
 
 SPEC CHECKSUMS:
   A2DynamicDelegate: 013b345f1aca891ded67a95c1512fad677c260a9
   AFNetworking: a44069e3c9c89867544f6639482f155c7e5f9b41
   BlocksKit: 12fbe889d9f8cc66adf5c9bd4cb0606071f214f2
   InAppSettingsKit: cf2c4193c3269d6acf996f7975f310d18a5e1e3c
-  libffi: 8a1d9ba43c0c84b546b42c6f742714e73aa07ae1
+  libffi: 64ef39353e747bb2b25e1026afd96a157bf9231c
+  MBProgressHUD: 9b55a90566fb5d07df0602f6fd9fa04510ad5d52
+  MWPhotoBrowser: e54233d4c88e951a3b6b8f136393614cf319ac47
+  SDWebImage: 06f076026fe7867ab0100fce95d943f7bff981eb
 
 COCOAPODS: 0.20.2

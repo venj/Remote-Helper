@@ -13,6 +13,7 @@
 		252DFA8A1753784400FF8199 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 252DFA881753784400FF8199 /* InfoPlist.strings */; };
 		252DFA8C1753784400FF8199 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 252DFA8B1753784400FF8199 /* main.m */; };
 		252DFA901753784400FF8199 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 252DFA8F1753784400FF8199 /* AppDelegate.m */; };
+		2571E73E1762C9240036C61D /* VPTorrentsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2571E73C1762C9240036C61D /* VPTorrentsListViewController.m */; };
 		2571FD4A1760346F00CE8982 /* VPFileInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2571FD481760346F00CE8982 /* VPFileInfoViewController.m */; };
 		2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2581D48717544A4C00EF3867 /* InAppSettings.bundle */; };
 		2581D497175465DD00EF3867 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 2581D48F175465DD00EF3867 /* Icon-72.png */; };
@@ -48,6 +49,8 @@
 		252DFA8D1753784400FF8199 /* Video Player-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Video Player-Prefix.pch"; sourceTree = "<group>"; };
 		252DFA8E1753784400FF8199 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		252DFA8F1753784400FF8199 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		2571E73B1762C9240036C61D /* VPTorrentsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = VPTorrentsListViewController.h; sourceTree = "<group>"; };
+		2571E73C1762C9240036C61D /* VPTorrentsListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VPTorrentsListViewController.m; sourceTree = "<group>"; };
 		2571FD471760346F00CE8982 /* VPFileInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = VPFileInfoViewController.h; sourceTree = "<group>"; };
 		2571FD481760346F00CE8982 /* VPFileInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VPFileInfoViewController.m; sourceTree = "<group>"; };
 		2581D48717544A4C00EF3867 /* InAppSettings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InAppSettings.bundle; sourceTree = "<group>"; };
@@ -135,6 +138,8 @@
 				25B0AA7117537A9D00141B0E /* VPFileListViewController.m */,
 				2571FD471760346F00CE8982 /* VPFileInfoViewController.h */,
 				2571FD481760346F00CE8982 /* VPFileInfoViewController.m */,
+				2571E73B1762C9240036C61D /* VPTorrentsListViewController.h */,
+				2571E73C1762C9240036C61D /* VPTorrentsListViewController.m */,
 				252DFA861753784400FF8199 /* Supporting Files */,
 			);
 			path = "Video Player";
@@ -299,6 +304,7 @@
 				252DFA901753784400FF8199 /* AppDelegate.m in Sources */,
 				25B0AA7217537A9D00141B0E /* VPFileListViewController.m in Sources */,
 				2571FD4A1760346F00CE8982 /* VPFileInfoViewController.m in Sources */,
+				2571E73E1762C9240036C61D /* VPTorrentsListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

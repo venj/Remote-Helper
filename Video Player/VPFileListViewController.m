@@ -11,6 +11,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <IASKAppSettingsViewController.h>
 #import <IASKSettingsReader.h>
+#import "VPTorrentsListViewController.h"
 #import "Common.h"
 #import "VPFileInfoViewController.h"
 #import "AppDelegate.h"
@@ -36,8 +37,16 @@
     [super viewDidLoad];
     self.title = NSLocalizedString(@"Movies List", @"Movies List");
     __block VPFileListViewController *blockSelf = self;
-    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Settings", @"Settings") style:UIBarButtonItemStyleBordered handler:^(id sender) {
-        [blockSelf showSettings:sender];
+    __block UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Options", @"Options") style:UIBarButtonItemStyleBordered handler:^(id sender) {
+        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Please select your operation", @"Please select your operation")];
+        [sheet addButtonWithTitle:NSLocalizedString(@"Torrents Viewer", @"Torrents Viewer") handler:^{
+            [blockSelf showTorrentsViewer:sender];
+        }];
+        [sheet addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings") handler:^{
+            [blockSelf showSettings:sender];
+        }];
+        [sheet setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:nil];
+        [sheet showFromBarButtonItem:leftButton animated:YES];
     }];
     self.navigationItem.leftBarButtonItem = leftButton;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -132,6 +141,22 @@
         settingsNavigationController.modalPresentationStyle = UIModalPresentationFormSheet;
     }
     [self presentViewController:settingsNavigationController animated:YES completion:^{}];
+}
+
+- (void)showTorrentsViewer:(id)sender {
+    __block VPFileListViewController *blockSelf = self;
+    NSURL *torrentsListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] torrentsListPath]];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:torrentsListURL];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        VPTorrentsListViewController *torrentsListViewController = [[VPTorrentsListViewController alloc] initWithStyle:UITableViewStylePlain];
+        UINavigationController *torrentsListNavigationController = [[UINavigationController alloc] initWithRootViewController:torrentsListViewController];
+        torrentsListViewController.datesList = JSON;
+        [blockSelf presentViewController:torrentsListNavigationController animated:YES completion:^{}];
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Connection failed." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }];
+    [operation start];
 }
 
 - (void)loadMovieList:(id)sender {

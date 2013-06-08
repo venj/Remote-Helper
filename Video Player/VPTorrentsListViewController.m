@@ -37,6 +37,9 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     self.title = NSLocalizedString(@"Torrents List", @"Torrents List");
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone handler:^(id sender) {
+        [self dismissViewControllerAnimated:YES completion:^{}];
+    }];
 }
 
 - (void)didReceiveMemoryWarning
@@ -141,6 +144,7 @@
         NSString *fileName = [photo stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%2F"];
         MWPhoto *p = [MWPhoto photoWithURL:[NSURL URLWithString:[linkBase stringByAppendingPathComponent:fileName]]];
+        p.caption = [photo lastPathComponent];
         [mwPhotos addObject:p];
     }
     return mwPhotos;

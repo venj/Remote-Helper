@@ -37,9 +37,9 @@
     [super viewDidLoad];
     self.title = NSLocalizedString(@"Movies List", @"Movies List");
     __block VPFileListViewController *blockSelf = self;
-    __block UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Options", @"Options") style:UIBarButtonItemStyleBordered handler:^(id sender) {
+    __block UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"More", @"More") style:UIBarButtonItemStyleBordered handler:^(id sender) {
         UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Please select your operation", @"Please select your operation")];
-        [sheet addButtonWithTitle:NSLocalizedString(@"Torrents Viewer", @"Torrents Viewer") handler:^{
+        [sheet addButtonWithTitle:NSLocalizedString(@"Gallary", @"Gallary") handler:^{
             [blockSelf showTorrentsViewer:sender];
         }];
         [sheet addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings") handler:^{

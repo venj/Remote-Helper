@@ -92,7 +92,7 @@
         MWPhotoBrowser *photoBrowser = [[MWPhotoBrowser alloc] initWithDelegate:blockSelf];
         photoBrowser.wantsFullScreenLayout = YES;
         photoBrowser.displayActionButton = NO;
-        [photoBrowser setInitialPageIndex:1];
+        [photoBrowser setInitialPageIndex:0];
         __block UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Download", @"Download") style:UIBarButtonItemStyleBordered handler:^(id sender) {
             [item setEnabled:NO];
             NSString *fileName = [JSON[photoBrowser.currentPageIndex] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

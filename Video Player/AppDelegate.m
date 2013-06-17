@@ -34,7 +34,12 @@
         rootViewController.viewControllers = @[fileListNavController, fileInfoNavController];
         self.window.rootViewController = rootViewController;
     }
-    
+    NSUserDefaults *defults = [NSUserDefaults standardUserDefaults];
+    NSString *appVersionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    [defults setObject:appVersionString forKey:@"kCurrentVersionKey"];
+    NSString *appBuildString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    [defults setObject:appBuildString forKey:@"kCurrentBuildKey"];
+    [defults synchronize];
     [self.window makeKeyAndVisible];
     return YES;
 }

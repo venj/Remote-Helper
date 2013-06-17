@@ -64,6 +64,32 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Version Info</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>Default Value</key>
+			<string>1.0</string>
+			<key>Title</key>
+			<string>Version</string>
+			<key>Key</key>
+			<string>kCurrentVersionKey</string>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+		</dict>
+		<dict>
+			<key>Default Value</key>
+			<string>1</string>
+			<key>Title</key>
+			<string>Build</string>
+			<key>Key</key>
+			<string>kCurrentBuildKey</string>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Root</string>

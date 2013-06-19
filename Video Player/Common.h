@@ -13,5 +13,7 @@
 #define ServerPortKey @"kServerPortKey"
 #define ServerPathKey @"kServerPathKey"
 #define ServerSetupDone @"kServerSetupDone"
-
+#define CurrentVersionKey @"kCurrentVersionKey"
+#define ClearCacheOnExitKey @"kClearCacheOnExitKey"
+#define ImageCacheSizeKey @"kImageCacheSizeKey"
 #endif

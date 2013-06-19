@@ -66,7 +66,33 @@
 		</dict>
 		<dict>
 			<key>Title</key>
-			<string>Version Info</string>
+			<string>Cache</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>Default Value</key>
+			<string>0.0 KB</string>
+			<key>Title</key>
+			<string>Cache Size</string>
+			<key>Key</key>
+			<string>kImageCacheSizeKey</string>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+		</dict>
+		<dict>
+			<key>Default Value</key>
+			<string>NO</string>
+			<key>Title</key>
+			<string>Clear Cache On Exit</string>
+			<key>Key</key>
+			<string>kClearCacheOnExitKey</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>App Version</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>
@@ -77,16 +103,6 @@
 			<string>Version</string>
 			<key>Key</key>
 			<string>kCurrentVersionKey</string>
-			<key>Type</key>
-			<string>PSTitleValueSpecifier</string>
-		</dict>
-		<dict>
-			<key>Default Value</key>
-			<string>1</string>
-			<key>Title</key>
-			<string>Build</string>
-			<key>Key</key>
-			<string>kCurrentBuildKey</string>
 			<key>Type</key>
 			<string>PSTitleValueSpecifier</string>
 		</dict>

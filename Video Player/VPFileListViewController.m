@@ -11,6 +11,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <IASKAppSettingsViewController.h>
 #import <IASKSettingsReader.h>
+#import <SDWebImage/SDImageCache.h>
 #import "VPTorrentsListViewController.h"
 #import "Common.h"
 #import "VPFileInfoViewController.h"
@@ -139,6 +140,15 @@
 
 #pragma mark - Action methods
 - (void)showSettings:(id)sender {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSInteger cacheSizeInBytes = [[SDImageCache sharedImageCache] getSize];
+    NSString *cacheSize = @"0B";
+    if (cacheSizeInBytes < 1000 * 1000)
+        cacheSize = [NSString stringWithFormat:@"%.1f KB", cacheSizeInBytes / 1000.];
+    else
+        cacheSize = [NSString stringWithFormat:@"%.1f MB", cacheSizeInBytes / (1000. * 1000.)];
+    [defaults setObject:cacheSize forKey:ImageCacheSizeKey];
+    [defaults synchronize];
     IASKAppSettingsViewController *settingsViewController = [[IASKAppSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
     UINavigationController *settingsNavigationController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
     settingsViewController.delegate = self;

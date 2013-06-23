@@ -93,11 +93,12 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *date = self.datesList[indexPath.row];
+    NSString *date = [self.datesList[indexPath.row] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     __block VPTorrentsListViewController *blockSelf = self;
     NSURL *movieListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] searchPathWithKeyword:date]];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:movieListURL];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        if ([JSON count] == 0) { return; }
         blockSelf.mwPhotos = [blockSelf mwPhotosArrayWithPhothsArray:JSON];
         MWPhotoBrowser *photoBrowser = [[MWPhotoBrowser alloc] initWithDelegate:blockSelf];
         photoBrowser.wantsFullScreenLayout = YES;

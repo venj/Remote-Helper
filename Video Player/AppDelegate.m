@@ -10,6 +10,7 @@
 #import "VPFileListViewController.h"
 #import "VPFileInfoViewController.h"
 #import "Common.h"
+#import <SDWebImage/SDImageCache.h>
 
 @interface AppDelegate () <UISplitViewControllerDelegate>
 
@@ -34,7 +35,11 @@
         rootViewController.delegate = self;
         self.window.rootViewController = rootViewController;
     }
-    
+    NSUserDefaults *defults = [NSUserDefaults standardUserDefaults];
+    NSString *appVersionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    NSString *appBuildString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    [defults setObject:[NSString stringWithFormat:@"%@(%@)", appVersionString, appBuildString] forKey:CurrentVersionKey];
+    [defults synchronize];
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -49,6 +54,10 @@
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults boolForKey:ClearCacheOnExitKey]) {
+        [[SDImageCache sharedImageCache] clearDisk]; // Clear Image Cache
+    }
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application

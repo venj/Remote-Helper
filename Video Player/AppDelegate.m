@@ -30,8 +30,8 @@
         self.fileInfoViewController = [[VPFileInfoViewController alloc] initWithStyle:UITableViewStyleGrouped];
         UINavigationController *fileInfoNavController = [[UINavigationController alloc] initWithRootViewController:self.fileInfoViewController];
         UISplitViewController *rootViewController = [[UISplitViewController alloc] init];
-        rootViewController.delegate = self;
         rootViewController.viewControllers = @[fileListNavController, fileInfoNavController];
+        rootViewController.delegate = self;
         self.window.rootViewController = rootViewController;
     }
     

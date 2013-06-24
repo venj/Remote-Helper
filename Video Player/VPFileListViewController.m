@@ -12,6 +12,8 @@
 #import <IASKAppSettingsViewController.h>
 #import <IASKSettingsReader.h>
 #import <SDWebImage/SDImageCache.h>
+#import <KKPasscodeLock/KKPasscodeLock.h>
+#import <KKPasscodeLock/KKPasscodeSettingsViewController.h>
 #import "VPTorrentsListViewController.h"
 #import "Common.h"
 #import "VPFileInfoViewController.h"
@@ -45,6 +47,16 @@
         }];
         [sheet addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings") handler:^{
             [blockSelf showSettings:sender];
+        }];
+        __block BOOL isPasscodeRequired = [[KKPasscodeLock sharedLock] isPasscodeRequired];
+        NSString *title = @"";
+        if (isPasscodeRequired)
+            title = NSLocalizedString(@"Turn off Password", @"Turn off Password");
+        else
+            title = NSLocalizedString(@"Turn on Password", @"Turn on Password");  
+        [sheet addButtonWithTitle:title handler:^{
+            KKPasscodeSettingsViewController *vc = [[KKPasscodeSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
+            [self.navigationController pushViewController:vc animated:YES];
         }];
         [sheet setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:nil];
         [sheet showFromBarButtonItem:leftButton animated:YES];

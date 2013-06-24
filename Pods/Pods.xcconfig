@@ -1,8 +1,8 @@
 ALWAYS_SEARCH_USER_PATHS = YES
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
 HEADER_SEARCH_PATHS = ${PODS_HEADERS_SEARCH_PATHS}
-OTHER_LDFLAGS = -ObjC -Wl,-no_compact_unwind -framework CoreGraphics -framework ImageIO -framework MessageUI -framework MobileCoreServices -framework Security -framework SystemConfiguration
-PODS_BUILD_HEADERS_SEARCH_PATHS = "${PODS_ROOT}/BuildHeaders" "${PODS_ROOT}/BuildHeaders/A2DynamicDelegate" "${PODS_ROOT}/BuildHeaders/AFNetworking" "${PODS_ROOT}/BuildHeaders/BlocksKit" "${PODS_ROOT}/BuildHeaders/InAppSettingsKit" "${PODS_ROOT}/BuildHeaders/MBProgressHUD" "${PODS_ROOT}/BuildHeaders/MWPhotoBrowser" "${PODS_ROOT}/BuildHeaders/SDWebImage" "${PODS_ROOT}/BuildHeaders/libffi"
+OTHER_LDFLAGS = -ObjC -Wl,-no_compact_unwind -framework AudioToolbox -framework CoreGraphics -framework ImageIO -framework MessageUI -framework MobileCoreServices -framework QuartzCore -framework Security -framework SystemConfiguration
+PODS_BUILD_HEADERS_SEARCH_PATHS = "${PODS_ROOT}/BuildHeaders" "${PODS_ROOT}/BuildHeaders/A2DynamicDelegate" "${PODS_ROOT}/BuildHeaders/AFNetworking" "${PODS_ROOT}/BuildHeaders/BlocksKit" "${PODS_ROOT}/BuildHeaders/InAppSettingsKit" "${PODS_ROOT}/BuildHeaders/KKPasscodeLock" "${PODS_ROOT}/BuildHeaders/MBProgressHUD" "${PODS_ROOT}/BuildHeaders/MWPhotoBrowser" "${PODS_ROOT}/BuildHeaders/SDWebImage" "${PODS_ROOT}/BuildHeaders/libffi"
 PODS_HEADERS_SEARCH_PATHS = ${PODS_PUBLIC_HEADERS_SEARCH_PATHS}
-PODS_PUBLIC_HEADERS_SEARCH_PATHS = "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/A2DynamicDelegate" "${PODS_ROOT}/Headers/AFNetworking" "${PODS_ROOT}/Headers/BlocksKit" "${PODS_ROOT}/Headers/InAppSettingsKit" "${PODS_ROOT}/Headers/MBProgressHUD" "${PODS_ROOT}/Headers/MWPhotoBrowser" "${PODS_ROOT}/Headers/SDWebImage" "${PODS_ROOT}/Headers/libffi"
+PODS_PUBLIC_HEADERS_SEARCH_PATHS = "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/A2DynamicDelegate" "${PODS_ROOT}/Headers/AFNetworking" "${PODS_ROOT}/Headers/BlocksKit" "${PODS_ROOT}/Headers/InAppSettingsKit" "${PODS_ROOT}/Headers/KKPasscodeLock" "${PODS_ROOT}/Headers/MBProgressHUD" "${PODS_ROOT}/Headers/MWPhotoBrowser" "${PODS_ROOT}/Headers/SDWebImage" "${PODS_ROOT}/Headers/libffi"
 PODS_ROOT = ${SRCROOT}/Pods

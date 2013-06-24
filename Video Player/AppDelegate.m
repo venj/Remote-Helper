@@ -11,8 +11,9 @@
 #import "VPFileInfoViewController.h"
 #import "Common.h"
 #import <SDWebImage/SDImageCache.h>
+#import <KKPasscodeLock/KKPasscodeLock.h>
 
-@interface AppDelegate () <UISplitViewControllerDelegate>
+@interface AppDelegate () <UISplitViewControllerDelegate, KKPasscodeViewControllerDelegate>
 
 @end
 
@@ -67,7 +68,13 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    if ([[KKPasscodeLock sharedLock] isPasscodeRequired]) {
+        KKPasscodeViewController *vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
+        vc.mode = KKPasscodeModeEnter;
+        vc.delegate = self;
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+        [self.window.rootViewController presentModalViewController:nav animated:NO];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -145,6 +152,19 @@
         path = [[NSString alloc]  initWithFormat:@"%@/", path];
     NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@%@info/%@", host, port, path, fileName];
     return link;
+}
+
+#pragma mark - KKPasscode View Controller Delegate
+- (void)shouldEraseApplicationData:(KKPasscodeViewController*)viewController
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"You have entered an incorrect passcode too many times. All account data in this app has been deleted.", @"You have entered an incorrect passcode too many times. All account data in this app has been deleted.") delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
+    [alert show];
+}
+
+- (void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController*)viewController
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"You have entered an incorrect passcode too many times.", @"You have entered an incorrect passcode too many times.") delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK")  otherButtonTitles:nil];
+    [alert show];
 }
 
 @end

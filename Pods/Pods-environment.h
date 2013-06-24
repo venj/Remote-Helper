@@ -30,6 +30,12 @@
 #define COCOAPODS_VERSION_MINOR_InAppSettingsKit 1
 #define COCOAPODS_VERSION_PATCH_InAppSettingsKit 0
 
+// KKPasscodeLock
+#define COCOAPODS_POD_AVAILABLE_KKPasscodeLock
+#define COCOAPODS_VERSION_MAJOR_KKPasscodeLock 0
+#define COCOAPODS_VERSION_MINOR_KKPasscodeLock 1
+#define COCOAPODS_VERSION_PATCH_KKPasscodeLock 5
+
 // MBProgressHUD
 #define COCOAPODS_POD_AVAILABLE_MBProgressHUD
 #define COCOAPODS_VERSION_MAJOR_MBProgressHUD 0

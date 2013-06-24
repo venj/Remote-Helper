@@ -5,6 +5,7 @@ PODS:
   - BlocksKit (1.5.2):
     - A2DynamicDelegate
   - InAppSettingsKit (1.1)
+  - KKPasscodeLock (0.1.5)
   - libffi (3.0.13)
   - MBProgressHUD (0.6)
   - MWPhotoBrowser (1.0.1):
@@ -18,6 +19,7 @@ DEPENDENCIES:
   - AFNetworking (~> 1.2)
   - BlocksKit (~> 1.5.2)
   - InAppSettingsKit (~> 1.1)
+  - KKPasscodeLock (~> 0.1.5)
   - MWPhotoBrowser (~> 1.0.1)
 
 SPEC CHECKSUMS:
@@ -25,6 +27,7 @@ SPEC CHECKSUMS:
   AFNetworking: a44069e3c9c89867544f6639482f155c7e5f9b41
   BlocksKit: 12fbe889d9f8cc66adf5c9bd4cb0606071f214f2
   InAppSettingsKit: cf2c4193c3269d6acf996f7975f310d18a5e1e3c
+  KKPasscodeLock: 5fb69da49d4163215e0405a482e152bec671586d
   libffi: 64ef39353e747bb2b25e1026afd96a157bf9231c
   MBProgressHUD: 9b55a90566fb5d07df0602f6fd9fa04510ad5d52
   MWPhotoBrowser: e54233d4c88e951a3b6b8f136393614cf319ac47

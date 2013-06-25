@@ -13,6 +13,7 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) VPFileInfoViewController *fileInfoViewController;
+@property (strong, nonatomic) UISplitViewController *splitViewController;
 
 + (AppDelegate *)shared;
 - (NSString *)fileLinkWithPath:(NSString *)path;

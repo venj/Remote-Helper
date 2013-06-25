@@ -3,11 +3,15 @@ Video Player
 
 Simple video player which aim to become a full functional management client for my Cubieboard.
 
-
 What's New
 ----------
 
-**1.1 Build 24**
+**1.0 Build 25**
+
+- Added loading HUD for Gallary
+- Fixed a bug prevent showing passcode UI (by dismiss any modal include gallary, not a good way, but works.)
+
+**1.0 Build 24**
 
 - Added Passcode for the app.
     + Erase data actually does nothing to your data

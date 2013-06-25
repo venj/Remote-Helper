@@ -31,10 +31,10 @@
     else {
         self.fileInfoViewController = [[VPFileInfoViewController alloc] initWithStyle:UITableViewStyleGrouped];
         UINavigationController *fileInfoNavController = [[UINavigationController alloc] initWithRootViewController:self.fileInfoViewController];
-        UISplitViewController *rootViewController = [[UISplitViewController alloc] init];
-        rootViewController.viewControllers = @[fileListNavController, fileInfoNavController];
-        rootViewController.delegate = self;
-        self.window.rootViewController = rootViewController;
+        self.splitViewController = [[UISplitViewController alloc] init];
+        self.splitViewController.viewControllers = @[fileListNavController, fileInfoNavController];
+        self.splitViewController.delegate = self;
+        self.window.rootViewController = self.splitViewController;
     }
     NSUserDefaults *defults = [NSUserDefaults standardUserDefaults];
     NSString *appVersionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
@@ -69,6 +69,7 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     if ([[KKPasscodeLock sharedLock] isPasscodeRequired]) {
+        [self.window.rootViewController dismissModalViewControllerAnimated:NO];
         KKPasscodeViewController *vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
         vc.mode = KKPasscodeModeEnter;
         vc.delegate = self;

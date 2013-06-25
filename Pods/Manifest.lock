@@ -20,6 +20,7 @@ DEPENDENCIES:
   - BlocksKit (~> 1.5.2)
   - InAppSettingsKit (~> 1.1)
   - KKPasscodeLock (~> 0.1.5)
+  - MBProgressHUD (~> 0.6)
   - MWPhotoBrowser (~> 1.0.1)
 
 SPEC CHECKSUMS:

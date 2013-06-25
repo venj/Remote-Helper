@@ -14,6 +14,7 @@
 #import <SDWebImage/SDImageCache.h>
 #import <KKPasscodeLock/KKPasscodeLock.h>
 #import <KKPasscodeLock/KKPasscodeSettingsViewController.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 #import "VPTorrentsListViewController.h"
 #import "Common.h"
 #import "VPFileInfoViewController.h"
@@ -176,12 +177,20 @@
     __block VPFileListViewController *blockSelf = self;
     NSURL *torrentsListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] torrentsListPath]];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:torrentsListURL];
+    UIView *aView = nil;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+        aView = [AppDelegate shared].window;
+    else
+        aView = self.view;
+    [MBProgressHUD showHUDAddedTo:aView animated:NO];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        [MBProgressHUD hideHUDForView:aView animated:NO];
         VPTorrentsListViewController *torrentsListViewController = [[VPTorrentsListViewController alloc] initWithStyle:UITableViewStylePlain];
         UINavigationController *torrentsListNavigationController = [[UINavigationController alloc] initWithRootViewController:torrentsListViewController];
         torrentsListViewController.datesList = JSON;
         [blockSelf presentViewController:torrentsListNavigationController animated:YES completion:^{}];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        [MBProgressHUD hideHUDForView:aView animated:NO];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Connection failed." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
     }];

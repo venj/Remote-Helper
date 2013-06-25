@@ -16,4 +16,5 @@
 #define CurrentVersionKey @"kCurrentVersionKey"
 #define ClearCacheOnExitKey @"kClearCacheOnExitKey"
 #define ImageCacheSizeKey @"kImageCacheSizeKey"
+#define AsyncAddCloudTaskKey @"kAsyncAddCloudTaskKey"
 #endif

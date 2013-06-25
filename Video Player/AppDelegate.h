@@ -21,4 +21,5 @@
 - (NSString *)torrentsListPath;
 - (NSString *)searchPathWithKeyword:(NSString *)keyword;
 - (NSString *)addTorrentWithName:(NSString *)name;
+- (BOOL)shouldSendWebRequest;
 @end

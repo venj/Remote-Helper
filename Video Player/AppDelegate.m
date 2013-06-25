@@ -12,6 +12,7 @@
 #import "Common.h"
 #import <SDWebImage/SDImageCache.h>
 #import <KKPasscodeLock/KKPasscodeLock.h>
+#import "ipaddress.h"
 
 @interface AppDelegate () <UISplitViewControllerDelegate, KKPasscodeViewControllerDelegate>
 
@@ -153,6 +154,31 @@
         path = [[NSString alloc]  initWithFormat:@"%@/", path];
     NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@%@info/%@", host, port, path, fileName];
     return link;
+}
+
+- (BOOL)shouldSendWebRequest {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *host = [defaults objectForKey:ServerHostKey];
+    NSString *myAddress = [self getIPAddress];
+    
+    if (host && myAddress) {
+        NSArray *hostComponents = [host componentsSeparatedByString:@"."];
+        NSArray *myAddressComponents = [myAddress componentsSeparatedByString:@"."];
+        if (([hostComponents[0] isEqualToString:myAddressComponents[0]]) &&
+            ([hostComponents[1] isEqualToString:myAddressComponents[1]]) &&
+            ([hostComponents[2] isEqualToString:myAddressComponents[2]])) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (NSString *)getIPAddress {
+    InitAddresses();
+    GetIPAddresses();
+    GetHWAddresses();
+    NSString *address = [NSString stringWithFormat:@"%s", ip_names[1]];
+    return address;
 }
 
 #pragma mark - KKPasscode View Controller Delegate

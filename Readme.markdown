@@ -6,6 +6,10 @@ Simple video player which aim to become a full functional management client for 
 What's New
 ----------
 
+**1.0 Build 26**
+
+- Added search in torrent date list. Now user can filter out dates.
+
 **1.0 Build 25**
 
 - Added loading HUD for Gallary

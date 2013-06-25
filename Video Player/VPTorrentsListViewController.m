@@ -44,6 +44,7 @@
     }];
     
     UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0., 0., 320., 44.)];
+    searchBar.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
     searchBar.delegate = self;
     searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     

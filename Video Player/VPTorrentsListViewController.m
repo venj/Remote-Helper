@@ -12,8 +12,10 @@
 #import "AppDelegate.h"
 #import "Common.h"
 
-@interface VPTorrentsListViewController () <MWPhotoBrowserDelegate>
+@interface VPTorrentsListViewController () <MWPhotoBrowserDelegate, UISearchDisplayDelegate, UISearchBarDelegate>
 @property (nonatomic, strong) NSArray *mwPhotos;
+@property (nonatomic, strong) NSMutableArray *filteredDatesList;
+@property (nonatomic, strong) UISearchDisplayController *searchController;
 @end
 
 @implementation VPTorrentsListViewController
@@ -40,6 +42,16 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone handler:^(id sender) {
         [self dismissViewControllerAnimated:YES completion:^{}];
     }];
+    
+    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0., 0., 320., 44.)];
+    searchBar.delegate = self;
+    searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    
+    self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:searchBar contentsController:self];
+    self.searchController.delegate = self;
+    self.searchController.searchResultsDataSource = self;
+    self.searchController.searchResultsDelegate = self;
+    self.tableView.tableHeaderView = searchBar;
 }
 
 - (void)didReceiveMemoryWarning
@@ -60,7 +72,14 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    if (self.datesList) {
+    NSArray *list;
+    if (tableView == self.tableView) {
+        list = self.datesList;
+    }
+    else {
+        list = self.filteredDatesList;
+    }
+    if (list) {
         return 1;
     }
     return 0;
@@ -69,10 +88,15 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    if (self.datesList) {
-        return [self.datesList count];
+    if (tableView == self.tableView) {
+        if (self.datesList) {
+            return [self.datesList count];
+        }
+        return 0;
     }
-    return 0;
+    else {
+        return [self.filteredDatesList count];
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -84,7 +108,14 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    cell.textLabel.text = self.datesList[indexPath.row];
+    NSArray *list;
+    if (tableView == self.tableView) {
+        list = self.datesList;
+    }
+    else {
+        list = self.filteredDatesList;
+    }
+    cell.textLabel.text = list[indexPath.row];
     
     return cell;
 }
@@ -93,7 +124,14 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *date = [self.datesList[indexPath.row] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSArray *list;
+    if (tableView == self.tableView) {
+        list = self.datesList;
+    }
+    else {
+        list = self.filteredDatesList;
+    }
+    NSString *date = [list[indexPath.row] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     __block VPTorrentsListViewController *blockSelf = self;
     NSURL *movieListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] searchPathWithKeyword:date]];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:movieListURL];
@@ -127,6 +165,23 @@
         [alert show];
     }];
     [operation start];
+}
+
+#pragma mark - SearchDisplayController Delegate
+
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
+    self.filteredDatesList = [NSMutableArray arrayWithArray:self.datesList];
+    for (NSString *dateString in self.datesList) {
+        if ([dateString rangeOfString:searchString].location == NSNotFound) {
+            [self.filteredDatesList removeObject:dateString];
+        }
+    }
+    [self.searchDisplayController.searchResultsTableView reloadData];
+    return YES;
+}
+
+#pragma mark - SearchBar Delegate
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
 }
 
 #pragma mark - MWPhotoBrowser delegate

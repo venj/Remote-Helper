@@ -1,25 +1,25 @@
 Video Player
 ============
 
-Simple video player which aim to become a full functional management client for my Cubieboard.
+一个简单的在线视频播放器，请配合[服务器端](https://github.com/venj/movie_server)一起使用。
 
-What's New
-----------
+新功能介绍
+---------
 
 **1.0 Build 26**
 
-- Added search in torrent date list. Now user can filter out dates.
+- 在种子日期列表中加入搜索功能，用于过滤日期。
 
 **1.0 Build 25**
 
-- Added loading HUD for Gallary
-- Fixed a bug prevent showing passcode UI (by dismiss any modal include gallary, not a good way, but works.)
+- 在载入种子日期列表的时候，使用了加载进度显示；
+- 修正了一个导致密码界面无法显示的问题（通过隐藏位于最前端的ModalViewController，并不是一个好方法，但目前只能这么解决。）
 
 **1.0 Build 24**
 
-- Added Passcode for the app.
-    + Erase data actually does nothing to your data
-    + If you used out all 5 attempt for the password, you should kill the app and retry
-    + If you app is on background, activate it will show a flash of your content
-    + Passcode input showed on full screen on iPad, because the app load content before password check, full screen will prevent reveal the app content
-- Known bug: When the movie is loading from the web, and user quit the playing screen, some times video will still play in the background.
+- 为程序增加密码锁定功能，注意事项如下：
+    + 清除数据开关实际上并没有起作用
+    + 如果你输错了5次密码，程序将锁住。这时候，请按Home键退出，然后双击Home键，在任务列表里杀死进程后重新打开程序
+    + 如果应用程序位于后台（并没有被杀死的时候）再次打开程序可能会出现之前浏览的画面大约0.?秒
+    + 密码锁以全屏Modal的方式在iPad上显示，用来避免程序主界面无法被完全覆盖
+- 已知Bug：在视频缓冲的时候，如果用户点击“Done”按钮退出播放，在某些情况下，视频依然会在后台加载并播放

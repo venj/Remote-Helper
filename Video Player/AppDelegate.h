@@ -8,12 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@class VPFileInfoViewController;
+@class VPFileInfoViewController, VPFileListViewController;
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) VPFileInfoViewController *fileInfoViewController;
 @property (strong, nonatomic) UISplitViewController *splitViewController;
+@property (strong, nonatomic) VPFileListViewController *fileListViewController;
 
 + (AppDelegate *)shared;
 - (NSString *)fileLinkWithPath:(NSString *)path;

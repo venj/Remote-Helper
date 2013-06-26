@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface VPFileListViewController : UITableViewController
-
+- (void)showSettings:(id)sender;
 @end

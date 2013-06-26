@@ -23,8 +23,8 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    VPFileListViewController *fileListViewController = [[VPFileListViewController alloc] initWithStyle:UITableViewStylePlain];
-    UINavigationController *fileListNavController = [[UINavigationController alloc] initWithRootViewController:fileListViewController];
+    self.fileListViewController = [[VPFileListViewController alloc] initWithStyle:UITableViewStylePlain];
+    UINavigationController *fileListNavController = [[UINavigationController alloc] initWithRootViewController:self.fileListViewController];
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         self.window.rootViewController = fileListNavController;
     }

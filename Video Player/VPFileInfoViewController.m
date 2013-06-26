@@ -39,8 +39,17 @@
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay handler:^(id sender) {
         if (!self.fileInfo) return;
-        NSString *moviePath = [[AppDelegate shared] fileLinkWithPath:[self.fileInfo[@"file"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        NSURL *url = [[NSURL alloc] initWithString:moviePath];
+        NSString *moviePath;
+        NSURL *url;
+        if (self.isLocalFile) {
+            moviePath = self.fileInfo[@"file"];
+            url = [NSURL fileURLWithPath:moviePath];
+        }
+        else {
+            moviePath = [[AppDelegate shared] fileLinkWithPath:[self.fileInfo[@"file"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            url = [[NSURL alloc] initWithString:moviePath];
+        }
+        
         if (self.mpViewController)
             self.mpViewController.moviePlayer.contentURL = url;
         else
@@ -119,19 +128,19 @@
 
 - (void)deleteFile:(id)sender {
     __block VPFileInfoViewController *blockSelf = self;
-    [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Delete File", @"Delete File") message:[NSString stringWithFormat:NSLocalizedString(@"Are you sure to delete \"%@\" from the server.", @"Are you sure to delete \"%@\" from the server."), [[self.fileInfo[@"file"] componentsSeparatedByString:@"/"] lastObject]] cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:@[NSLocalizedString(@"Delete", @"Delete")] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+    [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Delete File", @"Delete File") message:[NSString stringWithFormat:NSLocalizedString(@"Are you sure to delete \"%@\".", @"Are you sure to delete \"%@\"."), [[self.fileInfo[@"file"] componentsSeparatedByString:@"/"] lastObject]] cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:@[NSLocalizedString(@"Delete", @"Delete")] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
         if (buttonIndex != [alertView cancelButtonIndex]) {
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            NSString *path = [defaults objectForKey:ServerPathKey];
-            NSString *fileName = [self.fileInfo[@"file"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
-            NSString *movieRemovePath = [[AppDelegate shared] fileOperation:@"remove" withPath:path fileName:fileName];
-            NSURL *movieRemoveURL = [[NSURL alloc] initWithString:movieRemovePath];
-            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:movieRemoveURL];
-            request.HTTPMethod = @"DELETE";
-            
-            AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-                [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Delete File", @"Delete File") message:[NSString stringWithFormat:NSLocalizedString(@"\"%@\" has been deleted from the server.", @"\"%@\" has been deleted from the server."), [[self.fileInfo[@"file"] componentsSeparatedByString:@"/"] lastObject]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+            if (blockSelf.isLocalFile) {
+                NSFileManager *fileManager = [NSFileManager defaultManager];
+                NSError *error;
+                [fileManager removeItemAtPath:blockSelf.fileInfo[@"file"] error:&error];
+                NSString *message = nil;
+                if (error)
+                    message = [NSString stringWithFormat:NSLocalizedString(@"Failed to delete file \"%@\".", @"Failed to delete file \"%@\"."), [[self.fileInfo[@"file"] componentsSeparatedByString:@"/"] lastObject]];
+                else
+                    message = [NSString stringWithFormat:NSLocalizedString(@"\"%@\" has been deleted from your device.", @"\"%@\" has been deleted from your device."), [[self.fileInfo[@"file"] componentsSeparatedByString:@"/"] lastObject]];
+                [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Delete File", @"Delete File") message:message cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                    if (error) return;
                     [blockSelf.navigationController popViewControllerAnimated:YES];
                     if ([blockSelf.delegate respondsToSelector:@selector(fileDidRemovedFromServerForParentIndexPath:)]) {
                         [NSTimer scheduledTimerWithTimeInterval:0.3 block:^(NSTimeInterval time) {
@@ -139,11 +148,32 @@
                         } repeats:NO];
                     }
                 }];
-            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Connection failed." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alert show];
-            }];
-            [operation start];
+            }
+            else {
+                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                NSString *path = [defaults objectForKey:ServerPathKey];
+                NSString *fileName = [self.fileInfo[@"file"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
+                NSString *movieRemovePath = [[AppDelegate shared] fileOperation:@"remove" withPath:path fileName:fileName];
+                NSURL *movieRemoveURL = [[NSURL alloc] initWithString:movieRemovePath];
+                NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:movieRemoveURL];
+                request.HTTPMethod = @"DELETE";
+                
+                AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+                    [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Delete File", @"Delete File") message:[NSString stringWithFormat:NSLocalizedString(@"\"%@\" has been deleted from the server.", @"\"%@\" has been deleted from the server."), [[self.fileInfo[@"file"] componentsSeparatedByString:@"/"] lastObject]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                        [blockSelf.navigationController popViewControllerAnimated:YES];
+                        if ([blockSelf.delegate respondsToSelector:@selector(fileDidRemovedFromServerForParentIndexPath:)]) {
+                            [NSTimer scheduledTimerWithTimeInterval:0.3 block:^(NSTimeInterval time) {
+                                [blockSelf.delegate fileDidRemovedFromServerForParentIndexPath:self.parentIndexPath];
+                            } repeats:NO];
+                        }
+                    }];
+                } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Connection failed." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alert show];
+                }];
+                [operation start];
+            }
         }
     }];
 }

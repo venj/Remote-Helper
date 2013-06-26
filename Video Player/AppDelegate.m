@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "VPFileListViewController.h"
 #import "VPFileInfoViewController.h"
+#import "VPLocalFileListViewController.h"
 #import "Common.h"
 #import <SDWebImage/SDImageCache.h>
 #import <KKPasscodeLock/KKPasscodeLock.h>
@@ -26,9 +27,17 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.fileListViewController = [[VPFileListViewController alloc] initWithStyle:UITableViewStylePlain];
+    self.fileListViewController.title = NSLocalizedString(@"Server", @"Server");
+    self.fileListViewController.tabBarItem.image = [UIImage imageNamed:@"tab_cloud"];
     UINavigationController *fileListNavController = [[UINavigationController alloc] initWithRootViewController:self.fileListViewController];
+    VPLocalFileListViewController *localFileListViewController = [[VPLocalFileListViewController alloc] initWithStyle:UITableViewStylePlain];
+    localFileListViewController.title = NSLocalizedString(@"Local", @"Local");
+    localFileListViewController.tabBarItem.image = [UIImage imageNamed:@"tab_local"];
+    UINavigationController *localFileListNavController = [[UINavigationController alloc] initWithRootViewController:localFileListViewController];
+    UITabBarController *tabbarController = [[UITabBarController alloc] init];
+    tabbarController.viewControllers = @[fileListNavController, localFileListNavController];
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self.window.rootViewController = fileListNavController;
+        self.window.rootViewController = tabbarController;
     }
     else {
         self.fileInfoViewController = [[VPFileInfoViewController alloc] initWithStyle:UITableViewStyleGrouped];

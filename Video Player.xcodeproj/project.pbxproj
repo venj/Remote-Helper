@@ -25,6 +25,11 @@
 		2581D49C175465DD00EF3867 /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2581D494175465DD00EF3867 /* Icon-Small@2x.png */; };
 		2581D49D175465DD00EF3867 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2581D495175465DD00EF3867 /* Icon.png */; };
 		2581D49E175465DD00EF3867 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2581D496175465DD00EF3867 /* Icon@2x.png */; };
+		258466AC177AAB26005E9D55 /* VPLocalFileListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258466AA177AAB26005E9D55 /* VPLocalFileListViewController.m */; };
+		258466B1177AC639005E9D55 /* tab_cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = 258466AD177AC639005E9D55 /* tab_cloud.png */; };
+		258466B2177AC639005E9D55 /* tab_cloud@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 258466AE177AC639005E9D55 /* tab_cloud@2x.png */; };
+		258466B7177AC71F005E9D55 /* tab_local.png in Resources */ = {isa = PBXBuildFile; fileRef = 258466B5177AC71F005E9D55 /* tab_local.png */; };
+		258466B8177AC71F005E9D55 /* tab_local@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 258466B6177AC71F005E9D55 /* tab_local@2x.png */; };
 		25B0AA7217537A9D00141B0E /* VPFileListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B0AA7117537A9D00141B0E /* VPFileListViewController.m */; };
 		25B0AA7417537B2D00141B0E /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7317537B2D00141B0E /* MediaPlayer.framework */; };
 		25B0AA7A1753A66C00141B0E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA791753A66C00141B0E /* SystemConfiguration.framework */; };
@@ -69,6 +74,12 @@
 		2581D494175465DD00EF3867 /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@2x.png"; sourceTree = "<group>"; };
 		2581D495175465DD00EF3867 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		2581D496175465DD00EF3867 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		258466A9177AAB26005E9D55 /* VPLocalFileListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = VPLocalFileListViewController.h; sourceTree = "<group>"; };
+		258466AA177AAB26005E9D55 /* VPLocalFileListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VPLocalFileListViewController.m; sourceTree = "<group>"; };
+		258466AD177AC639005E9D55 /* tab_cloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab_cloud.png; sourceTree = "<group>"; };
+		258466AE177AC639005E9D55 /* tab_cloud@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_cloud@2x.png"; sourceTree = "<group>"; };
+		258466B5177AC71F005E9D55 /* tab_local.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab_local.png; sourceTree = "<group>"; };
+		258466B6177AC71F005E9D55 /* tab_local@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_local@2x.png"; sourceTree = "<group>"; };
 		25B0AA7017537A9D00141B0E /* VPFileListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VPFileListViewController.h; sourceTree = "<group>"; };
 		25B0AA7117537A9D00141B0E /* VPFileListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VPFileListViewController.m; sourceTree = "<group>"; };
 		25B0AA7317537B2D00141B0E /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
@@ -149,6 +160,8 @@
 				252DFA8F1753784400FF8199 /* AppDelegate.m */,
 				25B0AA7017537A9D00141B0E /* VPFileListViewController.h */,
 				25B0AA7117537A9D00141B0E /* VPFileListViewController.m */,
+				258466A9177AAB26005E9D55 /* VPLocalFileListViewController.h */,
+				258466AA177AAB26005E9D55 /* VPLocalFileListViewController.m */,
 				2571FD471760346F00CE8982 /* VPFileInfoViewController.h */,
 				2571FD481760346F00CE8982 /* VPFileInfoViewController.m */,
 				2571E73B1762C9240036C61D /* VPTorrentsListViewController.h */,
@@ -184,6 +197,10 @@
 				25F1C0FC176042490024394B /* Default-Landscape@2x~ipad.png */,
 				25F1C0FD176042490024394B /* Default-Landscape~ipad.png */,
 				25F1C0FE176042490024394B /* Default-Portrait@2x~ipad.png */,
+				258466AD177AC639005E9D55 /* tab_cloud.png */,
+				258466AE177AC639005E9D55 /* tab_cloud@2x.png */,
+				258466B5177AC71F005E9D55 /* tab_local.png */,
+				258466B6177AC71F005E9D55 /* tab_local@2x.png */,
 				25F1C0FF176042490024394B /* Default-Portrait~ipad.png */,
 				25F1C0EF176041530024394B /* Default.png */,
 				25F1C0F0176041530024394B /* Default@2x.png */,
@@ -280,6 +297,10 @@
 				25F8BC0A177A8D1A00A03436 /* redButton@2x.png in Resources */,
 				25F8BC0B177A8D1A00A03436 /* redButtonHighlight.png in Resources */,
 				25F8BC0C177A8D1A00A03436 /* redButtonHighlight@2x.png in Resources */,
+				258466B1177AC639005E9D55 /* tab_cloud.png in Resources */,
+				258466B2177AC639005E9D55 /* tab_cloud@2x.png in Resources */,
+				258466B7177AC71F005E9D55 /* tab_local.png in Resources */,
+				258466B8177AC71F005E9D55 /* tab_local@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,6 +348,7 @@
 				2571FD4A1760346F00CE8982 /* VPFileInfoViewController.m in Sources */,
 				2571E73E1762C9240036C61D /* VPTorrentsListViewController.m in Sources */,
 				25386B941779B60D001027BD /* ipaddress.c in Sources */,
+				258466AC177AAB26005E9D55 /* VPLocalFileListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

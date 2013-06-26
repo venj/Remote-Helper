@@ -39,7 +39,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = NSLocalizedString(@"Movies List", @"Movies List");
+    self.title = NSLocalizedString(@"Server", @"Server");
     __block VPFileListViewController *blockSelf = self;
     __block UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"More", @"More") style:UIBarButtonItemStyleBordered handler:^(id sender) {
         self.sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Please select your operation", @"Please select your operation")];
@@ -105,10 +105,11 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     }
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
     }
     cell.textLabel.text = [[self.movieFiles[indexPath.row] componentsSeparatedByString:@"/"] lastObject];
+    cell.textLabel.font = [UIFont boldSystemFontOfSize:17.];
     return cell;
 }
 
@@ -144,6 +145,7 @@
             fileInfoViewController.delegate = self;
             fileInfoViewController.parentIndexPath = indexPath;
             fileInfoViewController.fileInfo = JSON;
+            fileInfoViewController.isLocalFile = NO;
             [blockSelf.navigationController pushViewController:fileInfoViewController animated:YES];
         }
         else {

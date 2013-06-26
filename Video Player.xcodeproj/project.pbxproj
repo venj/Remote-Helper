@@ -13,6 +13,7 @@
 		252DFA8A1753784400FF8199 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 252DFA881753784400FF8199 /* InfoPlist.strings */; };
 		252DFA8C1753784400FF8199 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 252DFA8B1753784400FF8199 /* main.m */; };
 		252DFA901753784400FF8199 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 252DFA8F1753784400FF8199 /* AppDelegate.m */; };
+		25310E3F177ACA9500D4A212 /* VCFileAttributeHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 25310E3D177ACA9500D4A212 /* VCFileAttributeHelper.m */; };
 		25386B941779B60D001027BD /* ipaddress.c in Sources */ = {isa = PBXBuildFile; fileRef = 25386B931779B60D001027BD /* ipaddress.c */; };
 		2571E73E1762C9240036C61D /* VPTorrentsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2571E73C1762C9240036C61D /* VPTorrentsListViewController.m */; };
 		2571FD4A1760346F00CE8982 /* VPFileInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2571FD481760346F00CE8982 /* VPFileInfoViewController.m */; };
@@ -59,6 +60,8 @@
 		252DFA8D1753784400FF8199 /* Video Player-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Video Player-Prefix.pch"; sourceTree = "<group>"; };
 		252DFA8E1753784400FF8199 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		252DFA8F1753784400FF8199 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		25310E3C177ACA9500D4A212 /* VCFileAttributeHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = VCFileAttributeHelper.h; sourceTree = "<group>"; };
+		25310E3D177ACA9500D4A212 /* VCFileAttributeHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VCFileAttributeHelper.m; sourceTree = "<group>"; };
 		25386B931779B60D001027BD /* ipaddress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ipaddress.c; sourceTree = "<group>"; };
 		25386B951779B619001027BD /* ipaddress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ipaddress.h; sourceTree = "<group>"; };
 		2571E73B1762C9240036C61D /* VPTorrentsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = VPTorrentsListViewController.h; sourceTree = "<group>"; };
@@ -154,8 +157,7 @@
 		252DFA851753784400FF8199 /* Video Player */ = {
 			isa = PBXGroup;
 			children = (
-				25386B951779B619001027BD /* ipaddress.h */,
-				25386B931779B60D001027BD /* ipaddress.c */,
+				25310E40177ACB1600D4A212 /* 3rd Party */,
 				252DFA8E1753784400FF8199 /* AppDelegate.h */,
 				252DFA8F1753784400FF8199 /* AppDelegate.m */,
 				25B0AA7017537A9D00141B0E /* VPFileListViewController.h */,
@@ -184,6 +186,17 @@
 				2581D48717544A4C00EF3867 /* InAppSettings.bundle */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		25310E40177ACB1600D4A212 /* 3rd Party */ = {
+			isa = PBXGroup;
+			children = (
+				25386B951779B619001027BD /* ipaddress.h */,
+				25386B931779B60D001027BD /* ipaddress.c */,
+				25310E3C177ACA9500D4A212 /* VCFileAttributeHelper.h */,
+				25310E3D177ACA9500D4A212 /* VCFileAttributeHelper.m */,
+			);
+			name = "3rd Party";
 			sourceTree = "<group>";
 		};
 		2581D4891754534400EF3867 /* Images */ = {
@@ -349,6 +362,7 @@
 				2571E73E1762C9240036C61D /* VPTorrentsListViewController.m in Sources */,
 				25386B941779B60D001027BD /* ipaddress.c in Sources */,
 				258466AC177AAB26005E9D55 /* VPLocalFileListViewController.m in Sources */,
+				25310E3F177ACA9500D4A212 /* VCFileAttributeHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

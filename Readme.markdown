@@ -6,6 +6,14 @@ Video Player
 新功能介绍
 ---------
 
+**1.0 Build 37**
+
+- 为本地视频增加跳过备份的文件属性以防止iTunes备份本地视频。
+
+**1.0 Build 36**
+
+- 加入了本地视频播放功能。
+
 **1.0 Build 31**
 
 - 修正了在ActionSheet呈现时锁定App，解锁后ActionSheet无法自动隐藏的问题。

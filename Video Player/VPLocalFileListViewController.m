@@ -9,6 +9,7 @@
 #import "VPLocalFileListViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "VPFileInfoViewController.h"
+#import "VCFileAttributeHelper.h"
 
 @interface VPLocalFileListViewController () <VPFileInfoViewControllerDelegate>
 @property (nonatomic, strong) NSMutableArray *localFiles;
@@ -167,6 +168,7 @@
     }
     __block VPLocalFileListViewController *blockSelf = self;
     [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [VCFileAttributeHelper addSkipBackupAttributeToItemAtURL:obj];
         NSString *fileExtension = [[(NSURL *)obj pathExtension] lowercaseString];
         if ([[@[@"mp4", @"m4v", @"mov"] indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
             return [obj isEqualToString:fileExtension] ? YES : NO ;

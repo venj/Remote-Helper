@@ -125,6 +125,11 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (![[AppDelegate shared] shouldSendWebRequest]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Network Error", @"Network Error") message:NSLocalizedString(@"Your device is not in the same LAN with the server.", @"Your device is not in the same LAN with the server.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
     NSString *fileName = [self.movieFiles[indexPath.row] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
     __block VPFileListViewController *blockSelf = self;
@@ -174,6 +179,11 @@
 }
 
 - (void)showTorrentsViewer:(id)sender {
+    if (![[AppDelegate shared] shouldSendWebRequest]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Network Error", @"Network Error") message:NSLocalizedString(@"Your device is not in the same LAN with the server.", @"Your device is not in the same LAN with the server.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
     __block VPFileListViewController *blockSelf = self;
     NSURL *torrentsListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] torrentsListPath]];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:torrentsListURL];
@@ -191,13 +201,17 @@
         [blockSelf presentViewController:torrentsListNavigationController animated:YES completion:^{}];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         [MBProgressHUD hideHUDForView:aView animated:NO];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Connection failed." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Connection failed." delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
         [alert show];
     }];
     [operation start];
 }
 
 - (void)loadMovieList:(id)sender {
+    if (![[AppDelegate shared] shouldSendWebRequest]) {
+        [self showActivityIndicatorInBarButton:NO];
+        return;
+    }
     [self showActivityIndicatorInBarButton:YES];
     __block VPFileListViewController *blockSelf = self;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

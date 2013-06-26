@@ -8,6 +8,8 @@
 
 #import "VPFileInfoViewController.h"
 #import "AppDelegate.h"
+#import "Common.h"
+#import <AFNetworking/AFNetworking.h>
 #import <MediaPlayer/MediaPlayer.h>
 
 @interface VPFileInfoViewController ()
@@ -46,6 +48,12 @@
         
         [self presentMoviePlayerViewControllerAnimated:self.mpViewController];
     }];
+    
+    UIButton *button = [self deleteButton];
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0., 0., 320., 60.)];
+    footerView.backgroundColor = [UIColor clearColor];
+    [footerView addSubview:button];
+    self.tableView.tableFooterView = footerView;
 }
 
 - (void)didReceiveMemoryWarning
@@ -105,6 +113,71 @@
     cell.detailTextLabel.text = v;
     
     return cell;
+}
+
+#pragma mark - Action method
+
+- (void)deleteFile:(id)sender {
+    __block VPFileInfoViewController *blockSelf = self;
+    [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Delete File", @"Delete File") message:[NSString stringWithFormat:NSLocalizedString(@"Are you sure to delete \"%@\" from the server.", @"Are you sure to delete \"%@\" from the server."), [[self.fileInfo[@"file"] componentsSeparatedByString:@"/"] lastObject]] cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:@[NSLocalizedString(@"Delete", @"Delete")] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+        if (buttonIndex != [alertView cancelButtonIndex]) {
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            NSString *path = [defaults objectForKey:ServerPathKey];
+            NSString *fileName = [self.fileInfo[@"file"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
+            NSString *movieRemovePath = [[AppDelegate shared] fileOperation:@"remove" withPath:path fileName:fileName];
+            NSURL *movieRemoveURL = [[NSURL alloc] initWithString:movieRemovePath];
+            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:movieRemoveURL];
+            request.HTTPMethod = @"DELETE";
+            
+            AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+                [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Delete File", @"Delete File") message:[NSString stringWithFormat:NSLocalizedString(@"\"%@\" has been deleted from the server.", @"\"%@\" has been deleted from the server."), [[self.fileInfo[@"file"] componentsSeparatedByString:@"/"] lastObject]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                    [blockSelf.navigationController popViewControllerAnimated:YES];
+                    if ([blockSelf.delegate respondsToSelector:@selector(fileDidRemovedFromServerForParentIndexPath:)]) {
+                        [NSTimer scheduledTimerWithTimeInterval:0.3 block:^(NSTimeInterval time) {
+                            [blockSelf.delegate fileDidRemovedFromServerForParentIndexPath:self.parentIndexPath];
+                        } repeats:NO];
+                    }
+                }];
+            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Connection failed." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert show];
+            }];
+            [operation start];
+        }
+    }];
+}
+
+#pragma mark - Helper Methods
+
+- (UIButton *)deleteButton {
+    UIImage *originalImage = [UIImage imageNamed:@"redButton"];
+    UIImage *originalHighlightImage = [UIImage imageNamed:@"redButtonHighlight"];
+    UIImage *buttonImage, *buttonHighlightImage;
+    if ([[UIImage class] respondsToSelector:@selector(resizableImageWithCapInsets:)]) {
+        buttonImage = [originalImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, 8, 0, 8)];
+    }
+    else {
+        buttonImage = [originalImage stretchableImageWithLeftCapWidth:8 topCapHeight:0];
+    }
+    if ([[UIImage class] respondsToSelector:@selector(resizableImageWithCapInsets:)]) {
+        buttonHighlightImage = [originalHighlightImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, 8, 0, 8)];
+    }
+    else {
+        buttonHighlightImage = [originalHighlightImage stretchableImageWithLeftCapWidth:8 topCapHeight:0];
+    }
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [button setBackgroundImage:buttonHighlightImage forState:UIControlStateHighlighted];
+    [button setTitle:NSLocalizedString(@"Delete", @"Delete") forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(deleteFile:) forControlEvents:UIControlEventTouchUpInside];
+    button.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+    button.titleLabel.shadowColor = [UIColor grayColor];
+    button.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
+    button.frame = CGRectMake(10., 8., 300., 36.);
+    button.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    return button;
 }
 
 @end

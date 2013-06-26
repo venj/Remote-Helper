@@ -15,6 +15,7 @@
 #include <net/if.h>
 #include <errno.h>
 #include <net/if_dl.h>
+#include <net/ethernet.h>
 
 #define    min(a,b)    ((a) < (b) ? (a) : (b))
 #define    max(a,b)    ((a) > (b) ? (a) : (b))
@@ -187,7 +188,7 @@ void GetHWAddresses()
             int a,b,c,d,e,f;
             int i;
             
-            strcpy(temp, (char *)ether_ntoa(LLADDR(sdl)));
+            strcpy(temp, (char *)ether_ntoa((struct ether_addr*)LLADDR(sdl)));
             sscanf(temp, "%x:%x:%x:%x:%x:%x", &a, &b, &c, &d, &e, &f);
             sprintf(temp, "%02X:%02X:%02X:%02X:%02X:%02X",a,b,c,d,e,f);
             

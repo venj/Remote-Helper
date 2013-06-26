@@ -21,7 +21,7 @@
 #import "AppDelegate.h"
 
 @interface VPFileListViewController () <IASKSettingsDelegate>
-@property (nonatomic, strong) NSArray *movieFiles;
+@property (nonatomic, strong) NSMutableArray *movieFiles;
 @property (nonatomic, strong) MPMoviePlayerViewController *mpViewController;
 @end
 
@@ -134,13 +134,15 @@
     __block VPFileListViewController *blockSelf = self;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *path = [defaults objectForKey:ServerPathKey];
-    NSString *movieInfoPath = [[AppDelegate shared] fileInfoWithPath:path fileName:fileName];
+    NSString *movieInfoPath = [[AppDelegate shared] fileOperation:@"info" withPath:path fileName:fileName];
     NSURL *movieInfoURL = [[NSURL alloc] initWithString:movieInfoPath];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:movieInfoURL];
     
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
             VPFileInfoViewController *fileInfoViewController = [[VPFileInfoViewController alloc] initWithStyle:UITableViewStyleGrouped];
+            fileInfoViewController.delegate = self;
+            fileInfoViewController.parentIndexPath = indexPath;
             fileInfoViewController.fileInfo = JSON;
             [blockSelf.navigationController pushViewController:fileInfoViewController animated:YES];
         }
@@ -217,7 +219,7 @@
     NSURL *movieListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] fileLinkWithPath:path]];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:movieListURL];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        blockSelf.movieFiles = JSON;
+        blockSelf.movieFiles = [NSMutableArray arrayWithArray:JSON];
         [blockSelf.tableView reloadData];
         [blockSelf showActivityIndicatorInBarButton:NO];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
@@ -237,6 +239,18 @@
         [sender synchronizeSettings];
         [blockSelf loadMovieList:nil];
     }];
+}
+
+#pragma mark - File Info View Controller Delegate
+
+- (void)fileDidRemovedFromServerForParentIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath) {
+        [self.movieFiles removeObjectAtIndex:indexPath.row];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
+    else {
+        [self loadMovieList:nil];
+    }
 }
 
 #pragma mark - Helper methods

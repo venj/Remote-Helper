@@ -8,6 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol VPFileInfoViewControllerDelegate <NSObject>
+@optional
+- (void)fileDidRemovedFromServerForParentIndexPath:(NSIndexPath *)indexPath;
+@end
+
 @interface VPFileInfoViewController : UITableViewController
+@property (nonatomic, weak) id<VPFileInfoViewControllerDelegate> delegate;
+@property (nonatomic, strong) NSIndexPath *parentIndexPath;
 @property (nonatomic, strong) NSDictionary *fileInfo;
 @end
+

@@ -147,7 +147,7 @@
     return link;
 }
 
-- (NSString *)fileInfoWithPath:(NSString *)path fileName:(NSString *)fileName {
+- (NSString *)fileOperation:(NSString *)operation withPath:(NSString *)path fileName:(NSString *)fileName {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *host = [defaults objectForKey:ServerHostKey];
     if (!host) host = @"192.168.1.1";
@@ -159,7 +159,7 @@
         path = [[NSString alloc]  initWithFormat:@"/%@", path];
     else if (![[path substringFromIndex:[path length] - 1] isEqualToString:@"/"])
         path = [[NSString alloc]  initWithFormat:@"%@/", path];
-    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@%@info/%@", host, port, path, fileName];
+    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@%@%@/%@", host, port, path, operation, fileName];
     return link;
 }
 

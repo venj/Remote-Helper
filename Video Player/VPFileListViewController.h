@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface VPFileListViewController : UITableViewController
+#import "VPFileInfoViewController.h"
+@interface VPFileListViewController : UITableViewController <VPFileInfoViewControllerDelegate>
 - (void)showSettings:(id)sender;
 @end

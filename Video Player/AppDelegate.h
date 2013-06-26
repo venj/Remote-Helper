@@ -23,4 +23,5 @@
 - (NSString *)searchPathWithKeyword:(NSString *)keyword;
 - (NSString *)addTorrentWithName:(NSString *)name async:(BOOL)async;
 - (BOOL)shouldSendWebRequest;
+- (void)showNetworkAlert;
 @end

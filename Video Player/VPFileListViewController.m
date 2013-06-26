@@ -42,11 +42,11 @@
     self.title = NSLocalizedString(@"Movies List", @"Movies List");
     __block VPFileListViewController *blockSelf = self;
     __block UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"More", @"More") style:UIBarButtonItemStyleBordered handler:^(id sender) {
-        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Please select your operation", @"Please select your operation")];
-        [sheet addButtonWithTitle:NSLocalizedString(@"Gallary", @"Gallary") handler:^{
+        self.sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Please select your operation", @"Please select your operation")];
+        [self.sheet addButtonWithTitle:NSLocalizedString(@"Gallary", @"Gallary") handler:^{
             [blockSelf showTorrentsViewer:sender];
         }];
-        [sheet addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings") handler:^{
+        [self.sheet addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings") handler:^{
             [blockSelf showSettings:sender];
         }];
         __block BOOL isPasscodeRequired = [[KKPasscodeLock sharedLock] isPasscodeRequired];
@@ -55,12 +55,12 @@
             title = NSLocalizedString(@"Turn off Password", @"Turn off Password");
         else
             title = NSLocalizedString(@"Turn on Password", @"Turn on Password");  
-        [sheet addButtonWithTitle:title handler:^{
+        [self.sheet addButtonWithTitle:title handler:^{
             KKPasscodeSettingsViewController *vc = [[KKPasscodeSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
-            [self.navigationController pushViewController:vc animated:YES];
+            [blockSelf.navigationController pushViewController:vc animated:YES];
         }];
-        [sheet setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:nil];
-        [sheet showFromBarButtonItem:leftButton animated:YES];
+        [self.sheet setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:nil];
+        [self.sheet showFromBarButtonItem:leftButton animated:YES];
     }];
     self.navigationItem.leftBarButtonItem = leftButton;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

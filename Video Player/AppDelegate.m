@@ -71,6 +71,7 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     if ([[KKPasscodeLock sharedLock] isPasscodeRequired]) {
+        [self.fileListViewController.sheet dismissWithClickedButtonIndex:self.fileListViewController.sheet.cancelButtonIndex animated:NO];
         [self.window.rootViewController dismissModalViewControllerAnimated:NO];
         KKPasscodeViewController *vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
         vc.mode = KKPasscodeModeEnter;

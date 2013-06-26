@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "VPFileInfoViewController.h"
 @interface VPFileListViewController : UITableViewController <VPFileInfoViewControllerDelegate>
+@property (nonatomic, strong) UIActionSheet *sheet;
 - (void)showSettings:(id)sender;
 @end

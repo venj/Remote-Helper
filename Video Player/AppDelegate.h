@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "VPFileInfoViewController.h"
 
-@class VPFileInfoViewController, VPFileListViewController;
+@class VPFileListViewController;
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;

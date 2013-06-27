@@ -141,14 +141,20 @@
                 if (error)
                     message = [NSString stringWithFormat:NSLocalizedString(@"Failed to delete file \"%@\".", @"Failed to delete file \"%@\"."), [[self.fileInfo[@"file"] componentsSeparatedByString:@"/"] lastObject]];
                 else
-                    message = [NSString stringWithFormat:NSLocalizedString(@"\"%@\" has been deleted from your device.", @"\"%@\" has been deleted from your device."), [[self.fileInfo[@"file"] componentsSeparatedByString:@"/"] lastObject]];
+                    message = [NSString stringWithFormat:NSLocalizedString(@"\"%@\" has been deleted from your device.", @"\"%@\" has been deleted from your device."), [[blockSelf.fileInfo[@"file"] componentsSeparatedByString:@"/"] lastObject]];
                 [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Delete File", @"Delete File") message:message cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
                     if (error) return;
-                    [blockSelf.navigationController popViewControllerAnimated:YES];
                     if ([blockSelf.delegate respondsToSelector:@selector(fileDidRemovedFromServerForParentIndexPath:)]) {
                         [NSTimer scheduledTimerWithTimeInterval:0.3 block:^(NSTimeInterval time) {
-                            [blockSelf.delegate fileDidRemovedFromServerForParentIndexPath:self.parentIndexPath];
+                            [blockSelf.delegate fileDidRemovedFromServerForParentIndexPath:blockSelf.parentIndexPath];
                         } repeats:NO];
+                    }
+                    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+                        [blockSelf.navigationController popViewControllerAnimated:YES];
+                    }
+                    else {
+                        blockSelf.fileInfo = nil;
+                        [blockSelf.tableView reloadData];
                     }
                 }];
             }
@@ -164,11 +170,17 @@
                 
                 AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
                     [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Delete File", @"Delete File") message:[NSString stringWithFormat:NSLocalizedString(@"\"%@\" has been deleted from the server.", @"\"%@\" has been deleted from the server."), [[self.fileInfo[@"file"] componentsSeparatedByString:@"/"] lastObject]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
-                        [blockSelf.navigationController popViewControllerAnimated:YES];
                         if ([blockSelf.delegate respondsToSelector:@selector(fileDidRemovedFromServerForParentIndexPath:)]) {
                             [NSTimer scheduledTimerWithTimeInterval:0.3 block:^(NSTimeInterval time) {
-                                [blockSelf.delegate fileDidRemovedFromServerForParentIndexPath:self.parentIndexPath];
+                                [blockSelf.delegate fileDidRemovedFromServerForParentIndexPath:blockSelf.parentIndexPath];
                             } repeats:NO];
+                        }
+                        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+                            [blockSelf.navigationController popViewControllerAnimated:YES];
+                        }
+                        else {
+                            blockSelf.fileInfo = nil;
+                            [blockSelf.tableView reloadData];
                         }
                     }];
                 } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {

@@ -17,10 +17,10 @@
 #import "VPTorrentsListViewController.h"
 #import "Common.h"
 #import "VPFileInfoViewController.h"
+#import "VCFileAttributeHelper.h"
 #import "AppDelegate.h"
 
 @interface VPFileListViewController () <IASKSettingsDelegate, KKPasscodeSettingsViewControllerDelegate>
-@property (nonatomic, strong) NSMutableArray *movieFiles;
 @property (nonatomic, strong) MPMoviePlayerViewController *mpViewController;
 @property (nonatomic, strong) IASKAppSettingsViewController *settingsViewController;
 @end
@@ -39,28 +39,37 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = NSLocalizedString(@"Server", @"Server");
     __weak VPFileListViewController *blockSelf = self;
-    __block UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"More", @"More") style:UIBarButtonItemStyleBordered handler:^(id sender) {
-        blockSelf.sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Please select your operation", @"Please select your operation")];
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            [self.sheet addButtonWithTitle:NSLocalizedString(@"Torrents", @"Torrents") handler:^{
-                [blockSelf showTorrentsViewer:sender];
-            }];
-        }
-        [blockSelf.sheet addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings") handler:^{
-            [blockSelf showSettings:sender];
-        }];
-        [blockSelf.sheet setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:nil];
-        [blockSelf.sheet showFromBarButtonItem:leftButton animated:YES];
-    }];
-    self.navigationItem.leftBarButtonItem = leftButton;
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults boolForKey:ServerSetupDone]) {
+    
+    if (self.isLocal) {
+        self.title = NSLocalizedString(@"Local", @"Local");
+        UIBarButtonItem *rightButtom = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(loadMovieList:)];
+        self.navigationItem.rightBarButtonItem = rightButtom;
         [self loadMovieList:nil];
     }
     else {
-        [self showSettings:nil];
+        self.title = NSLocalizedString(@"Server", @"Server");
+        __block UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"More", @"More") style:UIBarButtonItemStyleBordered handler:^(id sender) {
+            blockSelf.sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Please select your operation", @"Please select your operation")];
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+                [self.sheet addButtonWithTitle:NSLocalizedString(@"Torrents", @"Torrents") handler:^{
+                    [blockSelf showTorrentsViewer:sender];
+                }];
+            }
+            [blockSelf.sheet addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings") handler:^{
+                [blockSelf showSettings:sender];
+            }];
+            [blockSelf.sheet setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:nil];
+            [blockSelf.sheet showFromBarButtonItem:leftButton animated:YES];
+        }];
+        self.navigationItem.leftBarButtonItem = leftButton;
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        if ([defaults boolForKey:ServerSetupDone]) {
+            [self loadMovieList:nil];
+        }
+        else {
+            [self showSettings:nil];
+        }
     }
 }
 
@@ -87,7 +96,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.movieFiles count];
+    return [self.dataList count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -100,15 +109,28 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
     }
-    cell.textLabel.text = [[self.movieFiles[indexPath.row] componentsSeparatedByString:@"/"] lastObject];
-    cell.textLabel.font = [UIFont boldSystemFontOfSize:17.];
+    if (self.isLocal) {
+        NSURL *fileURL = self.dataList[indexPath.row];
+        cell.textLabel.text = [fileURL lastPathComponent];
+    }
+    else {
+        cell.textLabel.text = [[self.dataList[indexPath.row] componentsSeparatedByString:@"/"] lastObject];
+    }
+    //cell.textLabel.font = [UIFont boldSystemFontOfSize:17.];
+    
     return cell;
 }
 
 #pragma mark - Table view delegate
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    NSString *moviePath = [[AppDelegate shared] fileLinkWithPath:[self.movieFiles[indexPath.row] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    NSURL *url = [[NSURL alloc] initWithString:moviePath];
+    NSURL *url;
+    if (self.isLocal) {
+        url = self.dataList[indexPath.row];
+    }
+    else {
+        NSString *moviePath = [[AppDelegate shared] fileLinkWithPath:[self.dataList[indexPath.row] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        url = [[NSURL alloc] initWithString:moviePath];
+    }
     if (self.mpViewController)
         self.mpViewController.moviePlayer.contentURL = url;
     else
@@ -118,37 +140,68 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (![[AppDelegate shared] shouldSendWebRequest]) {
-        [[AppDelegate shared] showNetworkAlert];
-        return;
-    }
-    NSString *fileName = [self.movieFiles[indexPath.row] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
-    __weak VPFileListViewController *blockSelf = self;
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *path = [defaults objectForKey:ServerPathKey];
-    NSString *movieInfoPath = [[AppDelegate shared] fileOperation:@"info" withPath:path fileName:fileName];
-    NSURL *movieInfoURL = [[NSURL alloc] initWithString:movieInfoPath];
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:movieInfoURL];
-    
-    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-            VPFileInfoViewController *fileInfoViewController = [[VPFileInfoViewController alloc] initWithStyle:UITableViewStyleGrouped];
-            fileInfoViewController.delegate = self;
-            fileInfoViewController.parentIndexPath = indexPath;
-            fileInfoViewController.fileInfo = JSON;
-            fileInfoViewController.isLocalFile = NO;
-            [blockSelf.navigationController pushViewController:fileInfoViewController animated:YES];
+    if (self.isLocal) {
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSString *currentFile = [self.dataList[indexPath.row] path];
+        NSError *error;
+        NSDictionary *attributes = [fileManager attributesOfItemAtPath:currentFile error:&error];
+        if (error) {
+            NSLog(@"Error read file attributes %@", [error description]);
+            return;
+        }
+        NSDictionary *fileInfo = @{@"file": currentFile, @"size": attributes[NSFileSize]};
+        VPFileInfoViewController *fileInfoViewController = [[VPFileInfoViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        fileInfoViewController.delegate = self;
+        fileInfoViewController.parentIndexPath = indexPath;
+        fileInfoViewController.fileInfo = fileInfo;
+        fileInfoViewController.isLocalFile = YES;
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+            [self.navigationController pushViewController:fileInfoViewController animated:YES];
         }
         else {
-            [[AppDelegate shared] fileInfoViewController].fileInfo = JSON;
-            [[[AppDelegate shared] fileInfoViewController].tableView reloadData];
+            VPFileInfoViewController *fileInfoViewController = [[AppDelegate shared] fileInfoViewController];
+            fileInfoViewController.fileInfo = fileInfo;
+            fileInfoViewController.parentIndexPath = indexPath;
+            fileInfoViewController.isLocalFile = NO;
+            [fileInfoViewController.tableView reloadData];
         }
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Connection failed." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-    }];
-    [operation start];
+    }
+    else {
+        if (![[AppDelegate shared] shouldSendWebRequest]) {
+            [[AppDelegate shared] showNetworkAlert];
+            return;
+        }
+        NSString *fileName = [self.dataList[indexPath.row] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
+        __weak VPFileListViewController *blockSelf = self;
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *path = [defaults objectForKey:ServerPathKey];
+        NSString *movieInfoPath = [[AppDelegate shared] fileOperation:@"info" withPath:path fileName:fileName];
+        NSURL *movieInfoURL = [[NSURL alloc] initWithString:movieInfoPath];
+        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:movieInfoURL];
+        
+        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+                VPFileInfoViewController *fileInfoViewController = [[VPFileInfoViewController alloc] initWithStyle:UITableViewStyleGrouped];
+                fileInfoViewController.delegate = self;
+                fileInfoViewController.parentIndexPath = indexPath;
+                fileInfoViewController.fileInfo = JSON;
+                fileInfoViewController.isLocalFile = NO;
+                [blockSelf.navigationController pushViewController:fileInfoViewController animated:YES];
+            }
+            else {
+                VPFileInfoViewController *fileInfoViewController = [[AppDelegate shared] fileInfoViewController];
+                fileInfoViewController.fileInfo = JSON;
+                fileInfoViewController.parentIndexPath = indexPath;
+                fileInfoViewController.isLocalFile = NO;
+                [fileInfoViewController.tableView reloadData];
+            }
+        } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Connection failed." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert show];
+        }];
+        [operation start];
+    }
 }
 
 #pragma mark - Action methods
@@ -182,26 +235,55 @@
 }
 
 - (void)loadMovieList:(id)sender {
-    if (![[AppDelegate shared] shouldSendWebRequest]) {
-        [self showActivityIndicatorInBarButton:NO];
-        return;
-    }
-    [self showActivityIndicatorInBarButton:YES];
     __weak VPFileListViewController *blockSelf = self;
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *path = [defaults objectForKey:ServerPathKey];
-    NSURL *movieListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] fileLinkWithPath:path]];
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:movieListURL];
-    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        blockSelf.movieFiles = [NSMutableArray arrayWithArray:JSON];
-        [blockSelf.tableView reloadData];
-        [blockSelf showActivityIndicatorInBarButton:NO];
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Connection failed." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-        [blockSelf showActivityIndicatorInBarButton:NO];
-    }];
-    [operation start];
+    if (self.isLocal) {
+        if (!self.dataList) {
+            self.dataList = [[NSMutableArray alloc] init];
+        }
+        else {
+            [self.dataList removeAllObjects];
+        }
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSError *error;
+        NSArray *files = [fileManager contentsOfDirectoryAtURL:[NSURL fileURLWithPath:documentsDirectory] includingPropertiesForKeys:nil options:NSDirectoryEnumerationSkipsHiddenFiles error:&error];
+        if (error) {
+            NSLog(@"Error loading file list %@", [error description]);
+            return;
+        }
+        [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [VCFileAttributeHelper addSkipBackupAttributeToItemAtURL:obj];
+            NSString *fileExtension = [[(NSURL *)obj pathExtension] lowercaseString];
+            if ([[@[@"mp4", @"m4v", @"mov"] indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+                return [obj isEqualToString:fileExtension] ? YES : NO ;
+            }] count] != 0) {
+                [blockSelf.dataList addObject:obj];
+            }
+        }];
+        [self.tableView reloadData];
+    }
+    else {
+        if (![[AppDelegate shared] shouldSendWebRequest]) {
+            [self showActivityIndicatorInBarButton:NO];
+            return;
+        }
+        [self showActivityIndicatorInBarButton:YES];
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *path = [defaults objectForKey:ServerPathKey];
+        NSURL *movieListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] fileLinkWithPath:path]];
+        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:movieListURL];
+        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+            blockSelf.dataList = [NSMutableArray arrayWithArray:JSON];
+            [blockSelf.tableView reloadData];
+            [blockSelf showActivityIndicatorInBarButton:NO];
+        } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Connection failed." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert show];
+            [blockSelf showActivityIndicatorInBarButton:NO];
+        }];
+        [operation start];
+    }
 }
 
 #pragma mark - IASKSettingsDelegate
@@ -237,7 +319,7 @@
 
 - (void)fileDidRemovedFromServerForParentIndexPath:(NSIndexPath *)indexPath {
     if (indexPath) {
-        [self.movieFiles removeObjectAtIndex:indexPath.row];
+        [self.dataList removeObjectAtIndex:indexPath.row];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
     else {

@@ -9,15 +9,15 @@
 #import "AppDelegate.h"
 #import "VPFileListViewController.h"
 #import "VPFileInfoViewController.h"
-#import "VPLocalFileListViewController.h"
 #import "Common.h"
 #import <SDWebImage/SDImageCache.h>
 #import <KKPasscodeLock/KKPasscodeLock.h>
 #import "VPTorrentsListViewController.h"
 #import "ipaddress.h"
 
-@interface AppDelegate () <UISplitViewControllerDelegate, KKPasscodeViewControllerDelegate>
-
+@interface AppDelegate () <UISplitViewControllerDelegate, KKPasscodeViewControllerDelegate, UITabBarControllerDelegate, VPFileInfoViewControllerDelegate>
+@property (nonatomic, strong) VPFileListViewController *localFileListViewController;
+@property (nonatomic, strong) UITabBarController *tabbarController;
 @end
 
 @implementation AppDelegate
@@ -28,31 +28,35 @@
 
     // File List
     self.fileListViewController = [[VPFileListViewController alloc] initWithStyle:UITableViewStylePlain];
+    self.fileListViewController.isLocal = NO;
     self.fileListViewController.title = NSLocalizedString(@"Server", @"Server");
     self.fileListViewController.tabBarItem.image = [UIImage imageNamed:@"tab_cloud"];
     UINavigationController *fileListNavController = [[UINavigationController alloc] initWithRootViewController:self.fileListViewController];
     // Local File List
-    VPLocalFileListViewController *localFileListViewController = [[VPLocalFileListViewController alloc] initWithStyle:UITableViewStylePlain];
-    localFileListViewController.title = NSLocalizedString(@"Local", @"Local");
-    localFileListViewController.tabBarItem.image = [UIImage imageNamed:@"tab_local"];
-    UINavigationController *localFileListNavController = [[UINavigationController alloc] initWithRootViewController:localFileListViewController];
+    self.localFileListViewController = [[VPFileListViewController alloc] initWithStyle:UITableViewStylePlain];
+    self.localFileListViewController.isLocal = YES;
+    self.localFileListViewController.title = NSLocalizedString(@"Local", @"Local");
+    self.localFileListViewController.tabBarItem.image = [UIImage imageNamed:@"tab_local"];
+    UINavigationController *localFileListNavController = [[UINavigationController alloc] initWithRootViewController:self.localFileListViewController];
     // Torrent List
     VPTorrentsListViewController *torrentsListViewController = [[VPTorrentsListViewController alloc] initWithStyle:UITableViewStylePlain];
     torrentsListViewController.title = NSLocalizedString(@"Torrents", @"Torrents");
     torrentsListViewController.tabBarItem.image = [UIImage imageNamed:@"tab_torrents"];
     UINavigationController *torrentsListNavigationController = [[UINavigationController alloc] initWithRootViewController:torrentsListViewController];
-    
-    UITabBarController *tabbarController = [[UITabBarController alloc] init];
+    // Tabbar
+    self.tabbarController = [[UITabBarController alloc] init];
+    self.tabbarController.delegate = self;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        tabbarController.viewControllers = @[fileListNavController, localFileListNavController, torrentsListNavigationController];
-        self.window.rootViewController = tabbarController;
+        self.tabbarController.viewControllers = @[fileListNavController, localFileListNavController, torrentsListNavigationController];
+        self.window.rootViewController = self.tabbarController;
     }
     else {
-        tabbarController.viewControllers = @[fileListNavController, localFileListNavController];
+        self.tabbarController.viewControllers = @[fileListNavController, localFileListNavController];
         self.fileInfoViewController = [[VPFileInfoViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        self.fileInfoViewController.delegate = self;
         UINavigationController *fileInfoNavController = [[UINavigationController alloc] initWithRootViewController:self.fileInfoViewController];
         self.splitViewController = [[UISplitViewController alloc] init];
-        self.splitViewController.viewControllers = @[tabbarController, fileInfoNavController];
+        self.splitViewController.viewControllers = @[self.tabbarController, fileInfoNavController];
         self.splitViewController.delegate = self;
         self.window.rootViewController = self.splitViewController;
     }
@@ -116,6 +120,21 @@
 - (BOOL)splitViewController:(UISplitViewController *)svc shouldHideViewController:(UIViewController *)vc inOrientation:(UIInterfaceOrientation)orientation {
     return NO;
 }
+
+#pragma mark - File Info View Controller Delegate
+- (void)fileDidRemovedFromServerForParentIndexPath:(NSIndexPath *)indexPath {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        VPFileListViewController *fileListController = (VPFileListViewController *)[(UINavigationController *)[self.tabbarController selectedViewController] topViewController];
+        if (indexPath) {
+            [fileListController.dataList removeObjectAtIndex:indexPath.row];
+            [fileListController.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        }
+        else {
+            [fileListController loadMovieList:nil];
+        }
+    }
+}
+
 
 #pragma mark - Helper Methods
 - (NSString *)torrentsListPath {

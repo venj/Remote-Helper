@@ -6,6 +6,11 @@ Video Player
 新功能介绍
 ---------
 
+**1.0 Build 41**
+
+- 重构代码，让本地文件和远程文件使用统一个ViewController来呈现。
+- 修正了iPad下，本地文件信息没有先是在右半侧界面中的问题。
+
 **1.0 Build 40**
 
 - 将BT列表整合进Tabbar（iPhone），iPad依然使用Modal显示BT列表。

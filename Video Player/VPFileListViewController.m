@@ -20,9 +20,10 @@
 #import "VPFileInfoViewController.h"
 #import "AppDelegate.h"
 
-@interface VPFileListViewController () <IASKSettingsDelegate>
+@interface VPFileListViewController () <IASKSettingsDelegate, KKPasscodeSettingsViewControllerDelegate>
 @property (nonatomic, strong) NSMutableArray *movieFiles;
 @property (nonatomic, strong) MPMoviePlayerViewController *mpViewController;
+@property (nonatomic, strong) IASKAppSettingsViewController *settingsViewController;
 @end
 
 @implementation VPFileListViewController
@@ -48,16 +49,6 @@
         }];
         [self.sheet addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings") handler:^{
             [blockSelf showSettings:sender];
-        }];
-        __block BOOL isPasscodeRequired = [[KKPasscodeLock sharedLock] isPasscodeRequired];
-        NSString *title = @"";
-        if (isPasscodeRequired)
-            title = NSLocalizedString(@"Turn off Password", @"Turn off Password");
-        else
-            title = NSLocalizedString(@"Turn on Password", @"Turn on Password");  
-        [self.sheet addButtonWithTitle:title handler:^{
-            KKPasscodeSettingsViewController *vc = [[KKPasscodeSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
-            [blockSelf.navigationController pushViewController:vc animated:YES];
         }];
         [self.sheet setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:nil];
         [self.sheet showFromBarButtonItem:leftButton animated:YES];
@@ -169,11 +160,13 @@
     else
         cacheSize = [NSString stringWithFormat:@"%.1f MB", cacheSizeInBytes / (1000. * 1000.)];
     [defaults setObject:cacheSize forKey:ImageCacheSizeKey];
+    NSString *status = [[KKPasscodeLock sharedLock] isPasscodeRequired] ? @"On" : @"Off";
+    [defaults setObject:status forKey:PasscodeLockStatus];
     [defaults synchronize];
-    IASKAppSettingsViewController *settingsViewController = [[IASKAppSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    UINavigationController *settingsNavigationController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
-    settingsViewController.delegate = self;
-    settingsViewController.showCreditsFooter = NO;
+    self.settingsViewController = [[IASKAppSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    UINavigationController *settingsNavigationController = [[UINavigationController alloc] initWithRootViewController:self.settingsViewController];
+    self.settingsViewController.delegate = self;
+    self.settingsViewController.showCreditsFooter = NO;
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         settingsNavigationController.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -241,6 +234,24 @@
         [sender synchronizeSettings];
         [blockSelf loadMovieList:nil];
     }];
+}
+
+- (void)settingsViewController:(IASKAppSettingsViewController*)sender buttonTappedForSpecifier:(IASKSpecifier*)specifier {
+    if ([specifier.key isEqualToString:PasscodeLockConfig]) {
+        KKPasscodeSettingsViewController *vc = [[KKPasscodeSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        vc.delegate = self;
+        [sender.navigationController pushViewController:vc animated:YES];
+    }
+}
+
+#pragma mark - KKPasscode View Controller Delegate
+
+- (void)didSettingsChanged:(KKPasscodeViewController*)viewController {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *status = [[KKPasscodeLock sharedLock] isPasscodeRequired] ? @"On" : @"Off";
+    [defaults setObject:status forKey:PasscodeLockStatus];
+    [defaults synchronize];
+    [self.settingsViewController.tableView reloadData];
 }
 
 #pragma mark - File Info View Controller Delegate

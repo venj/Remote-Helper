@@ -82,7 +82,7 @@
 		</dict>
 		<dict>
 			<key>Default Value</key>
-			<string>NO</string>
+			<false/>
 			<key>Title</key>
 			<string>Clear Cache On Exit</string>
 			<key>Key</key>
@@ -98,13 +98,37 @@
 		</dict>
 		<dict>
 			<key>Default Value</key>
-			<string>NO</string>
+			<false/>
 			<key>Title</key>
 			<string>Async Add Torrent</string>
 			<key>Key</key>
 			<string>kAsyncAddCloudTaskKey</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Security</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>Default Value</key>
+			<string>Off</string>
+			<key>Title</key>
+			<string>Passcode Lock</string>
+			<key>Key</key>
+			<string>kPasscodeLockStatus</string>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Config Passcode</string>
+			<key>Key</key>
+			<string>kPasscodeLockConfig</string>
+			<key>Type</key>
+			<string>IASKButtonSpecifier</string>
 		</dict>
 		<dict>
 			<key>Title</key>

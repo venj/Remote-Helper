@@ -17,4 +17,6 @@
 #define ClearCacheOnExitKey @"kClearCacheOnExitKey"
 #define ImageCacheSizeKey @"kImageCacheSizeKey"
 #define AsyncAddCloudTaskKey @"kAsyncAddCloudTaskKey"
+#define PasscodeLockStatus @"kPasscodeLockStatus"
+#define PasscodeLockConfig @"kPasscodeLockConfig"
 #endif

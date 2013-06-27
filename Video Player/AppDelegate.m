@@ -25,11 +25,13 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
+
+    // File List
     self.fileListViewController = [[VPFileListViewController alloc] initWithStyle:UITableViewStylePlain];
     self.fileListViewController.title = NSLocalizedString(@"Server", @"Server");
     self.fileListViewController.tabBarItem.image = [UIImage imageNamed:@"tab_cloud"];
     UINavigationController *fileListNavController = [[UINavigationController alloc] initWithRootViewController:self.fileListViewController];
+    // Local File List
     VPLocalFileListViewController *localFileListViewController = [[VPLocalFileListViewController alloc] initWithStyle:UITableViewStylePlain];
     localFileListViewController.title = NSLocalizedString(@"Local", @"Local");
     localFileListViewController.tabBarItem.image = [UIImage imageNamed:@"tab_local"];
@@ -66,6 +68,10 @@
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    if ([[KKPasscodeLock sharedLock] isPasscodeRequired]) {
+        [self.fileListViewController.sheet dismissWithClickedButtonIndex:self.fileListViewController.sheet.cancelButtonIndex animated:NO];
+        [self.window.rootViewController dismissModalViewControllerAnimated:NO];
+    }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if ([defaults boolForKey:ClearCacheOnExitKey]) {
         [[SDImageCache sharedImageCache] clearDisk]; // Clear Image Cache
@@ -80,8 +86,6 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     if ([[KKPasscodeLock sharedLock] isPasscodeRequired]) {
-        [self.fileListViewController.sheet dismissWithClickedButtonIndex:self.fileListViewController.sheet.cancelButtonIndex animated:NO];
-        [self.window.rootViewController dismissModalViewControllerAnimated:NO];
         KKPasscodeViewController *vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
         vc.mode = KKPasscodeModeEnter;
         vc.delegate = self;

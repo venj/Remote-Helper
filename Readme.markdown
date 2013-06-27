@@ -6,6 +6,10 @@ Video Player
 新功能介绍
 ---------
 
+**1.0 Build 39**
+
+- 改善iPad支持。
+
 **1.0 Build 38**
 
 - 将密码锁设置功能整合进Settings。

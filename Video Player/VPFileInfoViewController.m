@@ -14,6 +14,7 @@
 
 @interface VPFileInfoViewController ()
 @property (nonatomic, strong) MPMoviePlayerViewController *mpViewController;
+@property (nonatomic, strong) UIButton *button;
 @end
 
 @implementation VPFileInfoViewController
@@ -58,10 +59,10 @@
         [self presentMoviePlayerViewControllerAnimated:self.mpViewController];
     }];
     
-    UIButton *button = [self deleteButton];
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0., 0., 320., 60.)];
+    self.button = [self deleteButton];
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0., 0., 320, 60.)];
     footerView.backgroundColor = [UIColor clearColor];
-    [footerView addSubview:button];
+    [footerView addSubview:self.button];
     self.tableView.tableFooterView = footerView;
 }
 
@@ -220,7 +221,12 @@
     button.titleLabel.font = [UIFont boldSystemFontOfSize:16];
     button.titleLabel.shadowColor = [UIColor grayColor];
     button.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
-    button.frame = CGRectMake(10., 8., 300., 36.);
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        button.frame = CGRectMake(8., 8., 304., 36.);
+    }
+    else {
+        button.frame = CGRectMake(40., 8., 240., 36.);
+    }
     button.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     return button;
 }

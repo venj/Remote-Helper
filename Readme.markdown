@@ -6,6 +6,10 @@ Video Player
 新功能介绍
 ---------
 
+**1.0 Build 40**
+
+- 将BT列表整合进Tabbar（iPhone），iPad依然使用Modal显示BT列表。
+
 **1.0 Build 39**
 
 - 改善iPad支持。

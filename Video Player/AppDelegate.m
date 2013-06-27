@@ -13,7 +13,7 @@
 #import "Common.h"
 #import <SDWebImage/SDImageCache.h>
 #import <KKPasscodeLock/KKPasscodeLock.h>
-#import <BlocksKit/UIAlertView+BlocksKit.h>
+#import "VPTorrentsListViewController.h"
 #import "ipaddress.h"
 
 @interface AppDelegate () <UISplitViewControllerDelegate, KKPasscodeViewControllerDelegate>
@@ -36,12 +36,19 @@
     localFileListViewController.title = NSLocalizedString(@"Local", @"Local");
     localFileListViewController.tabBarItem.image = [UIImage imageNamed:@"tab_local"];
     UINavigationController *localFileListNavController = [[UINavigationController alloc] initWithRootViewController:localFileListViewController];
+    // Torrent List
+    VPTorrentsListViewController *torrentsListViewController = [[VPTorrentsListViewController alloc] initWithStyle:UITableViewStylePlain];
+    torrentsListViewController.title = NSLocalizedString(@"Torrents", @"Torrents");
+    torrentsListViewController.tabBarItem.image = [UIImage imageNamed:@"tab_torrents"];
+    UINavigationController *torrentsListNavigationController = [[UINavigationController alloc] initWithRootViewController:torrentsListViewController];
+    
     UITabBarController *tabbarController = [[UITabBarController alloc] init];
-    tabbarController.viewControllers = @[fileListNavController, localFileListNavController];
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        tabbarController.viewControllers = @[fileListNavController, localFileListNavController, torrentsListNavigationController];
         self.window.rootViewController = tabbarController;
     }
     else {
+        tabbarController.viewControllers = @[fileListNavController, localFileListNavController];
         self.fileInfoViewController = [[VPFileInfoViewController alloc] initWithStyle:UITableViewStyleGrouped];
         UINavigationController *fileInfoNavController = [[UINavigationController alloc] initWithRootViewController:self.fileInfoViewController];
         self.splitViewController = [[UISplitViewController alloc] init];

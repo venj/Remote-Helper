@@ -9,10 +9,12 @@
 #import "VPTorrentsListViewController.h"
 #import <MWPhotoBrowser/MWPhotoBrowser.h>
 #import <AFNetworking/AFNetworking.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 #import "AppDelegate.h"
 #import "Common.h"
 
 @interface VPTorrentsListViewController () <MWPhotoBrowserDelegate, UISearchDisplayDelegate, UISearchBarDelegate>
+@property (nonatomic, strong) NSArray *datesList;
 @property (nonatomic, strong) NSArray *mwPhotos;
 @property (nonatomic, strong) NSMutableArray *filteredDatesList;
 @property (nonatomic, strong) UISearchDisplayController *searchController;
@@ -38,10 +40,17 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    self.title = NSLocalizedString(@"Torrents List", @"Torrents List");
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone handler:^(id sender) {
-        [self dismissViewControllerAnimated:YES completion:^{}];
-    }];
+    self.title = NSLocalizedString(@"Torrents", @"Torrents");
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone handler:^(id sender) {
+            [self dismissModalViewControllerAnimated:YES];
+        }];
+    }
+    else {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh handler:^(id sender) {
+            [self loadTorrentList];
+        }];
+    }
     
     UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0., 0., 320., 44.)];
     searchBar.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
@@ -53,6 +62,7 @@
     self.searchController.searchResultsDataSource = self;
     self.searchController.searchResultsDelegate = self;
     self.tableView.tableHeaderView = searchBar;
+    [self loadTorrentList];
 }
 
 - (void)didReceiveMemoryWarning
@@ -137,7 +147,7 @@
         list = self.filteredDatesList;
     }
     NSString *date = [list[indexPath.row] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    __block VPTorrentsListViewController *blockSelf = self;
+    __weak VPTorrentsListViewController *blockSelf = self;
     NSURL *movieListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] searchPathWithKeyword:date]];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:movieListURL];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
@@ -196,8 +206,32 @@
     return YES;
 }
 
-#pragma mark - SearchBar Delegate
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+#pragma mark - Action Method
+
+- (void)loadTorrentList {
+    if (![[AppDelegate shared] shouldSendWebRequest]) {
+        [[AppDelegate shared] showNetworkAlert];
+        return;
+    }
+    __weak VPTorrentsListViewController *blockSelf = self;
+    NSURL *torrentsListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] torrentsListPath]];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:torrentsListURL];
+    UIView *aView = nil;
+    aView = [AppDelegate shared].window;
+    [MBProgressHUD showHUDAddedTo:aView animated:NO];
+    self.navigationItem.rightBarButtonItem.enabled = NO;
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        [MBProgressHUD hideHUDForView:aView animated:NO];
+        blockSelf.navigationItem.rightBarButtonItem.enabled = YES;
+        blockSelf.datesList = JSON;
+        [blockSelf.tableView reloadData];
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        [MBProgressHUD hideHUDForView:aView animated:NO];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Connection failed." delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
+        [alert show];
+        blockSelf.navigationItem.rightBarButtonItem.enabled = YES;
+    }];
+    [operation start];
 }
 
 #pragma mark - MWPhotoBrowser delegate

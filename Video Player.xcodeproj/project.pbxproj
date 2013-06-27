@@ -35,6 +35,8 @@
 		25B0AA7417537B2D00141B0E /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7317537B2D00141B0E /* MediaPlayer.framework */; };
 		25B0AA7A1753A66C00141B0E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA791753A66C00141B0E /* SystemConfiguration.framework */; };
 		25B0AA7C1753A67300141B0E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */; };
+		25DD7ECA177BE94800C44F67 /* tab_torrents.png in Resources */ = {isa = PBXBuildFile; fileRef = 25DD7EC8177BE94800C44F67 /* tab_torrents.png */; };
+		25DD7ECB177BE94800C44F67 /* tab_torrents@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25DD7EC9177BE94800C44F67 /* tab_torrents@2x.png */; };
 		25F1C0F1176041530024394B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25F1C0EE176041530024394B /* Default-568h@2x.png */; };
 		25F1C0F2176041530024394B /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 25F1C0EF176041530024394B /* Default.png */; };
 		25F1C0F3176041530024394B /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25F1C0F0176041530024394B /* Default@2x.png */; };
@@ -89,6 +91,8 @@
 		25B0AA7517537D2500141B0E /* Common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
 		25B0AA791753A66C00141B0E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		25DD7EC8177BE94800C44F67 /* tab_torrents.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab_torrents.png; sourceTree = "<group>"; };
+		25DD7EC9177BE94800C44F67 /* tab_torrents@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_torrents@2x.png"; sourceTree = "<group>"; };
 		25F1C0EE176041530024394B /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		25F1C0EF176041530024394B /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		25F1C0F0176041530024394B /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
@@ -213,6 +217,8 @@
 				258466AD177AC639005E9D55 /* tab_cloud.png */,
 				258466AE177AC639005E9D55 /* tab_cloud@2x.png */,
 				258466B5177AC71F005E9D55 /* tab_local.png */,
+				25DD7EC8177BE94800C44F67 /* tab_torrents.png */,
+				25DD7EC9177BE94800C44F67 /* tab_torrents@2x.png */,
 				258466B6177AC71F005E9D55 /* tab_local@2x.png */,
 				25F1C0FF176042490024394B /* Default-Portrait~ipad.png */,
 				25F1C0EF176041530024394B /* Default.png */,
@@ -314,6 +320,8 @@
 				258466B2177AC639005E9D55 /* tab_cloud@2x.png in Resources */,
 				258466B7177AC71F005E9D55 /* tab_local.png in Resources */,
 				258466B8177AC71F005E9D55 /* tab_local@2x.png in Resources */,
+				25DD7ECA177BE94800C44F67 /* tab_torrents.png in Resources */,
+				25DD7ECB177BE94800C44F67 /* tab_torrents@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

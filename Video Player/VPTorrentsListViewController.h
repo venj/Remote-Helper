@@ -9,5 +9,4 @@
 #import <UIKit/UIKit.h>
 
 @interface VPTorrentsListViewController : UITableViewController
-@property (nonatomic, strong) NSArray *datesList;
 @end

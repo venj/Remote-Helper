@@ -14,7 +14,6 @@
 #import <SDWebImage/SDImageCache.h>
 #import <KKPasscodeLock/KKPasscodeLock.h>
 #import <KKPasscodeLock/KKPasscodeSettingsViewController.h>
-#import <MBProgressHUD/MBProgressHUD.h>
 #import "VPTorrentsListViewController.h"
 #import "Common.h"
 #import "VPFileInfoViewController.h"
@@ -41,17 +40,19 @@
 {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"Server", @"Server");
-    __block VPFileListViewController *blockSelf = self;
+    __weak VPFileListViewController *blockSelf = self;
     __block UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"More", @"More") style:UIBarButtonItemStyleBordered handler:^(id sender) {
-        self.sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Please select your operation", @"Please select your operation")];
-        [self.sheet addButtonWithTitle:NSLocalizedString(@"Gallary", @"Gallary") handler:^{
-            [blockSelf showTorrentsViewer:sender];
-        }];
-        [self.sheet addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings") handler:^{
+        blockSelf.sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Please select your operation", @"Please select your operation")];
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            [self.sheet addButtonWithTitle:NSLocalizedString(@"Torrents", @"Torrents") handler:^{
+                [blockSelf showTorrentsViewer:sender];
+            }];
+        }
+        [blockSelf.sheet addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings") handler:^{
             [blockSelf showSettings:sender];
         }];
-        [self.sheet setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:nil];
-        [self.sheet showFromBarButtonItem:leftButton animated:YES];
+        [blockSelf.sheet setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:nil];
+        [blockSelf.sheet showFromBarButtonItem:leftButton animated:YES];
     }];
     self.navigationItem.leftBarButtonItem = leftButton;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -123,7 +124,7 @@
     }
     NSString *fileName = [self.movieFiles[indexPath.row] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
-    __block VPFileListViewController *blockSelf = self;
+    __weak VPFileListViewController *blockSelf = self;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *path = [defaults objectForKey:ServerPathKey];
     NSString *movieInfoPath = [[AppDelegate shared] fileOperation:@"info" withPath:path fileName:fileName];
@@ -175,31 +176,9 @@
 }
 
 - (void)showTorrentsViewer:(id)sender {
-    if (![[AppDelegate shared] shouldSendWebRequest]) {
-        [[AppDelegate shared] showNetworkAlert];
-        return;
-    }
-    __block VPFileListViewController *blockSelf = self;
-    NSURL *torrentsListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] torrentsListPath]];
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:torrentsListURL];
-    UIView *aView = nil;
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-        aView = [AppDelegate shared].window;
-    else
-        aView = self.view;
-    [MBProgressHUD showHUDAddedTo:aView animated:NO];
-    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        [MBProgressHUD hideHUDForView:aView animated:NO];
-        VPTorrentsListViewController *torrentsListViewController = [[VPTorrentsListViewController alloc] initWithStyle:UITableViewStylePlain];
-        UINavigationController *torrentsListNavigationController = [[UINavigationController alloc] initWithRootViewController:torrentsListViewController];
-        torrentsListViewController.datesList = JSON;
-        [blockSelf presentViewController:torrentsListNavigationController animated:YES completion:^{}];
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        [MBProgressHUD hideHUDForView:aView animated:NO];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Connection failed." delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
-        [alert show];
-    }];
-    [operation start];
+    VPTorrentsListViewController *torrentsListViewController = [[VPTorrentsListViewController alloc] initWithStyle:UITableViewStylePlain];
+    UINavigationController *torrentsListNavigationController = [[UINavigationController alloc] initWithRootViewController:torrentsListViewController];
+    [self presentViewController:torrentsListNavigationController animated:YES completion:^{}];
 }
 
 - (void)loadMovieList:(id)sender {
@@ -208,7 +187,7 @@
         return;
     }
     [self showActivityIndicatorInBarButton:YES];
-    __block VPFileListViewController *blockSelf = self;
+    __weak VPFileListViewController *blockSelf = self;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *path = [defaults objectForKey:ServerPathKey];
     NSURL *movieListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] fileLinkWithPath:path]];

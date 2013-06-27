@@ -166,7 +166,7 @@
         NSLog(@"Error loading file list %@", [error description]);
         return;
     }
-    __block VPLocalFileListViewController *blockSelf = self;
+    __weak VPLocalFileListViewController *blockSelf = self;
     [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [VCFileAttributeHelper addSkipBackupAttributeToItemAtURL:obj];
         NSString *fileExtension = [[(NSURL *)obj pathExtension] lowercaseString];

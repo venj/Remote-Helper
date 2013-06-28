@@ -146,7 +146,7 @@
         NSError *error;
         NSDictionary *attributes = [fileManager attributesOfItemAtPath:currentFile error:&error];
         if (error) {
-            NSLog(@"Error read file attributes %@", [error description]);
+            NSLog(NSLocalizedString(@"Error read file attributes. Reason: %@", @"Error read file attributes. Reason: %@"), [error description]);
             return;
         }
         NSDictionary *fileInfo = @{@"file": currentFile, @"size": attributes[NSFileSize]};
@@ -197,7 +197,7 @@
                 [fileInfoViewController.tableView reloadData];
             }
         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Connection failed." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Connection failed.", @"Connection failed.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
             [alert show];
         }];
         [operation start];
@@ -249,7 +249,7 @@
         NSError *error;
         NSArray *files = [fileManager contentsOfDirectoryAtURL:[NSURL fileURLWithPath:documentsDirectory] includingPropertiesForKeys:nil options:NSDirectoryEnumerationSkipsHiddenFiles error:&error];
         if (error) {
-            NSLog(@"Error loading file list %@", [error description]);
+            NSLog(NSLocalizedString(@"Error loading file list. Reason: %@", @"Error loading file list. Reason: %@"), [error description]);
             return;
         }
         [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -265,6 +265,9 @@
     }
     else {
         if (![[AppDelegate shared] shouldSendWebRequest]) {
+            if (sender) {
+                [[AppDelegate shared] showNetworkAlert];
+            }
             [self showActivityIndicatorInBarButton:NO];
             return;
         }
@@ -278,7 +281,7 @@
             [blockSelf.tableView reloadData];
             [blockSelf showActivityIndicatorInBarButton:NO];
         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Connection failed." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Connection failed.", @"Connection failed.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
             [alert show];
             [blockSelf showActivityIndicatorInBarButton:NO];
         }];
@@ -309,7 +312,7 @@
 
 - (void)didSettingsChanged:(KKPasscodeViewController*)viewController {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *status = [[KKPasscodeLock sharedLock] isPasscodeRequired] ? @"On" : @"Off";
+    NSString *status = [[KKPasscodeLock sharedLock] isPasscodeRequired] ? NSLocalizedString(@"On", @"On"): NSLocalizedString(@"Off", @"Off");
     [defaults setObject:status forKey:PasscodeLockStatus];
     [defaults synchronize];
     [self.settingsViewController.tableView reloadData];

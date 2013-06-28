@@ -135,6 +135,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [self.searchController.searchBar resignFirstResponder];
     if (![[AppDelegate shared] shouldSendWebRequest]) {
         [[AppDelegate shared] showNetworkAlert];
         return;
@@ -150,7 +151,10 @@
     __weak VPTorrentsListViewController *blockSelf = self;
     NSURL *movieListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] searchPathWithKeyword:date]];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:movieListURL];
+    UIView *aView = [AppDelegate shared].window;
+    [MBProgressHUD showHUDAddedTo:aView animated:YES];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        [MBProgressHUD hideHUDForView:aView animated:YES];
         if ([JSON count] == 0) { return; }
         blockSelf.mwPhotos = [blockSelf mwPhotosArrayWithPhothsArray:JSON];
         MWPhotoBrowser *photoBrowser = [[MWPhotoBrowser alloc] initWithDelegate:blockSelf];
@@ -187,6 +191,7 @@
         photoBrowser.navigationItem.rightBarButtonItem = item;
         [self.navigationController pushViewController:photoBrowser animated:YES];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        [MBProgressHUD hideHUDForView:aView animated:YES];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Connection failed.", @"Connection failed.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
         [alert show];
     }];
@@ -216,17 +221,16 @@
     __weak VPTorrentsListViewController *blockSelf = self;
     NSURL *torrentsListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] torrentsListPath]];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:torrentsListURL];
-    UIView *aView = nil;
-    aView = [AppDelegate shared].window;
-    [MBProgressHUD showHUDAddedTo:aView animated:NO];
+    UIView *aView = [AppDelegate shared].window;
+    [MBProgressHUD showHUDAddedTo:aView animated:YES];
     self.navigationItem.rightBarButtonItem.enabled = NO;
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        [MBProgressHUD hideHUDForView:aView animated:NO];
+        [MBProgressHUD hideHUDForView:aView animated:YES];
         blockSelf.navigationItem.rightBarButtonItem.enabled = YES;
         blockSelf.datesList = JSON;
         [blockSelf.tableView reloadData];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        [MBProgressHUD hideHUDForView:aView animated:NO];
+        [MBProgressHUD hideHUDForView:aView animated:YES];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Connection failed.", @"Connection failed.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
         [alert show];
         blockSelf.navigationItem.rightBarButtonItem.enabled = YES;

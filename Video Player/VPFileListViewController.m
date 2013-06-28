@@ -214,7 +214,7 @@
     else
         cacheSize = [NSString stringWithFormat:@"%.1f MB", cacheSizeInBytes / (1000. * 1000.)];
     [defaults setObject:cacheSize forKey:ImageCacheSizeKey];
-    NSString *status = [[KKPasscodeLock sharedLock] isPasscodeRequired] ? @"On" : @"Off";
+    NSString *status = [[KKPasscodeLock sharedLock] isPasscodeRequired] ? NSLocalizedString(@"On", @"On"): NSLocalizedString(@"Off", @"Off");
     [defaults setObject:status forKey:PasscodeLockStatus];
     [defaults synchronize];
     self.settingsViewController = [[IASKAppSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];

@@ -124,7 +124,7 @@
 		</dict>
 		<dict>
 			<key>Title</key>
-			<string>Config Passcode</string>
+			<string>Configure Passcode</string>
 			<key>Key</key>
 			<string>kPasscodeLockConfig</string>
 			<key>Type</key>

@@ -117,7 +117,21 @@
     }
     else if (indexPath.row == 2) {
         k = NSLocalizedString(@"Size", @"Size");
-        v = [NSString stringWithFormat:@"%.2f MB", [self.fileInfo[@"size"] integerValue] / (1024. * 1024)];
+        NSInteger size = [self.fileInfo[@"size"] integerValue];
+        NSString *sizeString; 
+        if (size > 1024 * 1024 * 1024) {
+            sizeString = [NSString stringWithFormat:@"%.2f GB", size / (1024. * 1024 * 1024)];
+        }
+        else if (size > 1024 * 1024) {
+            sizeString = [NSString stringWithFormat:@"%.1f MB", size / (1024. * 1024)];
+        }
+        else if (size > 1024) {
+            sizeString = [NSString stringWithFormat:@"%.1f KB", size / 1024.];
+        }
+        else {
+            sizeString = [NSString stringWithFormat:@"%d B", size];
+        }
+        v = sizeString;
     }
     cell.textLabel.text = k;
     cell.detailTextLabel.text = v;

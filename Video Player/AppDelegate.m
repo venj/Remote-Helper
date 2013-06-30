@@ -11,6 +11,7 @@
 #import "VPFileInfoViewController.h"
 #import "Common.h"
 #import <SDWebImage/SDImageCache.h>
+#import <MediaPlayer/MediaPlayer.h>
 #import <KKPasscodeLock/KKPasscodeLock.h>
 #import "VPTorrentsListViewController.h"
 #import "ipaddress.h"
@@ -65,6 +66,7 @@
     NSString *appBuildString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
     [defults setObject:[NSString stringWithFormat:@"%@(%@)", appVersionString, appBuildString] forKey:CurrentVersionKey];
     [defults synchronize];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(airplayStateChanged:) name:MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification object:nil];
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -108,12 +110,24 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification object:nil];
 }
 
 #pragma mark - Singleton
 
 + (AppDelegate *)shared {
     return (AppDelegate *)[UIApplication sharedApplication].delegate;
+}
+
+#pragma mark - AirPlay Status Change Notification
+
+- (void)airplayStateChanged:(NSNotification *)note {
+    if ([(MPMoviePlayerController *)(note.object) isAirPlayVideoActive]) {
+        [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+    }
+    else {
+        [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+    }
 }
 
 #pragma mark - UISplitViewController Delegate
@@ -134,7 +148,6 @@
         }
     }
 }
-
 
 #pragma mark - Helper Methods
 - (NSString *)torrentsListPath {

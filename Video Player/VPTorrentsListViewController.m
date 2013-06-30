@@ -13,11 +13,14 @@
 #import "AppDelegate.h"
 #import "Common.h"
 
+
+
 @interface VPTorrentsListViewController () <MWPhotoBrowserDelegate, UISearchDisplayDelegate, UISearchBarDelegate>
 @property (nonatomic, strong) NSArray *datesList;
 @property (nonatomic, strong) NSArray *mwPhotos;
 @property (nonatomic, strong) NSMutableArray *filteredDatesList;
 @property (nonatomic, strong) UISearchDisplayController *searchController;
+@property (nonatomic, strong) NSDictionary *localizedStatusStrings;
 @end
 
 @implementation VPTorrentsListViewController
@@ -51,6 +54,12 @@
             [self loadTorrentList];
         }];
     }
+    
+    self.localizedStatusStrings = @{@"completed" : NSLocalizedString(@"completed", @"completed"),
+                                    @"waiting" : NSLocalizedString(@"waiting", @"waiting"),
+                                    @"downloading" : NSLocalizedString(@"downloading", @"downloading"),
+                                    @"failed or unknown" : NSLocalizedString(@"failed or unknown", @"failed or unknown")
+                                   };
     
     UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0., 0., 320., 44.)];
     searchBar.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
@@ -176,7 +185,7 @@
                 }
                 else {
                     title = NSLocalizedString(@"Result", @"Result");
-                    message = [NSString stringWithFormat:@"%@%@", NSLocalizedString(@"Torrent added! Download status:\n", @"Torrent added! Download status:\n"), anotherJSON[@"status"]];
+                    message = [NSString stringWithFormat:@"%@%@", NSLocalizedString(@"Torrent added! Download status:\n", @"Torrent added! Download status:\n"), self.localizedStatusStrings[anotherJSON[@"status"]]];
                 }
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
                 [alert show];

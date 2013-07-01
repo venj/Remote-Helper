@@ -219,6 +219,12 @@
 - (BOOL)shouldSendWebRequest {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *host = [defaults objectForKey:ServerHostKey];
+    NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:@"^[^\\d+]" options:NSRegularExpressionCaseInsensitive error:nil];
+    // By pass IP check for domain names (maybe mDNS domain names)
+    if ([[regex matchesInString:host options:0 range:NSMakeRange(0, [host length])] count] > 0) {
+        return YES;
+    }
+    
     NSString *myAddress = [self getIPAddress];
     
     if (host && myAddress) {

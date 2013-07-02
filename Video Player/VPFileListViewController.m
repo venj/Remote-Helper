@@ -75,7 +75,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     if (self.isLocal) {
-        [self loadMovieList:nil];
+        [NSTimer scheduledTimerWithTimeInterval:0.5 block:^(NSTimeInterval time) {
+            [self loadMovieList:nil];
+        } repeats:NO];
     }
 }
 

@@ -73,6 +73,12 @@
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    if (self.isLocal) {
+        [self loadMovieList:nil];
+    }
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

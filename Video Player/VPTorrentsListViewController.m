@@ -51,7 +51,7 @@
     }
     else {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh handler:^(id sender) {
-            [self loadTorrentList];
+            [self loadTorrentList:sender];
         }];
     }
     
@@ -71,7 +71,7 @@
     self.searchController.searchResultsDataSource = self;
     self.searchController.searchResultsDelegate = self;
     self.tableView.tableHeaderView = searchBar;
-    [self loadTorrentList];
+    [self loadTorrentList:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -222,7 +222,7 @@
 
 #pragma mark - Action Method
 
-- (void)loadTorrentList {
+- (void)loadTorrentList:(id)sender {
     if (![[AppDelegate shared] shouldSendWebRequest]) {
         [[AppDelegate shared] showNetworkAlert];
         return;

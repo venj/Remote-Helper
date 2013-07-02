@@ -156,12 +156,14 @@
                     blockSelf.progressHUD.labelText = [NSString stringWithFormat:NSLocalizedString(@"Downloading(%.0f%%)...", @"Downloading(%.0%%)..."), blockSelf.progressHUD.progress * 100];
                     if (totalBytesRead == totalBytesExpectedToRead) {
                         [NSTimer scheduledTimerWithTimeInterval:0.25 block:^(NSTimeInterval time) {
+                            [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
                             [MBProgressHUD hideHUDForView:blockSelf.tableView.window animated:YES];
                             [self.navigationController popToRootViewControllerAnimated:YES];
                         } repeats:NO];
                     }
                 }];
                 [operation start];
+                [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
             }
         }];
     }

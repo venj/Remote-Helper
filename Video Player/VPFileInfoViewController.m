@@ -11,10 +11,12 @@
 #import "Common.h"
 #import <AFNetworking/AFNetworking.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 
 @interface VPFileInfoViewController ()
 @property (nonatomic, strong) MPMoviePlayerViewController *mpViewController;
 @property (nonatomic, strong) UIButton *button;
+@property (nonatomic, strong) MBProgressHUD *progressHUD;
 @end
 
 @implementation VPFileInfoViewController
@@ -110,6 +112,9 @@
     if (indexPath.row == 0) {
         k = NSLocalizedString(@"File", @"File");
         v = [[path componentsSeparatedByString:@"/"] lastObject];
+        if (!self.isLocalFile) {
+            cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+        }
     }
     else if (indexPath.row == 1) {
         k = NSLocalizedString(@"Path", @"Path");
@@ -137,6 +142,30 @@
     cell.detailTextLabel.text = v;
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    if (self.isLocalFile) {
+        return;
+    }
+    if (indexPath.row == 0) {
+        self.progressHUD = [MBProgressHUD HUDForView:self.tableView];
+        self.progressHUD.mode = MBProgressHUDModeIndeterminate;
+        NSString *path = [[AppDelegate shared] fileLinkWithPath:[self.fileInfo[@"file"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSURL *url = [NSURL URLWithString:path];
+        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
+        AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+        [self.progressHUD show:YES];
+        NSOutputStream *oStream = [[NSOutputStream alloc] initToFileAtPath:[[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent:[self.fileInfo[@"file"] lastPathComponent]] append:YES];
+        [operation setOutputStream:oStream];
+        [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+            self.progressHUD.progress = totalBytesRead / (totalBytesExpectedToRead * 1.0);
+            if (totalBytesRead == totalBytesExpectedToRead) {
+                [self.progressHUD show:NO];
+            }
+        }];
+        [operation start];
+    }
 }
 
 #pragma mark - Action method

@@ -208,14 +208,14 @@
 - (void)showSettings:(id)sender {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSInteger cacheSizeInBytes = [[SDImageCache sharedImageCache] getSize];
-    NSString *cacheSize = @"0B";
-    if (cacheSizeInBytes < 1000 * 1000)
-        cacheSize = [NSString stringWithFormat:@"%.1f KB", cacheSizeInBytes / 1000.];
-    else
-        cacheSize = [NSString stringWithFormat:@"%.1f MB", cacheSizeInBytes / (1000. * 1000.)];
+    NSString *cacheSize = [[AppDelegate shared] fileSizeStringWithInteger:cacheSizeInBytes];
     [defaults setObject:cacheSize forKey:ImageCacheSizeKey];
     NSString *status = [[KKPasscodeLock sharedLock] isPasscodeRequired] ? NSLocalizedString(@"On", @"On"): NSLocalizedString(@"Off", @"Off");
     [defaults setObject:status forKey:PasscodeLockStatus];
+    NSString *localFileSize = [[AppDelegate shared] fileSizeStringWithInteger:[[AppDelegate shared] localFileSize]];
+    [defaults setObject:localFileSize forKey:LocalFileSize];
+    NSString *deviceFreeSpace = [[AppDelegate shared] fileSizeStringWithInteger:[[AppDelegate shared] freeDiskSpace]];
+    [defaults setObject:deviceFreeSpace forKey:DeviceFreeSpace];
     [defaults synchronize];
     self.settingsViewController = [[IASKAppSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
     UINavigationController *settingsNavigationController = [[UINavigationController alloc] initWithRootViewController:self.settingsViewController];
@@ -243,8 +243,7 @@
         else {
             [self.dataList removeAllObjects];
         }
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
+        NSString *documentsDirectory = [[AppDelegate shared] documentsDirectory];
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSError *error;
         NSArray *files = [fileManager contentsOfDirectoryAtURL:[NSURL fileURLWithPath:documentsDirectory] includingPropertiesForKeys:nil options:NSDirectoryEnumerationSkipsHiddenFiles error:&error];

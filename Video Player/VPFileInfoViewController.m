@@ -112,31 +112,18 @@
     if (indexPath.row == 0) {
         k = NSLocalizedString(@"File", @"File");
         v = [[path componentsSeparatedByString:@"/"] lastObject];
-        if (!self.isLocalFile) {
+        if (!self.isLocalFile && ![[NSFileManager defaultManager] fileExistsAtPath:[self fileToDownload]]) {
             cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
         }
     }
     else if (indexPath.row == 1) {
         k = NSLocalizedString(@"Path", @"Path");
-        v = path;
+        v = [path stringByReplacingOccurrencesOfString:[[AppDelegate shared] documentsDirectory] withString:@""];
     }
     else if (indexPath.row == 2) {
         k = NSLocalizedString(@"Size", @"Size");
-        NSInteger size = [self.fileInfo[@"size"] integerValue];
-        NSString *sizeString; 
-        if (size > 1024 * 1024 * 1024) {
-            sizeString = [NSString stringWithFormat:@"%.2f GB", size / (1024. * 1024 * 1024)];
-        }
-        else if (size > 1024 * 1024) {
-            sizeString = [NSString stringWithFormat:@"%.1f MB", size / (1024. * 1024)];
-        }
-        else if (size > 1024) {
-            sizeString = [NSString stringWithFormat:@"%.1f KB", size / 1024.];
-        }
-        else {
-            sizeString = [NSString stringWithFormat:@"%d B", size];
-        }
-        v = sizeString;
+        NSInteger size = [self.fileInfo[@"size"] unsignedLongLongValue];
+        v = [[AppDelegate shared] fileSizeStringWithInteger:size];
     }
     cell.textLabel.text = k;
     cell.detailTextLabel.text = v;
@@ -149,22 +136,33 @@
         return;
     }
     if (indexPath.row == 0) {
-        self.progressHUD = [MBProgressHUD HUDForView:self.tableView];
-        self.progressHUD.mode = MBProgressHUDModeIndeterminate;
-        NSString *path = [[AppDelegate shared] fileLinkWithPath:[self.fileInfo[@"file"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        NSURL *url = [NSURL URLWithString:path];
-        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
-        AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-        [self.progressHUD show:YES];
-        NSOutputStream *oStream = [[NSOutputStream alloc] initToFileAtPath:[[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent:[self.fileInfo[@"file"] lastPathComponent]] append:YES];
-        [operation setOutputStream:oStream];
-        [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-            self.progressHUD.progress = totalBytesRead / (totalBytesExpectedToRead * 1.0);
-            if (totalBytesRead == totalBytesExpectedToRead) {
-                [self.progressHUD show:NO];
+        if ([self.fileInfo[@"size"] unsignedLongLongValue] > [[AppDelegate shared] freeDiskSpace]) {
+            [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"No Space", @"No Space") message:NSLocalizedString(@"You don't have enough free space on your device to download the file.", @"You don't have enough free space on your device to download the file.") cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:NULL];
+            return;
+        }
+        [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Comfirm Download", @"Comfirm Download") message:NSLocalizedString(@"Are you sure to download the movie to your device?", @"Are you sure to download the movie to your device?") cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:@[NSLocalizedString(@"Download", @"Download")] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+            if (buttonIndex != [alertView cancelButtonIndex]) {
+                self.progressHUD = [MBProgressHUD showHUDAddedTo:self.tableView.window animated:YES];
+                self.progressHUD.mode = MBProgressHUDModeDeterminate;
+                self.progressHUD.labelText = [NSString stringWithFormat:NSLocalizedString(@"Downloading(%.0f%%)...", @"Downloading(%.0%%)..."), 0];
+                NSString *path = [[AppDelegate shared] fileLinkWithPath:[self.fileInfo[@"file"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+                NSURL *url = [NSURL URLWithString:path];
+                NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
+                AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+                NSOutputStream *oStream = [[NSOutputStream alloc] initToFileAtPath:[self fileToDownload] append:NO];
+                [operation setOutputStream:oStream];
+                [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+                    self.progressHUD.progress = totalBytesRead / (totalBytesExpectedToRead * 1.0);
+                    self.progressHUD.labelText = [NSString stringWithFormat:NSLocalizedString(@"Downloading(%.0f%%)...", @"Downloading(%.0%%)..."), self.progressHUD.progress * 100];
+                    if (totalBytesRead == totalBytesExpectedToRead) {
+                        [NSTimer scheduledTimerWithTimeInterval:0.25 block:^(NSTimeInterval time) {
+                            [MBProgressHUD hideHUDForView:self.tableView.window animated:YES];
+                        } repeats:NO];
+                    }
+                }];
+                [operation start];
             }
         }];
-        [operation start];
     }
 }
 
@@ -272,6 +270,12 @@
     }
     button.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     return button;
+}
+
+- (NSString *)fileToDownload {
+    NSString *documentsDirectory = [[AppDelegate shared] documentsDirectory];
+    NSString *fileToDownload = [documentsDirectory stringByAppendingPathComponent:[self.fileInfo[@"file"] lastPathComponent]];
+    return fileToDownload;
 }
 
 @end

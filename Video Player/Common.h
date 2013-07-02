@@ -19,4 +19,6 @@
 #define AsyncAddCloudTaskKey @"kAsyncAddCloudTaskKey"
 #define PasscodeLockStatus @"kPasscodeLockStatus"
 #define PasscodeLockConfig @"kPasscodeLockConfig"
+#define LocalFileSize @"kLocalFileSize"
+#define DeviceFreeSpace @"kDeviceFreeSpace"
 #endif

@@ -247,6 +247,59 @@
     return address;
 }
 
+- (uint64_t)freeDiskSpace {
+    uint64_t totalSpace = 0;
+    uint64_t totalFreeSpace = 0;
+    NSError *error = nil;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSDictionary *dictionary = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error: &error];
+    
+    if (dictionary) {
+        NSNumber *fileSystemSizeInBytes = [dictionary objectForKey: NSFileSystemSize];
+        NSNumber *freeFileSystemSizeInBytes = [dictionary objectForKey:NSFileSystemFreeSize];
+        totalSpace = [fileSystemSizeInBytes unsignedLongLongValue];
+        totalFreeSpace = [freeFileSystemSizeInBytes unsignedLongLongValue];
+    }
+    
+    return totalFreeSpace;
+}
+
+- (NSString *)fileSizeStringWithInteger:(uint64_t)size {
+    NSString *sizeString;
+    if (size > 1024 * 1024 * 1024) {
+        sizeString = [NSString stringWithFormat:@"%.1f GB", size / (1024. * 1024 * 1024)];
+    }
+    else if (size > 1024 * 1024) {
+        sizeString = [NSString stringWithFormat:@"%.1f MB", size / (1024. * 1024)];
+    }
+    else if (size > 1024) {
+        sizeString = [NSString stringWithFormat:@"%.1f KB", size / 1024.];
+    }
+    else {
+        sizeString = [NSString stringWithFormat:@"%llu B", size];
+    }
+    return sizeString;
+}
+
+- (uint64_t)localFileSize {
+    uint64_t size = 0;
+    NSString *documentsDirectory = [self documentsDirectory];
+    NSDirectoryEnumerator *fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:documentsDirectory];
+    for (NSString *fileName in fileEnumerator)
+    {
+        NSString *filePath = [documentsDirectory stringByAppendingPathComponent:fileName];
+        NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
+        size += [attrs fileSize];
+    }
+    return size;
+}
+
+- (NSString *)documentsDirectory {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    return documentsDirectory;
+}
+
 #pragma mark - KKPasscode View Controller Delegate
 - (void)shouldEraseApplicationData:(KKPasscodeViewController*)viewController
 {

@@ -25,4 +25,8 @@
 - (NSString *)addTorrentWithName:(NSString *)name async:(BOOL)async;
 - (BOOL)shouldSendWebRequest;
 - (void)showNetworkAlert;
+- (NSString *)documentsDirectory;
+- (uint64_t)freeDiskSpace;
+- (uint64_t)localFileSize;
+- (NSString *)fileSizeStringWithInteger:(uint64_t)size;
 @end

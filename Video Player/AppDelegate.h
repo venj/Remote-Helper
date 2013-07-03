@@ -29,4 +29,6 @@
 - (uint64_t)freeDiskSpace;
 - (uint64_t)localFileSize;
 - (NSString *)fileSizeStringWithInteger:(uint64_t)size;
+- (NSString *)fileToDownloadWithPath:(NSString *)path;
+- (NSURL *)videoPlayURLWithPath:(NSString *)path;
 @end

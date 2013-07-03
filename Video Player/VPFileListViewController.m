@@ -136,8 +136,11 @@
         url = self.dataList[indexPath.row];
     }
     else {
-        NSString *moviePath = [[AppDelegate shared] fileLinkWithPath:[self.dataList[indexPath.row] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        url = [[NSURL alloc] initWithString:moviePath];
+        url = [[AppDelegate shared] videoPlayURLWithPath:self.dataList[indexPath.row]];
+        if ([[url absoluteString] rangeOfString:@"http"].location != NSNotFound && ![[AppDelegate shared] shouldSendWebRequest]) {
+            [[AppDelegate shared] showNetworkAlert];
+            return;
+        }
     }
     if (self.mpViewController)
         self.mpViewController.moviePlayer.contentURL = url;

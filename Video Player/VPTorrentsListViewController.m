@@ -224,9 +224,10 @@
 
 - (void)loadTorrentList:(id)sender {
     if (![[AppDelegate shared] shouldSendWebRequest]) {
-        [[AppDelegate shared] showNetworkAlert];
+        if (sender != nil) [[AppDelegate shared] showNetworkAlert];
         return;
     }
+    
     __weak VPTorrentsListViewController *blockSelf = self;
     NSURL *torrentsListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] torrentsListPath]];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:torrentsListURL];

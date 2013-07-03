@@ -49,7 +49,11 @@
             url = [NSURL fileURLWithPath:moviePath];
         }
         else {
-            url = [self getVideoPlayURL];
+            url = [[AppDelegate shared] videoPlayURLWithPath:self.fileInfo[@"file"]];
+            if ([[url absoluteString] rangeOfString:@"http"].location != NSNotFound && ![[AppDelegate shared] shouldSendWebRequest]) {
+                [[AppDelegate shared] showNetworkAlert];
+                return;
+            }
         }
         
         if (self.mpViewController)
@@ -111,7 +115,7 @@
     if (indexPath.row == 0) {
         k = NSLocalizedString(@"File", @"File");
         v = [[path componentsSeparatedByString:@"/"] lastObject];
-        if (!self.isLocalFile && ![[NSFileManager defaultManager] fileExistsAtPath:[self fileToDownload]]) {
+        if (!self.isLocalFile && ![[NSFileManager defaultManager] fileExistsAtPath:[[AppDelegate shared] fileToDownloadWithPath:self.fileInfo[@"file"]]]) {
             cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
         }
     }
@@ -149,7 +153,7 @@
                 NSURL *url = [NSURL URLWithString:path];
                 NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
                 AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-                NSOutputStream *oStream = [[NSOutputStream alloc] initToFileAtPath:[blockSelf fileToDownload] append:NO];
+                NSOutputStream *oStream = [[NSOutputStream alloc] initToFileAtPath:[[AppDelegate shared] fileToDownloadWithPath:blockSelf.fileInfo[@"file"]] append:NO];
                 [operation setOutputStream:oStream];
                 [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
                     blockSelf.progressHUD.progress = totalBytesRead / (totalBytesExpectedToRead * 1.0);
@@ -273,20 +277,6 @@
     }
     button.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     return button;
-}
-
-- (NSString *)fileToDownload {
-    NSString *documentsDirectory = [[AppDelegate shared] documentsDirectory];
-    NSString *fileToDownload = [documentsDirectory stringByAppendingPathComponent:[self.fileInfo[@"file"] lastPathComponent]];
-    return fileToDownload;
-}
-
-- (NSURL *)getVideoPlayURL {
-    NSString *localFile = [self fileToDownload];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:localFile])
-        return [NSURL fileURLWithPath:localFile];
-    else
-        return [NSURL URLWithString:[[AppDelegate shared] fileLinkWithPath:[self.fileInfo[@"file"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 }
 
 @end

@@ -300,6 +300,20 @@
     return documentsDirectory;
 }
 
+- (NSString *)fileToDownloadWithPath:(NSString *)path {
+    NSString *documentsDirectory = [[AppDelegate shared] documentsDirectory];
+    NSString *fileToDownload = [documentsDirectory stringByAppendingPathComponent:[path lastPathComponent]];
+    return fileToDownload;
+}
+
+- (NSURL *)videoPlayURLWithPath:(NSString *)path {
+    NSString *localFile = [self fileToDownloadWithPath:path];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:localFile])
+        return [NSURL fileURLWithPath:localFile];
+    else
+        return [NSURL URLWithString:[[[AppDelegate shared] fileLinkWithPath:path] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+}
+
 #pragma mark - KKPasscode View Controller Delegate
 - (void)shouldEraseApplicationData:(KKPasscodeViewController*)viewController
 {

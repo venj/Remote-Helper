@@ -153,7 +153,6 @@
                 NSURL *url = [NSURL URLWithString:path];
                 NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
                 AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFinished:) name:AFNetworkingOperationDidFinishNotification object:operation];
                 NSOutputStream *oStream = [[NSOutputStream alloc] initToFileAtPath:[[AppDelegate shared] fileToDownloadWithPath:blockSelf.fileInfo[@"file"]] append:NO];
                 [operation setOutputStream:oStream];
                 [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
@@ -167,6 +166,35 @@
                         blockSelf.progressHUD.labelText = [NSString stringWithFormat:NSLocalizedString(@"Downloading(%.0f%%)", @"Downloading(%.0%%)"), blockSelf.progressHUD.progress * 100];
                     }
                 }];
+                [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+                    [MBProgressHUD hideHUDForView:blockSelf.tableView.window animated:YES];
+                    [NSTimer scheduledTimerWithTimeInterval:0.3 block:^(NSTimeInterval time) {
+                        blockSelf.progressHUD = nil;
+                    } repeats:NO];
+                    [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+                    [NSTimer scheduledTimerWithTimeInterval:0.25 block:^(NSTimeInterval time) {
+                        [blockSelf.navigationController popToRootViewControllerAnimated:YES];
+                    } repeats:NO];
+                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                    [MBProgressHUD hideHUDForView:blockSelf.tableView.window animated:YES];
+                    [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+                    [NSTimer scheduledTimerWithTimeInterval:0.3 block:^(NSTimeInterval time) {
+                        blockSelf.progressHUD = nil;
+                    } repeats:NO];
+                    [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Download Failed", @"Download Failed") message:[NSString stringWithFormat:NSLocalizedString(@"Failed to download \"%@\", please try agian later.", @"Failed to download \"%@\", please try agian later."), [blockSelf.fileInfo[@"file"] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                        [[NSFileManager defaultManager] removeItemAtPath:[[AppDelegate shared] fileToDownloadWithPath:self.fileInfo[@"file"]] error:NULL];
+                    }];
+                }];
+                [operation setShouldExecuteAsBackgroundTaskWithExpirationHandler:^{
+                    [MBProgressHUD hideHUDForView:blockSelf.tableView.window animated:NO];
+                    [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+                    NSFileManager *fm = [NSFileManager defaultManager];
+                    NSString *path = [[AppDelegate shared] fileToDownloadWithPath:self.fileInfo[@"file"]];
+                    NSDictionary *attributes = [fm attributesOfItemAtPath:path error:NULL];
+                    if ([attributes[NSFileSize] unsignedLongLongValue] < [self.fileInfo[@"size"] unsignedLongLongValue]) {
+                        [fm removeItemAtPath:[[AppDelegate shared] fileToDownloadWithPath:self.fileInfo[@"file"]] error:NULL];
+                    }
+                }];
                 [operation start];
                 [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
             }
@@ -175,26 +203,6 @@
 }
 
 #pragma mark - Action method
-
-- (void)downloadFinished:(NSNotification *)note {
-    __weak VPFileInfoViewController *blockSelf = self;
-    [MBProgressHUD hideHUDForView:self.tableView.window animated:YES];
-    [NSTimer scheduledTimerWithTimeInterval:0.3 block:^(NSTimeInterval time) {
-        blockSelf.progressHUD = nil;
-    } repeats:NO];
-    if ([((NSNotification *)note).object error]) {
-        [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Download Failed", @"Download Failed") message:[NSString stringWithFormat:NSLocalizedString(@"Failed to download \"%@\", please try agian later.", @"Failed to download \"%@\", please try agian later."), [blockSelf.fileInfo[@"file"] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
-            [[NSFileManager defaultManager] removeItemAtPath:[[AppDelegate shared] fileToDownloadWithPath:self.fileInfo[@"file"]] error:NULL];
-        }];
-    }
-    else {
-        [NSTimer scheduledTimerWithTimeInterval:0.25 block:^(NSTimeInterval time) {
-            [blockSelf.navigationController popToRootViewControllerAnimated:YES];
-        } repeats:NO];
-    }
-    [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AFNetworkingOperationDidFinishNotification object:nil];
-}
 
 - (void)deleteFile:(id)sender {
     if (!self.fileInfo) {

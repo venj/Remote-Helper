@@ -146,6 +146,9 @@
         __weak VPFileInfoViewController *blockSelf = self;
         [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Comfirm Download", @"Comfirm Download") message:[NSString stringWithFormat:NSLocalizedString(@"Are you sure to download \"%@\" to your device?", @"Are you sure to download \"%@\" to your device?"), [self.fileInfo[@"file"] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:@[NSLocalizedString(@"Download", @"Download")] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
             if (buttonIndex != [alertView cancelButtonIndex]) {
+                if (!blockSelf.progressHUD)
+                    blockSelf.progressHUD = [MBProgressHUD showHUDAddedTo:blockSelf.tableView.window animated:YES];
+                blockSelf.progressHUD.labelText = NSLocalizedString(@"Downloading", @"Downloading");
                 NSString *path = [[AppDelegate shared] fileLinkWithPath:[blockSelf.fileInfo[@"file"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
                 NSURL *url = [NSURL URLWithString:path];
                 NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
@@ -155,14 +158,10 @@
                 [operation setOutputStream:oStream];
                 [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
                     if (totalBytesExpectedToRead < 0) {
-                        if (!blockSelf.progressHUD)
-                            blockSelf.progressHUD = [MBProgressHUD showHUDAddedTo:blockSelf.tableView.window animated:YES];
                         blockSelf.progressHUD.mode = MBProgressHUDModeIndeterminate;
                         blockSelf.progressHUD.labelText = [NSString stringWithFormat:NSLocalizedString(@"Downloading(%@)", @"Downloading(%@)"), [[AppDelegate shared] fileSizeStringWithInteger:totalBytesRead]];
                     }
                     else {
-                        if (!blockSelf.progressHUD)
-                            blockSelf.progressHUD = [MBProgressHUD showHUDAddedTo:blockSelf.tableView.window animated:YES];
                         blockSelf.progressHUD.mode = MBProgressHUDModeDeterminate;
                         blockSelf.progressHUD.progress = totalBytesRead / (totalBytesExpectedToRead * 1.0);
                         blockSelf.progressHUD.labelText = [NSString stringWithFormat:NSLocalizedString(@"Downloading(%.0f%%)", @"Downloading(%.0%%)"), blockSelf.progressHUD.progress * 100];

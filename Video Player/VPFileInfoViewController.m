@@ -140,30 +140,32 @@
     }
     if (indexPath.row == 0) {
         if ([self.fileInfo[@"size"] unsignedLongLongValue] > [[AppDelegate shared] freeDiskSpace]) {
-            [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"No Space", @"No Space") message:NSLocalizedString(@"You don't have enough free space on your device to download the file.", @"You don't have enough free space on your device to download the file.") cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:NULL];
+            [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"No Space", @"No Space") message:[NSString stringWithFormat:NSLocalizedString(@"You don't have enough free space on your device to download \"%@\".", @"You don't have enough free space on your device to download \"%@\"."), [self.fileInfo[@"file"] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:NULL];
             return;
         }
         __weak VPFileInfoViewController *blockSelf = self;
-        [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Comfirm Download", @"Comfirm Download") message:NSLocalizedString(@"Are you sure to download the movie to your device?", @"Are you sure to download the movie to your device?") cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:@[NSLocalizedString(@"Download", @"Download")] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+        [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Comfirm Download", @"Comfirm Download") message:[NSString stringWithFormat:NSLocalizedString(@"Are you sure to download \"%@\" to your device?", @"Are you sure to download \"%@\" to your device?"), [self.fileInfo[@"file"] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:@[NSLocalizedString(@"Download", @"Download")] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
             if (buttonIndex != [alertView cancelButtonIndex]) {
-                blockSelf.progressHUD = [MBProgressHUD showHUDAddedTo:blockSelf.tableView.window animated:YES];
-                blockSelf.progressHUD.mode = MBProgressHUDModeDeterminate;
-                blockSelf.progressHUD.labelText = [NSString stringWithFormat:NSLocalizedString(@"Downloading(%.0f%%)...", @"Downloading(%.0%%)..."), 0];
                 NSString *path = [[AppDelegate shared] fileLinkWithPath:[blockSelf.fileInfo[@"file"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
                 NSURL *url = [NSURL URLWithString:path];
                 NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
                 AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFinished:) name:AFNetworkingOperationDidFinishNotification object:operation];
                 NSOutputStream *oStream = [[NSOutputStream alloc] initToFileAtPath:[[AppDelegate shared] fileToDownloadWithPath:blockSelf.fileInfo[@"file"]] append:NO];
                 [operation setOutputStream:oStream];
                 [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-                    blockSelf.progressHUD.progress = totalBytesRead / (totalBytesExpectedToRead * 1.0);
-                    blockSelf.progressHUD.labelText = [NSString stringWithFormat:NSLocalizedString(@"Downloading(%.0f%%)...", @"Downloading(%.0%%)..."), blockSelf.progressHUD.progress * 100];
-                    if (totalBytesRead == totalBytesExpectedToRead) {
-                        [NSTimer scheduledTimerWithTimeInterval:0.25 block:^(NSTimeInterval time) {
-                            [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
-                            [MBProgressHUD hideHUDForView:blockSelf.tableView.window animated:YES];
-                            [self.navigationController popToRootViewControllerAnimated:YES];
-                        } repeats:NO];
+                    if (totalBytesExpectedToRead < 0) {
+                        if (!blockSelf.progressHUD)
+                            blockSelf.progressHUD = [MBProgressHUD showHUDAddedTo:blockSelf.tableView.window animated:YES];
+                        blockSelf.progressHUD.mode = MBProgressHUDModeIndeterminate;
+                        blockSelf.progressHUD.labelText = [NSString stringWithFormat:NSLocalizedString(@"Downloading(%@)", @"Downloading(%@)"), [[AppDelegate shared] fileSizeStringWithInteger:totalBytesRead]];
+                    }
+                    else {
+                        if (!blockSelf.progressHUD)
+                            blockSelf.progressHUD = [MBProgressHUD showHUDAddedTo:blockSelf.tableView.window animated:YES];
+                        blockSelf.progressHUD.mode = MBProgressHUDModeDeterminate;
+                        blockSelf.progressHUD.progress = totalBytesRead / (totalBytesExpectedToRead * 1.0);
+                        blockSelf.progressHUD.labelText = [NSString stringWithFormat:NSLocalizedString(@"Downloading(%.0f%%)", @"Downloading(%.0%%)"), blockSelf.progressHUD.progress * 100];
                     }
                 }];
                 [operation start];
@@ -174,6 +176,26 @@
 }
 
 #pragma mark - Action method
+
+- (void)downloadFinished:(NSNotification *)note {
+    __weak VPFileInfoViewController *blockSelf = self;
+    [MBProgressHUD hideHUDForView:self.tableView.window animated:YES];
+    [NSTimer scheduledTimerWithTimeInterval:0.3 block:^(NSTimeInterval time) {
+        blockSelf.progressHUD = nil;
+    } repeats:NO];
+    if ([((NSNotification *)note).object error]) {
+        [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Download Failed", @"Download Failed") message:[NSString stringWithFormat:NSLocalizedString(@"Failed to download \"%@\", please try agian later.", @"Failed to download \"%@\", please try agian later."), [blockSelf.fileInfo[@"file"] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+            [[NSFileManager defaultManager] removeItemAtPath:[[AppDelegate shared] fileToDownloadWithPath:self.fileInfo[@"file"]] error:NULL];
+        }];
+    }
+    else {
+        [NSTimer scheduledTimerWithTimeInterval:0.25 block:^(NSTimeInterval time) {
+            [blockSelf.navigationController popToRootViewControllerAnimated:YES];
+        } repeats:NO];
+    }
+    [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AFNetworkingOperationDidFinishNotification object:nil];
+}
 
 - (void)deleteFile:(id)sender {
     if (!self.fileInfo) {
@@ -188,9 +210,9 @@
                 [fileManager removeItemAtPath:blockSelf.fileInfo[@"file"] error:&error];
                 NSString *message = nil;
                 if (error)
-                    message = [NSString stringWithFormat:NSLocalizedString(@"Failed to delete file \"%@\".", @"Failed to delete file \"%@\"."), [[self.fileInfo[@"file"] componentsSeparatedByString:@"/"] lastObject]];
+                    message = [NSString stringWithFormat:NSLocalizedString(@"Failed to delete file \"%@\".", @"Failed to delete file \"%@\"."), [blockSelf.fileInfo[@"file"] lastPathComponent]];
                 else
-                    message = [NSString stringWithFormat:NSLocalizedString(@"\"%@\" has been deleted from your device.", @"\"%@\" has been deleted from your device."), [[blockSelf.fileInfo[@"file"] componentsSeparatedByString:@"/"] lastObject]];
+                    message = [NSString stringWithFormat:NSLocalizedString(@"\"%@\" has been deleted from your device.", @"\"%@\" has been deleted from your device."), [blockSelf.fileInfo[@"file"] lastPathComponent]];
                 [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Delete File", @"Delete File") message:message cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
                     if (error) return;
                     if ([blockSelf.delegate respondsToSelector:@selector(fileDidRemovedFromServerForParentIndexPath:)]) {

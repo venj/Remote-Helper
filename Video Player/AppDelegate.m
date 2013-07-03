@@ -243,7 +243,14 @@
     InitAddresses();
     GetIPAddresses();
     GetHWAddresses();
-    NSString *address = [NSString stringWithFormat:@"%s", ip_names[1]];
+    NSString *address = nil;
+    for (int i = 0; i < 5; i++) {
+        NSString *tmp = [NSString stringWithFormat:@"%s", ip_names[i]];
+        NSArray *addressComponents = [tmp componentsSeparatedByString:@"."];
+        if ([addressComponents[0] isEqualToString:@"192"] && [addressComponents[1] isEqualToString:@"168"]) {
+            address = tmp;
+        }
+    }
     return address;
 }
 

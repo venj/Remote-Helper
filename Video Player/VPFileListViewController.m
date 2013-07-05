@@ -122,7 +122,7 @@
         cell.textLabel.text = [fileURL lastPathComponent];
     }
     else {
-        cell.textLabel.text = [[self.dataList[indexPath.row] componentsSeparatedByString:@"/"] lastObject];
+        cell.textLabel.text = [self.dataList[indexPath.row] lastPathComponent];
     }
     //cell.textLabel.font = [UIFont boldSystemFontOfSize:17.];
     
@@ -192,6 +192,13 @@
         NSURLRequest *request = [[NSURLRequest alloc] initWithURL:movieInfoURL];
         
         AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+            if ((JSON[@"exist"] != nil) && ([JSON[@"exist"] boolValue] == NO)) {
+                [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Error", @"Error") message:[NSString stringWithFormat:NSLocalizedString(@"%@ was deleted from the server.", @"%@ was deleted from the server."), [self.dataList[indexPath.row] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                    [blockSelf.dataList removeObjectAtIndex:indexPath.row];
+                    [blockSelf.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+                }];
+                return;
+            }
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
                 VPFileInfoViewController *fileInfoViewController = [[VPFileInfoViewController alloc] initWithStyle:UITableViewStyleGrouped];
                 fileInfoViewController.delegate = self;

@@ -23,6 +23,7 @@
 @interface VPFileListViewController () <IASKSettingsDelegate, KKPasscodeSettingsViewControllerDelegate>
 @property (nonatomic, strong) MPMoviePlayerViewController *mpViewController;
 @property (nonatomic, strong) IASKAppSettingsViewController *settingsViewController;
+@property (nonatomic, strong) UIActionSheet *sheet;
 @end
 
 @implementation VPFileListViewController
@@ -142,10 +143,8 @@
             return;
         }
     }
-    if (self.mpViewController)
-        self.mpViewController.moviePlayer.contentURL = url;
-    else
-        self.mpViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:url];
+    
+    self.mpViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:url];
     
     [self presentMoviePlayerViewControllerAnimated:self.mpViewController];
 }

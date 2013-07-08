@@ -56,10 +56,7 @@
             }
         }
         
-        if (self.mpViewController)
-            self.mpViewController.moviePlayer.contentURL = url;
-        else
-            self.mpViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:url];
+        self.mpViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:url];
         
         [self presentMoviePlayerViewControllerAnimated:self.mpViewController];
     }];

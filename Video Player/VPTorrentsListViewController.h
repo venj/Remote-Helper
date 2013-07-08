@@ -8,5 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+/*!
+ @class VPTorrentsListViewController
+ @brief The view controller to show the torrents date list.
+ */
 @interface VPTorrentsListViewController : UITableViewController
 @end

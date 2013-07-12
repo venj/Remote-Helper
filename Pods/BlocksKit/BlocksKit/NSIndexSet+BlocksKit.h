@@ -1,6 +1,6 @@
 //
 //  NSIndexSet+BlocksKit.h
-//  %PROJECT
+//  BlocksKit
 //
 
 #import "BKGlobals.h"
@@ -14,9 +14,10 @@
 
  Includes code by the following:
 
-- Robin Lu.	   <https://github.com/robin>.	  2009. MIT.
-- Michael Ash.	<https://github.com/mikeash>.	2010. BSD.
-- Zach Waldowski. <https://github.com/zwaldowski>. 2011. MIT.
+- [Robin Lu](https://github.com/robin)
+- [Michael Ash](https://github.com/mikeash)
+- [Zach Waldowski](https://github.com/zwaldowski)
+- [Kaelin Colclasure]<https://github.com/kaelin>
 
  @see NSArray(BlocksKit)
  @see NSDictionary(BlocksKit)
@@ -72,6 +73,20 @@
  @return An index set of the indexes returned by the block.
  */
 - (NSIndexSet *)map:(BKIndexTransformBlock)block;
+
+/** Call the block once for each index and create an array of the return values.
+ 
+ This method allows transforming indexes into objects:
+     int values[10] = { 1, 2, 4, 8, 16, 32, 64, 128, 256, 512 };
+     NSIndexSet *idxs = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 10)];
+     NSArray *new = [idxs mapIndex:^id(NSUInteger index) {
+       return [NSNumber numberWithInt:values[index]]);
+     }];
+ 
+ @param block A block that returns an object for an index.
+ @return Returns an array of the objects returned by the block.
+ */
+- (NSArray *)mapIndex:(BKIndexMapBlock)block;
 
 /** Loops through an index set to find whether any of the indexes matche the block.
  

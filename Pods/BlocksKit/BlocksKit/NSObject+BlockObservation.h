@@ -1,6 +1,6 @@
 //
 //  NSObject+BlockObservation.h
-//  %PROJECT
+//  BlocksKit
 //
 
 #import "BKGlobals.h"
@@ -20,16 +20,10 @@
  
  Includes code by the following:
  
- - Andy Matuschak. <https://github.com/andymatuschak>. 2009. Public domain.
- - Jon Sterling. <https://github.com/jonsterling>. 2010. Public domain.
- - Zach Waldowski. <https://github.com/zwaldowski>. 2011. MIT.
- - Jonathan Wight. <https://github.com/schwa>. 2011. BSD.
-
- @warning *Important:* Due to a design flaw in some recent versions of the
- Objective-C runtime, you must call either a block overserver removal 
- method in the dealloc method of any object making use of block-backed
- key-value observing. This has been fixed in the OS X 10.7 and iOS 5.0
- runtime.
+ - [Andy Matuschak](https://github.com/andymatuschak)
+ - [Jon Sterling](https://github.com/jonsterling)
+ - [Zach Waldowski](https://github.com/zwaldowski)
+ - [Jonathan Wight](https://github.com/schwa)
  */
 
 @interface NSObject (BlockObservation)

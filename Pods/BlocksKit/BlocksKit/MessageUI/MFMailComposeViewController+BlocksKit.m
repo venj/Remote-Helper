@@ -4,7 +4,6 @@
 //
 
 #import "MFMailComposeViewController+BlocksKit.h"
-#import "A2BlockDelegate+BlocksKit.h"
 
 #pragma mark Custom delegate
 
@@ -24,8 +23,14 @@
 	if (block)
 		block(controller, result, error);
 	
-	if (!shouldDismiss)
-		[controller dismissModalViewControllerAnimated:YES];
+	if (!shouldDismiss) {
+	        #if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
+	            [controller dismissModalViewControllerAnimated:YES];
+                #else
+                    [controller dismissViewControllerAnimated:YES completion:nil];
+                #endif
+		
+         }
 }
 
 @end
@@ -39,10 +44,8 @@
 + (void)load {
 	@autoreleasepool {
 		[self registerDynamicDelegateNamed:@"mailComposeDelegate" forProtocol:@protocol(MFMailComposeViewControllerDelegate)];
-		[self linkCategoryBlockProperty:@"completionBlock" withDelegateMethod:@selector(mailComposeController:didFinishWithResult:error:)];
+		[self linkDelegateMethods: @{ @"completionBlock": @"mailComposeController:didFinishWithResult:error:" }];
 	}
 }
 
 @end
-
-BK_MAKE_CATEGORY_LOADABLE(MFMailComposeViewController_BlocksKit)

@@ -92,22 +92,6 @@
 		</dict>
 		<dict>
 			<key>Title</key>
-			<string>Xunlei Lixian</string>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-		</dict>
-		<dict>
-			<key>Default Value</key>
-			<false/>
-			<key>Title</key>
-			<string>Async Add Torrent</string>
-			<key>Key</key>
-			<string>kAsyncAddCloudTaskKey</string>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-		</dict>
-		<dict>
-			<key>Title</key>
 			<string>Disk Storage</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
@@ -134,6 +118,22 @@
 		</dict>
 		<dict>
 			<key>Title</key>
+			<string>Xunlei Lixian</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>Default Value</key>
+			<false/>
+			<key>Title</key>
+			<string>Async Add Torrent</string>
+			<key>Key</key>
+			<string>kAsyncAddCloudTaskKey</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+		</dict>
+		<dict>
+			<key>Title</key>
 			<string>Security</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
@@ -155,6 +155,8 @@
 			<string>kPasscodeLockConfig</string>
 			<key>Type</key>
 			<string>IASKButtonSpecifier</string>
+			<key>IASKTextAlignment</key>
+			<string>IASKUITextAlignmentLeft</string>
 		</dict>
 		<dict>
 			<key>Title</key>

@@ -5,7 +5,6 @@
 
 #import "NSArray+BlocksKit.h"
 #import "UIAlertView+BlocksKit.h"
-#import "A2BlockDelegate+BlocksKit.h"
 
 #pragma mark Delegate
 
@@ -34,8 +33,8 @@
 	if (realDelegate && [realDelegate respondsToSelector:@selector(alertViewCancel:)])
 		[realDelegate alertViewCancel:alertView];
 	
-	id key = [NSNumber numberWithInteger:alertView.cancelButtonIndex];
-	BKBlock cancelBlock = [self.handlers objectForKey:key];
+	id key = @(alertView.cancelButtonIndex);
+	BKBlock cancelBlock = (self.handlers)[key];
 	if (cancelBlock)
 		cancelBlock();
 }
@@ -89,8 +88,8 @@
 	if (block)
 		block(alertView, buttonIndex);
 	
-	id key = [NSNumber numberWithInteger:buttonIndex];
-	BKBlock buttonBlock = [self.handlers objectForKey: key];
+	id key = @(buttonIndex);
+	BKBlock buttonBlock = (self.handlers)[key];
 	if (buttonBlock)
 		buttonBlock();
 }
@@ -106,14 +105,13 @@
 + (void)load {
 	@autoreleasepool {
 		[self registerDynamicDelegate];
-		NSDictionary *methods = [NSDictionary dictionaryWithObjectsAndKeys:
-								 @"willPresentAlertView:", @"willShowBlock",
-								 @"didPresentAlertView:", @"didShowBlock",
-								 @"alertView:willDismissWithButtonIndex:", @"willDismissBlock",
-								 @"alertView:didDismissWithButtonIndex:", @"didDismissBlock",
-								 @"alertViewShouldEnableFirstOtherButton:", @"shouldEnableFirstOtherButtonBlock",
-								 nil];
-		[self linkDelegateMethods:methods];
+		[self linkDelegateMethods: @{
+		 @"willShowBlock": @"willPresentAlertView:",
+		 @"didShowBlock": @"didPresentAlertView:",
+		 @"willDismissBlock": @"alertView:willDismissWithButtonIndex:",
+		 @"didDismissBlock": @"alertView:didDismissWithButtonIndex:",
+		 @"shouldEnableFirstOtherButtonBlock": @"alertViewShouldEnableFirstOtherButton:"
+		}];
 	}
 }
 
@@ -121,7 +119,19 @@
 
 + (void) showAlertViewWithTitle: (NSString *) title message: (NSString *) message cancelButtonTitle: (NSString *) cancelButtonTitle otherButtonTitles: (NSArray *) otherButtonTitles handler: (void (^)(UIAlertView *, NSInteger)) block
 {
-	UIAlertView *alertView = [UIAlertView alertViewWithTitle: title message: message];
+	UIAlertView *alertView = [[self class] alertViewWithTitle: title message: message];
+	
+	// Set other buttons
+	if (otherButtonTitles.count)
+	{
+		NSUInteger firstOtherButton = [alertView addButtonWithTitle: otherButtonTitles[0]];
+		[alertView setValue: @(firstOtherButton) forKey: @"firstOtherButton"];
+		
+		otherButtonTitles = [otherButtonTitles subarrayWithRange: NSMakeRange(1, otherButtonTitles.count - 1)];
+		[otherButtonTitles each: ^(NSString *button) {
+			[alertView addButtonWithTitle: button];
+		}];
+	}
 	
 	// If no buttons were specified, cancel button becomes "Dismiss"
 	if (!cancelButtonTitle.length && !otherButtonTitles.count)
@@ -130,19 +140,7 @@
 	// Set cancel button
 	if (cancelButtonTitle.length)
 		alertView.cancelButtonIndex = [alertView addButtonWithTitle: cancelButtonTitle];
-	
-	// Set other buttons
-	if (otherButtonTitles.count)
-	{
-		NSUInteger firstOtherButton = [alertView addButtonWithTitle: [otherButtonTitles objectAtIndex: 0]];
-		[alertView setValue: [NSNumber numberWithInteger: firstOtherButton] forKey: @"firstOtherButton"];
-		
-		otherButtonTitles = [otherButtonTitles subarrayWithRange: NSMakeRange(1, otherButtonTitles.count - 1)];
-		[otherButtonTitles each: ^(NSString *button) {
-			[alertView addButtonWithTitle: button];
-		}];
-	}
-	
+
 	// Set `didDismissBlock`
 	if (block) alertView.didDismissBlock = block;
 	
@@ -157,7 +155,7 @@
 }
 
 + (id)alertViewWithTitle:(NSString *)title message:(NSString *)message {
-	return [[[UIAlertView alloc] initWithTitle:title message:message] autorelease];
+	return [[[self class] alloc] initWithTitle:title message:message];
 }
 
 - (id)initWithTitle:(NSString *)title message:(NSString *)message {
@@ -185,17 +183,17 @@
 #pragma mark Properties
 
 - (void)setHandler:(BKBlock)block forButtonAtIndex:(NSInteger)index {
-	id key = [NSNumber numberWithInteger:index];
+	id key = @(index);
 	
 	if (block)
-		[[self.dynamicDelegate handlers] setObject:[[block copy] autorelease] forKey:key];
+		[self.dynamicDelegate handlers][key] = [block copy];
 	else
-		[[self.dynamicDelegate handlers] removeObjectForKey:key];
+		[[self.dynamicDelegate handlers] removeObjectForKey: key];
 }
 
 - (BKBlock)handlerForButtonAtIndex:(NSInteger)index {
-	id key = [NSNumber numberWithInteger:index];
-	return [[self.dynamicDelegate handlers] objectForKey:key];
+	id key = @(index);
+	return [self.dynamicDelegate handlers][key];
 }
 
 - (BKBlock)cancelBlock {
@@ -212,5 +210,3 @@
 }
 
 @end
-
-BK_MAKE_CATEGORY_LOADABLE(UIAlertView_BlocksKit)

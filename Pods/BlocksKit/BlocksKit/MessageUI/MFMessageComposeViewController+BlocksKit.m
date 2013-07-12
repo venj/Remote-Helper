@@ -4,7 +4,6 @@
 //
 
 #import "MFMessageComposeViewController+BlocksKit.h"
-#import "A2BlockDelegate+BlocksKit.h"
 
 #pragma mark Custom delegate
 
@@ -23,8 +22,13 @@
 	if (block)
 		block(controller, result);
 	
-	if (!shouldDismiss)
-		[controller dismissModalViewControllerAnimated:YES];
+	if (!shouldDismiss) {
+	        #if __IPHONE_OS_VERSION_MIN_REQUIRED < 60000
+	            [controller dismissModalViewControllerAnimated:YES];
+                #else
+                    [controller dismissViewControllerAnimated:YES completion:nil];
+                #endif
+         }
 }
 
 @end
@@ -38,10 +42,8 @@
 + (void)load {
 	@autoreleasepool {
 		[self registerDynamicDelegateNamed:@"messageComposeDelegate" forProtocol:@protocol(MFMessageComposeViewControllerDelegate)];
-		[self linkCategoryBlockProperty:@"completionBlock" withDelegateMethod:@selector(messageComposeViewController:didFinishWithResult:)];
+		[self linkDelegateMethods: @{ @"completionBlock": @"messageComposeViewController:didFinishWithResult:" }];
 	}
 }
 
 @end
-
-BK_MAKE_CATEGORY_LOADABLE(MFMessageComposeViewController_BlocksKit)

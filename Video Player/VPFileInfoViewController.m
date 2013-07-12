@@ -137,7 +137,7 @@
     }
     if (indexPath.row == 0) {
         if ([self.fileInfo[@"size"] unsignedLongLongValue] > [[AppDelegate shared] freeDiskSpace]) {
-            [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"No Space", @"No Space") message:[NSString stringWithFormat:NSLocalizedString(@"You don't have enough free space on your device to download \"%@\".", @"You don't have enough free space on your device to download \"%@\"."), [self.fileInfo[@"file"] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:NULL];
+            [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"No Space", @"No Space") message:[NSString stringWithFormat:NSLocalizedString(@"You don't have enough free space on your device to download \"%@\".", @"You don't have enough free space on your device to download \"%@\"."), [self.fileInfo[@"file"] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {}];
             return;
         }
         __weak VPFileInfoViewController *blockSelf = self;

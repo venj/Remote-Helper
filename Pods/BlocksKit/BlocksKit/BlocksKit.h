@@ -1,9 +1,9 @@
 //
-//  %PROJECT
+//  BlocksKit
 //
 //  The Objective-C block utilities you always wish you had.
 //
-//  Copyright (c) %YEAR %COMPANY.
+//  Copyright (c) 2011-2012 Pandamonia LLC.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -40,6 +40,8 @@
 #import "NSMutableDictionary+BlocksKit.h"
 #import "NSIndexSet+BlocksKit.h"
 #import "NSMutableIndexSet+BlocksKit.h"
+#import "NSOrderedSet+BlocksKit.h"
+#import "NSMutableOrderedSet+BlocksKit.h"
 
 #import "NSInvocation+BlocksKit.h"
 #import "NSTimer+BlocksKit.h"
@@ -50,9 +52,10 @@
 #if BK_HAS_UIKIT
 #import "UIAlertView+BlocksKit.h"
 #import "UIActionSheet+BlocksKit.h"
-#import "UIControl+BlocksKit.h"
 #import "UIBarButtonItem+BlocksKit.h"
+#import "UIControl+BlocksKit.h"
 #import "UIGestureRecognizer+BlocksKit.h"
+#import "UIPopoverController+BlocksKit.h"
 #import "UIView+BlocksKit.h"
 #import "UIWebView+BlocksKit.h"
 #import "MFMailComposeViewController+BlocksKit.h"

@@ -1,6 +1,6 @@
 //
 //  UIAlertView+BlocksKit.h
-//  %PROJECT
+//  BlocksKit
 //
 
 #import "BKGlobals.h"
@@ -26,11 +26,11 @@
 
  Includes code by the following:
 
- - Landon Fuller, "Using Blocks".  <http://landonf.bikemonkey.org>.
- - Peter Steinberger. <https://github.com/steipete>.   2011. MIT.
- - Zach Waldowski.	<https://github.com/zwaldowski>. 2011. MIT.
+ - [Landon Fuller](http://landonf.bikemonkey.org), "Using Blocks".
+ - [Peter Steinberger](https://github.com/steipete)
+ - [Zach Waldowski](https://github.com/zwaldowski)
 
- @warning UIAlertView is only available on iOS or in a Mac app using Chameleon.
+ @warning UIAlertView is only available on a platform with UIKit.
  */
 @interface UIAlertView (BlocksKit)
 
@@ -46,7 +46,7 @@
  @param otherButtonTitles Titles of additional buttons to add to the receiver.
  @param block A block of code to be fired on the dismissal of the alert view.
  */
-+ (void) showAlertViewWithTitle: (NSString *) title message: (NSString *) message cancelButtonTitle: (NSString *) cancelButtonTitle otherButtonTitles: (NSArray *) otherButtonTitles handler: (void (^)(UIAlertView *, NSInteger)) block;
++ (void) showAlertViewWithTitle: (NSString *) title message: (NSString *) message cancelButtonTitle: (NSString *) cancelButtonTitle otherButtonTitles: (NSArray *) otherButtonTitles handler: (void (^)(UIAlertView *alertView, NSInteger buttonIndex)) block;
 
 /** Creates and returns a new alert view with only a title and cancel button.
 

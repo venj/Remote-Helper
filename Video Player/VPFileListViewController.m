@@ -60,7 +60,7 @@
             [blockSelf.sheet addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings") handler:^{
                 [blockSelf showSettings:sender];
             }];
-            [blockSelf.sheet setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:nil];
+            [blockSelf.sheet setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:^{}];
             [blockSelf.sheet showFromBarButtonItem:leftButton animated:YES];
         }];
         self.navigationItem.leftBarButtonItem = leftButton;

@@ -1,18 +1,13 @@
 //
 //  NSURLConnection+BlocksKit.h
-//  %PROJECT
+//  BlocksKit
 //
 
 #import "BKGlobals.h"
 
-/** NSURLConnection with both delegate and block callback support
+/** NSURLConnection with both delegate and block callback support.
  
- This category allows you to assign blocks on NSURLConnection
- delegate callbacks, while still allowing the normal delegation
- pattern!
- 
- It also adds useful block handlers for tracking upload and
- download progress.
+ It also adds useful block handlers for tracking upload and download progress.
  
  Here is a small example:
 	 - (void)downloadImage:(id)sender {
@@ -48,7 +43,9 @@
 		 NSLog(@"%s",__PRETTY_FUNCTION__);
 	 }
 
- Created by Igor Evsukov as [IEURLConnection](https://github.com/evsukov89/IEURLConnection) and contributed to BlocksKit.
+ Created by Igor Evsukov as
+ [IEURLConnection](https://github.com/evsukov89/IEURLConnection) and contributed
+ to BlocksKit.
 */
 
 @interface NSURLConnection (BlocksKit)
@@ -59,7 +56,7 @@
  in an instance of NSURLConnection.  It only works on block-backed
  NSURLConnection instances.
  */
-@property (nonatomic, assign) id delegate;
+@property (nonatomic, weak) id delegate;
 
 /** The block fired once the connection recieves a response from the server.
 
@@ -116,7 +113,7 @@
  @param success A code block that acts on instances of NSURLResponse and NSData in the event of a successful connection.
  @param failure A code block that acts on instances of NSURLResponse and NSError in the event of a failed connection.
  */
-+ (NSURLConnection *)startConnectionWithRequest:(NSURLRequest *)request successHandler:(void(^)(NSURLConnection *, NSURLResponse *, NSData *))success failureHandler:(void(^)(NSURLConnection *, NSError *))failure;
++ (NSURLConnection *)startConnectionWithRequest:(NSURLRequest *)request successHandler:(void(^)(NSURLConnection *urlConnection, NSURLResponse *urlResponse, NSData *data))success failureHandler:(void(^)(NSURLConnection *urlConnection, NSError *error))failure;
 
 /** Returns an initialized block-backed URL connection.
  
@@ -131,12 +128,12 @@
  @param request The URL request to load.
  @param block A code block that acts on instances of NSURLResponse and NSData in the event of a successful connection.
  */
-- (id)initWithRequest:(NSURLRequest *)request completionHandler:(void(^)(NSURLConnection *, NSURLResponse *, NSData *))block;
+- (id)initWithRequest:(NSURLRequest *)request completionHandler:(void(^)(NSURLConnection *urlConnection, NSURLResponse *urlResponse, NSData *data))block;
 
 /** Causes the connection to begin loading data, if it has not already, with the specified block to be fired on successful completion.
  
  @param block A code block that acts on instances of NSURLResponse and NSData in the event of a successful connection.
  */
-- (void)startWithCompletionBlock:(void(^)(NSURLConnection *, NSURLResponse *, NSData *))block;
+- (void)startWithCompletionBlock:(void(^)(NSURLConnection *urlConnection, NSURLResponse *urlResponse, NSData *data))block;
 
 @end

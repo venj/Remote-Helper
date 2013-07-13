@@ -295,6 +295,11 @@
 			attributes = {
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = Home;
+				TargetAttributes = {
+					252DFA7B1753784400FF8199 = {
+						DevelopmentTeam = 32Y52676KN;
+					};
+				};
 			};
 			buildConfigurationList = 252DFA771753784400FF8199 /* Build configuration list for PBXProject "Video Player" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -487,6 +492,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4407DC00D1FF4D4D9CAF0B8E /* Pods.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Video Player/Video Player-Prefix.pch";
 				INFOPLIST_FILE = "Video Player/Video Player-Info.plist";
@@ -500,6 +506,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4407DC00D1FF4D4D9CAF0B8E /* Pods.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Video Player/Video Player-Prefix.pch";
 				INFOPLIST_FILE = "Video Player/Video Player-Info.plist";

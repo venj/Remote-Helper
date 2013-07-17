@@ -127,7 +127,7 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
     NSArray *list;
     if (tableView == self.tableView) {
         list = self.datesList;
@@ -144,6 +144,25 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [self showPhotoBrowserForTableView:tableView atIndexPath:indexPath initialPhotoIndex:0];
+}
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    UIAlertView *alert = [UIAlertView alertViewWithTitle:NSLocalizedString(@"Initial Index", @"Initial Index") message:NSLocalizedString(@"Please enter a number for photo index(from 1).", @"Please enter a number for photo index(from 1).")];
+    [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    UITextField *textField = [alert textFieldAtIndex:0];
+    textField.placeholder = @"1";
+    [textField setKeyboardType:UIKeyboardTypeNumberPad];
+    [alert addButtonWithTitle:NSLocalizedString(@"OK", @"OK") handler:^{
+        NSInteger index = [textField.text integerValue];
+        if (index < 1) index = 1;
+        [self showPhotoBrowserForTableView:tableView atIndexPath:indexPath initialPhotoIndex:(index - 1)];
+    }];
+    [alert setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:NULL];
+    [alert show];
+}
+
+- (void)showPhotoBrowserForTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath initialPhotoIndex:(NSInteger)index {
     [self.searchController.searchBar resignFirstResponder];
     if (![[AppDelegate shared] shouldSendWebRequest]) {
         [[AppDelegate shared] showNetworkAlert];
@@ -169,7 +188,9 @@
         MWPhotoBrowser *photoBrowser = [[MWPhotoBrowser alloc] initWithDelegate:blockSelf];
         photoBrowser.wantsFullScreenLayout = YES;
         photoBrowser.displayActionButton = NO;
-        [photoBrowser setInitialPageIndex:0];
+        NSInteger sIndex = index;
+        if (sIndex > [JSON count] - 1) sIndex = ([JSON count] - 1);
+        [photoBrowser setInitialPageIndex:sIndex];
         __block UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cloud Download", @"Cloud Download") style:UIBarButtonItemStyleBordered handler:^(id sender) {
             [item setEnabled:NO];
             NSString *fileName = [JSON[photoBrowser.currentPageIndex] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

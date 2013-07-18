@@ -153,7 +153,10 @@
                 NSOutputStream *oStream = [[NSOutputStream alloc] initToFileAtPath:[[AppDelegate shared] fileToDownloadWithPath:blockSelf.fileInfo[@"file"]] append:NO];
                 [operation setOutputStream:oStream];
                 [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-                    if (totalBytesExpectedToRead < 0) {
+                    unsigned long long staticFileSize = [self.fileInfo[@"size"] unsignedLongLongValue];
+                    if (totalBytesExpectedToRead < 0)
+                        totalBytesExpectedToRead = staticFileSize;
+                    if (totalBytesExpectedToRead <= 0) { // In case file size returned from server less than 0.
                         blockSelf.progressHUD.mode = MBProgressHUDModeIndeterminate;
                         blockSelf.progressHUD.labelText = [NSString stringWithFormat:NSLocalizedString(@"Downloading(%@)", @"Downloading(%@)"), [[AppDelegate shared] fileSizeStringWithInteger:totalBytesRead]];
                     }

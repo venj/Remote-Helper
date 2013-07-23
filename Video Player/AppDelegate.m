@@ -87,7 +87,9 @@
     }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if ([defaults boolForKey:ClearCacheOnExitKey]) {
-        [[SDImageCache sharedImageCache] clearDisk]; // Clear Image Cache
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            [[SDImageCache sharedImageCache] clearDisk]; // Clear Image Cache
+        });
     }
 }
 

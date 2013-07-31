@@ -2,7 +2,7 @@
 //  VCFileAttributeHelper.m
 //  iGolf
 //
-//  Created by 朱 文杰 on 12-8-1.
+//  Created by Venj Chu on 12-8-1.
 //  Copyright (c) 2012年 com.emobilesoft. All rights reserved.
 //
 

@@ -2,7 +2,7 @@
 //  ipaddress.h
 //  Video Player
 //
-//  Created by 朱 文杰 on 13-6-25.
+//  Created by Venj Chu on 13-6-25.
 //  Copyright (c) 2013年 Home. All rights reserved.
 //
 

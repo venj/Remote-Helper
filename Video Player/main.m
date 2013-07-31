@@ -2,7 +2,7 @@
 //  main.m
 //  Video Player
 //
-//  Created by 朱 文杰 on 13-5-27.
+//  Created by Venj Chu on 13-5-27.
 //  Copyright (c) 2013年 Home. All rights reserved.
 //
 

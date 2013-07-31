@@ -3,6 +3,8 @@ Video Player
 
 一个简单的在线视频播放器，请配合[服务器端](https://github.com/venj/movie_server)一起使用。
 
+把这个项目开源了，仅供玩耍。
+
 新功能介绍
 ---------
 
@@ -138,3 +140,15 @@ Video Player
 
 - 在视频缓冲的时候，如果用户点击“Done”按钮退出播放，在某些情况下，视频依然会在后台加载并播放。
 - 用iOS 7 SDK作为Base SDK编译程序的时候，会导致程序在弹出UIAlertView的时候崩溃（BlocksKit的Bug）。
+
+版权许可
+-------
+
+[The MIT License (MIT)](http://opensource.org/licenses/MIT)
+Copyright (c) 2013 venj
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

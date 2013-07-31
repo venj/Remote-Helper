@@ -144,6 +144,8 @@ Video Player
 版权许可
 -------
 
+**CocoaPods打包进来的的代码不适用本协议。**
+
 [The MIT License (MIT)](http://opensource.org/licenses/MIT)
 Copyright (c) 2013 venj
 

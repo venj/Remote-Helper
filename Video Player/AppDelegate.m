@@ -208,7 +208,7 @@
     if (!host) host = @"192.168.1.1";
     NSString *port = [defaults objectForKey:ServerPortKey];
     if (!port) port = @"80";
-    if (!path)
+    if (!path || [path isEqualToString:@""])
         path = @"/";
     else if (![[path substringToIndex:1] isEqualToString:@"/"])
         path = [[NSString alloc]  initWithFormat:@"/%@", path];

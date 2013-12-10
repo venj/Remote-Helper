@@ -3,7 +3,7 @@
 //  BlocksKit
 //
 
-#import "BKGlobals.h"
+#import <MessageUI/MessageUI.h>
 
 /** MFMailComposeViewController with block callbacks.
 
@@ -15,16 +15,16 @@
  Created by [Igor Evsukov](https://github.com/evsukov89) and contributed to
  BlocksKit.
 
- @warning UIWebView is only available on a platform with UIKit.
+ @warning MFMailComposeViewController is only available on a platform with MessageUI.
  */
 @interface MFMailComposeViewController (BlocksKit)
 
 /**  The block fired on the dismissal of the mail composition interface.
 
  This block callback is an analog for the
- mailComposeController:didFinishWithResult:error: method
+ mailComposeController:didFinishWithResult:error:method
  of MFMailComposeViewControllerDelegate.
 */
-@property (nonatomic, copy) void(^completionBlock)(MFMailComposeViewController *, MFMailComposeResult, NSError *);
+@property (nonatomic, copy, setter = bk_setCompletionBlock:) void (^bk_completionBlock)(MFMailComposeViewController *controller, MFMailComposeResult result, NSError *error);
 
 @end

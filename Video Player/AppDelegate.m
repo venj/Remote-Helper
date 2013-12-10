@@ -338,7 +338,7 @@
 
 #pragma mark - Shared action
 - (void)showNetworkAlert {
-    [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Network Error", @"Network Error") message:NSLocalizedString(@"Your device is not in the same LAN with the server.", @"Your device is not in the same LAN with the server.") cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@[NSLocalizedString(@"Settings", @"Settings")] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+    [UIAlertView bk_showAlertViewWithTitle:NSLocalizedString(@"Network Error", @"Network Error") message:NSLocalizedString(@"Your device is not in the same LAN with the server.", @"Your device is not in the same LAN with the server.") cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@[NSLocalizedString(@"Settings", @"Settings")] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
         if (buttonIndex != [alertView cancelButtonIndex]) {
             [self.fileListViewController showSettings:nil];
         }

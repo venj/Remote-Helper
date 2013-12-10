@@ -7,18 +7,40 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "SDImageCacheDelegate.h"
+#import "SDWebImageCompat.h"
+
+enum SDImageCacheType
+{
+    /**
+     * The image wasn't available the SDWebImage caches, but was downloaded from the web.
+     */
+    SDImageCacheTypeNone = 0,
+    /**
+     * The image was obtained from the disk cache.
+     */
+    SDImageCacheTypeDisk,
+    /**
+     * The image was obtained from the memory cache.
+     */
+    SDImageCacheTypeMemory
+};
+typedef enum SDImageCacheType SDImageCacheType;
 
 /**
  * SDImageCache maintains a memory cache and an optional disk cache. Disk cache write operations are performed
  * asynchronous so it doesn’t add unnecessary latency to the UI.
  */
 @interface SDImageCache : NSObject
-{
-    NSCache *memCache;
-    NSString *diskCachePath;
-    NSOperationQueue *cacheInQueue, *cacheOutQueue;
-}
+
+/**
+ * The maximum length of time to keep an image in the cache, in seconds
+ */
+@property (assign, nonatomic) NSInteger maxCacheAge;
+
+/**
+ * The maximum size of the cache, in bytes.
+ */
+@property (assign, nonatomic) unsigned long long maxCacheSize;
 
 /**
  * Returns global shared cache instance
@@ -28,11 +50,19 @@
 + (SDImageCache *)sharedImageCache;
 
 /**
- * Sets the global maximum cache age
+ * Init a new cache store with a specific namespace
  *
- * @param maxCacheAge The maximum length of time to keep an image in the cache, in seconds
+ * @param ns The namespace to use for this cache store
  */
-+ (void) setMaxCacheAge:(NSInteger) maxCacheAge;
+- (id)initWithNamespace:(NSString *)ns;
+
+/**
+ * Add a read-only cache path to search for images pre-cached by SDImageCache
+ * Useful if you want to bundle pre-loaded images with your app
+ *
+ * @param path The path to use for this read-only cache path
+ */
+- (void)addReadOnlyCachePath:(NSString *)path;
 
 /**
  * Store an image into memory and disk cache at the given key.
@@ -64,45 +94,35 @@
 - (void)storeImage:(UIImage *)image imageData:(NSData *)data forKey:(NSString *)key toDisk:(BOOL)toDisk;
 
 /**
- * Query the memory cache for an image at a given key and fallback to disk cache
- * synchronousely if not found in memory.
- *
- * @warning This method may perform some synchronous IO operations
+ * Query the disk cache asynchronously.
  *
  * @param key The unique key used to store the wanted image
  */
-- (UIImage *)imageFromKey:(NSString *)key;
+- (NSOperation *)queryDiskCacheForKey:(NSString *)key done:(void (^)(UIImage *image, SDImageCacheType cacheType))doneBlock;
 
 /**
- * Query the memory cache for an image at a given key and optionnaly fallback to disk cache
- * synchronousely if not found in memory.
- *
- * @warning This method may perform some synchronous IO operations if fromDisk is YES
+ * Query the memory cache synchronously.
  *
  * @param key The unique key used to store the wanted image
- * @param fromDisk Try to retrive the image from disk if not found in memory if YES
  */
-- (UIImage *)imageFromKey:(NSString *)key fromDisk:(BOOL)fromDisk;
-
+- (UIImage *)imageFromMemoryCacheForKey:(NSString *)key;
 
 /**
- * Query the disk cache asynchronousely.
+ * Query the disk cache synchronously after checking the memory cache.
  *
  * @param key The unique key used to store the wanted image
- * @param delegate The delegate object to send response to
- * @param info An NSDictionary with some user info sent back to the delegate
  */
-- (void)queryDiskCacheForKey:(NSString *)key delegate:(id <SDImageCacheDelegate>)delegate userInfo:(NSDictionary *)info;
+- (UIImage *)imageFromDiskCacheForKey:(NSString *)key;
 
 /**
- * Remove the image from memory and disk cache synchronousely
+ * Remove the image from memory and disk cache synchronously
  *
  * @param key The unique image cache key
  */
 - (void)removeImageForKey:(NSString *)key;
 
 /**
- * Remove the image from memory and optionaly disk cache synchronousely
+ * Remove the image from memory and optionaly disk cache synchronously
  *
  * @param key The unique image cache key
  * @param fromDisk Also remove cache entry from disk if YES
@@ -127,11 +147,21 @@
 /**
  * Get the size used by the disk cache
  */
-- (int)getSize;
+- (unsigned long long)getSize;
 
 /**
  * Get the number of images in the disk cache
  */
 - (int)getDiskCount;
+
+/**
+ * Asynchronously calculate the disk cache's size.
+ */
+- (void)calculateSizeWithCompletionBlock:(void (^)(NSUInteger fileCount, unsigned long long totalSize))completionBlock;
+
+/**
+ * Check if image exists in cache already
+ */
+- (BOOL)diskImageExistsWithKey:(NSString *)key;
 
 @end

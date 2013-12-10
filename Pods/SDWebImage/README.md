@@ -1,8 +1,6 @@
 Web Image
 =========
 
-> **Psst! [SDWebImage 3.0 beta](https://github.com/rs/SDWebImage/tree/3.0-beta) is out!**
-
 This library provides a category for UIImageVIew with support for remote images coming from the web.
 
 It provides:
@@ -10,11 +8,17 @@ It provides:
 - An UIImageView category adding web image and cache management to the Cocoa Touch framework
 - An asynchronous image downloader
 - An asynchronous memory + disk image caching with automatic cache expiration handling
+- Animated GIF support
+- WebP format support
 - A background image decompression
 - A guarantee that the same URL won't be downloaded several times
 - A guarantee that bogus URLs won't be retried again and again
 - A guarantee that main thread will never be blocked
 - Performances!
+- Use GCD and ARC
+
+NOTE: The version 3.0 of SDWebImage isn't fully backward compatible with 2.0 and requires iOS 5.0
+minimum deployement version. If you need iOS < 5.0 support, please use the last [2.0 version](https://github.com/rs/SDWebImage/tree/2.0-compat).
 
 [How is SDWebImage better than X?](https://github.com/rs/SDWebImage/wiki/How-is-SDWebImage-better-than-X%3F)
 
@@ -62,15 +66,14 @@ handled for you, from async downloads to caching management.
 
 ### Using blocks
 
-If your project's deployement target is set to iOS 4+, you may want to use the success/failure blocks to be
-notified when image have been retrieved from cache.
+With blocks, you can be notified about the image download progress and whenever the image retrival
+has completed with success or not:
+
 ```objective-c
 // Here we use the new provided setImageWithURL: method to load the web image
 [cell.imageView setImageWithURL:[NSURL URLWithString:@"http://www.domain.com/path/to/image.jpg"]
                placeholderImage:[UIImage imageNamed:@"placeholder.png"]
-                        success:^(UIImage *image, BOOL cached) {... success code here ...}
-                        failure:^(NSError *error) {... failure code here ...}];
-];
+                      completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {... completion code here ...}];
 ```
 
 Note: neither your success nor failure block will be call if your image request is canceled before completion.
@@ -86,29 +89,43 @@ Here is a simple example of how to use SDWebImageManager:
 ```objective-c
 SDWebImageManager *manager = [SDWebImageManager sharedManager];
 [manager downloadWithURL:imageURL
-                delegate:self
                  options:0
-                 success:^(UIImage *image, BOOL cached)
+                 progress:^(NSUInteger receivedSize, long long expectedSize)
                  {
-                     // do something with image
+                     // progression tracking code
                  }
-                 failure:nil];
+                 completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType)
+                 {
+                     if (image)
+                     {
+                         // do something with image
+                     }
+                 }];
 ```
 
 ### Using Asynchronous Image Downloader Independently
 
-It is possible to use the async image downloader independently. You just have to create an instance
-of SDWebImageDownloader using its convenience constructor downloaderWithURL:delegate:.
-```objective-c
-downloader = [SDWebImageDownloader downloaderWithURL:url delegate:self];
-```
+It's also possible to use the async image downloader independently:
 
-The download will start immediately and the imageDownloader:didFinishWithImage: method from the
-SDWebImageDownloaderDelegate protocol will be called as soon as the download of image is completed.
+```objective-c
+[SDWebImageDownloader.sharedDownloader downloadImageWithURL:imageURL
+                                                    options:0
+                                                   progress:^(NSUInteger receivedSize, long long expectedSize)
+                                                   {
+                                                       // progression tracking code
+                                                   }
+                                                   completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
+                                                   {
+                                                       if (image && finished)
+                                                       {
+                                                           // do something with image
+                                                       }
+                                                   }];
+```
 
 ### Using Asynchronous Image Caching Independently
 
-It is also possible to use the NSOperation based image cache store independently. SDImageCache
+It is also possible to use the aync based image cache store independently. SDImageCache
 maintains a memory cache and an optional disk cache. Disk cache write operations are performed
 asynchronous so it doesn't add unnecessary latency to the UI.
 
@@ -121,12 +138,15 @@ key is an application unique identifier for the image to cache. It is generally 
 the image.
 
 ```objective-c
-UIImage *myCachedImage = [[SDImageCache sharedImageCache] imageFromKey:myCacheKey];
+SDImageCache *imageCache = [SDImageCache.alloc initWithNamespace:@"myNamespace"];
+[imageCache queryDiskCacheForKey:myCacheKey done:^(UIImage *image)
+{
+    // image is not nil if image was found
+}];
 ```
 
 By default SDImageCache will lookup the disk cache if an image can't be found in the memory cache.
-You can prevent this from happening by calling the alternative method imageFromKey:fromDisk: with a
-negative second argument.
+You can prevent this from happening by calling the alternative method `imageFromMemoryCacheForKey:`.
 
 To store an image into the cache, you use the storeImage:forKey: method:
 
@@ -150,11 +170,11 @@ the URL before to use it as a cache key:
 ```objective-c
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [[SDWebImageManager sharedManager] setCacheKeyFilter:^(NSURL *url)
+    SDWebImageManager.sharedManager.cacheKeyFilter:^(NSURL *url)
     {
         url = [[[NSURL alloc] initWithScheme:url.scheme host:url.host path:url.path] autorelease];
         return [url absoluteString];
-    }];
+    };
 
     // Your app init code...
     return YES;
@@ -173,12 +193,22 @@ The following article gives a way to workaround this issue:
 
 [http://www.wrichards.com/blog/2011/11/sdwebimage-fixed-width-cell-images/](http://www.wrichards.com/blog/2011/11/sdwebimage-fixed-width-cell-images/)
 
-Automatic Reference Counting (ARC)
-----------------------------------
 
-You can use either style in your Cocoa project. SDWebImage Will figure out which you are using at compile
-time and do the right thing.
+### Handle image refresh
 
+SDWebImage does very aggressive caching by default. It ignores all kind of caching control header returned by the HTTP server and cache the returned images with no time restriction. It implies your images URLs are static URLs pointing to images that never change. If the pointed image happen to change, some parts of the URL should change accordingly.
+
+If you don't control the image server you're using, you may not be able to change the URL when its content is updated. This is the case for Facebook avatar URLs for instance. In such case, you may use the `SDWebImageRefreshCached` flag. This will slightly degrade the performance but will respect the HTTP caching control headers:
+
+``` objective-c
+[imageView setImageWithURL:[NSURL URLWithString:@"https://graph.facebook.com/olivier.poitrey/picture"]
+          placeholderImage:[UIImage imageNamed:@"avatar-placeholder.png"]
+                   options:SDWebImageRefreshCached];
+```
+
+### Add a progress indicator
+
+See this category: https://github.com/JJSaccolo/UIActivityIndicator-for-SDWebImage
 
 Installation
 ------------
@@ -187,7 +217,7 @@ There are two ways to use this in your project: copy all the files into your pro
 
 ### Add the SDWebImage project to your project
 
-- Download and unzip the last version of the framework from the [download page](https://github.com/rs/SDWebImage/downloads)
+- Download and unzip the last version of the framework from the [download page](https://github.com/rs/SDWebImage/releases)
 - Right-click on the project navigator and select "Add Files to "Your Project":
 - In the dialog, select SDWebImage.framework:
 - Check the "Copy items into destination group's folder (if needed)" checkbox

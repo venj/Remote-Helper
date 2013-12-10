@@ -40,7 +40,7 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     self.title = NSLocalizedString(@"File Info", @"File Info");
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay handler:^(id sender) {
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] bk_initWithBarButtonSystemItem:UIBarButtonSystemItemPlay handler:^(id sender) {
         if (!self.fileInfo) return;
         NSString *moviePath;
         NSURL *url;
@@ -137,11 +137,11 @@
     }
     if (indexPath.row == 0) {
         if ([self.fileInfo[@"size"] unsignedLongLongValue] > [[AppDelegate shared] freeDiskSpace]) {
-            [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"No Space", @"No Space") message:[NSString stringWithFormat:NSLocalizedString(@"You don't have enough free space on your device to download \"%@\".", @"You don't have enough free space on your device to download \"%@\"."), [self.fileInfo[@"file"] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {}];
+            [UIAlertView bk_showAlertViewWithTitle:NSLocalizedString(@"No Space", @"No Space") message:[NSString stringWithFormat:NSLocalizedString(@"You don't have enough free space on your device to download \"%@\".", @"You don't have enough free space on your device to download \"%@\"."), [self.fileInfo[@"file"] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {}];
             return;
         }
         __weak VPFileInfoViewController *blockSelf = self;
-        [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Comfirm Download", @"Comfirm Download") message:[NSString stringWithFormat:NSLocalizedString(@"Are you sure to download \"%@\" to your device?", @"Are you sure to download \"%@\" to your device?"), [self.fileInfo[@"file"] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:@[NSLocalizedString(@"Download", @"Download")] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+        [UIAlertView bk_showAlertViewWithTitle:NSLocalizedString(@"Comfirm Download", @"Comfirm Download") message:[NSString stringWithFormat:NSLocalizedString(@"Are you sure to download \"%@\" to your device?", @"Are you sure to download \"%@\" to your device?"), [self.fileInfo[@"file"] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:@[NSLocalizedString(@"Download", @"Download")] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
             if (buttonIndex != [alertView cancelButtonIndex]) {
                 if (!blockSelf.progressHUD)
                     blockSelf.progressHUD = [MBProgressHUD showHUDAddedTo:blockSelf.tableView.window animated:YES];
@@ -168,20 +168,20 @@
                 }];
                 [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
                     [MBProgressHUD hideHUDForView:blockSelf.tableView.window animated:YES];
-                    [NSTimer scheduledTimerWithTimeInterval:0.3 block:^(NSTimeInterval time) {
+                    [NSTimer bk_scheduledTimerWithTimeInterval:0.3 block:^(NSTimer *timer) {
                         blockSelf.progressHUD = nil;
                     } repeats:NO];
                     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
-                    [NSTimer scheduledTimerWithTimeInterval:0.25 block:^(NSTimeInterval time) {
+                    [NSTimer bk_scheduledTimerWithTimeInterval:0.25 block:^(NSTimer *timer) {
                         [blockSelf.navigationController popToRootViewControllerAnimated:YES];
                     } repeats:NO];
                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                     [MBProgressHUD hideHUDForView:blockSelf.tableView.window animated:YES];
                     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
-                    [NSTimer scheduledTimerWithTimeInterval:0.3 block:^(NSTimeInterval time) {
+                    [NSTimer bk_scheduledTimerWithTimeInterval:0.3 block:^(NSTimer *timer) {
                         blockSelf.progressHUD = nil;
                     } repeats:NO];
-                    [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Download Failed", @"Download Failed") message:[NSString stringWithFormat:NSLocalizedString(@"Failed to download \"%@\", please try agian later.", @"Failed to download \"%@\", please try agian later."), [blockSelf.fileInfo[@"file"] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                    [UIAlertView bk_showAlertViewWithTitle:NSLocalizedString(@"Download Failed", @"Download Failed") message:[NSString stringWithFormat:NSLocalizedString(@"Failed to download \"%@\", please try agian later.", @"Failed to download \"%@\", please try agian later."), [blockSelf.fileInfo[@"file"] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
                         [[NSFileManager defaultManager] removeItemAtPath:[[AppDelegate shared] fileToDownloadWithPath:self.fileInfo[@"file"]] error:NULL];
                     }];
                 }];
@@ -209,7 +209,7 @@
         return;
     }
     __weak VPFileInfoViewController *blockSelf = self;
-    [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Delete File", @"Delete File") message:[NSString stringWithFormat:NSLocalizedString(@"Are you sure to delete \"%@\".", @"Are you sure to delete \"%@\"."), [[self.fileInfo[@"file"] componentsSeparatedByString:@"/"] lastObject]] cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:@[NSLocalizedString(@"Delete", @"Delete")] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+    [UIAlertView bk_showAlertViewWithTitle:NSLocalizedString(@"Delete File", @"Delete File") message:[NSString stringWithFormat:NSLocalizedString(@"Are you sure to delete \"%@\".", @"Are you sure to delete \"%@\"."), [[self.fileInfo[@"file"] componentsSeparatedByString:@"/"] lastObject]] cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:@[NSLocalizedString(@"Delete", @"Delete")] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
         if (buttonIndex != [alertView cancelButtonIndex]) {
             if (blockSelf.isLocalFile) {
                 NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -220,10 +220,10 @@
                     message = [NSString stringWithFormat:NSLocalizedString(@"Failed to delete file \"%@\".", @"Failed to delete file \"%@\"."), [blockSelf.fileInfo[@"file"] lastPathComponent]];
                 else
                     message = [NSString stringWithFormat:NSLocalizedString(@"\"%@\" has been deleted from your device.", @"\"%@\" has been deleted from your device."), [blockSelf.fileInfo[@"file"] lastPathComponent]];
-                [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Delete File", @"Delete File") message:message cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                [UIAlertView bk_showAlertViewWithTitle:NSLocalizedString(@"Delete File", @"Delete File") message:message cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
                     if (error) return;
                     if ([blockSelf.delegate respondsToSelector:@selector(fileDidRemovedFromServerForParentIndexPath:)]) {
-                        [NSTimer scheduledTimerWithTimeInterval:0.3 block:^(NSTimeInterval time) {
+                        [NSTimer bk_scheduledTimerWithTimeInterval:0.3 block:^(NSTimer *timer) {
                             [blockSelf.delegate fileDidRemovedFromServerForParentIndexPath:blockSelf.parentIndexPath];
                         } repeats:NO];
                     }
@@ -247,9 +247,9 @@
                 request.HTTPMethod = @"DELETE";
                 
                 AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-                    [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Delete File", @"Delete File") message:[NSString stringWithFormat:NSLocalizedString(@"\"%@\" has been deleted from the server.", @"\"%@\" has been deleted from the server."), [[self.fileInfo[@"file"] componentsSeparatedByString:@"/"] lastObject]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                    [UIAlertView bk_showAlertViewWithTitle:NSLocalizedString(@"Delete File", @"Delete File") message:[NSString stringWithFormat:NSLocalizedString(@"\"%@\" has been deleted from the server.", @"\"%@\" has been deleted from the server."), [[self.fileInfo[@"file"] componentsSeparatedByString:@"/"] lastObject]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
                         if ([blockSelf.delegate respondsToSelector:@selector(fileDidRemovedFromServerForParentIndexPath:)]) {
-                            [NSTimer scheduledTimerWithTimeInterval:0.3 block:^(NSTimeInterval time) {
+                            [NSTimer bk_scheduledTimerWithTimeInterval:0.3 block:^(NSTimer *timer) {
                                 [blockSelf.delegate fileDidRemovedFromServerForParentIndexPath:blockSelf.parentIndexPath];
                             } repeats:NO];
                         }

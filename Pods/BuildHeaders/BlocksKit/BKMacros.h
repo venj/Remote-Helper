@@ -1,1 +1,1 @@
-../../BlocksKit/BlocksKit/BKMacros.h
+../../BlocksKit/BlocksKit/Core/BKMacros.h

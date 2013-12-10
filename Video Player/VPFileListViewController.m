@@ -50,17 +50,17 @@
     }
     else {
         self.title = NSLocalizedString(@"Server", @"Server");
-        __block UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"More", @"More") style:UIBarButtonItemStyleBordered handler:^(id sender) {
-            blockSelf.sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Please select your operation", @"Please select your operation")];
+        __block UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] bk_initWithTitle:NSLocalizedString(@"More", @"More") style:UIBarButtonItemStyleBordered handler:^(id sender) {
+            blockSelf.sheet = [[UIActionSheet alloc] bk_initWithTitle:NSLocalizedString(@"Please select your operation", @"Please select your operation")];
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-                [self.sheet addButtonWithTitle:NSLocalizedString(@"Torrents", @"Torrents") handler:^{
+                [self.sheet bk_addButtonWithTitle:NSLocalizedString(@"Torrents", @"Torrents") handler:^{
                     [blockSelf showTorrentsViewer:sender];
                 }];
             }
-            [blockSelf.sheet addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings") handler:^{
+            [blockSelf.sheet bk_addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings") handler:^{
                 [blockSelf showSettings:sender];
             }];
-            [blockSelf.sheet setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:^{}];
+            [blockSelf.sheet bk_setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:^{}];
             [blockSelf.sheet showFromBarButtonItem:leftButton animated:YES];
         }];
         self.navigationItem.leftBarButtonItem = leftButton;
@@ -76,7 +76,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     if (self.isLocal) {
-        [NSTimer scheduledTimerWithTimeInterval:0.5 block:^(NSTimeInterval time) {
+        [NSTimer bk_scheduledTimerWithTimeInterval:0.5 block:^(NSTimer *timer) {
             [self loadMovieList:nil];
         } repeats:NO];
     }
@@ -192,7 +192,7 @@
         
         AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
             if ((JSON[@"exist"] != nil) && ([JSON[@"exist"] boolValue] == NO)) {
-                [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"Error", @"Error") message:[NSString stringWithFormat:NSLocalizedString(@"%@ was deleted from the server.", @"%@ was deleted from the server."), [self.dataList[indexPath.row] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                [UIAlertView bk_showAlertViewWithTitle:NSLocalizedString(@"Error", @"Error") message:[NSString stringWithFormat:NSLocalizedString(@"%@ was deleted from the server.", @"%@ was deleted from the server."), [self.dataList[indexPath.row] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
                     [blockSelf.dataList removeObjectAtIndex:indexPath.row];
                     [blockSelf.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
                 }];

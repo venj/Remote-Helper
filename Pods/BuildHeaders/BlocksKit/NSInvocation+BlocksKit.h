@@ -1,1 +1,1 @@
-../../BlocksKit/BlocksKit/NSInvocation+BlocksKit.h
+../../BlocksKit/BlocksKit/Core/NSInvocation+BlocksKit.h

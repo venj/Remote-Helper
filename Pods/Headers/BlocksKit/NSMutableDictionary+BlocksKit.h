@@ -1,1 +1,1 @@
-../../BlocksKit/BlocksKit/NSMutableDictionary+BlocksKit.h
+../../BlocksKit/BlocksKit/Core/NSMutableDictionary+BlocksKit.h

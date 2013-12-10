@@ -1,1 +1,1 @@
-../../BlocksKit/BlocksKit/NSArray+BlocksKit.h
+../../BlocksKit/BlocksKit/Core/NSArray+BlocksKit.h

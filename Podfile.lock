@@ -1,34 +1,54 @@
 PODS:
   - AFNetworking (1.2.1)
-  - BlocksKit (1.8.2):
+  - BlocksKit (2.0.0):
+    - BlocksKit/All
+  - BlocksKit/All (2.0.0):
+    - BlocksKit/Core
+    - BlocksKit/DynamicDelegate
+    - BlocksKit/MessageUI
+    - BlocksKit/UIKit
+  - BlocksKit/Core (2.0.0)
+  - BlocksKit/DynamicDelegate (2.0.0):
     - libffi
+  - BlocksKit/MessageUI (2.0.0):
+    - BlocksKit/DynamicDelegate
+  - BlocksKit/UIKit (2.0.0):
+    - BlocksKit/DynamicDelegate
+  - DACircularProgress (2.1.0)
   - InAppSettingsKit (1.1)
   - KKPasscodeLock (0.1.5)
   - libffi (3.0.13)
   - MBProgressHUD (0.6)
-  - MWPhotoBrowser (1.0.1):
+  - MWPhotoBrowser (1.1.4):
+    - DACircularProgress
     - MBProgressHUD
-    - SDWebImage (< 3.0.0)
-  - SDWebImage (2.7.4):
-    - SDWebImage/Main
-  - SDWebImage/Main (2.7.4)
+    - MWPhotoBrowser/ARC
+    - SDWebImage (= 3.5)
+  - MWPhotoBrowser/ARC (1.1.4):
+    - DACircularProgress
+    - MBProgressHUD
+    - SDWebImage (= 3.5)
+  - SDWebImage (3.5):
+    - SDWebImage/Core
+  - SDWebImage/Core (3.5)
 
 DEPENDENCIES:
   - AFNetworking (~> 1.2)
-  - BlocksKit (~> 1.8.2)
+  - BlocksKit (~> 2.0.0)
   - InAppSettingsKit (~> 1.1)
   - KKPasscodeLock (~> 0.1.5)
   - MBProgressHUD (~> 0.6)
-  - MWPhotoBrowser (~> 1.0.1)
+  - MWPhotoBrowser (~> 1.1.4)
 
 SPEC CHECKSUMS:
   AFNetworking: a44069e3c9c89867544f6639482f155c7e5f9b41
-  BlocksKit: 7396526b0816734103f6133fbb1a520c8b04e80c
+  BlocksKit: b29ee3f28ba06a09f5c64987314ce5b75b2c3962
+  DACircularProgress: 8c8f20c8dffdd647fbf570ddecbc2b1b59da5888
   InAppSettingsKit: cf2c4193c3269d6acf996f7975f310d18a5e1e3c
-  KKPasscodeLock: 5fb69da49d4163215e0405a482e152bec671586d
+  KKPasscodeLock: 297a1048f20db7f47b85110196a25202905df81d
   libffi: 64ef39353e747bb2b25e1026afd96a157bf9231c
   MBProgressHUD: 9b55a90566fb5d07df0602f6fd9fa04510ad5d52
-  MWPhotoBrowser: e54233d4c88e951a3b6b8f136393614cf319ac47
-  SDWebImage: 06f076026fe7867ab0100fce95d943f7bff981eb
+  MWPhotoBrowser: bcc8bffb52c7ae6e8550d98336c65b8de969aeb3
+  SDWebImage: f1a72472f8a2d54445f1fedafe2090593d9caf7f
 
-COCOAPODS: 0.22.2
+COCOAPODS: 0.28.0

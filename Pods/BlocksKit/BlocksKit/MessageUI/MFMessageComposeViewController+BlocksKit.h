@@ -3,7 +3,7 @@
 //  BlocksKit
 //
 
-#import "BKGlobals.h"
+#import <MessageUI/MessageUI.h>
 
 /** MFMessageComposeViewController with block callback in addition to delegation.
  
@@ -15,7 +15,7 @@
  Created by [Igor Evsukov](https://github.com/evsukov89) and contributed to
  BlocksKit.
 
- @warning UIWebView is only available on a platform with UIKit.
+ @warning MFMessageComposeViewController is only available on a platform with MessageUI.
 */
 @interface MFMessageComposeViewController (BlocksKit)
 
@@ -25,6 +25,6 @@
  messageComposeViewController:didFinishWithResult: method
  of MFMessageComposeViewControllerDelegate.
  */
-@property (nonatomic, copy) void(^completionBlock)(MFMessageComposeViewController *, MessageComposeResult);
+@property (nonatomic, copy, setter = bk_setCompletionBlock:) void (^bk_completionBlock)(MFMessageComposeViewController *controller, MessageComposeResult result);
 
 @end

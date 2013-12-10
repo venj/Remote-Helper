@@ -1,1 +1,1 @@
-../../BlocksKit/BlocksKit/NSMutableIndexSet+BlocksKit.h
+../../BlocksKit/BlocksKit/Core/NSMutableIndexSet+BlocksKit.h

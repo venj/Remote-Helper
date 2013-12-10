@@ -1,64 +1,93 @@
-# MWPhotoBrowser — A simple iOS photo browser
+# MWPhotoBrowser
 
-MWPhotoBrowser is an implementation of a photo browser similar to the native Photos app in iOS. It can display one or more images by providing either `UIImage` objects, file paths to images on the device, or URLs to images online. The photo browser handles the downloading and caching of photos from the web seamlessly. Photos can be zoomed and panned, and optional (customisable) captions can be displayed. Works on iOS 3.2+. All strings are localisable so they can be used in apps that support multiple languages.
+[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=mwaterfall&url=https://github.com/mwaterfall/MWPhotoBrowser&title=MWPhotoBrowser&language=&tags=github&category=software)
+
+## A simple iOS photo browser
+
+MWPhotoBrowser is an implementation of a photo browser similar to the native Photos app in iOS. It can display one or more images by providing either `UIImage` objects, or URLs to files, web images or library assets. The photo browser handles the downloading and caching of photos from the web seamlessly. Photos can be zoomed and panned, and optional (customisable) captions can be displayed. Works on iOS 5+. All strings are localisable so they can be used in apps that support multiple languages.
 
 [![Alt][screenshot1_thumb]][screenshot1]    [![Alt][screenshot2_thumb]][screenshot2]    [![Alt][screenshot3_thumb]][screenshot3]    [![Alt][screenshot4_thumb]][screenshot4]
-[screenshot1_thumb]: http://dl.dropbox.com/u/2111839/Permanent/MWPhotoBrowser/mwphotobrowser1_thumb.png
-[screenshot1]: http://dl.dropbox.com/u/2111839/Permanent/MWPhotoBrowser/mwphotobrowser1.png
-[screenshot2_thumb]: http://dl.dropbox.com/u/2111839/Permanent/MWPhotoBrowser/mwphotobrowser2_thumb.png
-[screenshot2]: http://dl.dropbox.com/u/2111839/Permanent/MWPhotoBrowser/mwphotobrowser2.png
-[screenshot3_thumb]: http://dl.dropbox.com/u/2111839/Permanent/MWPhotoBrowser/mwphotobrowser3_thumb.png
-[screenshot3]: http://dl.dropbox.com/u/2111839/Permanent/MWPhotoBrowser/mwphotobrowser3.png
-[screenshot4_thumb]: http://dl.dropbox.com/u/2111839/Permanent/MWPhotoBrowser/mwphotobrowser4_thumb.png
-[screenshot4]: http://dl.dropbox.com/u/2111839/Permanent/MWPhotoBrowser/mwphotobrowser4.png
+[screenshot1_thumb]: https://raw.github.com/mwaterfall/MWPhotoBrowser/master/Misc/MWPhotoBrowser1t.png
+[screenshot1]: https://raw.github.com/mwaterfall/MWPhotoBrowser/master/Misc/MWPhotoBrowser1.png
+[screenshot2_thumb]: https://raw.github.com/mwaterfall/MWPhotoBrowser/master/Misc/MWPhotoBrowser2t.png
+[screenshot2]: https://raw.github.com/mwaterfall/MWPhotoBrowser/master/Misc/MWPhotoBrowser2.png
+[screenshot3_thumb]: https://raw.github.com/mwaterfall/MWPhotoBrowser/master/Misc/MWPhotoBrowser3t.png
+[screenshot3]: https://raw.github.com/mwaterfall/MWPhotoBrowser/master/Misc/MWPhotoBrowser3.png
+[screenshot4_thumb]: https://raw.github.com/mwaterfall/MWPhotoBrowser/master/Misc/MWPhotoBrowser4t.png
+[screenshot4]: https://raw.github.com/mwaterfall/MWPhotoBrowser/master/Misc/MWPhotoBrowser4.png
 
 
 ## Usage
 
-MWPhotoBrowser is designed to be presented within a navigation controller. Simply set the delegate (which must conform to `MWPhotoBrowserDelegate`) and implement the 2 required delegate methods to provide the photo browser with the data in the form of `MWPhoto` objects. You can create an `MWPhoto` object by providing a `UIImage` object, a file path to a physical image file, or a URL to an image online.
+MWPhotoBrowser is designed to be presented within a navigation controller. Simply set the delegate (which must conform to `MWPhotoBrowserDelegate`) and implement the 2 required delegate methods to provide the photo browser with the data in the form of `MWPhoto` objects. You can create an `MWPhoto` object by providing a `UIImage` object, or a URL containing the path to a file, an image online or an asset from the asset library.
 
-`MWPhoto` objects handle caching, file management, downloading of web images, and various optimisations for you. If however you would like to use your own data model to represent photos you can simply ensure your model conforms to the `MWPhoto` protocol. You can then handle the management of caching, downloads, etc, yourself. More information on this can be found in `MWPhotoProtocol.h`. 
+`MWPhoto` objects handle caching, file management, downloading of web images, and various optimisations for you. If however you would like to use your own data model to represent photos you can simply ensure your model conforms to the `MWPhoto` protocol. You can then handle the management of caching, downloads, etc, yourself. More information on this can be found in `MWPhotoProtocol.h`.
 
 See the code snippet below for an example of how to implement the photo browser. There is also a simple demo app within the project.
 
-    // Create array of `MWPhoto` objects
-    self.photos = [NSMutableArray array];
-    [photos addObject:[MWPhoto photoWithFilePath:[[NSBundle mainBundle] pathForResource:@"photo2l" ofType:@"jpg"]]];
-    [photos addObject:[MWPhoto photoWithURL:[NSURL URLWithString:@"http://farm4.static.flickr.com/3629/3339128908_7aecabc34b.jpg"]]];
-    [photos addObject:[MWPhoto photoWithURL:[NSURL URLWithString:@"http://farm4.static.flickr.com/3590/3329114220_5fbc5bc92b.jpg"]]];
+```obj-c
+// Create array of `MWPhoto` objects
+self.photos = [NSMutableArray array];
+[photos addObject:[MWPhoto photoWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"photo2l" ofType:@"jpg"]]]];
+[photos addObject:[MWPhoto photoWithURL:[NSURL URLWithString:@"http://farm4.static.flickr.com/3629/3339128908_7aecabc34b.jpg"]]];
+[photos addObject:[MWPhoto photoWithURL:[NSURL URLWithString:@"http://farm4.static.flickr.com/3590/3329114220_5fbc5bc92b.jpg"]]];
 
-    // Create & present browser
-    MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
-    // Set options
-    browser.wantsFullScreenLayout = YES; // Decide if you want the photo browser full screen, i.e. whether the status bar is affected (defaults to YES)
-    browser.displayActionButton = YES; // Show action button to save, copy or email photos (defaults to NO)
-    [browser setInitialPageIndex:1]; // Example: allows second image to be presented first
-    // Present
-    [self.navigationController pushViewController:browser animated:YES];
+// Create & present browser
+MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
+// Set options
+browser.displayActionButton = YES; // Show action button to allow sharing, copying, etc (defaults to YES)
+browser.displayNavArrows = NO; // Whether to display left and right nav arrows on toolbar (defaults to NO)
+browser.zoomPhotosToFill = YES; // Images that almost fill the screen will be initially zoomed to fill (defaults to YES)
+[browser setCurrentPhotoIndex:1]; // Example: allows second image to be presented first
+browser.wantsFullScreenLayout = YES; // iOS 5 & 6 only: Decide if you want the photo browser full screen, i.e. whether the status bar is affected (defaults to YES)
+// Present
+[self.navigationController pushViewController:browser animated:YES];
+
+// Manipulate!
+[browser showPreviousPhotoAnimated:YES];
+[browser showNextPhotoAnimated:YES];
+```
 
 Then respond to the required delegate methods:
 
-    - (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {
-        return self.photos.count;
-    }
+```obj-c
+- (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {
+    return self.photos.count;
+}
 
-    - (MWPhoto *)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
-        if (index < self.photos.count)
-            return [self.photos objectAtIndex:index];
-        return nil;
-    }
+- (MWPhoto *)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
+    if (index < self.photos.count)
+        return [self.photos objectAtIndex:index];
+    return nil;
+}
+```
 
 You can present the browser modally simply by wrapping it in a new navigation controller and presenting that. The demo app allows you to toggle between the two presentation types.
 
-If you don't want to view the photo browser full screen (for example if you are using view controller containment in iOS 5) then set the photo browser's `wantsFullScreenLayout` property to `NO`. This will mean the status bar will not be affected by the photo browser.
+If using iOS 5 or 6 and you don't want to view the photo browser full screen (for example if you are using view controller containment) then set the photo browser's `wantsFullScreenLayout` property to `NO`. This will mean the status bar will not be affected by the photo browser.
+
+
+### Actions
+
+By default, if the action button is visible then the image (and caption if it exists) are sent to a UIActivityViewController. On iOS 5, a custom action sheet appears allowing them to copy or email the photo.
+
+You can provide a custom action by implementing the following delegate method:
+
+```obj-c
+- (void)photoBrowser:(MWPhotoBrowser *)photoBrowser actionButtonPressedForPhotoAtIndex:(NSUInteger)index {
+    // Do your thing!
+}
+```
 
 
 ### Photo Captions
 
 Photo captions can be displayed simply by setting the `caption` property on specific photos:
 
-    MWPhoto *photo = [MWPhoto photoWithFilePath:[[NSBundle mainBundle] pathForResource:@"photo2l" ofType:@"jpg"]];
-    photo.caption = @"Campervan";
+```obj-c
+MWPhoto *photo = [MWPhoto photoWithURL:[NSURL URLWithString:@"http://farm4.static.flickr.com/3629/3339128908_7aecabc34b.jpg"]];
+photo.caption = @"Campervan";
+```
 
 No caption will be displayed if the caption property is not set.
 
@@ -73,14 +102,16 @@ By default, the caption is a simple black transparent view with a label displayi
 
 Example delegate method for custom caption view:
 
-    - (MWCaptionView *)photoBrowser:(MWPhotoBrowser *)photoBrowser captionViewForPhotoAtIndex:(NSUInteger)index {
-        MWPhoto *photo = [self.photos objectAtIndex:index];
-        MyMWCaptionViewSubclass *captionView = [[MyMWCaptionViewSubclass alloc] initWithPhoto:photo];
-        return [captionView autorelease];
-    }
+```obj-c
+- (MWCaptionView *)photoBrowser:(MWPhotoBrowser *)photoBrowser captionViewForPhotoAtIndex:(NSUInteger)index {
+    MWPhoto *photo = [self.photos objectAtIndex:index];
+    MyMWCaptionViewSubclass *captionView = [[MyMWCaptionViewSubclass alloc] initWithPhoto:photo];
+    return captionView;
+}
+```
 
 
-## Adding to your project (Xcode 4)
+## Adding to your project
 
 ### Method 1: Static Library
 
@@ -89,11 +120,11 @@ Example delegate method for custom caption view:
 3. In your project's target settings, go to "Build Phases" -> "Link Binary With Libraries" and add `libMWPhotoBrowser.a`.
 4. Still in "Build Phases", drop down "Copy Bundle Resources" and drag the file `MWPhotoBrowser.bundle` from the MWPhotoBrowser project into that list. This ensures your project will include the required graphics for the photo browser to work correctly.
 5. In the target, select the "Build Settings" tab and ensure "Always Search User Paths" is set to YES, and "User Header Search Paths" is set to the recursive absolute or relative path that points to a directory under which the MWPhotoBrowser code is stored. In the file layout of the MWPhotoBrowser project, a simple ../** works as the demo project folder and MWPhotoBrowser project folder are adjacent to one another. Please let me know if you encounter any issue with this.
-6. In "Summary" add `MessageUI.framework` and `ImageIO.framework` to "Linked Frameworks and Libraries".
+6. Under "Build Phases / Link Binary With Libraries" add `MessageUI.framework`, `QuartzCore.framework`, `AssetsLibrary.framework` and `ImageIO.framework` to "Linked Frameworks and Libraries".
 
 You should now be able to include `MWPhotoBrowser.h` into your project and start using it.
 
-Setting these things up in Xcode 4 can be a bit tricky so if you run into any problems you may wish to read through a few bits of information:
+Setting these things up in Xcode can be a bit tricky so if you run into any problems you may wish to read through a few bits of information:
 
 - [Developing a Static Library and Incorporating It in Your Application](http://developer.apple.com/library/ios/#documentation/Xcode/Conceptual/ios_development_workflow/910-A-Developing_a_Static_Library_and_Incorporating_It_in_Your_Application/archiving_an_application_that_uses_a_static_library.html)
 - [Using Open Source Static Libraries in Xcode 4](http://blog.carbonfive.com/2011/04/04/using-open-source-static-libraries-in-xcode-4/#using_a_static_library)
@@ -101,29 +132,23 @@ Setting these things up in Xcode 4 can be a bit tricky so if you run into any pr
 
 ### Method 2: Including Source Directly Into Your Project
 
-Another method is to simply add the files to your Xcode project, copying them to your project's directory if required. Ensure that all the code within `MWPhotoBrowser/Classes`, `MWPhotoBrowser/Libraries` and the `MWPhotoBrowser.bundle` is included in your project. 
-
-If your project uses ARC then you will have to disable ARC for each of the files in MWPhotoBrowser. Here's how you do it: http://stackoverflow.com/a/6658549/106244
-
-
-## Outstanding issues and improvements
-
-*Nothing outstanding*
+Another method is to simply add the files to your Xcode project, copying them to your project's directory if required. Ensure that all the code within `MWPhotoBrowser/Classes`, `MWPhotoBrowser/Libraries` and the `MWPhotoBrowser.bundle` is included in your project.
 
 
 ## Notes and Accreditation
 
-MWPhotoBrowser very gratefully makes use of 2 other fantastic open source projects:
+MWPhotoBrowser very gratefully makes use of these other fantastic open source projects:
 
 - [SDWebImage](https://github.com/rs/SDWebImage) by Olivier Poitrey — Used to handle downloading and decompressing of photos from the web.
-- [MBProgressHUD](https://github.com/jdg/MBProgressHUD) by Jonathan George — Used to display notifications of photo saving and copying progress/completion.
+- [MBProgressHUD](https://github.com/jdg/MBProgressHUD) by Jonathan George — Used to display activity notifications.
+- [DACircularProgress](https://github.com/danielamitay/DACircularProgress) by Daniel Amitay — Used to display image download progress.
 
 Demo photos kindly provided by Oliver Waters (<http://twitter.com/oliverwaters>).
 
 
 ## Licence
 
-Copyright (c) 2010 Michael Waterfall
+Copyright (c) 2010-2013 Michael Waterfall
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

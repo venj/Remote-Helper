@@ -45,12 +45,12 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     self.title = NSLocalizedString(@"Torrents", @"Torrents");
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone handler:^(id sender) {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] bk_initWithBarButtonSystemItem:UIBarButtonSystemItemDone handler:^(id sender) {
             [self dismissModalViewControllerAnimated:YES];
         }];
     }
     else {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh handler:^(id sender) {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] bk_initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh handler:^(id sender) {
             [self loadTorrentList:sender];
         }];
     }
@@ -148,17 +148,17 @@
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    UIAlertView *alert = [UIAlertView alertViewWithTitle:NSLocalizedString(@"Initial Index", @"Initial Index") message:NSLocalizedString(@"Please enter a number for photo index(from 1).", @"Please enter a number for photo index(from 1).")];
+    UIAlertView *alert = [UIAlertView bk_alertViewWithTitle:NSLocalizedString(@"Initial Index", @"Initial Index") message:NSLocalizedString(@"Please enter a number for photo index(from 1).", @"Please enter a number for photo index(from 1).")];
     [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
     UITextField *textField = [alert textFieldAtIndex:0];
     textField.placeholder = @"1";
     [textField setKeyboardType:UIKeyboardTypeNumberPad];
-    [alert addButtonWithTitle:NSLocalizedString(@"OK", @"OK") handler:^{
+    [alert bk_addButtonWithTitle:NSLocalizedString(@"OK", @"OK") handler:^{
         NSInteger index = [textField.text integerValue];
         if (index < 1) index = 1;
         [self showPhotoBrowserForTableView:tableView atIndexPath:indexPath initialPhotoIndex:(index - 1)];
     }];
-    [alert setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:NULL];
+    [alert bk_setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:NULL];
     [alert show];
 }
 
@@ -190,10 +190,10 @@
         photoBrowser.displayActionButton = NO;
         NSInteger sIndex = index;
         if (sIndex > [JSON count] - 1) sIndex = ([JSON count] - 1);
-        [photoBrowser setInitialPageIndex:sIndex];
-        __block UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cloud Download", @"Cloud Download") style:UIBarButtonItemStyleBordered handler:^(id sender) {
+        [photoBrowser setCurrentPhotoIndex:sIndex];
+        __block UIBarButtonItem *item = [[UIBarButtonItem alloc] bk_initWithTitle:NSLocalizedString(@"Cloud Download", @"Cloud Download") style:UIBarButtonItemStyleBordered handler:^(id sender) {
             [item setEnabled:NO];
-            NSString *fileName = [JSON[photoBrowser.currentPageIndex] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSString *fileName = [JSON[photoBrowser.currentIndex] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             BOOL asyncAddTask = [defaults boolForKey:AsyncAddCloudTaskKey];

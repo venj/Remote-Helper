@@ -63,8 +63,8 @@
 // KKPasscodeLock
 #define COCOAPODS_POD_AVAILABLE_KKPasscodeLock
 #define COCOAPODS_VERSION_MAJOR_KKPasscodeLock 0
-#define COCOAPODS_VERSION_MINOR_KKPasscodeLock 1
-#define COCOAPODS_VERSION_PATCH_KKPasscodeLock 5
+#define COCOAPODS_VERSION_MINOR_KKPasscodeLock 2
+#define COCOAPODS_VERSION_PATCH_KKPasscodeLock 2
 
 // MBProgressHUD
 #define COCOAPODS_POD_AVAILABLE_MBProgressHUD

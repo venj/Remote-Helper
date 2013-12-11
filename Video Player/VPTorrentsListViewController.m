@@ -18,6 +18,7 @@
 @interface VPTorrentsListViewController () <MWPhotoBrowserDelegate, UISearchDisplayDelegate, UISearchBarDelegate>
 @property (nonatomic, strong) NSArray *datesList;
 @property (nonatomic, strong) NSArray *mwPhotos;
+@property (nonatomic, strong) NSArray *photos;
 @property (nonatomic, strong) NSMutableArray *filteredDatesList;
 @property (nonatomic, strong) UISearchDisplayController *searchController;
 @property (nonatomic, strong) NSDictionary *localizedStatusStrings;
@@ -37,12 +38,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
     self.title = NSLocalizedString(@"Torrents", @"Torrents");
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] bk_initWithBarButtonSystemItem:UIBarButtonSystemItemDone handler:^(id sender) {
@@ -188,37 +184,12 @@
         MWPhotoBrowser *photoBrowser = [[MWPhotoBrowser alloc] initWithDelegate:blockSelf];
         photoBrowser.wantsFullScreenLayout = YES;
         photoBrowser.displayActionButton = NO;
+        photoBrowser.displayNavArrows = YES;
+        photoBrowser.zoomPhotosToFill = NO;
         NSInteger sIndex = index;
         if (sIndex > [JSON count] - 1) sIndex = ([JSON count] - 1);
+        self.photos = JSON; //Save for add torrent.
         [photoBrowser setCurrentPhotoIndex:sIndex];
-        __block UIBarButtonItem *item = [[UIBarButtonItem alloc] bk_initWithTitle:NSLocalizedString(@"Cloud Download", @"Cloud Download") style:UIBarButtonItemStyleBordered handler:^(id sender) {
-            [item setEnabled:NO];
-            NSString *fileName = [JSON[photoBrowser.currentIndex] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            BOOL asyncAddTask = [defaults boolForKey:AsyncAddCloudTaskKey];
-            NSURLRequest *addTorrentRequest = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] addTorrentWithName:fileName async:asyncAddTask]]];
-            AFJSONRequestOperation *trOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:addTorrentRequest success:^(NSURLRequest *req, NSHTTPURLResponse *res, id anotherJSON) {
-                NSString *title, *message;
-                if (asyncAddTask) {
-                    title = NSLocalizedString(@"Task added", @"Task added");
-                    message = NSLocalizedString(@"Torrent added! Please check your Xunlei account.", @"Torrent added! Please check your Xunlei account.");
-                }
-                else {
-                    title = NSLocalizedString(@"Result", @"Result");
-                    message = [NSString stringWithFormat:@"%@%@", NSLocalizedString(@"Torrent added! Download status:\n", @"Torrent added! Download status:\n"), self.localizedStatusStrings[anotherJSON[@"status"]]];
-                }
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
-                [alert show];
-                [item setEnabled:YES];
-            } failure:^(NSURLRequest *req, NSHTTPURLResponse *res, NSError *err, id anotherJSON) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Connection failed.", @"Connection failed.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
-                [alert show];
-                [item setEnabled:YES];
-            }];
-            [trOperation start];
-        }];
-        photoBrowser.navigationItem.rightBarButtonItem = item;
         [self.navigationController pushViewController:photoBrowser animated:YES];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         [MBProgressHUD hideHUDForView:aView animated:YES];
@@ -296,6 +267,37 @@
         [mwPhotos addObject:p];
     }
     return mwPhotos;
+}
+
+- (void)photoBrowser:(MWPhotoBrowser *)photoBrowser didDisplayPhotoAtIndex:(NSUInteger)index {
+    __block UIBarButtonItem *item = [[UIBarButtonItem alloc] bk_initWithTitle:NSLocalizedString(@"Cloud Download", @"Cloud Download") style:UIBarButtonItemStyleBordered handler:^(id sender) {
+        [item setEnabled:NO];
+        NSString *fileName = [self.photos[index] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        BOOL asyncAddTask = [defaults boolForKey:AsyncAddCloudTaskKey];
+        NSURLRequest *addTorrentRequest = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] addTorrentWithName:fileName async:asyncAddTask]]];
+        AFJSONRequestOperation *trOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:addTorrentRequest success:^(NSURLRequest *req, NSHTTPURLResponse *res, id anotherJSON) {
+            NSString *title, *message;
+            if (asyncAddTask) {
+                title = NSLocalizedString(@"Task added", @"Task added");
+                message = NSLocalizedString(@"Torrent added! Please check your Xunlei account.", @"Torrent added! Please check your Xunlei account.");
+            }
+            else {
+                title = NSLocalizedString(@"Result", @"Result");
+                message = [NSString stringWithFormat:@"%@%@", NSLocalizedString(@"Torrent added! Download status:\n", @"Torrent added! Download status:\n"), self.localizedStatusStrings[anotherJSON[@"status"]]];
+            }
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
+            [alert show];
+            [item setEnabled:YES];
+        } failure:^(NSURLRequest *req, NSHTTPURLResponse *res, NSError *err, id anotherJSON) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Connection failed.", @"Connection failed.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
+            [alert show];
+            [item setEnabled:YES];
+        }];
+        [trOperation start];
+    }];
+    photoBrowser.navigationItem.rightBarButtonItem = item;
 }
 
 @end

@@ -31,6 +31,7 @@
 	// Paging
 	NSMutableSet *_visiblePages, *_recycledPages;
 	NSUInteger _currentPageIndex;
+    NSUInteger _previousPageIndex;
 	NSUInteger _pageIndexBeforeRotation;
 	
 	// Navigation & controls
@@ -167,6 +168,7 @@
     self.hidesBottomBarWhenPushed = YES;
     _photoCount = NSNotFound;
     _currentPageIndex = 0;
+    _previousPageIndex = NSUIntegerMax;
     _displayActionButton = YES;
     _displayNavArrows = NO;
     _zoomPhotosToFill = YES;
@@ -879,11 +881,10 @@
     }
     
     // Notify delegate
-    static NSUInteger prevIndex = NSUIntegerMax;
-    if (index != prevIndex) {
+    if (index != _previousPageIndex) {
         if ([_delegate respondsToSelector:@selector(photoBrowser:didDisplayPhotoAtIndex:)])
             [_delegate photoBrowser:self didDisplayPhotoAtIndex:index];
-        prevIndex = index;
+        _previousPageIndex = index;
     }
     
     // Update nav

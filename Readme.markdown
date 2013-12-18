@@ -12,6 +12,7 @@ Video Player
 
 - 升级了程序使用的库。
 - iOS 7兼容。
+- BlocksKit的`AlertView`扩展导致程序崩溃的Bug已修正。
 
 **1.1.2 (70)**
 
@@ -144,7 +145,7 @@ Video Player
 -------
 
 - 在视频缓冲的时候，如果用户点击“Done”按钮退出播放，在某些情况下，视频依然会在后台加载并播放。
-- 用iOS 7 SDK作为Base SDK编译程序的时候，会导致程序在弹出UIAlertView的时候崩溃（BlocksKit的Bug）。
+
 
 版权许可
 -------

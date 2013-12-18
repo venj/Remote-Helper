@@ -13,6 +13,7 @@ Video Player
 - 升级了程序使用的库。
 - iOS 7兼容。
 - BlocksKit的`AlertView`扩展导致程序崩溃的Bug已修正。
+- 修正了MWPhotoBrowser的回调无法正常调用的Bug。
 
 **1.1.2 (70)**
 

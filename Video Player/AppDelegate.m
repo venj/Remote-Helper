@@ -83,7 +83,7 @@
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     if ([[KKPasscodeLock sharedLock] isPasscodeRequired]) {
         [self.fileListViewController.sheet dismissWithClickedButtonIndex:self.fileListViewController.sheet.cancelButtonIndex animated:NO];
-        [self.window.rootViewController dismissModalViewControllerAnimated:NO];
+        [self.window.rootViewController dismissViewControllerAnimated:NO completion:NULL];
     }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if ([defaults boolForKey:ClearCacheOnExitKey]) {
@@ -105,7 +105,7 @@
         vc.mode = KKPasscodeModeEnter;
         vc.delegate = self;
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-        [self.window.rootViewController presentModalViewController:nav animated:NO];
+        [self.window.rootViewController presentViewController:nav animated:NO completion:NULL];
     }
 }
 
@@ -221,6 +221,9 @@
 - (BOOL)shouldSendWebRequest {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *host = [defaults objectForKey:ServerHostKey];
+    if ([host length] == 0) {
+        return NO;
+    }
     NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:@"^[^\\d+]" options:NSRegularExpressionCaseInsensitive error:nil];
     // By pass IP check for domain names (maybe mDNS domain names)
     if ([[regex matchesInString:host options:0 range:NSMakeRange(0, [host length])] count] > 0) {

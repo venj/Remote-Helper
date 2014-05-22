@@ -51,9 +51,9 @@ iCloud sync
 To sync your `NSUserDefaults` with iCloud, there's another project called [FTiCloudSync](https://github.com/futuretap/FTiCloudSync) which is implemented as a category on `NSUserDefaults`: All write and remove requests are automatically forwarded to iCloud and all updates from iCloud are automatically stored in `NSUserDefaults`. InAppSettingsKit automatically updates the UI if the standard `NSUserDefaults` based store is used.
 
 
+
 Goodies
 =======
-
 The intention of InAppSettingsKit was to create a 100% imitation of the Settings.app behavior. However, we added some bonus features for extra flexibility.
 
 
@@ -138,7 +138,10 @@ The behaviour is similar to the custom cells except that the methods get the key
 
 Custom ViewControllers
 ----------------------
-For child pane elements (`PSChildPaneSpecifier`), Apple requires a `file` key that specifies the child plist. InAppSettingsKit allow to alternatively specify `IASKViewControllerClass` and `IASKViewControllerSelector`. In this case, the child pane is displayed by instantiating a UIViewController subclass of the specified class and initializing it using the init method specified in the `IASKViewControllerSelector`. The custom view controller is then pushed onto the navigation stack. See the sample app for more details.
+For child pane elements (`PSChildPaneSpecifier`), Apple requires a `file` key that specifies the child plist. InAppSettingsKit allow to alternatively specify `IASKViewControllerClass` and `IASKViewControllerSelector`. In this case, the child pane is displayed by instantiating a UIViewController subclass of the specified class and initializing it using the init method specified in the `IASKViewControllerSelector`. The selector must have two arguments: an `NSString` argument for the file name in the Settings bundle and the `IASKSpecifier`. The custom view controller is then pushed onto the navigation stack. See the sample app for more details.
+##### Using Custom ViewControllers from StoryBoard
+Alternatively specify `IASKViewControllerStoryBoardId` to initiate a viewcontroller from [main storyboard](https://developer.apple.com/library/ios/documentation/general/conceptual/Devpedia-CocoaApp/Storyboard.html/).
+Specifiy `IASKViewControllerStoryBoardFile` to use a story board other than MainStoryboard file.
 
 
 Text alignment

@@ -6,31 +6,23 @@
 //  Copyright 2010 d3i. All rights reserved.
 //
 
+#import "MWCommon.h"
 #import "MWZoomingScrollView.h"
 #import "MWPhotoBrowser.h"
 #import "MWPhoto.h"
 #import "DACircularProgressView.h"
-
-// Declare private methods of browser
-@interface MWPhotoBrowser ()
-- (UIImage *)imageForPhoto:(id<MWPhoto>)photo;
-- (void)cancelControlHiding;
-- (void)hideControlsAfterDelay;
-@end
+#import "MWPhotoBrowserPrivate.h"
 
 // Private methods and properties
 @interface MWZoomingScrollView () {
     
+    MWPhotoBrowser __weak *_photoBrowser;
 	MWTapDetectingView *_tapView; // for background taps
 	MWTapDetectingImageView *_photoImageView;
 	DACircularProgressView *_loadingIndicator;
+    UIImageView *_loadingError;
     
 }
-
-@property (nonatomic, weak) MWPhotoBrowser *photoBrowser;
-
-- (void)handleSingleTap:(CGPoint)touchPoint;
-- (void)handleDoubleTap:(CGPoint)touchPoint;
 
 @end
 
@@ -39,8 +31,9 @@
 - (id)initWithPhotoBrowser:(MWPhotoBrowser *)browser {
     if ((self = [super init])) {
         
-        // Delegate
-        self.photoBrowser = browser;
+        // Setup
+        _index = NSUIntegerMax;
+        _photoBrowser = browser;
         
 		// Tap view for background
 		_tapView = [[MWTapDetectingView alloc] initWithFrame:self.bounds];
@@ -92,21 +85,33 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)setPhoto:(id<MWPhoto>)photo {
-    _photoImageView.image = nil; // Release image
-    if (_photo != photo) {
-        _photo = photo;
-    }
-    [self displayImage];
-}
-
 - (void)prepareForReuse {
+    [self hideImageFailure];
     self.photo = nil;
-    [_captionView removeFromSuperview];
     self.captionView = nil;
+    self.selectedButton = nil;
+    _photoImageView.image = nil;
+    _index = NSUIntegerMax;
 }
 
 #pragma mark - Image
+
+- (void)setPhoto:(id<MWPhoto>)photo {
+    // Cancel any loading on old photo
+    if (_photo && photo == nil) {
+        if ([_photo respondsToSelector:@selector(cancelAnyLoading)]) {
+            [_photo cancelAnyLoading];
+        }
+    }
+    _photo = photo;
+    UIImage *img = [_photoBrowser imageForPhoto:_photo];
+    if (img) {
+        [self displayImage];
+    } else {
+        // Will be loading so show loading
+        [self showLoadingIndicator];
+    }
+}
 
 // Get and display image
 - (void)displayImage {
@@ -119,7 +124,7 @@
 		self.contentSize = CGSizeMake(0, 0);
 		
 		// Get image from browser as it handles ordering of fetching
-		UIImage *img = [self.photoBrowser imageForPhoto:_photo];
+		UIImage *img = [_photoBrowser imageForPhoto:_photo];
 		if (img) {
 			
 			// Hide indicator
@@ -141,9 +146,8 @@
 			
 		} else {
 			
-			// Hide image view
-			_photoImageView.hidden = YES;
-			[self showLoadingIndicator];
+			// Failed no image
+            [self displayImageFailure];
 			
 		}
 		[self setNeedsLayout];
@@ -153,13 +157,34 @@
 // Image failed so just show black!
 - (void)displayImageFailure {
     [self hideLoadingIndicator];
+    _photoImageView.image = nil;
+    if (!_loadingError) {
+        _loadingError = [UIImageView new];
+        _loadingError.image = [UIImage imageNamed:@"MWPhotoBrowser.bundle/images/ImageError.png"];
+        _loadingError.userInteractionEnabled = NO;
+		_loadingError.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin |
+        UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
+        [_loadingError sizeToFit];
+        [self addSubview:_loadingError];
+    }
+    _loadingError.frame = CGRectMake(floorf((self.bounds.size.width - _loadingError.frame.size.width) / 2.),
+                                     floorf((self.bounds.size.height - _loadingError.frame.size.height) / 2),
+                                     _loadingError.frame.size.width,
+                                     _loadingError.frame.size.height);
+}
+
+- (void)hideImageFailure {
+    if (_loadingError) {
+        [_loadingError removeFromSuperview];
+        _loadingError = nil;
+    }
 }
 
 #pragma mark - Loading Progress
 
 - (void)setProgressFromNotification:(NSNotification *)notification {
     NSDictionary *dict = [notification object];
-    MWPhoto *photoWithProgress = (MWPhoto *)[dict objectForKey:@"photo"];
+    id <MWPhoto> photoWithProgress = [dict objectForKey:@"photo"];
     if (photoWithProgress == self.photo) {
         float progress = [[dict valueForKey:@"progress"] floatValue];
         _loadingIndicator.progress = MAX(MIN(1, progress), 0);
@@ -171,11 +196,35 @@
 }
 
 - (void)showLoadingIndicator {
+    self.zoomScale = 0;
+    self.minimumZoomScale = 0;
+    self.maximumZoomScale = 0;
     _loadingIndicator.progress = 0;
     _loadingIndicator.hidden = NO;
+    [self hideImageFailure];
 }
 
 #pragma mark - Setup
+
+- (CGFloat)initialZoomScaleWithMinScale {
+    CGFloat zoomScale = self.minimumZoomScale;
+    if (_photoImageView && _photoBrowser.zoomPhotosToFill) {
+        // Zoom image to fill if the aspect ratios are fairly similar
+        CGSize boundsSize = self.bounds.size;
+        CGSize imageSize = _photoImageView.image.size;
+        CGFloat boundsAR = boundsSize.width / boundsSize.height;
+        CGFloat imageAR = imageSize.width / imageSize.height;
+        CGFloat xScale = boundsSize.width / imageSize.width;    // the scale needed to perfectly fit the image width-wise
+        CGFloat yScale = boundsSize.height / imageSize.height;  // the scale needed to perfectly fit the image height-wise
+        // Zooms standard portrait images on a 3.5in screen but not on a 4in screen.
+        if (ABS(boundsAR - imageAR) < 0.17) {
+            zoomScale = MAX(xScale, yScale);
+            // Ensure we don't zoom in or out too far, just in case
+            zoomScale = MIN(MAX(self.minimumZoomScale, zoomScale), self.maximumZoomScale);
+        }
+    }
+    return zoomScale;
+}
 
 - (void)setMaxMinZoomScalesForCurrentBounds {
 	
@@ -184,12 +233,15 @@
 	self.minimumZoomScale = 1;
 	self.zoomScale = 1;
 	
-	// Bail
+	// Bail if no image
 	if (_photoImageView.image == nil) return;
+    
+	// Reset position
+	_photoImageView.frame = CGRectMake(0, 0, _photoImageView.frame.size.width, _photoImageView.frame.size.height);
 	
 	// Sizes
     CGSize boundsSize = self.bounds.size;
-    CGSize imageSize = _photoImageView.frame.size;
+    CGSize imageSize = _photoImageView.image.size;
     
     // Calculate Min
     CGFloat xScale = boundsSize.width / imageSize.width;    // the scale needed to perfectly fit the image width-wise
@@ -207,33 +259,19 @@
 	if (xScale >= 1 && yScale >= 1) {
 		minScale = 1.0;
 	}
-
-    // Initial zoom
-    CGFloat zoomScale = minScale;
-    if (self.photoBrowser.zoomPhotosToFill) {
-        // Zoom image to fill if the aspect ratios are fairly similar
-        CGFloat boundsAR = boundsSize.width / boundsSize.height;
-        CGFloat imageAR = imageSize.width / imageSize.height;
-        if (ABS(boundsAR - imageAR) < 0.3) {
-            zoomScale = MAX(xScale, yScale);
-            // Ensure we don't zoom in or out too far, just in case
-            zoomScale = MIN(MAX(minScale, zoomScale), maxScale);
-        }
-    }
 	
-	// Set
+	// Set min/max zoom
 	self.maximumZoomScale = maxScale;
 	self.minimumZoomScale = minScale;
-	self.zoomScale = zoomScale;
     
-	// Reset position
-	_photoImageView.frame = CGRectMake(0, 0, _photoImageView.frame.size.width, _photoImageView.frame.size.height);
+    // Initial zoom
+    self.zoomScale = [self initialZoomScaleWithMinScale];
     
     // If we're zooming to fill then centralise
-    if (zoomScale != minScale) {
+    if (self.zoomScale != minScale) {
         // Centralise
-        self.contentOffset = CGPointMake((imageSize.width * zoomScale - boundsSize.width) / 2.0,
-                                         (imageSize.height * zoomScale - boundsSize.height) / 2.0);
+        self.contentOffset = CGPointMake((imageSize.width * self.zoomScale - boundsSize.width) / 2.0,
+                                         (imageSize.height * self.zoomScale - boundsSize.height) / 2.0);
         // Disable scrolling initially until the first pinch to fix issues with swiping on an initally zoomed in photo
         self.scrollEnabled = NO;
     }
@@ -250,10 +288,18 @@
 	// Update tap view frame
 	_tapView.frame = self.bounds;
 	
-	// Indicator
+	// Position indicators (centre does not seem to work!)
 	if (!_loadingIndicator.hidden)
-        _loadingIndicator.center = CGPointMake(floorf(self.bounds.size.width/2.0),
-                                               floorf(self.bounds.size.height/2.0));
+        _loadingIndicator.frame = CGRectMake(floorf((self.bounds.size.width - _loadingIndicator.frame.size.width) / 2.),
+                                         floorf((self.bounds.size.height - _loadingIndicator.frame.size.height) / 2),
+                                         _loadingIndicator.frame.size.width,
+                                         _loadingIndicator.frame.size.height);
+	if (_loadingError)
+        _loadingError.frame = CGRectMake(floorf((self.bounds.size.width - _loadingError.frame.size.width) / 2.),
+                                         floorf((self.bounds.size.height - _loadingError.frame.size.height) / 2),
+                                         _loadingError.frame.size.width,
+                                         _loadingError.frame.size.height);
+
 	// Super
 	[super layoutSubviews];
 	
@@ -312,22 +358,15 @@
 	[NSObject cancelPreviousPerformRequestsWithTarget:_photoBrowser];
 	
 	// Zoom
-	if (self.zoomScale == self.maximumZoomScale) {
+	if (self.zoomScale != self.minimumZoomScale && self.zoomScale != [self initialZoomScaleWithMinScale]) {
 		
 		// Zoom out
 		[self setZoomScale:self.minimumZoomScale animated:YES];
 		
 	} else {
 		
-		// Zoom in
-        CGFloat newZoomScale;
-        if (((self.zoomScale - self.minimumZoomScale) / self.maximumZoomScale) >= 0.3) { // we're zoomed in a fair bit, so zoom to max now
-            // Go to max zoom
-            newZoomScale = self.maximumZoomScale;
-        } else {
-            // Zoom to 50%
-            newZoomScale = ((self.maximumZoomScale + self.minimumZoomScale) / 2);
-        }
+		// Zoom in to twice the size
+        CGFloat newZoomScale = ((self.maximumZoomScale + self.minimumZoomScale) / 2);
         CGFloat xsize = self.bounds.size.width / newZoomScale;
         CGFloat ysize = self.bounds.size.height / newZoomScale;
         [self zoomToRect:CGRectMake(touchPoint.x - xsize/2, touchPoint.y - ysize/2, xsize, ysize) animated:YES];

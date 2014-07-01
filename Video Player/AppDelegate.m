@@ -178,13 +178,23 @@
     if (!host) host = @"192.168.1.1";
     NSString *port = [defaults objectForKey:ServerPortKey];
     if (!port) port = @"80";
-    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@/lx/%@", host, port, name];;
+    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@/lx/%@", host, port, name];
     if (async) {
         link = [link stringByAppendingFormat:@"/1"];
     }
     else {
         link = [link stringByAppendingFormat:@"/0"];
     }
+    return link;
+}
+
+- (NSString *)hashTorrentWithName:(NSString *)name {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *host = [defaults objectForKey:ServerHostKey];
+    if (!host) host = @"192.168.1.1";
+    NSString *port = [defaults objectForKey:ServerPortKey];
+    if (!port) port = @"80";
+    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@/hash/%@", host, port, name];
     return link;
 }
 

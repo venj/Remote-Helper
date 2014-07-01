@@ -66,6 +66,13 @@
 - (NSString *)addTorrentWithName:(NSString *)name async:(BOOL)async;
 
 /*!
+ @brief Compose a remote link to hash a torrent file.
+ @param name The image file name (a relative path) associated with a torrent file.
+ @return Absolute remote link for hash a torrent.
+ */
+- (NSString *)hashTorrentWithName:(NSString *)name;
+
+/*!
  @brief According to the current IP address and server configuration, if the device is not in the same LAN as the server, app will not send web request to the server.
  @return Returns <code>YES</code> if server and client are in the same LAN, <code>NO</code> for otherwise.
  */

@@ -22,6 +22,8 @@
 @property (nonatomic, strong) NSMutableArray *filteredDatesList;
 @property (nonatomic, strong) UISearchDisplayController *searchController;
 @property (nonatomic, strong) NSDictionary *localizedStatusStrings;
+@property (nonatomic, strong) UIBarButtonItem *cloudItem;
+@property (nonatomic, strong) UIBarButtonItem *hashItem;
 @end
 
 @implementation VPTorrentsListViewController
@@ -270,34 +272,68 @@
 }
 
 - (void)photoBrowser:(MWPhotoBrowser *)photoBrowser didDisplayPhotoAtIndex:(NSUInteger)index {
-    __block UIBarButtonItem *item = [[UIBarButtonItem alloc] bk_initWithTitle:NSLocalizedString(@"Cloud Download", @"Cloud Download") style:UIBarButtonItemStyleBordered handler:^(id sender) {
-        [item setEnabled:NO];
-        NSString *fileName = [self.photos[index] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        BOOL asyncAddTask = [defaults boolForKey:AsyncAddCloudTaskKey];
-        NSURLRequest *addTorrentRequest = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] addTorrentWithName:fileName async:asyncAddTask]]];
-        AFJSONRequestOperation *trOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:addTorrentRequest success:^(NSURLRequest *req, NSHTTPURLResponse *res, id anotherJSON) {
-            NSString *title, *message;
-            if (asyncAddTask) {
-                title = NSLocalizedString(@"Task added", @"Task added");
-                message = NSLocalizedString(@"Torrent added! Please check your Xunlei account.", @"Torrent added! Please check your Xunlei account.");
-            }
-            else {
-                title = NSLocalizedString(@"Result", @"Result");
-                message = [NSString stringWithFormat:@"%@%@", NSLocalizedString(@"Torrent added! Download status:\n", @"Torrent added! Download status:\n"), self.localizedStatusStrings[anotherJSON[@"status"]]];
-            }
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
-            [alert show];
-            [item setEnabled:YES];
-        } failure:^(NSURLRequest *req, NSHTTPURLResponse *res, NSError *err, id anotherJSON) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Connection failed.", @"Connection failed.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
-            [alert show];
-            [item setEnabled:YES];
+    photoBrowser.navigationItem.rightBarButtonItems  = @[[self cloudItemWithIndex:index], [self hashItemWithIndex:index]];
+}
+
+- (UIBarButtonItem *)hashItemWithIndex:(NSUInteger)index {
+    if (!self.hashItem) {
+        self.hashItem = [[UIBarButtonItem alloc] bk_initWithTitle:NSLocalizedString(@"Hash", @"Hash") style:UIBarButtonItemStyleBordered handler:^(id sender) {
+            NSString *fileName = [self.photos[index] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
+            NSURLRequest *hashTorrentRequest = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] hashTorrentWithName:fileName ]]];
+            AFJSONRequestOperation *trOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:hashTorrentRequest success:^(NSURLRequest *req, NSHTTPURLResponse *res, id anotherJSON) {
+                NSString *title, *message;
+                title = NSLocalizedString(@"Torrent Hash", @"Torrent Hash");
+                message = [NSString stringWithFormat:@"magnet:?xt=urn:btih:%@", [anotherJSON[@"hash"] uppercaseString]];
+                UIPasteboard *pb = [UIPasteboard generalPasteboard];
+                pb.string = message;
+                UIView *aView = [AppDelegate shared].window;
+                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:aView animated:YES];
+                hud.mode = MBProgressHUDModeText;
+                hud.labelText = NSLocalizedString(@"Magnet link copied.", @"Magnet link copied.");
+                [hud hide:YES afterDelay:1];
+            } failure:^(NSURLRequest *req, NSHTTPURLResponse *res, NSError *err, id anotherJSON) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Connection failed.", @"Connection failed.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
+                [alert show];
+            }];
+            [trOperation start];
         }];
-        [trOperation start];
-    }];
-    photoBrowser.navigationItem.rightBarButtonItem = item;
+    }
+    return self.hashItem;
+}
+
+- (UIBarButtonItem *)cloudItemWithIndex:(NSUInteger)index {
+    __block UIBarButtonItem *item = self.cloudItem;
+    if (!self.cloudItem) {
+        self.cloudItem = [[UIBarButtonItem alloc] bk_initWithTitle:NSLocalizedString(@"Cloud Download", @"Cloud Download") style:UIBarButtonItemStyleBordered handler:^(id sender) {
+            [item setEnabled:NO];
+            NSString *fileName = [self.photos[index] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            BOOL asyncAddTask = [defaults boolForKey:AsyncAddCloudTaskKey];
+            NSURLRequest *addTorrentRequest = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] addTorrentWithName:fileName async:asyncAddTask]]];
+            AFJSONRequestOperation *trOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:addTorrentRequest success:^(NSURLRequest *req, NSHTTPURLResponse *res, id anotherJSON) {
+                NSString *title, *message;
+                if (asyncAddTask) {
+                    title = NSLocalizedString(@"Task added", @"Task added");
+                    message = NSLocalizedString(@"Torrent added! Please check your Xunlei account.", @"Torrent added! Please check your Xunlei account.");
+                }
+                else {
+                    title = NSLocalizedString(@"Result", @"Result");
+                    message = [NSString stringWithFormat:@"%@%@", NSLocalizedString(@"Torrent added! Download status:\n", @"Torrent added! Download status:\n"), self.localizedStatusStrings[anotherJSON[@"status"]]];
+                }
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
+                [alert show];
+                [item setEnabled:YES];
+            } failure:^(NSURLRequest *req, NSHTTPURLResponse *res, NSError *err, id anotherJSON) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Connection failed.", @"Connection failed.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
+                [alert show];
+                [item setEnabled:YES];
+            }];
+            [trOperation start];
+        }];
+    }
+    return self.cloudItem;
 }
 
 @end

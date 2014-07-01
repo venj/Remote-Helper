@@ -23,7 +23,7 @@
         const char* attrName = "com.apple.MobileBackup";
         u_int8_t attrValue = 1;
         
-        int result = getxattr(filePath, attrName, &attrValue, sizeof(attrValue), 0, 0);
+        NSInteger result = getxattr(filePath, attrName, &attrValue, sizeof(attrValue), 0, 0);
         return result == 0;
     }
     else if([[[version componentsSeparatedByString:@"."] objectAtIndex:0] intValue] < 5) {

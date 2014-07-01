@@ -9,6 +9,8 @@
 #import "PSTCollectionViewItemKey.h"
 #import "PSTCollectionViewData.h"
 
+#import <objc/runtime.h>
+
 @interface PSTCollectionView ()
 - (id)currentUpdate;
 - (NSDictionary *)visibleViewsDict;
@@ -124,14 +126,18 @@
     return self.representedElementCategory == PSTCollectionViewItemTypeCell;
 }
 
+- (void) updateFrame {
+    _frame = (CGRect){{_center.x - _size.width / 2, _center.y - _size.height / 2}, _size};
+}
+
 - (void)setSize:(CGSize)size {
     _size = size;
-    _frame = (CGRect){_frame.origin, _size};
+    [self updateFrame];
 }
 
 - (void)setCenter:(CGPoint)center {
     _center = center;
-    _frame = (CGRect){{_center.x - _frame.size.width / 2, _center.y - _frame.size.height / 2}, _frame.size};
+    [self updateFrame];
 }
 
 - (void)setFrame:(CGRect)frame {
@@ -161,7 +167,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - PSTCollection/UICollection interoperability
 
-#import <objc/runtime.h>
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
     NSMethodSignature *signature = [super methodSignatureForSelector:selector];
     if (!signature) {

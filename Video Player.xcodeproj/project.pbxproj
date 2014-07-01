@@ -295,11 +295,6 @@
 			attributes = {
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = Home;
-				TargetAttributes = {
-					252DFA7B1753784400FF8199 = {
-						DevelopmentTeam = 32Y52676KN;
-					};
-				};
 			};
 			buildConfigurationList = 252DFA771753784400FF8199 /* Build configuration list for PBXProject "Video Player" */;
 			compatibilityVersion = "Xcode 3.2";

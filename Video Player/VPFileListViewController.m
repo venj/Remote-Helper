@@ -25,7 +25,6 @@
 @property (nonatomic, strong) MPMoviePlayerViewController *mpViewController;
 @property (nonatomic, strong) IASKAppSettingsViewController *settingsViewController;
 @property (nonatomic, strong) UIActionSheet *sheet;
-@property (nonatomic, strong) MWPhotoBrowser *photoBrowser;
 @property (nonatomic, strong) NSArray *mwPhotos;
 @end
 
@@ -314,13 +313,13 @@
 - (void)browseCache:(id)sender {
     self.mwPhotos = [self fetchCacheFileList];
     if (self.mwPhotos.count == 0) return;
-    if (!self.photoBrowser) self.photoBrowser = [[MWPhotoBrowser alloc] initWithDelegate:self];
-    self.photoBrowser.wantsFullScreenLayout = YES;
-    self.photoBrowser.displayActionButton = NO;
-    self.photoBrowser.displayNavArrows = YES;
-    self.photoBrowser.zoomPhotosToFill = NO;
-    [self.photoBrowser setCurrentPhotoIndex:0];
-    [self.navigationController pushViewController:self.photoBrowser animated:YES];
+    MWPhotoBrowser *photoBrowser = [[MWPhotoBrowser alloc] initWithDelegate:self];
+    photoBrowser.wantsFullScreenLayout = YES;
+    photoBrowser.displayActionButton = NO;
+    photoBrowser.displayNavArrows = YES;
+    photoBrowser.zoomPhotosToFill = NO;
+    [photoBrowser setCurrentPhotoIndex:0];
+    [self.navigationController pushViewController:photoBrowser animated:YES];
 }
 
 - (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {

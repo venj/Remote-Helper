@@ -14,16 +14,19 @@
 #import <SDWebImage/SDImageCache.h>
 #import <KKPasscodeLock/KKPasscodeLock.h>
 #import <KKPasscodeLock/KKPasscodeSettingsViewController.h>
+#import <MWPhotoBrowser/MWPhotoBrowser.h>
 #import "VPTorrentsListViewController.h"
 #import "Common.h"
 #import "VPFileInfoViewController.h"
 #import "VCFileAttributeHelper.h"
 #import "AppDelegate.h"
 
-@interface VPFileListViewController () <IASKSettingsDelegate, KKPasscodeSettingsViewControllerDelegate>
+@interface VPFileListViewController () <IASKSettingsDelegate, KKPasscodeSettingsViewControllerDelegate, MWPhotoBrowserDelegate>
 @property (nonatomic, strong) MPMoviePlayerViewController *mpViewController;
 @property (nonatomic, strong) IASKAppSettingsViewController *settingsViewController;
 @property (nonatomic, strong) UIActionSheet *sheet;
+@property (nonatomic, strong) MWPhotoBrowser *photoBrowser;
+@property (nonatomic, strong) NSArray *mwPhotos;
 @end
 
 @implementation VPFileListViewController
@@ -59,6 +62,9 @@
             }
             [blockSelf.sheet bk_addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings") handler:^{
                 [blockSelf showSettings:sender];
+            }];
+            [blockSelf.sheet bk_addButtonWithTitle:NSLocalizedString(@"Cache Browser", @"Cache Browser") handler:^{
+                [blockSelf browseCache:sender];
             }];
             [blockSelf.sheet bk_setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:^{}];
             [blockSelf.sheet showFromBarButtonItem:leftButton animated:YES];
@@ -303,6 +309,44 @@
         }];
         [operation start];
     }
+}
+
+- (void)browseCache:(id)sender {
+    self.mwPhotos = [self fetchCacheFileList];
+    if (self.mwPhotos.count == 0) return;
+    if (!self.photoBrowser) self.photoBrowser = [[MWPhotoBrowser alloc] initWithDelegate:self];
+    self.photoBrowser.wantsFullScreenLayout = YES;
+    self.photoBrowser.displayActionButton = NO;
+    self.photoBrowser.displayNavArrows = YES;
+    self.photoBrowser.zoomPhotosToFill = NO;
+    [self.photoBrowser setCurrentPhotoIndex:0];
+    [self.navigationController pushViewController:self.photoBrowser animated:YES];
+}
+
+- (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {
+    return self.mwPhotos.count;
+}
+
+- (MWPhoto *)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
+    if (index < self.mwPhotos.count)
+        return self.mwPhotos[index];
+    return nil;
+}
+
+- (NSArray *)fetchCacheFileList {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *cacheDir = [paths[0] stringByAppendingPathComponent:@"com.hackemist.SDWebImageCache.default"];
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSError *error;
+    NSArray *arr = [fm contentsOfDirectoryAtPath:cacheDir error:&error];
+    if (error) {
+        return nil;
+    }
+    NSMutableArray *files = [[NSMutableArray alloc] init];
+    for (NSString *f in arr) {
+        [files addObject:[MWPhoto photoWithURL:[NSURL fileURLWithPath:[cacheDir stringByAppendingPathComponent:f]]]];
+    }
+    return files;
 }
 
 #pragma mark - IASKSettingsDelegate

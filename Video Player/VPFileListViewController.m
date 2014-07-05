@@ -15,6 +15,7 @@
 #import <KKPasscodeLock/KKPasscodeLock.h>
 #import <KKPasscodeLock/KKPasscodeSettingsViewController.h>
 #import <MWPhotoBrowser/MWPhotoBrowser.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 #import "VPTorrentsListViewController.h"
 #import "Common.h"
 #import "VPFileInfoViewController.h"
@@ -193,8 +194,8 @@
         NSString *path = [defaults objectForKey:ServerPathKey];
         NSString *movieInfoPath = [[AppDelegate shared] fileOperation:@"info" withPath:path fileName:fileName];
         NSURL *movieInfoURL = [[NSURL alloc] initWithString:movieInfoPath];
-        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:movieInfoURL];
-        
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:movieInfoURL];
+        request.timeoutInterval = REQUEST_TIME_OUT;
         AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
             if ((JSON[@"exist"] != nil) && ([JSON[@"exist"] boolValue] == NO)) {
                 [UIAlertView bk_showAlertViewWithTitle:NSLocalizedString(@"Error", @"Error") message:[NSString stringWithFormat:NSLocalizedString(@"%@ was deleted from the server.", @"%@ was deleted from the server."), [self.dataList[indexPath.row] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
@@ -219,8 +220,7 @@
                 [fileInfoViewController.tableView reloadData];
             }
         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Connection failed.", @"Connection failed.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
-            [alert show];
+            [self showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.")];
         }];
         [operation start];
     }
@@ -296,14 +296,14 @@
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSString *path = [defaults objectForKey:ServerPathKey];
         NSURL *movieListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] fileLinkWithPath:path]];
-        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:movieListURL];
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:movieListURL];
+        request.timeoutInterval = REQUEST_TIME_OUT;
         AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
             blockSelf.dataList = [NSMutableArray arrayWithArray:JSON];
             [blockSelf.tableView reloadData];
             [blockSelf showActivityIndicatorInBarButton:NO];
         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Connection failed.", @"Connection failed.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
-            [alert show];
+            [self showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.")];
             [blockSelf showActivityIndicatorInBarButton:NO];
         }];
         [operation start];
@@ -346,6 +346,14 @@
         [files addObject:[MWPhoto photoWithURL:[NSURL fileURLWithPath:[cacheDir stringByAppendingPathComponent:f]]]];
     }
     return files;
+}
+
+- (void)showHudWithMessage:(NSString *)message {
+    UIView *aView = self.navigationController.view;
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:aView animated:YES];
+    hud.mode = MBProgressHUDModeText;
+    hud.labelText = message;
+    [hud hide:YES afterDelay:1];
 }
 
 #pragma mark - IASKSettingsDelegate

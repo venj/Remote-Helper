@@ -13,8 +13,6 @@
 #import "AppDelegate.h"
 #import "Common.h"
 
-
-
 @interface VPTorrentsListViewController () <MWPhotoBrowserDelegate, UISearchDisplayDelegate, UISearchBarDelegate>
 @property (nonatomic, strong) NSArray *datesList;
 @property (nonatomic, strong) NSArray *mwPhotos;
@@ -176,7 +174,8 @@
     NSString *date = [list[indexPath.row] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     __weak VPTorrentsListViewController *blockSelf = self;
     NSURL *movieListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] searchPathWithKeyword:date]];
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:movieListURL];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:movieListURL];
+    request.timeoutInterval = REQUEST_TIME_OUT;
     UIView *aView = [AppDelegate shared].window;
     [MBProgressHUD showHUDAddedTo:aView animated:YES];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
@@ -195,8 +194,7 @@
         [self.navigationController pushViewController:photoBrowser animated:YES];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         [MBProgressHUD hideHUDForView:aView animated:YES];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Connection failed.", @"Connection failed.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
-        [alert show];
+        [self showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.")];
     }];
     [operation start];
 }
@@ -224,8 +222,9 @@
     
     __weak VPTorrentsListViewController *blockSelf = self;
     NSURL *torrentsListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] torrentsListPath]];
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:torrentsListURL];
-    UIView *aView = [AppDelegate shared].window;
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:torrentsListURL];
+    request.timeoutInterval = REQUEST_TIME_OUT;
+    UIView *aView = self.navigationController.view;
     [MBProgressHUD showHUDAddedTo:aView animated:YES];
     self.navigationItem.rightBarButtonItem.enabled = NO;
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
@@ -235,8 +234,7 @@
         [blockSelf.tableView reloadData];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         [MBProgressHUD hideHUDForView:aView animated:YES];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Connection failed.", @"Connection failed.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
-        [alert show];
+        [self showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.")];
         blockSelf.navigationItem.rightBarButtonItem.enabled = YES;
     }];
     [operation start];
@@ -276,7 +274,7 @@
 }
 
 - (UIBarButtonItem *)hashItemWithIndex:(NSUInteger)index {
-    self.hashItem = [[UIBarButtonItem alloc] bk_initWithTitle:NSLocalizedString(@"Hash", @"Hash") style:UIBarButtonItemStyleBordered handler:^(id sender) {
+    self.hashItem = [[UIBarButtonItem alloc] bk_initWithImage:[UIImage imageNamed:@"magnet"] style:UIBarButtonItemStylePlain handler:^(id sender) {
         NSString *fileName = [self.photos[index] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
         NSURLRequest *hashTorrentRequest = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] hashTorrentWithName:fileName ]]];
@@ -286,29 +284,33 @@
             message = [NSString stringWithFormat:@"magnet:?xt=urn:btih:%@", [anotherJSON[@"hash"] uppercaseString]];
             UIPasteboard *pb = [UIPasteboard generalPasteboard];
             pb.string = message;
-            UIView *aView = [AppDelegate shared].window;
-            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:aView animated:YES];
-            hud.mode = MBProgressHUDModeText;
-            hud.labelText = NSLocalizedString(@"Magnet link copied.", @"Magnet link copied.");
-            [hud hide:YES afterDelay:1];
+            [self showHudWithMessage:NSLocalizedString(@"Magnet link copied.", @"Magnet link copied.")];
         } failure:^(NSURLRequest *req, NSHTTPURLResponse *res, NSError *err, id anotherJSON) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Connection failed.", @"Connection failed.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
-            [alert show];
+            [self showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.")];
         }];
         [trOperation start];
     }];
     return self.hashItem;
 }
 
+- (void)showHudWithMessage:(NSString *)message {
+    UIView *aView = self.navigationController.view;
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:aView animated:YES];
+    hud.mode = MBProgressHUDModeText;
+    hud.labelText = message;
+    [hud hide:YES afterDelay:1];
+}
+
 - (UIBarButtonItem *)cloudItemWithIndex:(NSUInteger)index {
     __block UIBarButtonItem *item = self.cloudItem;
-    self.cloudItem = [[UIBarButtonItem alloc] bk_initWithTitle:NSLocalizedString(@"Cloud Download", @"Cloud Download") style:UIBarButtonItemStyleBordered handler:^(id sender) {
+    self.cloudItem = [[UIBarButtonItem alloc] bk_initWithImage:[UIImage imageNamed:@"cloud_down"] style:UIBarButtonItemStylePlain handler:^(id sender) {
         [item setEnabled:NO];
         NSString *fileName = [self.photos[index] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         BOOL asyncAddTask = [defaults boolForKey:AsyncAddCloudTaskKey];
-        NSURLRequest *addTorrentRequest = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] addTorrentWithName:fileName async:asyncAddTask]]];
+        NSMutableURLRequest *addTorrentRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] addTorrentWithName:fileName async:asyncAddTask]]];
+        addTorrentRequest.timeoutInterval = REQUEST_TIME_OUT;
         AFJSONRequestOperation *trOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:addTorrentRequest success:^(NSURLRequest *req, NSHTTPURLResponse *res, id anotherJSON) {
             NSString *title, *message;
             if (asyncAddTask) {
@@ -323,8 +325,7 @@
             [alert show];
             [item setEnabled:YES];
         } failure:^(NSURLRequest *req, NSHTTPURLResponse *res, NSError *err, id anotherJSON) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Connection failed.", @"Connection failed.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
-            [alert show];
+            [self showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.")];
             [item setEnabled:YES];
         }];
         [trOperation start];

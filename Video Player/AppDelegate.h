@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "VPFileInfoViewController.h"
+#define REQUEST_TIME_OUT 10.
 
 @class VPFileListViewController;
 

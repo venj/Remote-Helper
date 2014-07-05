@@ -148,7 +148,8 @@
                 blockSelf.progressHUD.labelText = NSLocalizedString(@"Downloading", @"Downloading");
                 NSString *path = [[AppDelegate shared] fileLinkWithPath:[blockSelf.fileInfo[@"file"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
                 NSURL *url = [NSURL URLWithString:path];
-                NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
+                NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+                request.timeoutInterval = REQUEST_TIME_OUT;
                 AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
                 NSOutputStream *oStream = [[NSOutputStream alloc] initToFileAtPath:[[AppDelegate shared] fileToDownloadWithPath:blockSelf.fileInfo[@"file"]] append:NO];
                 [operation setOutputStream:oStream];

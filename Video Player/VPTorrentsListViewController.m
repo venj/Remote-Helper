@@ -176,7 +176,7 @@
     NSURL *movieListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] searchPathWithKeyword:date]];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:movieListURL];
     request.timeoutInterval = REQUEST_TIME_OUT;
-    UIView *aView = [AppDelegate shared].window;
+    UIView *aView = self.navigationController.view;
     [MBProgressHUD showHUDAddedTo:aView animated:YES];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         [MBProgressHUD hideHUDForView:aView animated:YES];

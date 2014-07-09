@@ -348,13 +348,18 @@
     return files;
 }
 
-- (void)showHudWithMessage:(NSString *)message {
-    UIView *aView = self.navigationController.view;
+- (void)showHudWithMessage:(NSString *)message forView:(UIView *)aView {
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:aView animated:YES];
     hud.mode = MBProgressHUDModeText;
     hud.labelText = message;
     [hud hide:YES afterDelay:1];
 }
+
+- (void)showHudWithMessage:(NSString *)message {
+    UIView *aView = self.navigationController.view;
+    [self showHudWithMessage:message forView:aView];
+}
+
 
 #pragma mark - IASKSettingsDelegate
 - (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController *)sender {
@@ -372,6 +377,23 @@
         KKPasscodeSettingsViewController *vc = [[KKPasscodeSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
         vc.delegate = self;
         [sender.navigationController pushViewController:vc animated:YES];
+    }
+    else if ([specifier.key isEqualToString:ClearCacheNowKey]) {
+        UIView *aView = sender.navigationController.view;
+        [MBProgressHUD showHUDAddedTo:aView animated:YES];
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            [[SDImageCache sharedImageCache] clearDisk]; // Clear Image Cache
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            NSString *localFileSize = [[AppDelegate shared] fileSizeStringWithInteger:[[AppDelegate shared] localFileSize]];
+            [defaults setObject:localFileSize forKey:LocalFileSize];
+            [defaults synchronize];
+            [sender synchronizeSettings];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:aView animated:YES];
+                [self showHudWithMessage:NSLocalizedString(@"Cache Cleared!", @"Cache Cleared!") forView:aView];
+                [sender.tableView reloadData];
+            });
+        });
     }
 }
 

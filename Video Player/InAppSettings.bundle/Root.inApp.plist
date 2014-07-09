@@ -92,6 +92,16 @@
 		</dict>
 		<dict>
 			<key>Title</key>
+			<string>Clear Cache Now</string>
+			<key>Key</key>
+			<string>kClearCacheNowKey</string>
+			<key>Type</key>
+			<string>IASKButtonSpecifier</string>
+			<key>IASKTextAlignment</key>
+			<string>IASKUITextAlignmentCenter</string>
+		</dict>
+		<dict>
+			<key>Title</key>
 			<string>Disk Storage</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>

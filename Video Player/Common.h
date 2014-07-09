@@ -15,6 +15,7 @@
 #define ServerSetupDone @"kServerSetupDone"
 #define CurrentVersionKey @"kCurrentVersionKey"
 #define ClearCacheOnExitKey @"kClearCacheOnExitKey"
+#define ClearCacheNowKey @"kClearCacheNowKey"
 #define ImageCacheSizeKey @"kImageCacheSizeKey"
 #define AsyncAddCloudTaskKey @"kAsyncAddCloudTaskKey"
 #define PasscodeLockStatus @"kPasscodeLockStatus"

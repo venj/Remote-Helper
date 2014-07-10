@@ -54,11 +54,11 @@
     self.tabbarController = [[UITabBarController alloc] init];
     self.tabbarController.delegate = self;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        self.tabbarController.viewControllers = @[fileListNavController, localFileListNavController, torrentsListNavigationController, transmissionNavigationController];
+        self.tabbarController.viewControllers = @[fileListNavController, localFileListNavController, torrentsListNavigationController];
         self.window.rootViewController = self.tabbarController;
     }
     else {
-        self.tabbarController.viewControllers = @[fileListNavController, localFileListNavController, transmissionNavigationController];
+        self.tabbarController.viewControllers = @[fileListNavController, localFileListNavController];
         self.fileInfoViewController = [[VPFileInfoViewController alloc] initWithStyle:UITableViewStyleGrouped];
         self.fileInfoViewController.delegate = self;
         UINavigationController *fileInfoNavController = [[UINavigationController alloc] initWithRootViewController:self.fileInfoViewController];

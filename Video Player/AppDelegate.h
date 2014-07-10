@@ -46,6 +46,18 @@
 - (NSString *)fileOperation:(NSString *)operation withPath:(NSString *)path fileName:(NSString *)fileName;
 
 /*!
+ @brief Read Transmission server address from settings.
+ @return The Transmission web interface address.
+ */
+- (NSString *)getTransmissionServerAddress;
+
+/*!
+ @brief Read username and password for Transmission web interface.
+ @return An array with username and password.
+*/
+- (NSArray *)getUsernameAndPassword;
+
+/*!
  @brief Compose a remote link for torrents date list according to user server settings.
  @return Absolute remote link for torrents date list.
  */

@@ -66,6 +66,66 @@
 		</dict>
 		<dict>
 			<key>Title</key>
+			<string>Transmission Settings</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+			<key>DefaultValue</key>
+			<string>127.0.0.1:9091</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>Key</key>
+			<string>kTransmissionAddressKey</string>
+			<key>KeyboardType</key>
+			<string>Alphabet</string>
+			<key>Title</key>
+			<string>Host</string>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+		</dict>
+		<dict>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+			<key>DefaultValue</key>
+			<string>username</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>Key</key>
+			<string>kTransmissionUserNameKey</string>
+			<key>KeyboardType</key>
+			<string>Alphabet</string>
+			<key>Title</key>
+			<string>Username</string>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+		</dict>
+		<dict>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+			<key>DefaultValue</key>
+			<string>password</string>
+			<key>IsSecure</key>
+			<true/>
+			<key>Key</key>
+			<string>kTransmissionPasswordKey</string>
+			<key>KeyboardType</key>
+			<string>Alphabet</string>
+			<key>Title</key>
+			<string>Password</string>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+		</dict>
+		<dict>
+			<key>Title</key>
 			<string>Cache</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>

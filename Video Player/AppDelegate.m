@@ -14,6 +14,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <KKPasscodeLock/KKPasscodeLock.h>
 #import "VPTorrentsListViewController.h"
+#import "TransmissionWebViewController.h"
 #import "ipaddress.h"
 
 @interface AppDelegate () <UISplitViewControllerDelegate, KKPasscodeViewControllerDelegate, UITabBarControllerDelegate, VPFileInfoViewControllerDelegate>
@@ -44,15 +45,20 @@
     torrentsListViewController.title = NSLocalizedString(@"Torrents", @"Torrents");
     torrentsListViewController.tabBarItem.image = [UIImage imageNamed:@"tab_torrents"];
     UINavigationController *torrentsListNavigationController = [[UINavigationController alloc] initWithRootViewController:torrentsListViewController];
+    // Transmission Web Interface
+    TransmissionWebViewController *transmissionWebViewController = [[TransmissionWebViewController alloc] initWithNibName:nil bundle:nil];
+    transmissionWebViewController.title = NSLocalizedString(@"Transmission", @"Transmission");
+    transmissionWebViewController.tabBarItem.image = [UIImage imageNamed:@"transmission"];
+    UINavigationController *transmissionNavigationController = [[UINavigationController alloc] initWithRootViewController:transmissionWebViewController];
     // Tabbar
     self.tabbarController = [[UITabBarController alloc] init];
     self.tabbarController.delegate = self;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        self.tabbarController.viewControllers = @[fileListNavController, localFileListNavController, torrentsListNavigationController];
+        self.tabbarController.viewControllers = @[fileListNavController, localFileListNavController, torrentsListNavigationController, transmissionNavigationController];
         self.window.rootViewController = self.tabbarController;
     }
     else {
-        self.tabbarController.viewControllers = @[fileListNavController, localFileListNavController];
+        self.tabbarController.viewControllers = @[fileListNavController, localFileListNavController, transmissionNavigationController];
         self.fileInfoViewController = [[VPFileInfoViewController alloc] initWithStyle:UITableViewStyleGrouped];
         self.fileInfoViewController.delegate = self;
         UINavigationController *fileInfoNavController = [[UINavigationController alloc] initWithRootViewController:self.fileInfoViewController];
@@ -226,6 +232,29 @@
         path = [[NSString alloc]  initWithFormat:@"%@/", path];
     NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@%@%@/%@", host, port, path, operation, fileName];
     return link;
+}
+
+- (NSString *)getTransmissionServerAddress {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *address = [defaults objectForKey:TransmissionAddressKey];
+    if (address) {
+        return [NSString stringWithFormat:@"http://%@", address];
+    }
+    else {
+        return @"http://127.0.0.1:9091";
+    }
+}
+
+- (NSArray *)getUsernameAndPassword {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *username = [defaults objectForKey:TransmissionUserNameKey];
+    NSString *password = [defaults objectForKey:TransmissionPasswordKey];
+    if (username && password) {
+        return @[username, password];
+    }
+    else {
+        return @[@"username", @"password"];
+    }
 }
 
 - (BOOL)shouldSendWebRequest {

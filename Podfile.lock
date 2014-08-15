@@ -18,16 +18,16 @@ PODS:
   - DACircularProgress (2.2.0)
   - InAppSettingsKit (2.1)
   - KKPasscodeLock (0.2.2)
-  - MBProgressHUD (0.8)
+  - MBProgressHUD (0.9)
   - MWPhotoBrowser (1.4.0):
     - DACircularProgress
     - MBProgressHUD (~> 0.8)
     - PSTCollectionView (~> 1.2)
     - SDWebImage (~> 3.5.4)
-  - PSTCollectionView (1.2.1)
-  - SDWebImage (3.5.4):
+  - PSTCollectionView (1.2.3)
+  - SDWebImage (3.7.1):
     - SDWebImage/Core
-  - SDWebImage/Core (3.5.4)
+  - SDWebImage/Core (3.7.1)
 
 DEPENDENCIES:
   - AFNetworking (~> 1.3.4)
@@ -36,6 +36,7 @@ DEPENDENCIES:
   - KKPasscodeLock (~> 0.2.2)
   - MBProgressHUD (~> 0.8)
   - MWPhotoBrowser (~> 1.4.0)
+  - SDWebImage (<= 3.7.1)
 
 SPEC CHECKSUMS:
   AFNetworking: 80c4e0652b08eb34e25b9c0ff3c82556fe5967b4
@@ -43,9 +44,9 @@ SPEC CHECKSUMS:
   DACircularProgress: 3b41941891a56dc6aa17971f5322a9a38a6f446e
   InAppSettingsKit: 853cdc9fcc76b87a4694f8d2b930e116463b5a29
   KKPasscodeLock: 51e73d34a5b6ec8d20d041a97210545ae073f7ed
-  MBProgressHUD: c356980b0cd097f19acec959b49dca5eb8ec31be
+  MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
   MWPhotoBrowser: 4efcdb9da34751f97992128a5356f3929d1af537
-  PSTCollectionView: a63299550ad566b579479d07cb5e2bf61148686b
-  SDWebImage: 571295c8acbb699505a0f68e54506147c3de9ea7
+  PSTCollectionView: d9f466e4554cc83260ca9bde7beb27f308e8fd76
+  SDWebImage: 116e88633b5b416ea0ca4b334a4ac59cf72dd38d
 
 COCOAPODS: 0.33.1

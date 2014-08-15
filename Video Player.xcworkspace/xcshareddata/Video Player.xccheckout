@@ -5,27 +5,31 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>37F6DBB5-A496-45EB-B329-CC2074CF65BB</string>
+	<string>0FEE3D29-178E-4A10-8E3C-C2620D8AC821</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Video Player</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>3A4CCE06-CB94-4DA4-9047-79474F610ECC</key>
 		<string>ssh://bitbucket.org/venj/easynas.git</string>
+		<key>60304941CB62CBEB46D79CE0B96D37E4F2072870</key>
+		<string>bitbucket.org:venj/easynas.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Video Player.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>3A4CCE06-CB94-4DA4-9047-79474F610ECC</key>
+		<string>../../easynas</string>
+		<key>60304941CB62CBEB46D79CE0B96D37E4F2072870</key>
 		<string>..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://bitbucket.org/venj/easynas.git</string>
+	<string>bitbucket.org:venj/easynas.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>3A4CCE06-CB94-4DA4-9047-79474F610ECC</string>
+	<string>60304941CB62CBEB46D79CE0B96D37E4F2072870</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
@@ -35,6 +39,14 @@
 			<string>3A4CCE06-CB94-4DA4-9047-79474F610ECC</string>
 			<key>IDESourceControlWCCName</key>
 			<string>easynas</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>60304941CB62CBEB46D79CE0B96D37E4F2072870</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Video%20Player</string>
 		</dict>
 	</array>
 </dict>

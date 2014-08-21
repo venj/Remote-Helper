@@ -185,7 +185,16 @@
 }
 
 - (NSString *)fileLinkWithPath:(NSString *)path {
-    NSString *link = [[NSString alloc] initWithFormat:@"http://%@%@", [self baseLink], path];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *host = [defaults objectForKey:ServerHostKey];
+    if (!host) host = @"192.168.1.1";
+    NSString *port = [defaults objectForKey:ServerPortKey];
+    if (!port) port = @"80";
+    if (!path || [path isEqualToString:@""])
+        path = @"/";
+    else if (![[path substringToIndex:1] isEqualToString:@"/"])
+        path = [[NSString alloc]  initWithFormat:@"/%@", path];
+    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@%@", host, port, path];
     return link;
 }
 
@@ -202,7 +211,7 @@
     if (!port) port = @"80";
     NSString *subpath = [defaults objectForKey:ServerPathKey];
     if (!subpath || [subpath isEqualToString:@"/"]) {
-        subpath = @"/";
+        subpath = @"";
     }
     else {
         if (![[subpath substringToIndex:1] isEqualToString:@"/"])

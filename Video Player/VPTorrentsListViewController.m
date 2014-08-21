@@ -261,7 +261,7 @@
     NSString *linkBase = [[AppDelegate shared] fileLinkWithPath:path];
     for (NSString *photo in photos) {
         NSString *fileName = [photo stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%2F"];
+        //fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%2F"];
         MWPhoto *p = [MWPhoto photoWithURL:[NSURL URLWithString:[linkBase stringByAppendingPathComponent:fileName]]];
         p.caption = [photo lastPathComponent];
         [mwPhotos addObject:p];

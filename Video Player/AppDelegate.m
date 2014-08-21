@@ -159,32 +159,17 @@
 
 #pragma mark - Helper Methods
 - (NSString *)torrentsListPath {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *host = [defaults objectForKey:ServerHostKey];
-    if (!host) host = @"192.168.1.1";
-    NSString *port = [defaults objectForKey:ServerPortKey];
-    if (!port) port = @"80";
-    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@/torrents", host, port];
+    NSString *link = [[NSString alloc] initWithFormat:@"http://%@/torrents", [self baseLink]];
     return link;
 }
 
 - (NSString *)searchPathWithKeyword:(NSString *)keyword {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *host = [defaults objectForKey:ServerHostKey];
-    if (!host) host = @"192.168.1.1";
-    NSString *port = [defaults objectForKey:ServerPortKey];
-    if (!port) port = @"80";
-    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@/search/%@", host, port, keyword];
+    NSString *link = [[NSString alloc] initWithFormat:@"http://%@/search/%@", [self baseLink], keyword];
     return link;
 }
 
 - (NSString *)addTorrentWithName:(NSString *)name async:(BOOL)async {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *host = [defaults objectForKey:ServerHostKey];
-    if (!host) host = @"192.168.1.1";
-    NSString *port = [defaults objectForKey:ServerPortKey];
-    if (!port) port = @"80";
-    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@/lx/%@", host, port, name];
+    NSString *link = [[NSString alloc] initWithFormat:@"http://%@/lx/%@", [self baseLink], name];
     if (async) {
         link = [link stringByAppendingFormat:@"/1"];
     }
@@ -195,43 +180,37 @@
 }
 
 - (NSString *)hashTorrentWithName:(NSString *)name {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *host = [defaults objectForKey:ServerHostKey];
-    if (!host) host = @"192.168.1.1";
-    NSString *port = [defaults objectForKey:ServerPortKey];
-    if (!port) port = @"80";
-    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@/hash/%@", host, port, name];
+    NSString *link = [[NSString alloc] initWithFormat:@"http://%@/hash/%@", [self baseLink], name];
     return link;
 }
 
 - (NSString *)fileLinkWithPath:(NSString *)path {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *host = [defaults objectForKey:ServerHostKey];
-    if (!host) host = @"192.168.1.1";
-    NSString *port = [defaults objectForKey:ServerPortKey];
-    if (!port) port = @"80";
-    if (!path || [path isEqualToString:@""])
-        path = @"/";
-    else if (![[path substringToIndex:1] isEqualToString:@"/"])
-        path = [[NSString alloc]  initWithFormat:@"/%@", path];
-    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@%@", host, port, path];
+    NSString *link = [[NSString alloc] initWithFormat:@"http://%@%@", [self baseLink], path];
     return link;
 }
 
 - (NSString *)fileOperation:(NSString *)operation withPath:(NSString *)path fileName:(NSString *)fileName {
+    NSString *link = [[NSString alloc] initWithFormat:@"http://%@%@%@/%@", [self baseLink], path, operation, fileName];
+    return link;
+}
+
+- (NSString *)baseLink {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *host = [defaults objectForKey:ServerHostKey];
     if (!host) host = @"192.168.1.1";
     NSString *port = [defaults objectForKey:ServerPortKey];
     if (!port) port = @"80";
-    if (!path || [path isEqualToString:@""])
-        path = @"/";
-    else if (![[path substringToIndex:1] isEqualToString:@"/"])
-        path = [[NSString alloc]  initWithFormat:@"/%@", path];
-    else if (![[path substringFromIndex:[path length] - 1] isEqualToString:@"/"])
-        path = [[NSString alloc]  initWithFormat:@"%@/", path];
-    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@%@%@/%@", host, port, path, operation, fileName];
-    return link;
+    NSString *subpath = [defaults objectForKey:ServerPathKey];
+    if (!subpath || [subpath isEqualToString:@"/"]) {
+        subpath = @"/";
+    }
+    else {
+        if (![[subpath substringToIndex:1] isEqualToString:@"/"])
+            subpath = [[NSString alloc] initWithFormat:@"/%@", subpath];
+        if ([[subpath substringFromIndex:(subpath.length - 1)] isEqualToString:@"/"])
+            subpath = [subpath substringToIndex:subpath.length - 2];
+    }
+    return [[NSString alloc] initWithFormat:@"%@:%@%@", host, port, subpath];
 }
 
 - (NSString *)getTransmissionServerAddress {

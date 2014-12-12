@@ -1,11 +1,10 @@
-platform :ios, '6.1'
+platform :ios, '7.0'
 
-inhibit_all_warnings!
+source 'https://github.com/CocoaPods/Specs.git'
 
 pod 'AFNetworking', '~> 1.3.4'
 pod 'InAppSettingsKit', '~> 2.1'
 pod 'BlocksKit', '~> 2.2.3'
-pod 'SDWebImage', '<= 3.7.1' # Satisfy the requirement for MWPhotoBrowser
 pod 'MWPhotoBrowser', '~> 1.4.0'
 pod 'KKPasscodeLock', '~> 0.2.2'
 pod 'MBProgressHUD', '~> 0.8'

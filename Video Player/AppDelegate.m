@@ -13,6 +13,7 @@
 #import <SDWebImage/SDImageCache.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <KKPasscodeLock/KKPasscodeLock.h>
+#import <BlocksKit+UIKit.h>
 #import "VPTorrentsListViewController.h"
 #import "TransmissionWebViewController.h"
 #import "ipaddress.h"
@@ -368,11 +369,13 @@
 
 #pragma mark - Shared action
 - (void)showNetworkAlert {
-    [UIAlertView bk_showAlertViewWithTitle:NSLocalizedString(@"Network Error", @"Network Error") message:NSLocalizedString(@"Your device is not in the same LAN with the server.", @"Your device is not in the same LAN with the server.") cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@[NSLocalizedString(@"Settings", @"Settings")] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
-        if (buttonIndex != [alertView cancelButtonIndex]) {
-            [self.fileListViewController showSettings:nil];
-        }
+    __weak typeof(self) weakSelf = self;
+    UIAlertView *alert = [[UIAlertView alloc] bk_initWithTitle:NSLocalizedString(@"Network Error", @"Network Error") message:NSLocalizedString(@"Your device is not in the same LAN with the server.", @"Your device is not in the same LAN with the server.")];
+    [alert bk_addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings") handler:^{
+        [weakSelf.fileListViewController showSettings:nil];
     }];
+    [alert bk_setCancelButtonWithTitle:NSLocalizedString(@"OK", @"OK") handler:NULL];
+    [alert show];
 }
 
 @end

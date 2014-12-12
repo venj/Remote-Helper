@@ -10,6 +10,7 @@
 #import <MWPhotoBrowser/MWPhotoBrowser.h>
 #import <AFNetworking/AFNetworking.h>
 #import <MBProgressHUD/MBProgressHUD.h>
+#import <BlocksKit+UIKit.h>
 #import "AppDelegate.h"
 #import "Common.h"
 
@@ -183,7 +184,6 @@
         if ([JSON count] == 0) { return; }
         blockSelf.mwPhotos = [blockSelf mwPhotosArrayWithPhothsArray:JSON];
         MWPhotoBrowser *photoBrowser = [[MWPhotoBrowser alloc] initWithDelegate:blockSelf];
-        photoBrowser.wantsFullScreenLayout = YES;
         photoBrowser.displayActionButton = NO;
         photoBrowser.displayNavArrows = YES;
         photoBrowser.zoomPhotosToFill = NO;

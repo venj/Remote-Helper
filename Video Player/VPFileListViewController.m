@@ -16,6 +16,7 @@
 #import <KKPasscodeLock/KKPasscodeSettingsViewController.h>
 #import <MWPhotoBrowser/MWPhotoBrowser.h>
 #import <MBProgressHUD/MBProgressHUD.h>
+#import <BlocksKit+UIKit.h>
 #import "VPTorrentsListViewController.h"
 #import "Common.h"
 #import "VPFileInfoViewController.h"
@@ -314,7 +315,6 @@
     self.mwPhotos = [self fetchCacheFileList];
     if (self.mwPhotos.count == 0) return;
     MWPhotoBrowser *photoBrowser = [[MWPhotoBrowser alloc] initWithDelegate:self];
-    photoBrowser.wantsFullScreenLayout = YES;
     photoBrowser.displayActionButton = NO;
     photoBrowser.displayNavArrows = YES;
     photoBrowser.zoomPhotosToFill = NO;

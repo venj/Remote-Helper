@@ -200,6 +200,12 @@
 }
 
 - (NSString *)fileOperation:(NSString *)operation withPath:(NSString *)path fileName:(NSString *)fileName {
+    if (!path) {
+        path = @"/";
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:path forKey:ServerPathKey];
+        [defaults synchronize];
+    }
     NSString *link = [[NSString alloc] initWithFormat:@"http://%@%@%@/%@", [self baseLink], path, operation, fileName];
     return link;
 }

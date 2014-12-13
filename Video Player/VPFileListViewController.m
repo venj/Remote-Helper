@@ -248,13 +248,21 @@
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         settingsNavigationController.modalPresentationStyle = UIModalPresentationFormSheet;
     }
-    [self presentViewController:settingsNavigationController animated:YES completion:^{}];
+    __weak typeof(self) weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself presentViewController:settingsNavigationController animated:YES completion:^{}];
+    });
 }
 
 - (void)showTorrentsViewer:(id)sender {
     VPTorrentsListViewController *torrentsListViewController = [[VPTorrentsListViewController alloc] initWithStyle:UITableViewStylePlain];
     UINavigationController *torrentsListNavigationController = [[UINavigationController alloc] initWithRootViewController:torrentsListViewController];
-    [self presentViewController:torrentsListNavigationController animated:YES completion:^{}];
+    torrentsListNavigationController.modalPresentationStyle = UIModalPresentationFullScreen;
+    
+    __weak typeof(self) weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself presentViewController:torrentsListNavigationController animated:YES completion:^{}];
+    });
 }
 
 - (void)loadMovieList:(id)sender {
@@ -319,7 +327,11 @@
     photoBrowser.displayNavArrows = YES;
     photoBrowser.zoomPhotosToFill = NO;
     [photoBrowser setCurrentPhotoIndex:0];
-    [self.navigationController pushViewController:photoBrowser animated:YES];
+    UINavigationController *pbNavigationController = [[UINavigationController alloc] initWithRootViewController:photoBrowser];
+    __weak typeof(self) weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself presentViewController:pbNavigationController animated:YES completion:NULL];
+    });
 }
 
 - (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {

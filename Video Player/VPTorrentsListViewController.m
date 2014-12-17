@@ -11,6 +11,7 @@
 #import <AFNetworking/AFNetworking.h>
 #import <MBProgressHUD/MBProgressHUD.h>
 #import <BlocksKit+UIKit.h>
+#import <TOWebViewController/TOWebViewController.h>
 #import "AppDelegate.h"
 #import "Common.h"
 
@@ -191,6 +192,18 @@
         if (sIndex > [JSON count] - 1) sIndex = ([JSON count] - 1);
         self.photos = JSON; //Save for add torrent.
         [photoBrowser setCurrentPhotoIndex:sIndex];
+        photoBrowser.navigationItem.leftBarButtonItems = @[
+            // Back
+            [[UIBarButtonItem alloc] bk_initWithImage:[UIImage imageNamed:@"back_button"] style:UIBarButtonItemStylePlain handler:^(id sender) {
+               [photoBrowser.navigationController popViewControllerAnimated:YES];
+            }],
+            [[UIBarButtonItem alloc] bk_initWithTitle:NSLocalizedString(@"Download", @"Download") style:UIBarButtonItemStylePlain handler:^(id sender) {
+            // Transmission Web Interface
+                NSString *link = [[AppDelegate shared] getTransmissionServerAddress];
+                TOWebViewController *transmissionWebViewController = [[TOWebViewController alloc] initWithURLString:link];
+                UINavigationController *transmissionNavigationController = [[UINavigationController alloc] initWithRootViewController:transmissionWebViewController];
+                [photoBrowser presentViewController:transmissionNavigationController animated:YES completion:nil];
+            }]];
         [self.navigationController pushViewController:photoBrowser animated:YES];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         [MBProgressHUD hideHUDForView:aView animated:YES];

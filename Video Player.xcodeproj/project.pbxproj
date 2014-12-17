@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		25224B86196CDAF700CB37A7 /* TransmissionWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25224B85196CDAF700CB37A7 /* TransmissionWebViewController.m */; };
 		252DFA801753784400FF8199 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA7F1753784400FF8199 /* UIKit.framework */; };
 		252DFA821753784400FF8199 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA811753784400FF8199 /* Foundation.framework */; };
 		252DFA841753784400FF8199 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA831753784400FF8199 /* CoreGraphics.framework */; };
@@ -30,8 +29,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		25224B84196CDAF700CB37A7 /* TransmissionWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransmissionWebViewController.h; sourceTree = "<group>"; };
-		25224B85196CDAF700CB37A7 /* TransmissionWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransmissionWebViewController.m; sourceTree = "<group>"; };
 		252DFA7C1753784400FF8199 /* Video Player.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Video Player.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		252DFA7F1753784400FF8199 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		252DFA811753784400FF8199 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -129,8 +126,6 @@
 				2571FD481760346F00CE8982 /* VPFileInfoViewController.m */,
 				2571E73B1762C9240036C61D /* VPTorrentsListViewController.h */,
 				2571E73C1762C9240036C61D /* VPTorrentsListViewController.m */,
-				25224B84196CDAF700CB37A7 /* TransmissionWebViewController.h */,
-				25224B85196CDAF700CB37A7 /* TransmissionWebViewController.m */,
 				258CD0111A3B585D00B3EB55 /* Launch Screen.xib */,
 				258CD00F1A3B28B400B3EB55 /* Images.xcassets */,
 				252DFA861753784400FF8199 /* Supporting Files */,
@@ -278,7 +273,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				252DFA8C1753784400FF8199 /* main.m in Sources */,
-				25224B86196CDAF700CB37A7 /* TransmissionWebViewController.m in Sources */,
 				252DFA901753784400FF8199 /* AppDelegate.m in Sources */,
 				25B0AA7217537A9D00141B0E /* VPFileListViewController.m in Sources */,
 				2571FD4A1760346F00CE8982 /* VPFileInfoViewController.m in Sources */,

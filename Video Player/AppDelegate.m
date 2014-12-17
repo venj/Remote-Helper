@@ -16,7 +16,6 @@
 #import <LTHPasscodeViewController/LTHPasscodeViewController.h>
 #import <BlocksKit+UIKit.h>
 #import "VPTorrentsListViewController.h"
-#import "TransmissionWebViewController.h"
 #import "ipaddress.h"
 
 @interface AppDelegate () <UISplitViewControllerDelegate, LTHPasscodeViewControllerDelegate, MMAppSwitcherDataSource, UITabBarControllerDelegate, VPFileInfoViewControllerDelegate>
@@ -50,11 +49,6 @@
     torrentsListViewController.title = NSLocalizedString(@"Torrents", @"Torrents");
     torrentsListViewController.tabBarItem.image = [UIImage imageNamed:@"tab_torrents"];
     UINavigationController *torrentsListNavigationController = [[UINavigationController alloc] initWithRootViewController:torrentsListViewController];
-    // Transmission Web Interface
-    TransmissionWebViewController *transmissionWebViewController = [[TransmissionWebViewController alloc] initWithNibName:nil bundle:nil];
-    transmissionWebViewController.title = NSLocalizedString(@"Transmission", @"Transmission");
-    transmissionWebViewController.tabBarItem.image = [UIImage imageNamed:@"transmission"];
-    UINavigationController *transmissionNavigationController = [[UINavigationController alloc] initWithRootViewController:transmissionWebViewController];
     // Tabbar
     self.tabbarController = [[UITabBarController alloc] init];
     self.tabbarController.delegate = self;
@@ -245,11 +239,15 @@
 - (NSString *)getTransmissionServerAddress {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *address = [defaults objectForKey:TransmissionAddressKey];
-    if (address) {
-        return [NSString stringWithFormat:@"http://%@", address];
+    if (address == nil) {
+        address = @"127.0.0.1:9091";
+    }
+    NSArray *userpass = [self getUsernameAndPassword];
+    if ([userpass[0] length] > 0 && [userpass[1] length] > 0) {
+        return [NSString stringWithFormat:@"http://%@:%@@%@",userpass[0], userpass[1], address];
     }
     else {
-        return @"http://127.0.0.1:9091";
+        return [NSString stringWithFormat:@"http://%@", address];
     }
 }
 

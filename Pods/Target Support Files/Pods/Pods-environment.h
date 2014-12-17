@@ -60,17 +60,23 @@
 #define COCOAPODS_VERSION_MINOR_InAppSettingsKit 3
 #define COCOAPODS_VERSION_PATCH_InAppSettingsKit 2
 
-// KKPasscodeLock
-#define COCOAPODS_POD_AVAILABLE_KKPasscodeLock
-#define COCOAPODS_VERSION_MAJOR_KKPasscodeLock 0
-#define COCOAPODS_VERSION_MINOR_KKPasscodeLock 2
-#define COCOAPODS_VERSION_PATCH_KKPasscodeLock 2
+// LTHPasscodeViewController
+#define COCOAPODS_POD_AVAILABLE_LTHPasscodeViewController
+#define COCOAPODS_VERSION_MAJOR_LTHPasscodeViewController 3
+#define COCOAPODS_VERSION_MINOR_LTHPasscodeViewController 3
+#define COCOAPODS_VERSION_PATCH_LTHPasscodeViewController 3
 
 // MBProgressHUD
 #define COCOAPODS_POD_AVAILABLE_MBProgressHUD
 #define COCOAPODS_VERSION_MAJOR_MBProgressHUD 0
 #define COCOAPODS_VERSION_MINOR_MBProgressHUD 9
 #define COCOAPODS_VERSION_PATCH_MBProgressHUD 0
+
+// MMAppSwitcher
+#define COCOAPODS_POD_AVAILABLE_MMAppSwitcher
+#define COCOAPODS_VERSION_MAJOR_MMAppSwitcher 0
+#define COCOAPODS_VERSION_MINOR_MMAppSwitcher 2
+#define COCOAPODS_VERSION_PATCH_MMAppSwitcher 0
 
 // MWPhotoBrowser
 #define COCOAPODS_POD_AVAILABLE_MWPhotoBrowser
@@ -95,4 +101,10 @@
 #define COCOAPODS_VERSION_MAJOR_SDWebImage_Core 3
 #define COCOAPODS_VERSION_MINOR_SDWebImage_Core 7
 #define COCOAPODS_VERSION_PATCH_SDWebImage_Core 1
+
+// TOWebViewController
+#define COCOAPODS_POD_AVAILABLE_TOWebViewController
+#define COCOAPODS_VERSION_MAJOR_TOWebViewController 2
+#define COCOAPODS_VERSION_MINOR_TOWebViewController 0
+#define COCOAPODS_VERSION_PATCH_TOWebViewController 14
 

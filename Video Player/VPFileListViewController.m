@@ -12,8 +12,7 @@
 #import <IASKAppSettingsViewController.h>
 #import <IASKSettingsReader.h>
 #import <SDWebImage/SDImageCache.h>
-#import <KKPasscodeLock/KKPasscodeLock.h>
-#import <KKPasscodeLock/KKPasscodeSettingsViewController.h>
+#import <LTHPasscodeViewController/LTHPasscodeViewController.h>
 #import <MWPhotoBrowser/MWPhotoBrowser.h>
 #import <MBProgressHUD/MBProgressHUD.h>
 #import <BlocksKit+UIKit.h>
@@ -23,7 +22,7 @@
 #import "VCFileAttributeHelper.h"
 #import "AppDelegate.h"
 
-@interface VPFileListViewController () <IASKSettingsDelegate, KKPasscodeSettingsViewControllerDelegate, MWPhotoBrowserDelegate>
+@interface VPFileListViewController () <IASKSettingsDelegate, MWPhotoBrowserDelegate>
 @property (nonatomic, strong) MPMoviePlayerViewController *mpViewController;
 @property (nonatomic, strong) IASKAppSettingsViewController *settingsViewController;
 @property (nonatomic, strong) UIActionSheet *sheet;
@@ -233,7 +232,7 @@
     NSInteger cacheSizeInBytes = [[SDImageCache sharedImageCache] getSize];
     NSString *cacheSize = [[AppDelegate shared] fileSizeStringWithInteger:cacheSizeInBytes];
     [defaults setObject:cacheSize forKey:ImageCacheSizeKey];
-    NSString *status = [[KKPasscodeLock sharedLock] isPasscodeRequired] ? NSLocalizedString(@"On", @"On"): NSLocalizedString(@"Off", @"Off");
+    NSString *status = [LTHPasscodeViewController doesPasscodeExist] ? NSLocalizedString(@"On", @"On"): NSLocalizedString(@"Off", @"Off");
     [defaults setObject:status forKey:PasscodeLockStatus];
     NSString *localFileSize = [[AppDelegate shared] fileSizeStringWithInteger:[[AppDelegate shared] localFileSize]];
     [defaults setObject:localFileSize forKey:LocalFileSize];
@@ -386,9 +385,12 @@
 
 - (void)settingsViewController:(IASKAppSettingsViewController*)sender buttonTappedForSpecifier:(IASKSpecifier*)specifier {
     if ([specifier.key isEqualToString:PasscodeLockConfig]) {
-        KKPasscodeSettingsViewController *vc = [[KKPasscodeSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
-        vc.delegate = self;
-        [sender.navigationController pushViewController:vc animated:YES];
+        if (![LTHPasscodeViewController doesPasscodeExist]) {
+            [[LTHPasscodeViewController sharedUser] showForEnablingPasscodeInViewController:sender asModal:NO];
+        }
+        else {
+            [[LTHPasscodeViewController sharedUser] showForDisablingPasscodeInViewController:sender asModal:NO];
+        }
     }
     else if ([specifier.key isEqualToString:ClearCacheNowKey]) {
         UIView *aView = sender.navigationController.view;
@@ -407,16 +409,6 @@
             });
         });
     }
-}
-
-#pragma mark - KKPasscode View Controller Delegate
-
-- (void)didSettingsChanged:(KKPasscodeViewController*)viewController {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *status = [[KKPasscodeLock sharedLock] isPasscodeRequired] ? NSLocalizedString(@"On", @"On"): NSLocalizedString(@"Off", @"Off");
-    [defaults setObject:status forKey:PasscodeLockStatus];
-    [defaults synchronize];
-    [self.settingsViewController.tableView reloadData];
 }
 
 #pragma mark - File Info View Controller Delegate

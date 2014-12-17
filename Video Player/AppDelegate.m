@@ -12,13 +12,14 @@
 #import "Common.h"
 #import <SDWebImage/SDImageCache.h>
 #import <MediaPlayer/MediaPlayer.h>
-#import <KKPasscodeLock/KKPasscodeLock.h>
+#import <MMAppSwitcher/MMAppSwitcher.h>
+#import <LTHPasscodeViewController/LTHPasscodeViewController.h>
 #import <BlocksKit+UIKit.h>
 #import "VPTorrentsListViewController.h"
 #import "TransmissionWebViewController.h"
 #import "ipaddress.h"
 
-@interface AppDelegate () <UISplitViewControllerDelegate, KKPasscodeViewControllerDelegate, UITabBarControllerDelegate, VPFileInfoViewControllerDelegate>
+@interface AppDelegate () <UISplitViewControllerDelegate, LTHPasscodeViewControllerDelegate, MMAppSwitcherDataSource, UITabBarControllerDelegate, VPFileInfoViewControllerDelegate>
 @property (nonatomic, strong) VPFileListViewController *localFileListViewController;
 @property (nonatomic, strong) UITabBarController *tabbarController;
 @end
@@ -28,7 +29,10 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-
+    
+    // App Swicher
+    [[MMAppSwitcher sharedInstance] setDataSource:self];
+    
     // File List
     self.fileListViewController = [[VPFileListViewController alloc] initWithStyle:UITableViewStylePlain];
     self.fileListViewController.isLocal = NO;
@@ -82,38 +86,38 @@
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    [[MMAppSwitcher sharedInstance] setNeedsUpdate];
+    
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:ClearCacheOnExitKey] boolValue] == YES) {
+        UIApplication *app = [UIApplication sharedApplication];
+        __block UIBackgroundTaskIdentifier identifier = [app beginBackgroundTaskWithExpirationHandler:^{
+            [app endBackgroundTask:identifier];
+            identifier = UIBackgroundTaskInvalid;
+        }];
+        [[SDImageCache sharedImageCache] clearDiskOnCompletion:^{
+            [app endBackgroundTask:identifier];
+            identifier = UIBackgroundTaskInvalid;
+        }];
+    }
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    if ([[KKPasscodeLock sharedLock] isPasscodeRequired]) {
-        [self.fileListViewController.sheet dismissWithClickedButtonIndex:self.fileListViewController.sheet.cancelButtonIndex animated:NO];
-        [self.window.rootViewController dismissViewControllerAnimated:NO completion:NULL];
-    }
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults boolForKey:ClearCacheOnExitKey]) {
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            [[SDImageCache sharedImageCache] clearDisk]; // Clear Image Cache
-        });
-    }
+    [self.window.rootViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    if ([LTHPasscodeViewController doesPasscodeExist]) {
+        [[LTHPasscodeViewController sharedUser] showLockScreenWithAnimation:YES withLogout:NO andLogoutTitle:nil];
+    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    if ([[KKPasscodeLock sharedLock] isPasscodeRequired]) {
-        KKPasscodeViewController *vc = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
-        vc.mode = KKPasscodeModeEnter;
-        vc.delegate = self;
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-        [self.window.rootViewController presentViewController:nav animated:NO completion:NULL];
-    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -142,6 +146,15 @@
 #pragma mark - UISplitViewController Delegate
 - (BOOL)splitViewController:(UISplitViewController *)svc shouldHideViewController:(UIViewController *)vc inOrientation:(UIInterfaceOrientation)orientation {
     return NO;
+}
+
+
+#pragma mark - MMAppSwitcher
+- (UIView *)appSwitcher:(MMAppSwitcher *)appSwitcher viewForCardWithSize:(CGSize)size {
+    CGRect frame = CGRectMake(0.0, 0.0, size.width, size.height);
+    UIView *view = [[UIView alloc] initWithFrame:frame];
+    view.backgroundColor = [UIColor whiteColor];
+    return view;
 }
 
 #pragma mark - File Info View Controller Delegate
@@ -358,19 +371,6 @@
         return [NSURL fileURLWithPath:localFile];
     else
         return [NSURL URLWithString:[[[AppDelegate shared] fileLinkWithPath:path] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-}
-
-#pragma mark - KKPasscode View Controller Delegate
-- (void)shouldEraseApplicationData:(KKPasscodeViewController*)viewController
-{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"You have entered an incorrect passcode too many times. All account data in this app has been deleted.", @"You have entered an incorrect passcode too many times. All account data in this app has been deleted.") delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
-    [alert show];
-}
-
-- (void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController*)viewController
-{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"You have entered an incorrect passcode too many times.", @"You have entered an incorrect passcode too many times.") delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK")  otherButtonTitles:nil];
-    [alert show];
 }
 
 #pragma mark - Shared action

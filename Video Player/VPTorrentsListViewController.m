@@ -12,6 +12,7 @@
 #import <MBProgressHUD/MBProgressHUD.h>
 #import <BlocksKit+UIKit.h>
 #import <TOWebViewController/TOWebViewController.h>
+#import "SBAPIManager.h"
 #import "AppDelegate.h"
 #import "Common.h"
 
@@ -24,6 +25,9 @@
 @property (nonatomic, strong) NSDictionary *localizedStatusStrings;
 @property (nonatomic, strong) UIBarButtonItem *cloudItem;
 @property (nonatomic, strong) UIBarButtonItem *hashItem;
+@property (nonatomic, copy) NSString *sessionHeader;
+@property (nonatomic, strong) SBAPIManager *manager;
+@property (nonatomic, copy) NSString *downloadPath;
 @end
 
 @implementation VPTorrentsListViewController
@@ -52,6 +56,12 @@
             [self loadTorrentList:sender];
         }];
     }
+    self.sessionHeader = @"";
+    self.downloadPath = @"";
+    NSString *link = [[AppDelegate shared] getTransmissionServerAddressWithUserNameAndPassword:NO];
+    NSArray *userNameAndPassword = [[AppDelegate shared] getUsernameAndPassword];
+    self.manager = [SBAPIManager sharedManagerWithURLString:link];
+    [self.manager setUsername:userNameAndPassword[0] andPassword:userNameAndPassword[1]];
     
     self.localizedStatusStrings = @{@"completed" : NSLocalizedString(@"completed", @"completed"),
                                     @"waiting" : NSLocalizedString(@"waiting", @"waiting"),
@@ -192,18 +202,6 @@
         if (sIndex > [JSON count] - 1) sIndex = ([JSON count] - 1);
         self.photos = JSON; //Save for add torrent.
         [photoBrowser setCurrentPhotoIndex:sIndex];
-        photoBrowser.navigationItem.leftBarButtonItems = @[
-            // Back
-            [[UIBarButtonItem alloc] bk_initWithImage:[UIImage imageNamed:@"back_button"] style:UIBarButtonItemStylePlain handler:^(id sender) {
-               [photoBrowser.navigationController popViewControllerAnimated:YES];
-            }],
-            [[UIBarButtonItem alloc] bk_initWithTitle:NSLocalizedString(@"Download", @"Download") style:UIBarButtonItemStylePlain handler:^(id sender) {
-            // Transmission Web Interface
-                NSString *link = [[AppDelegate shared] getTransmissionServerAddress];
-                TOWebViewController *transmissionWebViewController = [[TOWebViewController alloc] initWithURLString:link];
-                UINavigationController *transmissionNavigationController = [[UINavigationController alloc] initWithRootViewController:transmissionWebViewController];
-                [photoBrowser presentViewController:transmissionNavigationController animated:YES completion:nil];
-            }]];
         [self.navigationController pushViewController:photoBrowser animated:YES];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         [MBProgressHUD hideHUDForView:aView animated:YES];
@@ -291,19 +289,63 @@
         NSString *fileName = [self.photos[index] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
         NSURLRequest *hashTorrentRequest = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] hashTorrentWithName:fileName ]]];
+        __weak typeof(self) weakself = self;
         AFJSONRequestOperation *trOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:hashTorrentRequest success:^(NSURLRequest *req, NSHTTPURLResponse *res, id anotherJSON) {
             NSString *title, *message;
             title = NSLocalizedString(@"Torrent Hash", @"Torrent Hash");
             message = [NSString stringWithFormat:@"magnet:?xt=urn:btih:%@", [anotherJSON[@"hash"] uppercaseString]];
             UIPasteboard *pb = [UIPasteboard generalPasteboard];
             pb.string = message;
-            [self showHudWithMessage:NSLocalizedString(@"Magnet link copied.", @"Magnet link copied.")];
+            
+            NSDictionary *sessionParams = @{@"method" : @"session-get"};
+            [weakself.manager setDefaultHeader:@"X-Transmission-Session-Id" value:weakself.sessionHeader];
+            [weakself.manager postPath:@"/transmission/rpc" parameters:sessionParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                NSString *result = [responseObject objectForKey:@"result"];
+                if ([result isEqualToString:@"success"]) {
+                    NSDictionary *responseDict = responseObject;
+                    NSString *result = responseDict[@"result"];
+                    if ([result isEqualToString:@"success"]) {
+                        weakself.downloadPath = responseDict[@"arguments"][@"download-dir"];
+                        [weakself addTask:message];
+                    }
+                }
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                if ([operation.response statusCode] == 409) {
+                    // GetSession
+                    weakself.sessionHeader = [operation.response allHeaderFields][@"X-Transmission-Session-Id"];
+                    [weakself.manager setDefaultHeader:@"X-Transmission-Session-Id" value:weakself.sessionHeader];
+                    [weakself.manager postPath:@"/transmission/rpc" parameters:sessionParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                        NSDictionary *responseDict = responseObject;
+                        NSString *result = responseDict[@"result"];
+                        if ([result isEqualToString:@"success"]) {
+                            weakself.downloadPath = responseDict[@"arguments"][@"download-dir"];
+                            [weakself addTask:message];
+                        }
+                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                        // error stuff here
+                        [weakself showHudWithMessage:NSLocalizedString(@"Unknown error.", @"Unknown error.")];
+                    }];
+                }
+            }];
         } failure:^(NSURLRequest *req, NSHTTPURLResponse *res, NSError *err, id anotherJSON) {
-            [self showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.")];
+            [weakself showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.")];
         }];
         [trOperation start];
     }];
     return self.hashItem;
+}
+
+- (void)addTask:(NSString *)magnet {
+    NSDictionary *params = @{@"method" : @"torrent-add", @"arguments": @{ @"paused" : @(NO), @"download-dir" : self.downloadPath, @"filename" : magnet } };
+    __weak typeof(self) weakself = self;
+    [self.manager postPath:@"/transmission/rpc" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSString *result = [responseObject objectForKey:@"result"];
+        if ([result isEqualToString:@"success"]) {
+            [weakself showHudWithMessage:NSLocalizedString(@"Task added.", @"Task added.")];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [weakself showHudWithMessage:NSLocalizedString(@"Unknow error.", @"Unknow error.")];
+    }];
 }
 
 - (void)showHudWithMessage:(NSString *)message {

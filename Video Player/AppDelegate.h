@@ -50,6 +50,8 @@
  @return The Transmission web interface address.
  */
 - (NSString *)getTransmissionServerAddress;
+- (NSString *)getTransmissionServerAddressWithUserNameAndPassword:(BOOL)withUserNameAndPassword;
+- (NSString *)getTransmissionRPCAddress;
 
 /*!
  @brief Read username and password for Transmission web interface.

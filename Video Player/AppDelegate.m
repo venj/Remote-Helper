@@ -237,13 +237,22 @@
 }
 
 - (NSString *)getTransmissionServerAddress {
+    return [self getTransmissionServerAddressWithUserNameAndPassword:YES];
+}
+
+- (NSString *)getTransmissionRPCAddress {
+    NSString *server = [self getTransmissionServerAddressWithUserNameAndPassword:NO];
+    return [server stringByAppendingPathComponent:@"transmission/rpc"];
+}
+
+- (NSString *)getTransmissionServerAddressWithUserNameAndPassword:(BOOL)withUserNameAndPassword {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *address = [defaults objectForKey:TransmissionAddressKey];
     if (address == nil) {
         address = @"127.0.0.1:9091";
     }
     NSArray *userpass = [self getUsernameAndPassword];
-    if ([userpass[0] length] > 0 && [userpass[1] length] > 0) {
+    if ([userpass[0] length] > 0 && [userpass[1] length] > 0 && withUserNameAndPassword) {
         return [NSString stringWithFormat:@"http://%@:%@@%@",userpass[0], userpass[1], address];
     }
     else {

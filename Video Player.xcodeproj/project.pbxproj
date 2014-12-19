@@ -25,6 +25,7 @@
 		25B0AA7417537B2D00141B0E /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7317537B2D00141B0E /* MediaPlayer.framework */; };
 		25B0AA7A1753A66C00141B0E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA791753A66C00141B0E /* SystemConfiguration.framework */; };
 		25B0AA7C1753A67300141B0E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */; };
+		25D718441A43BF0B006F34E7 /* SBAPIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D718431A43BF0B006F34E7 /* SBAPIManager.m */; };
 		94B491531CEE457B8C2AE085 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E3B0BCB77ECB434F89430D12 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +60,8 @@
 		25B0AA7517537D2500141B0E /* Common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
 		25B0AA791753A66C00141B0E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		25D718421A43BF0B006F34E7 /* SBAPIManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAPIManager.h; sourceTree = "<group>"; };
+		25D718431A43BF0B006F34E7 /* SBAPIManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAPIManager.m; sourceTree = "<group>"; };
 		4D49BE61A10F01745516BF6D /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		E3B0BCB77ECB434F89430D12 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC7CF9F5B9F61ADECD46FF2A /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -154,6 +157,8 @@
 				25386B931779B60D001027BD /* ipaddress.c */,
 				25310E3C177ACA9500D4A212 /* VCFileAttributeHelper.h */,
 				25310E3D177ACA9500D4A212 /* VCFileAttributeHelper.m */,
+				25D718421A43BF0B006F34E7 /* SBAPIManager.h */,
+				25D718431A43BF0B006F34E7 /* SBAPIManager.m */,
 			);
 			name = "3rd Party";
 			sourceTree = "<group>";
@@ -275,6 +280,7 @@
 				252DFA8C1753784400FF8199 /* main.m in Sources */,
 				252DFA901753784400FF8199 /* AppDelegate.m in Sources */,
 				25B0AA7217537A9D00141B0E /* VPFileListViewController.m in Sources */,
+				25D718441A43BF0B006F34E7 /* SBAPIManager.m in Sources */,
 				2571FD4A1760346F00CE8982 /* VPFileInfoViewController.m in Sources */,
 				2571E73E1762C9240036C61D /* VPTorrentsListViewController.m in Sources */,
 				25386B941779B60D001027BD /* ipaddress.c in Sources */,

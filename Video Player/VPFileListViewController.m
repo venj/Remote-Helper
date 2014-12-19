@@ -16,6 +16,7 @@
 #import <MWPhotoBrowser/MWPhotoBrowser.h>
 #import <MBProgressHUD/MBProgressHUD.h>
 #import <BlocksKit+UIKit.h>
+#import <TOWebViewController/TOWebViewController.h>
 #import "VPTorrentsListViewController.h"
 #import "Common.h"
 #import "VPFileInfoViewController.h"
@@ -60,12 +61,16 @@
                     [blockSelf showTorrentsViewer:sender];
                 }];
             }
+            [blockSelf.sheet bk_addButtonWithTitle:NSLocalizedString(@"Transmission", @"Transmission") handler:^{
+                [blockSelf showTransmission:nil];
+            }];
             [blockSelf.sheet bk_addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings") handler:^{
                 [blockSelf showSettings:sender];
             }];
             [blockSelf.sheet bk_addButtonWithTitle:NSLocalizedString(@"Cache Browser", @"Cache Browser") handler:^{
                 [blockSelf browseCache:sender];
             }];
+            
             [blockSelf.sheet bk_setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:^{}];
             [blockSelf.sheet showFromBarButtonItem:leftButton animated:YES];
         }];
@@ -262,6 +267,13 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakself presentViewController:torrentsListNavigationController animated:YES completion:^{}];
     });
+}
+
+- (void)showTransmission:(id)sender {
+    NSString *link = [[AppDelegate shared] getTransmissionServerAddress];
+    TOWebViewController *transmissionWebViewController = [[TOWebViewController alloc] initWithURLString:link];
+    UINavigationController *transmissionNavigationController = [[UINavigationController alloc] initWithRootViewController:transmissionWebViewController];
+    [self presentViewController:transmissionNavigationController animated:YES completion:nil];
 }
 
 - (void)loadMovieList:(id)sender {

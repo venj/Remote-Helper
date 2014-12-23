@@ -273,7 +273,10 @@
     NSString *link = [[AppDelegate shared] getTransmissionServerAddress];
     TOWebViewController *transmissionWebViewController = [[TOWebViewController alloc] initWithURLString:link];
     UINavigationController *transmissionNavigationController = [[UINavigationController alloc] initWithRootViewController:transmissionWebViewController];
-    [self presentViewController:transmissionNavigationController animated:YES completion:nil];
+    __weak typeof(self) weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself presentViewController:transmissionNavigationController animated:YES completion:^{}];
+    });
 }
 
 - (void)loadMovieList:(id)sender {

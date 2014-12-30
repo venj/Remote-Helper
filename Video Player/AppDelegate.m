@@ -32,6 +32,11 @@
     // App Swicher
     [[MMAppSwitcher sharedInstance] setDataSource:self];
     
+    // Passcode
+    if ([LTHPasscodeViewController doesPasscodeExist]) {
+        [[LTHPasscodeViewController sharedUser] showLockScreenWithAnimation:YES withLogout:NO andLogoutTitle:nil];
+    }
+    
     // File List
     self.fileListViewController = [[VPFileListViewController alloc] initWithStyle:UITableViewStylePlain];
     self.fileListViewController.isLocal = NO;

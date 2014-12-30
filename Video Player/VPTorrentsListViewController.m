@@ -26,7 +26,6 @@
 @property (nonatomic, strong) UIBarButtonItem *cloudItem;
 @property (nonatomic, strong) UIBarButtonItem *hashItem;
 @property (nonatomic, copy) NSString *sessionHeader;
-@property (nonatomic, strong) SBAPIManager *manager;
 @property (nonatomic, copy) NSString *downloadPath;
 @end
 
@@ -58,10 +57,6 @@
     }
     self.sessionHeader = @"";
     self.downloadPath = @"";
-    NSString *link = [[AppDelegate shared] getTransmissionServerAddressWithUserNameAndPassword:NO];
-    NSArray *userNameAndPassword = [[AppDelegate shared] getUsernameAndPassword];
-    self.manager = [SBAPIManager sharedManagerWithURLString:link];
-    [self.manager setUsername:userNameAndPassword[0] andPassword:userNameAndPassword[1]];
     
     self.localizedStatusStrings = @{@"completed" : NSLocalizedString(@"completed", @"completed"),
                                     @"waiting" : NSLocalizedString(@"waiting", @"waiting"),
@@ -96,6 +91,14 @@
 }
 
 #pragma mark - Table view data source
+
+- (SBAPIManager *)refreshedManager {
+    NSString *link = [[AppDelegate shared] getTransmissionServerAddressWithUserNameAndPassword:NO];
+    NSArray *userNameAndPassword = [[AppDelegate shared] getUsernameAndPassword];
+    SBAPIManager *manager = [SBAPIManager sharedManagerWithURLString:link];
+    [manager setUsername:userNameAndPassword[0] andPassword:userNameAndPassword[1]];
+    return manager;
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -298,8 +301,9 @@
             pb.string = message;
             
             NSDictionary *sessionParams = @{@"method" : @"session-get"};
-            [weakself.manager setDefaultHeader:@"X-Transmission-Session-Id" value:weakself.sessionHeader];
-            [weakself.manager postPath:@"/transmission/rpc" parameters:sessionParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            SBAPIManager *manager = [weakself refreshedManager];
+            [manager setDefaultHeader:@"X-Transmission-Session-Id" value:weakself.sessionHeader];
+            [manager postPath:@"/transmission/rpc" parameters:sessionParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 NSString *result = [responseObject objectForKey:@"result"];
                 if ([result isEqualToString:@"success"]) {
                     NSDictionary *responseDict = responseObject;
@@ -313,8 +317,8 @@
                 if ([operation.response statusCode] == 409) {
                     // GetSession
                     weakself.sessionHeader = [operation.response allHeaderFields][@"X-Transmission-Session-Id"];
-                    [weakself.manager setDefaultHeader:@"X-Transmission-Session-Id" value:weakself.sessionHeader];
-                    [weakself.manager postPath:@"/transmission/rpc" parameters:sessionParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                    [manager setDefaultHeader:@"X-Transmission-Session-Id" value:weakself.sessionHeader];
+                    [manager postPath:@"/transmission/rpc" parameters:sessionParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
                         NSDictionary *responseDict = responseObject;
                         NSString *result = responseDict[@"result"];
                         if ([result isEqualToString:@"success"]) {
@@ -338,7 +342,7 @@
 - (void)addTask:(NSString *)magnet {
     NSDictionary *params = @{@"method" : @"torrent-add", @"arguments": @{ @"paused" : @(NO), @"download-dir" : self.downloadPath, @"filename" : magnet } };
     __weak typeof(self) weakself = self;
-    [self.manager postPath:@"/transmission/rpc" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [[self refreshedManager] postPath:@"/transmission/rpc" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSString *result = [responseObject objectForKey:@"result"];
         if ([result isEqualToString:@"success"]) {
             [weakself showHudWithMessage:NSLocalizedString(@"Task added.", @"Task added.")];

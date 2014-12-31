@@ -32,11 +32,6 @@
     // App Swicher
     [[MMAppSwitcher sharedInstance] setDataSource:self];
     
-    // Passcode
-    if ([LTHPasscodeViewController doesPasscodeExist]) {
-        [[LTHPasscodeViewController sharedUser] showLockScreenWithAnimation:YES withLogout:NO andLogoutTitle:nil];
-    }
-    
     // File List
     self.fileListViewController = [[VPFileListViewController alloc] initWithStyle:UITableViewStylePlain];
     self.fileListViewController.isLocal = NO;
@@ -110,13 +105,11 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    if ([LTHPasscodeViewController doesPasscodeExist]) {
-        [[LTHPasscodeViewController sharedUser] showLockScreenWithAnimation:YES withLogout:NO andLogoutTitle:nil];
-    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    [self showPassLock];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -171,6 +164,13 @@
 }
 
 #pragma mark - Helper Methods
+
+- (void)showPassLock {
+    if ([LTHPasscodeViewController doesPasscodeExist]) {
+        [[LTHPasscodeViewController sharedUser] showLockScreenWithAnimation:YES withLogout:NO andLogoutTitle:nil];
+    }
+}
+
 - (NSString *)torrentsListPath {
     NSString *link = [[NSString alloc] initWithFormat:@"http://%@/torrents", [self baseLink]];
     return link;

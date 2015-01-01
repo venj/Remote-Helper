@@ -95,7 +95,7 @@
 - (SBAPIManager *)refreshedManager {
     NSString *link = [[AppDelegate shared] getTransmissionServerAddressWithUserNameAndPassword:NO];
     NSArray *userNameAndPassword = [[AppDelegate shared] getUsernameAndPassword];
-    SBAPIManager *manager = [SBAPIManager sharedManagerWithURLString:link];
+    SBAPIManager *manager = [[SBAPIManager alloc] initWithBaseURL:[[NSURL alloc] initWithString:link]];
     [manager setUsername:userNameAndPassword[0] andPassword:userNameAndPassword[1]];
     return manager;
 }
@@ -342,7 +342,9 @@
 - (void)addTask:(NSString *)magnet {
     NSDictionary *params = @{@"method" : @"torrent-add", @"arguments": @{ @"paused" : @(NO), @"download-dir" : self.downloadPath, @"filename" : magnet } };
     __weak typeof(self) weakself = self;
-    [[self refreshedManager] postPath:@"/transmission/rpc" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    SBAPIManager *manager = [weakself refreshedManager];
+    [manager setDefaultHeader:@"X-Transmission-Session-Id" value:weakself.sessionHeader];
+    [manager postPath:@"/transmission/rpc" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSString *result = [responseObject objectForKey:@"result"];
         if ([result isEqualToString:@"success"]) {
             [weakself showHudWithMessage:NSLocalizedString(@"Task added.", @"Task added.")];

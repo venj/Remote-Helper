@@ -388,7 +388,7 @@
 				INFOPLIST_FILE = "Video Player/Video Player-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "cf59a066-8187-40a2-a7c8-78f3c4e3de4d";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -406,7 +406,7 @@
 				INFOPLIST_FILE = "Video Player/Video Player-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "cf59a066-8187-40a2-a7c8-78f3c4e3de4d";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

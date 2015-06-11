@@ -1,9 +1,9 @@
-# Created by http://gitignore.io
+# Created by http://www.gitignore.io
 
 ### Objective-C ###
 # Xcode
-.DS_Store
-*/build/*
+#
+build/
 *.pbxuser
 !default.pbxuser
 *.mode1v3
@@ -13,15 +13,9 @@
 *.perspectivev3
 !default.perspectivev3
 xcuserdata
-profile
+*.xccheckout
 *.moved-aside
 DerivedData
-.idea/
 *.hmap
-
-### Xcode ###
-build
-*.xcodeproj/*
-!*.xcodeproj/project.pbxproj
-!*.xcworkspace/contents.xcworkspacedata
-
+*.ipa
+*.xcuserstate

@@ -17,10 +17,14 @@
 #import <BlocksKit+UIKit.h>
 #import "VPTorrentsListViewController.h"
 #import "ipaddress.h"
+#import "SBAPIManager.h"
+#import <MBProgressHUD/MBProgressHUD.h>
 
 @interface AppDelegate () <UISplitViewControllerDelegate, LTHPasscodeViewControllerDelegate, MMAppSwitcherDataSource, UITabBarControllerDelegate, VPFileInfoViewControllerDelegate>
 @property (nonatomic, strong) VPFileListViewController *localFileListViewController;
 @property (nonatomic, strong) UITabBarController *tabbarController;
+@property (nonatomic, copy) NSString *sessionHeader;
+@property (nonatomic, copy) NSString *downloadPath;
 @end
 
 @implementation AppDelegate
@@ -173,6 +177,11 @@
 
 - (NSString *)torrentsListPath {
     NSString *link = [[NSString alloc] initWithFormat:@"http://%@/torrents", [self baseLink]];
+    return link;
+}
+
+- (NSString *)dbSearchPathWithKeyword:(NSString *)keyword {
+    NSString *link = [[NSString alloc] initWithFormat:@"http://%@/db_search?keyword=%@", [self baseLink], [keyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     return link;
 }
 
@@ -395,5 +404,75 @@
     [alert bk_setCancelButtonWithTitle:NSLocalizedString(@"OK", @"OK") handler:NULL];
     [alert show];
 }
+
+#pragma mark - Add magnet task
+
+- (void)parseSessionAndAddTask:(NSString *)magnet completionHandler:(void (^__strong)(void))completionHandler errorHandler:(void (^__strong)(void))errorHandler {
+    __weak typeof(self) weakself = self;
+    NSDictionary *sessionParams = @{@"method" : @"session-get"};
+    SBAPIManager *manager = [self refreshedManager];
+    [manager setDefaultHeader:@"X-Transmission-Session-Id" value:weakself.sessionHeader];
+    [manager postPath:@"/transmission/rpc" parameters:sessionParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSString *result = [responseObject objectForKey:@"result"];
+        if ([result isEqualToString:@"success"]) {
+            NSDictionary *responseDict = responseObject;
+            NSString *result = responseDict[@"result"];
+            if ([result isEqualToString:@"success"]) {
+                weakself.downloadPath = responseDict[@"arguments"][@"download-dir"];
+                [weakself downloadTask:magnet toDir:weakself.downloadPath completionHandler:completionHandler errorHandler:errorHandler];
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if ([operation.response statusCode] == 409) {
+            // GetSession
+            weakself.sessionHeader = [operation.response allHeaderFields][@"X-Transmission-Session-Id"];
+            [manager setDefaultHeader:@"X-Transmission-Session-Id" value:weakself.sessionHeader];
+            [manager postPath:@"/transmission/rpc" parameters:sessionParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                NSDictionary *responseDict = responseObject;
+                NSString *result = responseDict[@"result"];
+                if ([result isEqualToString:@"success"]) {
+                    weakself.downloadPath = responseDict[@"arguments"][@"download-dir"];
+                    [weakself downloadTask:magnet toDir:weakself.downloadPath completionHandler:completionHandler errorHandler:errorHandler];
+                }
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                // error stuff here
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Unkown error.", @"Unknow error.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
+                [alert show];
+            }];
+        }
+    }];
+}
+
+- (void)downloadTask:(NSString *)magnet toDir:(NSString *)dir completionHandler:(void (^__strong)(void))completionHandler errorHandler:(void (^__strong)(void))errorHandler {
+    NSDictionary *params = @{@"method" : @"torrent-add", @"arguments": @{ @"paused" : @(NO), @"download-dir" : dir, @"filename" : magnet } };
+    __weak typeof(self) weakself = self;
+    SBAPIManager *manager = [self refreshedManager];
+    [manager setDefaultHeader:@"X-Transmission-Session-Id" value:weakself.sessionHeader];
+    [manager postPath:@"/transmission/rpc" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSString *result = [responseObject objectForKey:@"result"];
+        if ([result isEqualToString:@"success"]) {
+            completionHandler();
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        errorHandler();
+    }];
+}
+
+- (SBAPIManager *)refreshedManager {
+    NSString *link = [[AppDelegate shared] getTransmissionServerAddressWithUserNameAndPassword:NO];
+    NSArray *userNameAndPassword = [[AppDelegate shared] getUsernameAndPassword];
+    SBAPIManager *manager = [[SBAPIManager alloc] initWithBaseURL:[[NSURL alloc] initWithString:link]];
+    [manager setUsername:userNameAndPassword[0] andPassword:userNameAndPassword[1]];
+    return manager;
+}
+
+- (void)showHudWithMessage:(NSString *)message inView:(UIView *)aView {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:aView animated:YES];
+    hud.mode = MBProgressHUDModeText;
+    hud.removeFromSuperViewOnHide = YES;
+    hud.labelText = message;
+    [hud hide:YES afterDelay:1];
+}
+
 
 @end

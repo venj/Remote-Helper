@@ -12,8 +12,8 @@
 #import <MBProgressHUD/MBProgressHUD.h>
 #import <BlocksKit+UIKit.h>
 #import <TOWebViewController/TOWebViewController.h>
-#import "SBAPIManager.h"
 #import "AppDelegate.h"
+#import "VPSearchResultController.h"
 #import "Common.h"
 
 @interface VPTorrentsListViewController () <MWPhotoBrowserDelegate, UISearchDisplayDelegate, UISearchBarDelegate>
@@ -25,8 +25,7 @@
 @property (nonatomic, strong) NSDictionary *localizedStatusStrings;
 @property (nonatomic, strong) UIBarButtonItem *cloudItem;
 @property (nonatomic, strong) UIBarButtonItem *hashItem;
-@property (nonatomic, copy) NSString *sessionHeader;
-@property (nonatomic, copy) NSString *downloadPath;
+@property (nonatomic, strong) UIBarButtonItem *searchItem;
 @end
 
 @implementation VPTorrentsListViewController
@@ -55,8 +54,6 @@
             [self loadTorrentList:sender];
         }];
     }
-    self.sessionHeader = @"";
-    self.downloadPath = @"";
     
     self.localizedStatusStrings = @{@"completed" : NSLocalizedString(@"completed", @"completed"),
                                     @"waiting" : NSLocalizedString(@"waiting", @"waiting"),
@@ -91,14 +88,6 @@
 }
 
 #pragma mark - Table view data source
-
-- (SBAPIManager *)refreshedManager {
-    NSString *link = [[AppDelegate shared] getTransmissionServerAddressWithUserNameAndPassword:NO];
-    NSArray *userNameAndPassword = [[AppDelegate shared] getUsernameAndPassword];
-    SBAPIManager *manager = [[SBAPIManager alloc] initWithBaseURL:[[NSURL alloc] initWithString:link]];
-    [manager setUsername:userNameAndPassword[0] andPassword:userNameAndPassword[1]];
-    return manager;
-}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -208,7 +197,7 @@
         [self.navigationController pushViewController:photoBrowser animated:YES];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         [MBProgressHUD hideHUDForView:aView animated:YES];
-        [self showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.")];
+        [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.") inView:self.navigationController.view];
     }];
     [operation start];
 }
@@ -248,7 +237,7 @@
         [blockSelf.tableView reloadData];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         [MBProgressHUD hideHUDForView:aView animated:YES];
-        [self showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.")];
+        [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.") inView:self.navigationController.view];
         blockSelf.navigationItem.rightBarButtonItem.enabled = YES;
     }];
     [operation start];
@@ -284,8 +273,10 @@
 }
 
 - (void)photoBrowser:(MWPhotoBrowser *)photoBrowser didDisplayPhotoAtIndex:(NSUInteger)index {
-    photoBrowser.navigationItem.rightBarButtonItems  = @[[self cloudItemWithIndex:index], [self hashItemWithIndex:index]];
+    photoBrowser.navigationItem.rightBarButtonItems  = @[[self theSearchItem], [self hashItemWithIndex:index]];
 }
+
+
 
 - (UIBarButtonItem *)hashItemWithIndex:(NSUInteger)index {
     self.hashItem = [[UIBarButtonItem alloc] bk_initWithImage:[UIImage imageNamed:@"magnet"] style:UIBarButtonItemStylePlain handler:^(id sender) {
@@ -300,98 +291,51 @@
             UIPasteboard *pb = [UIPasteboard generalPasteboard];
             pb.string = message;
             
-            NSDictionary *sessionParams = @{@"method" : @"session-get"};
-            SBAPIManager *manager = [weakself refreshedManager];
-            [manager setDefaultHeader:@"X-Transmission-Session-Id" value:weakself.sessionHeader];
-            [manager postPath:@"/transmission/rpc" parameters:sessionParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                NSString *result = [responseObject objectForKey:@"result"];
-                if ([result isEqualToString:@"success"]) {
-                    NSDictionary *responseDict = responseObject;
-                    NSString *result = responseDict[@"result"];
-                    if ([result isEqualToString:@"success"]) {
-                        weakself.downloadPath = responseDict[@"arguments"][@"download-dir"];
-                        [weakself addTask:message];
-                    }
-                }
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                if ([operation.response statusCode] == 409) {
-                    // GetSession
-                    weakself.sessionHeader = [operation.response allHeaderFields][@"X-Transmission-Session-Id"];
-                    [manager setDefaultHeader:@"X-Transmission-Session-Id" value:weakself.sessionHeader];
-                    [manager postPath:@"/transmission/rpc" parameters:sessionParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                        NSDictionary *responseDict = responseObject;
-                        NSString *result = responseDict[@"result"];
-                        if ([result isEqualToString:@"success"]) {
-                            weakself.downloadPath = responseDict[@"arguments"][@"download-dir"];
-                            [weakself addTask:message];
-                        }
-                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                        // error stuff here
-                        [weakself showHudWithMessage:NSLocalizedString(@"Unknown error.", @"Unknown error.")];
-                    }];
-                }
+            [[AppDelegate shared] parseSessionAndAddTask:message completionHandler:^{
+                [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Task added.", @"Task added.") inView:weakself.navigationController.view];
+            } errorHandler:^{
+                [[AppDelegate shared]  showHudWithMessage:NSLocalizedString(@"Unknow error.", @"Unknow error.") inView:weakself.navigationController.view];
             }];
         } failure:^(NSURLRequest *req, NSHTTPURLResponse *res, NSError *err, id anotherJSON) {
-            [weakself showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.")];
+            [[AppDelegate shared]  showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.") inView:weakself.navigationController.view];
         }];
         [trOperation start];
     }];
     return self.hashItem;
 }
 
-- (void)addTask:(NSString *)magnet {
-    NSDictionary *params = @{@"method" : @"torrent-add", @"arguments": @{ @"paused" : @(NO), @"download-dir" : self.downloadPath, @"filename" : magnet } };
-    __weak typeof(self) weakself = self;
-    SBAPIManager *manager = [weakself refreshedManager];
-    [manager setDefaultHeader:@"X-Transmission-Session-Id" value:weakself.sessionHeader];
-    [manager postPath:@"/transmission/rpc" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSString *result = [responseObject objectForKey:@"result"];
-        if ([result isEqualToString:@"success"]) {
-            [weakself showHudWithMessage:NSLocalizedString(@"Task added.", @"Task added.")];
-        }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [weakself showHudWithMessage:NSLocalizedString(@"Unknow error.", @"Unknow error.")];
-    }];
-}
-
-- (void)showHudWithMessage:(NSString *)message {
-    UIView *aView = self.navigationController.view;
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:aView animated:YES];
-    hud.mode = MBProgressHUDModeText;
-    hud.labelText = message;
-    [hud hide:YES afterDelay:1];
-}
-
-- (UIBarButtonItem *)cloudItemWithIndex:(NSUInteger)index {
-    __block UIBarButtonItem *item = self.cloudItem;
-    self.cloudItem = [[UIBarButtonItem alloc] bk_initWithImage:[UIImage imageNamed:@"cloud_down"] style:UIBarButtonItemStylePlain handler:^(id sender) {
-        [item setEnabled:NO];
-        NSString *fileName = [self.photos[index] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        BOOL asyncAddTask = [defaults boolForKey:AsyncAddCloudTaskKey];
-        NSMutableURLRequest *addTorrentRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] addTorrentWithName:fileName async:asyncAddTask]]];
-        addTorrentRequest.timeoutInterval = REQUEST_TIME_OUT;
-        AFJSONRequestOperation *trOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:addTorrentRequest success:^(NSURLRequest *req, NSHTTPURLResponse *res, id anotherJSON) {
-            NSString *title, *message;
-            if (asyncAddTask) {
-                title = NSLocalizedString(@"Task added", @"Task added");
-                message = NSLocalizedString(@"Torrent added! Please check your Xunlei account.", @"Torrent added! Please check your Xunlei account.");
-            }
-            else {
-                title = NSLocalizedString(@"Result", @"Result");
-                message = [NSString stringWithFormat:@"%@%@", NSLocalizedString(@"Torrent added! Download status:\n", @"Torrent added! Download status:\n"), self.localizedStatusStrings[anotherJSON[@"status"]]];
-            }
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
-            [alert show];
-            [item setEnabled:YES];
-        } failure:^(NSURLRequest *req, NSHTTPURLResponse *res, NSError *err, id anotherJSON) {
-            [self showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.")];
-            [item setEnabled:YES];
+- (UIBarButtonItem *)theSearchItem {
+    if (self.searchItem) { return self.searchItem; }
+    __weak typeof(self) weakSelf = self;
+    self.searchItem = [[UIBarButtonItem alloc] bk_initWithBarButtonSystemItem:UIBarButtonSystemItemSearch handler:^(id sender) {
+        UIAlertView *alert = [[UIAlertView alloc] bk_initWithTitle:NSLocalizedString(@"Search", @"Search") message:NSLocalizedString(@"Please enter video serial:", @"Please enter video serial:")];
+        alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+        [alert bk_addButtonWithTitle:NSLocalizedString(@"Search", @"Search") handler:^{
+            NSString *keyword = [alert textFieldAtIndex:0].text;
+            NSMutableURLRequest *addTorrentRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] dbSearchPathWithKeyword:keyword]]];
+            addTorrentRequest.timeoutInterval = REQUEST_TIME_OUT;
+            AFJSONRequestOperation *trOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:addTorrentRequest success:^(NSURLRequest *req, NSHTTPURLResponse *res, id anotherJSON) {
+                if ([anotherJSON[@"success"] boolValue] == true) {
+                    VPSearchResultController *searchController = [[VPSearchResultController alloc] initWithStyle:UITableViewStylePlain];
+                    searchController.torrents = anotherJSON[@"results"];
+                    searchController.keyword = keyword;
+                    [weakSelf.navigationController pushViewController:searchController animated:YES];
+                }
+                else {
+                    NSString *errorMessage = anotherJSON[@"message"];
+                    [[AppDelegate shared] showHudWithMessage:NSLocalizedString(errorMessage, errorMessage) inView:self.navigationController.view];
+                }
+                
+            } failure:^(NSURLRequest *req, NSHTTPURLResponse *res, NSError *err, id anotherJSON) {
+                [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.") inView:self.navigationController.view];
+            }];
+            [trOperation start];
         }];
-        [trOperation start];
+        [alert bk_setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:nil];
+        [alert show];
     }];
-    return self.cloudItem;
+    
+    return self.searchItem;
 }
 
 @end

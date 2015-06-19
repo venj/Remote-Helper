@@ -64,7 +64,12 @@
  @return Absolute remote link for torrents date list.
  */
 - (NSString *)torrentsListPath;
-
+/*!
+ @brief Compose a remote link for search torrent db.
+ @param keyword Keyword for search.
+ @return Absolute remote link for search torrent db.
+ */
+- (NSString *)dbSearchPathWithKeyword:(NSString *)keyword;
 /*!
  @brief Compose a remote link for search file names include some keyword.
  @param keywork The keyword to search for.
@@ -135,5 +140,7 @@
  @param path The relative path for the video to be played.
  @return An <code>NSURL</code> object for a local file or a remote address.
  */
+- (void)showHudWithMessage:(NSString *)message inView:(UIView *)aView;
 - (NSURL *)videoPlayURLWithPath:(NSString *)path;
+- (void)parseSessionAndAddTask:(NSString *)magnet completionHandler:(void (^__strong)(void))completionHandler errorHandler:(void (^__strong)(void))errorHandler ;
 @end

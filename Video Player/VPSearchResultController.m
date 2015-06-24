@@ -56,8 +56,16 @@
     id size = torrent[@"size"];
     NSString *sizeString = NSLocalizedString(@"Unknown size", @"Unknown size");
     if (![size isKindOfClass:[NSNull class]]) {
-        sizeString = [[NSString alloc] initWithFormat:@"%.1f MB", [size integerValue] / (1024.0 * 1024.0)];
+        long long sizeValue = [size longLongValue];
+        double mbValue = sizeValue / (1024.0 * 1024.0);
+        if (mbValue > 1024.0) {
+            sizeString = [[NSString alloc] initWithFormat:@"%.1f GB", mbValue / 1024.0];
+        }
+        else {
+            sizeString = [[NSString alloc] initWithFormat:@"%.1f MB", mbValue];
+        }
     }
+    
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", sizeString];
     cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
     return cell;

@@ -14,7 +14,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = [[NSString alloc] initWithFormat:@"%@: %@", NSLocalizedString(@"Search", @"Search"), self.keyword];
+    self.title = [[NSString alloc] initWithFormat:@"%@: %@ (%u)", NSLocalizedString(@"Search", @"Search"), self.keyword, [self.torrents count]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -57,34 +57,77 @@
     NSString *sizeString = NSLocalizedString(@"Unknown size", @"Unknown size");
     if (![size isKindOfClass:[NSNull class]]) {
         long long sizeValue = [size longLongValue];
-        double mbValue = sizeValue / (1024.0 * 1024.0);
-        if (mbValue > 1024.0) {
-            sizeString = [[NSString alloc] initWithFormat:@"%.1f GB", mbValue / 1024.0];
-        }
-        else {
-            sizeString = [[NSString alloc] initWithFormat:@"%.1f MB", mbValue];
-        }
+        sizeString = [self stringForSize:sizeValue];
     }
     
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", sizeString];
+    NSString *dateString = [self formattedDate:[torrent[@"upload_date"] integerValue]];
+    cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@%@, %@", sizeString, torrent[@"seeders"], NSLocalizedString(@"seeders", @"seeders"), dateString];
     cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
     return cell;
 }
 
 #pragma mark - Table view delegate
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    __weak typeof(self) weakself = self;
     NSDictionary *torrent = self.torrents[indexPath.row];
+    [self addTorrentToTransmission:torrent];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    NSDictionary *torrent = self.torrents[indexPath.row];
+    UIAlertView *alert = [[UIAlertView alloc] bk_initWithTitle:NSLocalizedString(@"Info", @"Info") message:[self torrentDescription:torrent]];
+    __weak typeof(self) weakself = self;
+    [alert bk_addButtonWithTitle:NSLocalizedString(@"Download", @"Download") handler:^{
+        [weakself addTorrentToTransmission:torrent];
+    }];
+    [alert bk_setCancelButtonWithTitle:NSLocalizedString(@"OK", @"OK") handler:nil];
+    [alert show];
+}
+
+- (NSString *)formattedDate:(NSInteger)timeStamp {
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeStamp];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    NSLocale *locale = [NSLocale currentLocale];
+    [formatter setLocale:locale];
+    [formatter setDateStyle:NSDateFormatterShortStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    return [formatter stringFromDate:date];
+}
+
+- (NSString *)torrentDescription:(NSDictionary *)dict {
+    return [[NSString alloc] initWithFormat:@"%@, \n"
+                                             "%@, \n"
+                                             "%@, \n"
+                                             "%@, \n"
+                                             "%@"
+                                             " seeders",
+                                            dict[@"name"],
+                                            [self stringForSize:[dict[@"size"] longLongValue] ],
+                                            dict[@"magnet"],
+                                            [self formattedDate:[dict[@"upload_date"] integerValue]],
+                                            dict[@"seeders"],
+                                            NSLocalizedString(@"seeders", @"seeders")];
+}
+
+- (NSString *)stringForSize:(long long)size {
+    NSString *sizeString = @"";
+    double mbValue = size / (1024.0 * 1024.0);
+    if (mbValue > 1024.0) {
+        sizeString = [[NSString alloc] initWithFormat:@"%.2f GB", mbValue / 1024.0];
+    }
+    else {
+        sizeString = [[NSString alloc] initWithFormat:@"%.1f MB", mbValue];
+    }
+    return sizeString;
+}
+
+- (void)addTorrentToTransmission:(NSDictionary *)torrent {
+    __weak typeof(self) weakself = self;
     [[AppDelegate shared] parseSessionAndAddTask:torrent[@"magnet"] completionHandler:^{
         [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Task added.", @"Task added.") inView:weakself.navigationController.view];
     } errorHandler:^{
         [[AppDelegate shared]  showHudWithMessage:NSLocalizedString(@"Unknow error.", @"Unknow error.") inView:weakself.navigationController.view];
     }];
 }
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
 
 @end

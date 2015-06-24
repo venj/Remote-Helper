@@ -301,8 +301,10 @@
                 [[AppDelegate shared]  showHudWithMessage:NSLocalizedString(@"Unknow error.", @"Unknow error.") inView:weakself.navigationController.view];
             }];
         } failure:^(NSURLRequest *req, NSHTTPURLResponse *res, NSError *err, id anotherJSON) {
+            NSLog(@"%@", [err localizedDescription]);
             [[AppDelegate shared]  showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.") inView:weakself.navigationController.view];
         }];
+        if ([[AppDelegate shared] useSSL]) { [trOperation setAllowsInvalidSSLCertificate:YES]; }
         [trOperation start];
     }];
     return self.hashItem;
@@ -334,6 +336,7 @@
             } failure:^(NSURLRequest *req, NSHTTPURLResponse *res, NSError *err, id anotherJSON) {
                 [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.") inView:self.navigationController.view];
             }];
+            if ([[AppDelegate shared] useSSL]) { [trOperation setAllowsInvalidSSLCertificate:YES]; }
             [trOperation start];
         }];
         [alert bk_setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:nil];

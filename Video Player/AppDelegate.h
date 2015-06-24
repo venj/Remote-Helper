@@ -142,5 +142,7 @@
  */
 - (void)showHudWithMessage:(NSString *)message inView:(UIView *)aView;
 - (NSURL *)videoPlayURLWithPath:(NSString *)path;
-- (void)parseSessionAndAddTask:(NSString *)magnet completionHandler:(void (^__strong)(void))completionHandler errorHandler:(void (^__strong)(void))errorHandler ;
+- (void)parseSessionAndAddTask:(NSString *)magnet completionHandler:(void (^__strong)(void))completionHandler errorHandler:(void (^__strong)(void))errorHandler;
+- (NSString *)customUserAgent;
+- (BOOL)useSSL;
 @end

@@ -196,7 +196,7 @@
                         [fm removeItemAtPath:[[AppDelegate shared] fileToDownloadWithPath:self.fileInfo[@"file"]] error:NULL];
                     }
                 }];
-                [operation setAllowsInvalidSSLCertificate:YES];
+                if ([[AppDelegate shared] useSSL]) { [operation setAllowsInvalidSSLCertificate:YES]; }
                 [operation start];
                 [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
             }
@@ -246,7 +246,7 @@
                 NSString *movieRemovePath = [[AppDelegate shared] fileOperation:@"remove" withPath:path fileName:fileName];
                 NSURL *movieRemoveURL = [[NSURL alloc] initWithString:movieRemovePath];
                 NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:movieRemoveURL];
-                [request setAllHTTPHeaderFields:@{@"User-Agent" : @"CustomUserAgent"}];
+                [request setAllHTTPHeaderFields:@{@"User-Agent" : [[AppDelegate shared] customUserAgent]}];
                 request.HTTPMethod = @"DELETE";
                 
                 AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
@@ -268,7 +268,7 @@
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Connection failed.", @"Connection failed.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
                     [alert show];
                 }];
-                [operation setAllowsInvalidSSLCertificate:YES];
+                if ([[AppDelegate shared] useSSL]) { [operation setAllowsInvalidSSLCertificate:YES]; }
                 [operation start];
             }
         }

@@ -126,6 +126,40 @@
 		</dict>
 		<dict>
 			<key>Title</key>
+			<string>Request Settings</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+			<key>DefaultValue</key>
+			<string>video-player</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>Key</key>
+			<string>kCustomRequestUserAgent</string>
+			<key>KeyboardType</key>
+			<string>Alphabet</string>
+			<key>Title</key>
+			<string>Custom UA</string>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+		</dict>
+		<dict>
+			<key>Default Value</key>
+			<true/>
+			<key>Title</key>
+			<string>Use SSL</string>
+			<key>Key</key>
+			<string>kRequestUseSSL</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+		</dict>
+		<dict>
+			<key>Title</key>
 			<string>Cache</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>

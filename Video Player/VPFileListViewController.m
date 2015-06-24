@@ -201,7 +201,7 @@
         NSURL *movieInfoURL = [[NSURL alloc] initWithString:movieInfoPath];
         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:movieInfoURL];
         request.timeoutInterval = REQUEST_TIME_OUT;
-        [request setAllHTTPHeaderFields:@{@"User-Agent" : @"CustomUserAgent"}];
+        [request setAllHTTPHeaderFields:@{@"User-Agent" : [[AppDelegate shared] customUserAgent]}];
         AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
             if ((JSON[@"exist"] != nil) && ([JSON[@"exist"] boolValue] == NO)) {
                 [UIAlertView bk_showAlertViewWithTitle:NSLocalizedString(@"Error", @"Error") message:[NSString stringWithFormat:NSLocalizedString(@"%@ was deleted from the server.", @"%@ was deleted from the server."), [self.dataList[indexPath.row] lastPathComponent]] cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
@@ -228,7 +228,7 @@
         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
             [self showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.")];
         }];
-        [operation setAllowsInvalidSSLCertificate:YES];
+        if ([[AppDelegate shared] useSSL]) { [operation setAllowsInvalidSSLCertificate:YES]; }
         [operation start];
     }
 }
@@ -323,7 +323,7 @@
         NSURL *movieListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] fileLinkWithPath:path]];
         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:movieListURL];
         request.timeoutInterval = REQUEST_TIME_OUT;
-        [request setAllHTTPHeaderFields:@{@"User-Agent" : @"CustomUserAgent"}];
+        [request setAllHTTPHeaderFields:@{@"User-Agent" : [[AppDelegate shared] customUserAgent]}];
         __block AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
             blockSelf.dataList = [NSMutableArray arrayWithArray:JSON];
             [blockSelf.tableView reloadData];
@@ -332,7 +332,7 @@
             [self showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.")];
             [blockSelf showActivityIndicatorInBarButton:NO];
         }];
-        [operation setAllowsInvalidSSLCertificate:YES];
+        if ([[AppDelegate shared] useSSL]) { [operation setAllowsInvalidSSLCertificate:YES]; }
         [operation start];
     }
 }

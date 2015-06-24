@@ -25,4 +25,5 @@
 #define PasscodeLockConfig @"kPasscodeLockConfig"
 #define LocalFileSize @"kLocalFileSize"
 #define DeviceFreeSpace @"kDeviceFreeSpace"
+#define CustomUserAgent @"me.venj.Video-Player"
 #endif

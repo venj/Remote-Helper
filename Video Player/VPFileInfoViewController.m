@@ -246,7 +246,7 @@
                 NSString *movieRemovePath = [[AppDelegate shared] fileOperation:@"remove" withPath:path fileName:fileName];
                 NSURL *movieRemoveURL = [[NSURL alloc] initWithString:movieRemovePath];
                 NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:movieRemoveURL];
-                [request setAllHTTPHeaderFields:@{@"User-Agent" : @"me.venj.Video-Player"}];
+                [request setAllHTTPHeaderFields:@{@"User-Agent" : @"CustomUserAgent"}];
                 request.HTTPMethod = @"DELETE";
                 
                 AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {

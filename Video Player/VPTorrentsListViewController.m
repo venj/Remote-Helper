@@ -180,7 +180,7 @@
     NSURL *movieListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] searchPathWithKeyword:date]];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:movieListURL];
     request.timeoutInterval = REQUEST_TIME_OUT;
-    [request setAllHTTPHeaderFields:@{@"User-Agent" : @"me.venj.Video-Player"}];
+    [request setAllHTTPHeaderFields:@{@"User-Agent" : @"CustomUserAgent"}];
     UIView *aView = self.navigationController.view;
     [MBProgressHUD showHUDAddedTo:aView animated:YES];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
@@ -229,7 +229,7 @@
     NSURL *torrentsListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] torrentsListPath]];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:torrentsListURL];
     request.timeoutInterval = REQUEST_TIME_OUT;
-    [request setAllHTTPHeaderFields:@{@"User-Agent" : @"me.venj.Video-Player"}];
+    [request setAllHTTPHeaderFields:@{@"User-Agent" : @"CustomUserAgent"}];
     UIView *aView = self.navigationController.view;
     [MBProgressHUD showHUDAddedTo:aView animated:YES];
     self.navigationItem.rightBarButtonItem.enabled = NO;
@@ -286,7 +286,7 @@
         fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
         NSMutableURLRequest *hashTorrentRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] hashTorrentWithName:fileName ]]];
         [hashTorrentRequest setTimeoutInterval:REQUEST_TIME_OUT];
-        [hashTorrentRequest setAllHTTPHeaderFields:@{@"User-Agent" : @"me.venj.Video-Player"}];
+        [hashTorrentRequest setAllHTTPHeaderFields:@{@"User-Agent" : @"CustomUserAgent"}];
         __weak typeof(self) weakself = self;
         AFJSONRequestOperation *trOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:hashTorrentRequest success:^(NSURLRequest *req, NSHTTPURLResponse *res, id anotherJSON) {
             NSString *title, *message;
@@ -318,7 +318,7 @@
             NSString *keyword = [alert textFieldAtIndex:0].text;
             NSMutableURLRequest *addTorrentRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] dbSearchPathWithKeyword:keyword]]];
             addTorrentRequest.timeoutInterval = REQUEST_TIME_OUT;
-            [addTorrentRequest setAllHTTPHeaderFields:@{@"User-Agent" : @"me.venj.Video-Player"}];
+            [addTorrentRequest setAllHTTPHeaderFields:@{@"User-Agent" : @"CustomUserAgent"}];
             AFJSONRequestOperation *trOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:addTorrentRequest success:^(NSURLRequest *req, NSHTTPURLResponse *res, id anotherJSON) {
                 if ([anotherJSON[@"success"] boolValue] == true) {
                     VPSearchResultController *searchController = [[VPSearchResultController alloc] initWithStyle:UITableViewStylePlain];

@@ -176,22 +176,22 @@
 }
 
 - (NSString *)torrentsListPath {
-    NSString *link = [[NSString alloc] initWithFormat:@"http://%@/torrents", [self baseLink]];
+    NSString *link = [[NSString alloc] initWithFormat:@"https://%@/torrents", [self baseLink]];
     return link;
 }
 
 - (NSString *)dbSearchPathWithKeyword:(NSString *)keyword {
-    NSString *link = [[NSString alloc] initWithFormat:@"http://%@/db_search?keyword=%@", [self baseLink], [keyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *link = [[NSString alloc] initWithFormat:@"https://%@/db_search?keyword=%@", [self baseLink], [keyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     return link;
 }
 
 - (NSString *)searchPathWithKeyword:(NSString *)keyword {
-    NSString *link = [[NSString alloc] initWithFormat:@"http://%@/search/%@", [self baseLink], keyword];
+    NSString *link = [[NSString alloc] initWithFormat:@"https://%@/search/%@", [self baseLink], keyword];
     return link;
 }
 
 - (NSString *)addTorrentWithName:(NSString *)name async:(BOOL)async {
-    NSString *link = [[NSString alloc] initWithFormat:@"http://%@/lx/%@", [self baseLink], name];
+    NSString *link = [[NSString alloc] initWithFormat:@"https://%@/lx/%@", [self baseLink], name];
     if (async) {
         link = [link stringByAppendingFormat:@"/1"];
     }
@@ -202,7 +202,7 @@
 }
 
 - (NSString *)hashTorrentWithName:(NSString *)name {
-    NSString *link = [[NSString alloc] initWithFormat:@"http://%@/hash/%@", [self baseLink], name];
+    NSString *link = [[NSString alloc] initWithFormat:@"https://%@/hash/%@", [self baseLink], name];
     return link;
 }
 
@@ -216,7 +216,7 @@
         path = @"/";
     else if (![[path substringToIndex:1] isEqualToString:@"/"])
         path = [[NSString alloc]  initWithFormat:@"/%@", path];
-    NSString *link = [[NSString alloc] initWithFormat:@"http://%@:%@%@", host, port, path];
+    NSString *link = [[NSString alloc] initWithFormat:@"https://%@:%@%@", host, port, path];
     return link;
 }
 
@@ -227,7 +227,7 @@
         [defaults setObject:path forKey:ServerPathKey];
         [defaults synchronize];
     }
-    NSString *link = [[NSString alloc] initWithFormat:@"http://%@%@%@/%@", [self baseLink], path, operation, fileName];
+    NSString *link = [[NSString alloc] initWithFormat:@"https://%@%@%@/%@", [self baseLink], path, operation, fileName];
     return link;
 }
 

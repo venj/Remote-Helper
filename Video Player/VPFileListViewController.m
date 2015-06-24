@@ -228,6 +228,7 @@
         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
             [self showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.")];
         }];
+        [operation setAllowsInvalidSSLCertificate:YES];
         [operation start];
     }
 }
@@ -323,7 +324,7 @@
         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:movieListURL];
         request.timeoutInterval = REQUEST_TIME_OUT;
         [request setAllHTTPHeaderFields:@{@"User-Agent" : @"me.venj.Video-Player"}];
-        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        __block AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
             blockSelf.dataList = [NSMutableArray arrayWithArray:JSON];
             [blockSelf.tableView reloadData];
             [blockSelf showActivityIndicatorInBarButton:NO];
@@ -331,6 +332,7 @@
             [self showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.")];
             [blockSelf showActivityIndicatorInBarButton:NO];
         }];
+        [operation setAllowsInvalidSSLCertificate:YES];
         [operation start];
     }
 }

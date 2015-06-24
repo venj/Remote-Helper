@@ -196,6 +196,7 @@
                         [fm removeItemAtPath:[[AppDelegate shared] fileToDownloadWithPath:self.fileInfo[@"file"]] error:NULL];
                     }
                 }];
+                [operation setAllowsInvalidSSLCertificate:YES];
                 [operation start];
                 [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
             }
@@ -267,6 +268,7 @@
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Connection failed.", @"Connection failed.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
                     [alert show];
                 }];
+                [operation setAllowsInvalidSSLCertificate:YES];
                 [operation start];
             }
         }

@@ -200,6 +200,7 @@
         [MBProgressHUD hideHUDForView:aView animated:YES];
         [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.") inView:self.navigationController.view];
     }];
+    [operation setAllowsInvalidSSLCertificate:YES];
     [operation start];
 }
 
@@ -242,6 +243,7 @@
         [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.") inView:self.navigationController.view];
         blockSelf.navigationItem.rightBarButtonItem.enabled = YES;
     }];
+    [operation setAllowsInvalidSSLCertificate:YES];
     [operation start];
 }
 
@@ -277,8 +279,6 @@
 - (void)photoBrowser:(MWPhotoBrowser *)photoBrowser didDisplayPhotoAtIndex:(NSUInteger)index {
     photoBrowser.navigationItem.rightBarButtonItems  = @[[self theSearchItem], [self hashItemWithIndex:index]];
 }
-
-
 
 - (UIBarButtonItem *)hashItemWithIndex:(NSUInteger)index {
     self.hashItem = [[UIBarButtonItem alloc] bk_initWithImage:[UIImage imageNamed:@"magnet"] style:UIBarButtonItemStylePlain handler:^(id sender) {

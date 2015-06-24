@@ -14,7 +14,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = [[NSString alloc] initWithFormat:@"%@: %@ (%u)", NSLocalizedString(@"Search", @"Search"), self.keyword, [self.torrents count]];
+    self.title = [[NSString alloc] initWithFormat:@"%@: %@ (%lu)", NSLocalizedString(@"Search", @"Search"), self.keyword, (unsigned long)[self.torrents count]];
 }
 
 - (void)didReceiveMemoryWarning

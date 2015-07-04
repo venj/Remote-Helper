@@ -321,6 +321,9 @@
             NSMutableURLRequest *addTorrentRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] dbSearchPathWithKeyword:keyword]]];
             addTorrentRequest.timeoutInterval = REQUEST_TIME_OUT;
             [addTorrentRequest setAllHTTPHeaderFields:@{@"User-Agent" : [[AppDelegate shared] customUserAgent]}];
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+            hud.mode = MBProgressHUDModeIndeterminate;
+            hud.removeFromSuperViewOnHide = YES;
             AFJSONRequestOperation *trOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:addTorrentRequest success:^(NSURLRequest *req, NSHTTPURLResponse *res, id anotherJSON) {
                 if ([anotherJSON[@"success"] boolValue] == true) {
                     VPSearchResultController *searchController = [[VPSearchResultController alloc] initWithStyle:UITableViewStylePlain];
@@ -332,8 +335,9 @@
                     NSString *errorMessage = anotherJSON[@"message"];
                     [[AppDelegate shared] showHudWithMessage:NSLocalizedString(errorMessage, errorMessage) inView:self.navigationController.view];
                 }
-                
+                [hud hide:YES];
             } failure:^(NSURLRequest *req, NSHTTPURLResponse *res, NSError *err, id anotherJSON) {
+                [hud hide:YES];
                 [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.") inView:self.navigationController.view];
             }];
             if ([[AppDelegate shared] useSSL]) { [trOperation setAllowsInvalidSSLCertificate:YES]; }

@@ -17,6 +17,18 @@
     self.title = [[NSString alloc] initWithFormat:@"%@: %@ (%lu)", NSLocalizedString(@"Search", @"Search"), self.keyword, (unsigned long)[self.torrents count]];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    if (self.navigationController.navigationBarHidden) {
+        [self.navigationController setNavigationBarHidden:NO animated:YES];
+    }
+    if ([UIApplication sharedApplication].statusBarHidden) {
+        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+    }
+    self.navigationController.navigationBar.tintColor = nil;
+    [self.navigationController.navigationBar setBarStyle:UIBarStyleDefault];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

@@ -490,7 +490,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     
     //start loading the initial page
     if (self.url && self.webView.request == nil)
-        [self.webView loadRequest:[NSURLRequest requestWithURL:self.url]];
+        [self.webView loadRequest:[NSURLRequest requestWithURL:self.url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10.0]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -590,7 +590,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     if (self.webView.loading)
         [self.webView stopLoading];
     
-    [self.webView loadRequest:[NSURLRequest requestWithURL:self.url]];
+    [self.webView loadRequest:[NSURLRequest requestWithURL:self.url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10.0]];
 }
 
 - (void)setLoadingBarTintColor:(UIColor *)loadingBarTintColor
@@ -798,7 +798,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
         NSURLRequest *request = self.webView.request;
         if (self.webView.request.URL.absoluteString.length == 0 && self.url)
         {
-            request = [NSURLRequest requestWithURL:self.url];
+            request = [NSURLRequest requestWithURL:self.url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10.0];
             [self.webView loadRequest:request];
         }
         else {

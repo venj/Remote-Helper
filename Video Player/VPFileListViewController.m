@@ -274,6 +274,8 @@
 - (void)showTransmission:(id)sender {
     NSString *link = [[AppDelegate shared] getTransmissionServerAddress];
     TOWebViewController *transmissionWebViewController = [[TOWebViewController alloc] initWithURLString:link];
+    transmissionWebViewController.title = @"Transmission";
+    transmissionWebViewController.showUrlWhileLoading = NO;
     UINavigationController *transmissionNavigationController = [[UINavigationController alloc] initWithRootViewController:transmissionWebViewController];
     __weak typeof(self) weakself = self;
     dispatch_async(dispatch_get_main_queue(), ^{

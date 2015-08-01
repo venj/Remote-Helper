@@ -15,20 +15,18 @@ PODS:
   - BlocksKit/UIKit (2.2.5):
     - BlocksKit/Core
     - BlocksKit/DynamicDelegate
-  - DACircularProgress (2.2.0)
+  - DACircularProgress (2.3.1)
   - InAppSettingsKit (2.3.2)
   - LTHPasscodeViewController (3.3.3)
-  - MBProgressHUD (0.9)
+  - MBProgressHUD (0.9.1)
   - MMAppSwitcher (0.2.0)
-  - MWPhotoBrowser (1.4.1):
-    - DACircularProgress
-    - MBProgressHUD (~> 0.8)
-    - PSTCollectionView (~> 1.2)
-    - SDWebImage (~> 3.7)
-  - PSTCollectionView (1.2.3)
-  - SDWebImage (3.7.1):
-    - SDWebImage/Core (= 3.7.1)
-  - SDWebImage/Core (3.7.1)
+  - MWPhotoBrowser (2.1.1):
+    - DACircularProgress (~> 2.3)
+    - MBProgressHUD (~> 0.9)
+    - SDWebImage (!= 3.7.2, ~> 3.7)
+  - SDWebImage (3.7.3):
+    - SDWebImage/Core (= 3.7.3)
+  - SDWebImage/Core (3.7.3)
   - TOWebViewController (2.0.14)
 
 DEPENDENCIES:
@@ -38,20 +36,19 @@ DEPENDENCIES:
   - LTHPasscodeViewController (~> 3.3.2)
   - MBProgressHUD (~> 0.8)
   - MMAppSwitcher (~> 0.2.0)
-  - MWPhotoBrowser (~> 1.4.0)
+  - MWPhotoBrowser (~> 2.1.1)
   - TOWebViewController (~> 2.0.14)
 
 SPEC CHECKSUMS:
   AFNetworking: cf8e418e16f0c9c7e5c3150d019a3c679d015018
   BlocksKit: 7f422b971407001178d181a43b99014ea2591fe6
-  DACircularProgress: 0f92b77239d5f3c612fc66185e2998391ac8e054
+  DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   InAppSettingsKit: 496b66f63086f9fd97d027bb29628c041358bc38
   LTHPasscodeViewController: 01d2c19b6e2aefcd34f4a63d880cf3718da27fdc
-  MBProgressHUD: d8e7ea388dc1549a42e0d219067cf5f2c898fb66
+  MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
   MMAppSwitcher: 6e813046b201593d1a1d06188a6f6336f06b7be2
-  MWPhotoBrowser: 2531e682860d62b8a7ba8659de02eb9040e431e5
-  PSTCollectionView: 6749df92885353521f55279a7ce2b293762e2be4
-  SDWebImage: ed3095af2ff88b436426037444979b917f6c5575
+  MWPhotoBrowser: ba0d0c09ffda3a7ea10093518738c502c1c7141c
+  SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
   TOWebViewController: 2cfd0032d781cabd88a0995fbca9692c11f0797e
 
-COCOAPODS: 0.37.2
+COCOAPODS: 0.38.2

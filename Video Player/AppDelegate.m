@@ -267,7 +267,7 @@
         if (![[subpath substringToIndex:1] isEqualToString:@"/"])
             subpath = [[NSString alloc] initWithFormat:@"/%@", subpath];
         if ([[subpath substringFromIndex:(subpath.length - 1)] isEqualToString:@"/"])
-            subpath = [subpath substringToIndex:subpath.length - 2];
+            subpath = [subpath substringToIndex:subpath.length - 1];
     }
     return [[NSString alloc] initWithFormat:@"%@:%@%@", host, port, subpath];
 }

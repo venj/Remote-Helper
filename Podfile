@@ -1,4 +1,4 @@
-platform :ios, '7.0'
+platform :ios, '8.0'
 
 source 'https://github.com/CocoaPods/Specs.git'
 
@@ -11,3 +11,4 @@ pod 'MBProgressHUD', '~> 0.8'
 pod 'TOWebViewController', '~> 2.0.14'
 pod 'LTHPasscodeViewController', '~> 3.3.2'
 pod 'MMAppSwitcher', '~> 0.2.0'
+#pod 'CruiserWebViewController'

@@ -19,6 +19,7 @@
 		2571E73E1762C9240036C61D /* VPTorrentsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2571E73C1762C9240036C61D /* VPTorrentsListViewController.m */; };
 		2571FD4A1760346F00CE8982 /* VPFileInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2571FD481760346F00CE8982 /* VPFileInfoViewController.m */; };
 		2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2581D48717544A4C00EF3867 /* InAppSettings.bundle */; };
+		25840DD81B6C448E0098A6CC /* NSString+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 25840DD71B6C448E0098A6CC /* NSString+Base64.m */; };
 		258CD0101A3B28B400B3EB55 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 258CD00F1A3B28B400B3EB55 /* Images.xcassets */; };
 		258CD0121A3B585D00B3EB55 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 258CD0111A3B585D00B3EB55 /* Launch Screen.xib */; };
 		25B0AA7217537A9D00141B0E /* VPFileListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B0AA7117537A9D00141B0E /* VPFileListViewController.m */; };
@@ -53,6 +54,8 @@
 		2571FD471760346F00CE8982 /* VPFileInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = VPFileInfoViewController.h; sourceTree = "<group>"; };
 		2571FD481760346F00CE8982 /* VPFileInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VPFileInfoViewController.m; sourceTree = "<group>"; };
 		2581D48717544A4C00EF3867 /* InAppSettings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InAppSettings.bundle; sourceTree = "<group>"; };
+		25840DD61B6C448E0098A6CC /* NSString+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Base64.h"; sourceTree = "<group>"; };
+		25840DD71B6C448E0098A6CC /* NSString+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Base64.m"; sourceTree = "<group>"; };
 		258CD00F1A3B28B400B3EB55 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		258CD0111A3B585D00B3EB55 /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
 		25B0AA7017537A9D00141B0E /* VPFileListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VPFileListViewController.h; sourceTree = "<group>"; };
@@ -164,6 +167,8 @@
 				25310E3D177ACA9500D4A212 /* VCFileAttributeHelper.m */,
 				25D718421A43BF0B006F34E7 /* SBAPIManager.h */,
 				25D718431A43BF0B006F34E7 /* SBAPIManager.m */,
+				25840DD61B6C448E0098A6CC /* NSString+Base64.h */,
+				25840DD71B6C448E0098A6CC /* NSString+Base64.m */,
 			);
 			name = "3rd Party";
 			sourceTree = "<group>";
@@ -291,6 +296,7 @@
 				252DFA901753784400FF8199 /* AppDelegate.m in Sources */,
 				25B0AA7217537A9D00141B0E /* VPFileListViewController.m in Sources */,
 				25D718441A43BF0B006F34E7 /* SBAPIManager.m in Sources */,
+				25840DD81B6C448E0098A6CC /* NSString+Base64.m in Sources */,
 				2571FD4A1760346F00CE8982 /* VPFileInfoViewController.m in Sources */,
 				25D90C7A1B33BF12003C5B6E /* VPSearchResultController.m in Sources */,
 				2571E73E1762C9240036C61D /* VPTorrentsListViewController.m in Sources */,
@@ -348,7 +354,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -373,7 +379,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -392,7 +398,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Video Player/Video Player-Prefix.pch";
 				INFOPLIST_FILE = "Video Player/Video Player-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "cf59a066-8187-40a2-a7c8-78f3c4e3de4d";
 				WRAPPER_EXTENSION = app;
@@ -410,7 +416,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Video Player/Video Player-Prefix.pch";
 				INFOPLIST_FILE = "Video Player/Video Player-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "cf59a066-8187-40a2-a7c8-78f3c4e3de4d";
 				WRAPPER_EXTENSION = app;

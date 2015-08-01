@@ -15,6 +15,7 @@
 #import "AppDelegate.h"
 #import "VPSearchResultController.h"
 #import "Common.h"
+#import "NSString+Base64.h"
 
 @interface VPTorrentsListViewController () <MWPhotoBrowserDelegate, UISearchDisplayDelegate, UISearchBarDelegate>
 @property (nonatomic, strong) NSArray *datesList;
@@ -268,7 +269,6 @@
     NSString *linkBase = [[AppDelegate shared] fileLinkWithPath:path];
     for (NSString *photo in photos) {
         NSString *fileName = [photo stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        //fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%2F"];
         MWPhoto *p = [MWPhoto photoWithURL:[NSURL URLWithString:[linkBase stringByAppendingPathComponent:fileName]]];
         p.caption = [photo lastPathComponent];
         [mwPhotos addObject:p];
@@ -282,9 +282,8 @@
 
 - (UIBarButtonItem *)hashItemWithIndex:(NSUInteger)index {
     self.hashItem = [[UIBarButtonItem alloc] bk_initWithImage:[UIImage imageNamed:@"magnet"] style:UIBarButtonItemStylePlain handler:^(id sender) {
-        NSString *fileName = [self.photos[index] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@"%252F"];
-        NSMutableURLRequest *hashTorrentRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] hashTorrentWithName:fileName ]]];
+        NSString *base64FileName = [self.photos[index] base64String];
+        NSMutableURLRequest *hashTorrentRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] hashTorrentWithName:base64FileName]]];
         [hashTorrentRequest setTimeoutInterval:REQUEST_TIME_OUT];
         [hashTorrentRequest setAllHTTPHeaderFields:@{@"User-Agent" : [[AppDelegate shared] customUserAgent]}];
         __weak typeof(self) weakself = self;

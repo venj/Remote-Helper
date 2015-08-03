@@ -45,9 +45,13 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
         // Add address
         UIAlertView *alert = [[UIAlertView alloc] bk_initWithTitle:NSLocalizedString(@"Add address", @"Add address") message:NSLocalizedString(@"Please input an address:", @"Please input an address:")];
         alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+        UITextField *textField = [alert textFieldAtIndex:0];
+        textField.keyboardType = UIKeyboardTypeURL;
+        textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        textField.text = @"http://";
         __weak typeof(self) weakself = self;
         [alert bk_addButtonWithTitle:NSLocalizedString(@"Save", @"Save") handler:^{
-            NSString *address = [alert textFieldAtIndex:0].text;
+            NSString *address = textField.text;
             [weakself.addresses addObject:address];
             [weakself saveAddresses];
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.addresses count] - 1 inSection:0];

@@ -144,10 +144,11 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
     webViewController.showUrlWhileLoading = NO;
     webViewController.hidesBottomBarWhenPushed = YES;
     typeof(self) weakself = self;
-    webViewController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] bk_initWithBarButtonSystemItem:UIBarButtonSystemItemSearch handler:^(id sender) {
+    UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] bk_initWithBarButtonSystemItem:UIBarButtonSystemItemSearch handler:^(id sender) {
         NSString *html = [webViewController.webView stringByEvaluatingJavaScriptFromString:@"document.body.innerHTML"];
         [weakself processHTML:html];
     }];
+    webViewController.additionalBarButtonItems = @[rightBarButtonItem];
     [self.navigationController pushViewController:webViewController animated:YES];
 }
 

@@ -7,6 +7,6 @@ pod 'InAppSettingsKit', '~> 2.1'
 pod 'BlocksKit', '~> 2.2.3'
 pod 'MWPhotoBrowser', '~> 2.1.1'
 pod 'MBProgressHUD', '~> 0.8'
-pod 'TOWebViewController', :git => 'https://github.com/TimOliver/TOWebViewController.git'
+pod 'TOWebViewController', :git => 'https://github.com/venj/TOWebViewController.git', :tag => "2.0.17.1"
 pod 'LTHPasscodeViewController', '~> 3.3.2'
 pod 'MMAppSwitcher', '~> 0.2.0'

@@ -154,4 +154,13 @@
  */
 @property (nonatomic,assign)    CGFloat buttonBevelOpacity;
 
+/**
+ Decide whether show additional bar button items. Default to YES if additional button items was set.
+ */
+@property (nonatomic,assign)    BOOL showAdditionalBarButtonItems;
+
+/**
+ Add additional bar buttont items.
+ */
+@property (nonatomic,copy)    NSArray *additionalBarButtonItems;
 @end

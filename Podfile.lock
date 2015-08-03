@@ -37,16 +37,18 @@ DEPENDENCIES:
   - MBProgressHUD (~> 0.8)
   - MMAppSwitcher (~> 0.2.0)
   - MWPhotoBrowser (~> 2.1.1)
-  - TOWebViewController (from `https://github.com/TimOliver/TOWebViewController.git`)
+  - TOWebViewController (from `https://github.com/venj/TOWebViewController.git`, tag
+    `2.0.17.1`)
 
 EXTERNAL SOURCES:
   TOWebViewController:
-    :git: https://github.com/TimOliver/TOWebViewController.git
+    :git: https://github.com/venj/TOWebViewController.git
+    :tag: 2.0.17.1
 
 CHECKOUT OPTIONS:
   TOWebViewController:
-    :commit: 756b012be06ebd34a5722f0d6adfd0f92906d310
-    :git: https://github.com/TimOliver/TOWebViewController.git
+    :git: https://github.com/venj/TOWebViewController.git
+    :tag: 2.0.17.1
 
 SPEC CHECKSUMS:
   AFNetworking: cf8e418e16f0c9c7e5c3150d019a3c679d015018

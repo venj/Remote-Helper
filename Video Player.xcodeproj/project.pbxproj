@@ -47,7 +47,6 @@
 		25386B931779B60D001027BD /* ipaddress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ipaddress.c; sourceTree = "<group>"; };
 		25386B951779B619001027BD /* ipaddress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ipaddress.h; sourceTree = "<group>"; };
 		2561854F1B6F8D1B0073ACD3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/Launch Screen.xib"; sourceTree = "<group>"; };
-		256185511B6F8D1C0073ACD3 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/Launch Screen.xib"; sourceTree = "<group>"; };
 		256EA4BC177D5ED30081309B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		256EA4BE177D5F830081309B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		256EA4C0177D5F8E0081309B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -322,7 +321,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				2561854F1B6F8D1B0073ACD3 /* en */,
-				256185511B6F8D1C0073ACD3 /* zh-Hans */,
 			);
 			name = "Launch Screen.xib";
 			sourceTree = "<group>";

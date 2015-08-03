@@ -15,12 +15,12 @@
 		252DFA901753784400FF8199 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 252DFA8F1753784400FF8199 /* AppDelegate.m */; };
 		25310E3F177ACA9500D4A212 /* VCFileAttributeHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 25310E3D177ACA9500D4A212 /* VCFileAttributeHelper.m */; };
 		25386B941779B60D001027BD /* ipaddress.c in Sources */ = {isa = PBXBuildFile; fileRef = 25386B931779B60D001027BD /* ipaddress.c */; };
+		2561854E1B6F8D1B0073ACD3 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 256185501B6F8D1B0073ACD3 /* Launch Screen.xib */; };
 		256EA4BF177D5F830081309B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 256EA4BD177D5F830081309B /* Localizable.strings */; };
 		2571E73E1762C9240036C61D /* VPTorrentsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2571E73C1762C9240036C61D /* VPTorrentsListViewController.m */; };
 		2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2581D48717544A4C00EF3867 /* InAppSettings.bundle */; };
 		25840DD81B6C448E0098A6CC /* NSString+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 25840DD71B6C448E0098A6CC /* NSString+Base64.m */; };
 		258CD0101A3B28B400B3EB55 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 258CD00F1A3B28B400B3EB55 /* Images.xcassets */; };
-		258CD0121A3B585D00B3EB55 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 258CD0111A3B585D00B3EB55 /* Launch Screen.xib */; };
 		25B0AA7217537A9D00141B0E /* WebContentTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B0AA7117537A9D00141B0E /* WebContentTableViewController.m */; };
 		25B0AA7417537B2D00141B0E /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7317537B2D00141B0E /* MediaPlayer.framework */; };
 		25B0AA7A1753A66C00141B0E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA791753A66C00141B0E /* SystemConfiguration.framework */; };
@@ -46,6 +46,8 @@
 		25310E3D177ACA9500D4A212 /* VCFileAttributeHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VCFileAttributeHelper.m; sourceTree = "<group>"; };
 		25386B931779B60D001027BD /* ipaddress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ipaddress.c; sourceTree = "<group>"; };
 		25386B951779B619001027BD /* ipaddress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ipaddress.h; sourceTree = "<group>"; };
+		2561854F1B6F8D1B0073ACD3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/Launch Screen.xib"; sourceTree = "<group>"; };
+		256185511B6F8D1C0073ACD3 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "zh-Hans.lproj/Launch Screen.xib"; sourceTree = "<group>"; };
 		256EA4BC177D5ED30081309B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		256EA4BE177D5F830081309B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		256EA4C0177D5F8E0081309B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -55,7 +57,6 @@
 		25840DD61B6C448E0098A6CC /* NSString+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Base64.h"; sourceTree = "<group>"; };
 		25840DD71B6C448E0098A6CC /* NSString+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Base64.m"; sourceTree = "<group>"; };
 		258CD00F1A3B28B400B3EB55 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		258CD0111A3B585D00B3EB55 /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
 		25B0AA7017537A9D00141B0E /* WebContentTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebContentTableViewController.h; sourceTree = "<group>"; };
 		25B0AA7117537A9D00141B0E /* WebContentTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebContentTableViewController.m; sourceTree = "<group>"; };
 		25B0AA7317537B2D00141B0E /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
@@ -137,7 +138,7 @@
 				2571E73C1762C9240036C61D /* VPTorrentsListViewController.m */,
 				25D90C781B33BF12003C5B6E /* VPSearchResultController.h */,
 				25D90C791B33BF12003C5B6E /* VPSearchResultController.m */,
-				258CD0111A3B585D00B3EB55 /* Launch Screen.xib */,
+				256185501B6F8D1B0073ACD3 /* Launch Screen.xib */,
 				258CD00F1A3B28B400B3EB55 /* Images.xcassets */,
 				252DFA861753784400FF8199 /* Supporting Files */,
 			);
@@ -250,7 +251,7 @@
 				258CD0101A3B28B400B3EB55 /* Images.xcassets in Resources */,
 				2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */,
 				256EA4BF177D5F830081309B /* Localizable.strings in Resources */,
-				258CD0121A3B585D00B3EB55 /* Launch Screen.xib in Resources */,
+				2561854E1B6F8D1B0073ACD3 /* Launch Screen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,6 +316,15 @@
 				256EA4BC177D5ED30081309B /* zh-Hans */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		256185501B6F8D1B0073ACD3 /* Launch Screen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2561854F1B6F8D1B0073ACD3 /* en */,
+				256185511B6F8D1C0073ACD3 /* zh-Hans */,
+			);
+			name = "Launch Screen.xib";
 			sourceTree = "<group>";
 		};
 		256EA4BD177D5F830081309B /* Localizable.strings */ = {

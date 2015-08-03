@@ -25,6 +25,7 @@
 		25B0AA7417537B2D00141B0E /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7317537B2D00141B0E /* MediaPlayer.framework */; };
 		25B0AA7A1753A66C00141B0E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA791753A66C00141B0E /* SystemConfiguration.framework */; };
 		25B0AA7C1753A67300141B0E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */; };
+		25CEC8DA1B6F37410078FF40 /* ValidLinksTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25CEC8D91B6F37410078FF40 /* ValidLinksTableViewController.m */; };
 		25D718441A43BF0B006F34E7 /* SBAPIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D718431A43BF0B006F34E7 /* SBAPIManager.m */; };
 		25D90C7A1B33BF12003C5B6E /* VPSearchResultController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D90C791B33BF12003C5B6E /* VPSearchResultController.m */; };
 		94B491531CEE457B8C2AE085 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E3B0BCB77ECB434F89430D12 /* libPods.a */; };
@@ -61,6 +62,8 @@
 		25B0AA7517537D2500141B0E /* Common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
 		25B0AA791753A66C00141B0E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		25CEC8D81B6F37410078FF40 /* ValidLinksTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ValidLinksTableViewController.h; sourceTree = "<group>"; };
+		25CEC8D91B6F37410078FF40 /* ValidLinksTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ValidLinksTableViewController.m; sourceTree = "<group>"; };
 		25D718421A43BF0B006F34E7 /* SBAPIManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBAPIManager.h; sourceTree = "<group>"; };
 		25D718431A43BF0B006F34E7 /* SBAPIManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBAPIManager.m; sourceTree = "<group>"; };
 		25D90C781B33BF12003C5B6E /* VPSearchResultController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VPSearchResultController.h; sourceTree = "<group>"; };
@@ -128,6 +131,8 @@
 				252DFA8F1753784400FF8199 /* AppDelegate.m */,
 				25B0AA7017537A9D00141B0E /* WebContentTableViewController.h */,
 				25B0AA7117537A9D00141B0E /* WebContentTableViewController.m */,
+				25CEC8D81B6F37410078FF40 /* ValidLinksTableViewController.h */,
+				25CEC8D91B6F37410078FF40 /* ValidLinksTableViewController.m */,
 				2571E73B1762C9240036C61D /* VPTorrentsListViewController.h */,
 				2571E73C1762C9240036C61D /* VPTorrentsListViewController.m */,
 				25D90C781B33BF12003C5B6E /* VPSearchResultController.h */,
@@ -287,6 +292,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25CEC8DA1B6F37410078FF40 /* ValidLinksTableViewController.m in Sources */,
 				252DFA8C1753784400FF8199 /* main.m in Sources */,
 				252DFA901753784400FF8199 /* AppDelegate.m in Sources */,
 				25B0AA7217537A9D00141B0E /* WebContentTableViewController.m in Sources */,

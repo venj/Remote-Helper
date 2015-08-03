@@ -1,6 +1,11 @@
 # TOWebViewController
 
-<img src="https://raw.github.com/TimOliver/TOWebViewController/master/Screenshots/TOWebViewController.jpg" alt="TOWebViewController on the latest iOS devices" style="max-width:730px;" />
+![TOCropViewController](Screenshots/TOWebViewController.jpg)
+
+[![CI Status](http://img.shields.io/travis/TimOliver/TOWebViewController.svg?style=flat)](http://api.travis-ci.org/TimOliver/TOWebViewController.svg)
+[![Version](https://img.shields.io/cocoapods/v/TOWebViewController.svg?style=flat)](http://cocoadocs.org/docsets/TOWebViewController)
+[![License](https://img.shields.io/cocoapods/l/TOWebViewController.svg?style=flat)](http://cocoadocs.org/docsets/TOWebViewController)
+[![Platform](https://img.shields.io/cocoapods/p/TOWebViewController.svg?style=flat)](http://cocoadocs.org/docsets/TOWebViewController)
 
 TOWebViewController is an open-source `UIViewController` subclass designed to fulfill one goal: to be able to quickly present a web page to the user, without needing to leave the current app. TOWebViewController has been designed from the ground up to be easily integrated into existing projects, and to optionally be backwards compatible with earlier versions of iOS.
 
@@ -17,6 +22,18 @@ TOWebViewController is an open-source `UIViewController` subclass designed to fu
 * (TODO) A proper delegate system to allow external classes to interact with this controller.
 * (TODO) A rudimentary bookmark system.
 
+## Installation
+
+### [Cocoapods](https://cocoapods.org/)
+
+``` ruby
+pod 'TOWebViewController'
+```
+
+### Manual
+
+Add the files in the TOWebViewController to your Xcode project.
+
 ## Technical Requirements
 iOS 5.0 or above.
 
@@ -27,30 +44,5 @@ Necessary frameworks:
 
 ## License
 
-TOWebViewController is licensed under the MIT License. I don't personally require attribution, but please make sure 
+TOWebViewController is licensed under the MIT License, please see the LICENSE file. I don't personally require attribution, but please make sure 
 to shower [ninjinkun](https://github.com/ninjinkun) with much love for making the page loading progress bar possible!
-
-- - -
-
-Copyright 2013-2014 Timothy Oliver. All rights reserved.
-
-Features logic designed by Satoshi Asano (ninjinkun) for NJKWebViewProgress 
-(https://github.com/ninjinkun/NJKWebViewProgress), also licensed under the MIT License. 
-Re-implemented by Timothy Oliver.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to
-deal in the Software without restriction, including without limitation the
-rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-sell copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
-IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

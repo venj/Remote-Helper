@@ -21,6 +21,7 @@
 #import "Common.h"
 #import "VCFileAttributeHelper.h"
 #import "AppDelegate.h"
+#import "ValidLinksTableViewController.h"
 
 static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifier";
 
@@ -137,8 +138,18 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
     }
 }
 
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    NSString *urlString = self.addresses[indexPath.row];
+    TOWebViewController *webViewController = [[TOWebViewController alloc] initWithURL:[NSURL URLWithString:urlString]];
+    webViewController.showUrlWhileLoading = NO;
+    webViewController.hidesBottomBarWhenPushed = YES;
+    typeof(self) weakself = self;
+    webViewController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] bk_initWithBarButtonSystemItem:UIBarButtonSystemItemSearch handler:^(id sender) {
+        NSString *html = [webViewController.webView stringByEvaluatingJavaScriptFromString:@"document.body.innerHTML"];
+        [weakself processHTML:html];
+    }];
+    [self.navigationController pushViewController:webViewController animated:YES];
 }
 
 /*
@@ -165,6 +176,8 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
  }
  */
 
+#pragma mark - Action methods
+
 - (void)saveAddresses {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:self.addresses forKey:@"VPAddresses"];
@@ -176,7 +189,6 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
     self.addresses = [[defaults objectForKey:@"VPAddresses"] mutableCopy];
 }
 
-#pragma mark - Action methods
 - (void)showSettings:(id)sender {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSInteger cacheSizeInBytes = [[SDImageCache sharedImageCache] getSize];
@@ -217,6 +229,7 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
 - (void)showTransmission:(id)sender {
     NSString *link = [[AppDelegate shared] getTransmissionServerAddress];
     TOWebViewController *transmissionWebViewController = [[TOWebViewController alloc] initWithURLString:link];
+    transmissionWebViewController.urlRequest.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
     transmissionWebViewController.title = @"Transmission";
     transmissionWebViewController.showUrlWhileLoading = NO;
     UINavigationController *transmissionNavigationController = [[UINavigationController alloc] initWithRootViewController:transmissionWebViewController];
@@ -335,6 +348,26 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
         rightButtom = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(loadMovieList:)];
     }
     self.navigationItem.rightBarButtonItem = rightButtom;
+}
+
+- (void)processHTML:(NSString *)html {
+    NSMutableSet *validAddresses = [[NSMutableSet alloc] init];
+    NSArray *patterns = @[@"magnet:\\?[^\"'&<]+"];
+    for (NSString *pattern in patterns) {
+        NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
+        [regex enumerateMatchesInString:html options:0 range:NSMakeRange(0, [html length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            NSString *link = [html substringWithRange:result.range];
+            [validAddresses addObject:link];
+        }];
+    }
+    if ([validAddresses count] <= 0) {
+        [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"No downloadable link.", @"No downloadable link.") inView:self.navigationController.view];
+    }
+    else {
+        ValidLinksTableViewController *linkViewController = [[ValidLinksTableViewController alloc] initWithStyle:UITableViewStylePlain];
+        linkViewController.validLinks = [validAddresses allObjects];
+        [self.navigationController pushViewController:linkViewController animated:YES];
+    }
 }
 
 @end

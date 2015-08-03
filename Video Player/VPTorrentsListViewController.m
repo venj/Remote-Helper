@@ -223,10 +223,11 @@
     request.timeoutInterval = REQUEST_TIME_OUT;
     [request setAllHTTPHeaderFields:@{@"User-Agent" : [[AppDelegate shared] customUserAgent]}];
     UIView *aView = self.navigationController.view;
-    [MBProgressHUD showHUDAddedTo:aView animated:YES];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:aView animated:YES];
+    hud.removeFromSuperViewOnHide = YES;
     self.navigationItem.rightBarButtonItem.enabled = NO;
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        [MBProgressHUD hideHUDForView:aView animated:YES];
+        [hud hide:YES];
         blockSelf.navigationItem.rightBarButtonItem.enabled = YES;
         blockSelf.datesList = JSON;
         [blockSelf.tableView reloadData];

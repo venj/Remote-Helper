@@ -51,7 +51,6 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSString *link = self.validLinks[indexPath.row];
     UIAlertView *alert = [[UIAlertView alloc] bk_initWithTitle:NSLocalizedString(@"Info", @"Info") message:NSLocalizedString(@"Do you want to download this link?", @"Do you want to download this link?")];
     __weak typeof(self) weakself = self;

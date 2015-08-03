@@ -56,6 +56,27 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
     UIAlertView *alert = [[UIAlertView alloc] bk_initWithTitle:NSLocalizedString(@"Info", @"Info") message:NSLocalizedString(@"Do you want to download this link?", @"Do you want to download this link?")];
     __weak typeof(self) weakself = self;
     [alert bk_addButtonWithTitle:NSLocalizedString(@"Download", @"Download") handler:^{
+        NSString *protocal = [[link componentsSeparatedByString:@":"] firstObject];
+        if ([protocal isEqualToString:@"magnet"]) {
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:weakself.navigationController.view animated:YES];
+            hud.removeFromSuperViewOnHide = YES;
+            [[AppDelegate shared] parseSessionAndAddTask:link completionHandler:^{
+                [hud hide:YES];
+                [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Task added.", @"Task added.") inView:weakself.navigationController.view];
+            } errorHandler:^{
+                [[AppDelegate shared]  showHudWithMessage:NSLocalizedString(@"Unknow error.", @"Unknow error.") inView:weakself.navigationController.view];
+            }];
+        }
+        else {
+            NSURL *url = [NSURL URLWithString:link];
+            if ([[UIApplication sharedApplication] canOpenURL:url]) {
+                [[UIApplication sharedApplication] openURL:url];
+            }
+            else {
+                [[AppDelegate shared]  showHudWithMessage:NSLocalizedString(@"No 'DS Download' found.", @"No 'DS Download' found.") inView:weakself.navigationController.view];
+            }
+        }
+        /*
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:weakself.navigationController.view animated:YES];
         hud.removeFromSuperViewOnHide = YES;
         [[AppDelegate shared] parseSessionAndAddTask:link completionHandler:^{
@@ -64,6 +85,7 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
         } errorHandler:^{
             [[AppDelegate shared]  showHudWithMessage:NSLocalizedString(@"Unknow error.", @"Unknow error.") inView:weakself.navigationController.view];
         }];
+         */
     }];
     [alert bk_setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:nil];
     [alert show];

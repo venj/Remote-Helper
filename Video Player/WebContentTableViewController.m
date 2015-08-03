@@ -352,7 +352,7 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
 
 - (void)processHTML:(NSString *)html {
     NSMutableSet *validAddresses = [[NSMutableSet alloc] init];
-    NSArray *patterns = @[@"magnet:\\?[^\"'&<]+"];
+    NSArray *patterns = @[@"magnet:\\?[^\"'&<]+", @"ed2k://[^\"'&<]+", @"thunder://[^\"'&<]+"];
     for (NSString *pattern in patterns) {
         NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
         [regex enumerateMatchesInString:html options:0 range:NSMakeRange(0, [html length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {

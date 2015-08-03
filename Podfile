@@ -10,3 +10,4 @@ pod 'MBProgressHUD', '~> 0.8'
 pod 'TOWebViewController', :git => 'https://github.com/venj/TOWebViewController.git', :tag => "2.0.17.1"
 pod 'LTHPasscodeViewController', '~> 3.3.2'
 pod 'MMAppSwitcher', '~> 0.2.0'
+pod 'iOS8Colors', '~> 0.1.2'

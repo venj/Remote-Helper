@@ -15,4 +15,5 @@
     #import <MobileCoreServices/MobileCoreServices.h>
     #import <BlocksKit/BlocksKit.h>
     #import <BlocksKit+UIKit.h>
+    #import <iOS8Colors/UIColor+iOS8Colors.h>
 #endif

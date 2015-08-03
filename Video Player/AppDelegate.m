@@ -7,8 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "VPFileListViewController.h"
-#import "VPFileInfoViewController.h"
+#import "WebContentTableViewController.h"
 #import "Common.h"
 #import <SDWebImage/SDImageCache.h>
 #import <MediaPlayer/MediaPlayer.h>
@@ -16,13 +15,12 @@
 #import <LTHPasscodeViewController/LTHPasscodeViewController.h>
 #import <BlocksKit+UIKit.h>
 #import "VPTorrentsListViewController.h"
-#import "ipaddress.h"
 #import "SBAPIManager.h"
 #import <MBProgressHUD/MBProgressHUD.h>
 #define SSL_ADD_S ([self useSSL] ? @"s" : @"")
 
-@interface AppDelegate () <UISplitViewControllerDelegate, LTHPasscodeViewControllerDelegate, MMAppSwitcherDataSource, UITabBarControllerDelegate, VPFileInfoViewControllerDelegate>
-@property (nonatomic, strong) VPFileListViewController *localFileListViewController;
+@interface AppDelegate () <UISplitViewControllerDelegate, LTHPasscodeViewControllerDelegate, MMAppSwitcherDataSource, UITabBarControllerDelegate>
+@property (nonatomic, strong) WebContentTableViewController *localFileListViewController;
 @property (nonatomic, strong) UITabBarController *tabbarController;
 @property (nonatomic, copy) NSString *sessionHeader;
 @property (nonatomic, copy) NSString *downloadPath;
@@ -38,17 +36,10 @@
     [[MMAppSwitcher sharedInstance] setDataSource:self];
     
     // File List
-    self.fileListViewController = [[VPFileListViewController alloc] initWithStyle:UITableViewStylePlain];
-    self.fileListViewController.isLocal = NO;
-    self.fileListViewController.title = NSLocalizedString(@"Server", @"Server");
+    self.fileListViewController = [[WebContentTableViewController alloc] initWithStyle:UITableViewStylePlain];
+    self.fileListViewController.title = NSLocalizedString(@"Addresses", @"Addresses");
     self.fileListViewController.tabBarItem.image = [UIImage imageNamed:@"tab_cloud"];
     UINavigationController *fileListNavController = [[UINavigationController alloc] initWithRootViewController:self.fileListViewController];
-    // Local File List
-    self.localFileListViewController = [[VPFileListViewController alloc] initWithStyle:UITableViewStylePlain];
-    self.localFileListViewController.isLocal = YES;
-    self.localFileListViewController.title = NSLocalizedString(@"Local", @"Local");
-    self.localFileListViewController.tabBarItem.image = [UIImage imageNamed:@"tab_local"];
-    UINavigationController *localFileListNavController = [[UINavigationController alloc] initWithRootViewController:self.localFileListViewController];
     // Torrent List
     VPTorrentsListViewController *torrentsListViewController = [[VPTorrentsListViewController alloc] initWithStyle:UITableViewStylePlain];
     torrentsListViewController.title = NSLocalizedString(@"Torrents", @"Torrents");
@@ -57,20 +48,9 @@
     // Tabbar
     self.tabbarController = [[UITabBarController alloc] init];
     self.tabbarController.delegate = self;
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        self.tabbarController.viewControllers = @[fileListNavController, localFileListNavController, torrentsListNavigationController];
-        self.window.rootViewController = self.tabbarController;
-    }
-    else {
-        self.tabbarController.viewControllers = @[fileListNavController, localFileListNavController];
-        self.fileInfoViewController = [[VPFileInfoViewController alloc] initWithStyle:UITableViewStyleGrouped];
-        self.fileInfoViewController.delegate = self;
-        UINavigationController *fileInfoNavController = [[UINavigationController alloc] initWithRootViewController:self.fileInfoViewController];
-        self.splitViewController = [[UISplitViewController alloc] init];
-        self.splitViewController.viewControllers = @[self.tabbarController, fileInfoNavController];
-        self.splitViewController.delegate = self;
-        self.window.rootViewController = self.splitViewController;
-    }
+    self.tabbarController.viewControllers = @[fileListNavController, torrentsListNavigationController];
+    self.window.rootViewController = self.tabbarController;
+
     NSUserDefaults *defults = [NSUserDefaults standardUserDefaults];
     NSString *appVersionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     NSString *appBuildString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
@@ -152,20 +132,6 @@
     UIView *view = [[UIView alloc] initWithFrame:frame];
     view.backgroundColor = [UIColor whiteColor];
     return view;
-}
-
-#pragma mark - File Info View Controller Delegate
-- (void)fileDidRemovedFromServerForParentIndexPath:(NSIndexPath *)indexPath {
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        VPFileListViewController *fileListController = (VPFileListViewController *)[(UINavigationController *)[self.tabbarController selectedViewController] topViewController];
-        if (indexPath) {
-            [fileListController.dataList removeObjectAtIndex:indexPath.row];
-            [fileListController.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        }
-        else {
-            [fileListController loadMovieList:nil];
-        }
-    }
 }
 
 #pragma mark - Helper Methods
@@ -309,44 +275,8 @@
 }
 
 - (BOOL)shouldSendWebRequest {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *host = [defaults objectForKey:ServerHostKey];
-    if ([host length] == 0) {
-        return NO;
-    }
-    NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:@"^[^\\d+]" options:NSRegularExpressionCaseInsensitive error:nil];
-    // By pass IP check for domain names (maybe mDNS domain names)
-    if ([[regex matchesInString:host options:0 range:NSMakeRange(0, [host length])] count] > 0) {
-        return YES;
-    }
-    
-    NSString *myAddress = [self getIPAddress];
-    
-    if (host && myAddress) {
-        NSArray *hostComponents = [host componentsSeparatedByString:@"."];
-        NSArray *myAddressComponents = [myAddress componentsSeparatedByString:@"."];
-        if (([hostComponents[0] isEqualToString:myAddressComponents[0]]) &&
-            ([hostComponents[1] isEqualToString:myAddressComponents[1]]) &&
-            ([hostComponents[2] isEqualToString:myAddressComponents[2]])) {
-            return YES;
-        }
-    }
-    return NO;
-}
-
-- (NSString *)getIPAddress {
-    InitAddresses();
-    GetIPAddresses();
-    GetHWAddresses();
-    NSString *address = nil;
-    for (int i = 0; i < 5; i++) {
-        NSString *tmp = [NSString stringWithFormat:@"%s", ip_names[i]];
-        NSArray *addressComponents = [tmp componentsSeparatedByString:@"."];
-        if ([addressComponents[0] isEqualToString:@"192"] && [addressComponents[1] isEqualToString:@"168"]) {
-            address = tmp;
-        }
-    }
-    return address;
+    // Return YES for all
+    return YES;
 }
 
 - (uint64_t)freeDiskSpace {
@@ -414,17 +344,6 @@
         return [NSURL fileURLWithPath:localFile];
     else
         return [NSURL URLWithString:[[[AppDelegate shared] fileLinkWithPath:path] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-}
-
-#pragma mark - Shared action
-- (void)showNetworkAlert {
-    __weak typeof(self) weakSelf = self;
-    UIAlertView *alert = [[UIAlertView alloc] bk_initWithTitle:NSLocalizedString(@"Network Error", @"Network Error") message:NSLocalizedString(@"Your device is not in the same LAN with the server.", @"Your device is not in the same LAN with the server.")];
-    [alert bk_addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings") handler:^{
-        [weakSelf.fileListViewController showSettings:nil];
-    }];
-    [alert bk_setCancelButtonWithTitle:NSLocalizedString(@"OK", @"OK") handler:NULL];
-    [alert show];
 }
 
 #pragma mark - Add magnet task

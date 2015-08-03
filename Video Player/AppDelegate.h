@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "VPFileInfoViewController.h"
 #define REQUEST_TIME_OUT 10.
 
-@class VPFileListViewController;
+@class WebContentTableViewController;
 
 /*!
  @class AppDelegate
@@ -19,9 +18,8 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) VPFileInfoViewController *fileInfoViewController;
 @property (strong, nonatomic) UISplitViewController *splitViewController;
-@property (strong, nonatomic) VPFileListViewController *fileListViewController;
+@property (strong, nonatomic) WebContentTableViewController *fileListViewController;
 
 /*!
  @brief Return the AppDelegate singleton for sharing data and states between View Controllers.
@@ -97,11 +95,6 @@
  @return Returns <code>YES</code> if server and client are in the same LAN, <code>NO</code> for otherwise.
  */
 - (BOOL)shouldSendWebRequest;
-
-/*!
- @brief Show a alert view to notify user the client app is not in the same LAN with the server and offer an option to change server settings.
- */
-- (void)showNetworkAlert;
 
 /*!
  @brief Get the user's Documents directory inside app sandbox.

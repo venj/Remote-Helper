@@ -165,10 +165,6 @@
 
 - (void)showPhotoBrowserForTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath initialPhotoIndex:(NSInteger)index {
     [self.searchController.searchBar resignFirstResponder];
-    if (![[AppDelegate shared] shouldSendWebRequest]) {
-        [[AppDelegate shared] showNetworkAlert];
-        return;
-    }
     NSArray *list;
     if (tableView == self.tableView) {
         list = self.datesList;
@@ -221,11 +217,6 @@
 #pragma mark - Action Method
 
 - (void)loadTorrentList:(id)sender {
-    if (![[AppDelegate shared] shouldSendWebRequest]) {
-        if (sender != nil) [[AppDelegate shared] showNetworkAlert];
-        return;
-    }
-    
     __weak VPTorrentsListViewController *blockSelf = self;
     NSURL *torrentsListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] torrentsListPath]];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:torrentsListURL];

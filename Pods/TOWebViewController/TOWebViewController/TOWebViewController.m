@@ -153,6 +153,9 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
 /* See if we need to revert the navigation bar to 'hidden' when we pop from a navigation controller */
 @property (nonatomic,assign) BOOL hideNavBarOnClose;
 
+@property (nonatomic, strong, readonly) UIBarButtonItem *customBackButtonItem;
+@property (nonatomic, strong, readonly) UIBarButtonItem *closeButtonItem;
+
 /* Perform all common setup steps */
 - (void)setup;
 
@@ -476,6 +479,9 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     [self.forwardButton     addTarget:self action:@selector(forwardButtonTapped:)       forControlEvents:UIControlEventTouchUpInside];
     [self.reloadStopButton  addTarget:self action:@selector(reloadStopButtonTapped:)    forControlEvents:UIControlEventTouchUpInside];
     [self.actionButton      addTarget:self action:@selector(actionButtonTapped:)        forControlEvents:UIControlEventTouchUpInside];
+    
+    //update the navigation bar buttons
+    [self updateLeftBarButtonItems];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -768,9 +774,6 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     
     //start tracking the load state
     [self startLoadProgress];
-    
-    //update the navigation bar buttons
-    [self refreshButtonsState];
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
@@ -781,7 +784,43 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     //see if we can set the proper page title at this point
     if (self.showPageTitles)
         self.title = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+    
+    // Customize left bar button items
+    [self updateLeftBarButtonItems];
 }
+
+- (UIBarButtonItem *)customBackButtonItem {
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithImage:[self backButtonImage] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
+    return item;
+}
+
+- (UIBarButtonItem *)closeButtonItem {
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Close", @"Close") style:UIBarButtonItemStylePlain target:self action:@selector(close:)];
+    return item;
+}
+
+- (void)goBack:(id)sender {
+    if (self.webView.canGoBack) {
+        [self.webView goBack];
+    }
+    else {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+- (void)close:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)updateLeftBarButtonItems {
+    if (self.webView.canGoBack) {
+        self.navigationItem.leftBarButtonItems = @[self.customBackButtonItem, self.closeButtonItem];
+    }
+    else {
+        self.navigationItem.leftBarButtonItems = @[self.customBackButtonItem];
+    }
+}
+
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
@@ -1745,6 +1784,25 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     
     //Try and restart device rotation
     [UIViewController attemptRotationToDeviceOrientation];
+}
+
+- (UIImage *)backButtonImage {
+    CGFloat w = 10.0, h = 2.0 * w;
+    
+    CGFloat lineWidth = w / 4.0;
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(w + lineWidth, h + lineWidth), NO, 0.0);
+    
+    UIBezierPath *bezierPath = [UIBezierPath bezierPath];
+    [bezierPath moveToPoint: CGPointMake(w + lineWidth / 2.0, lineWidth / 2.0)];
+    [bezierPath addLineToPoint: CGPointMake(lineWidth / 2.0, w + lineWidth / 2.0)];
+    [bezierPath addLineToPoint: CGPointMake(w + lineWidth / 2.0, w * 2.0 + lineWidth / 2.0)];
+    [[UIColor blackColor] setStroke];
+    bezierPath.lineWidth = lineWidth;
+    [bezierPath stroke];
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
 }
 
 @end

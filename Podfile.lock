@@ -42,17 +42,17 @@ DEPENDENCIES:
   - MMAppSwitcher (~> 0.2.0)
   - MWPhotoBrowser (~> 2.1.1)
   - TOWebViewController (from `https://github.com/venj/TOWebViewController.git`, tag
-    `2.0.17.1`)
+    `2.0.17.2`)
 
 EXTERNAL SOURCES:
   TOWebViewController:
     :git: https://github.com/venj/TOWebViewController.git
-    :tag: 2.0.17.1
+    :tag: 2.0.17.2
 
 CHECKOUT OPTIONS:
   TOWebViewController:
     :git: https://github.com/venj/TOWebViewController.git
-    :tag: 2.0.17.1
+    :tag: 2.0.17.2
 
 SPEC CHECKSUMS:
   AFNetworking: cf8e418e16f0c9c7e5c3150d019a3c679d015018

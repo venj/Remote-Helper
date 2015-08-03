@@ -45,16 +45,9 @@
     [super viewDidLoad];
     
     self.title = NSLocalizedString(@"Torrents", @"Torrents");
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] bk_initWithBarButtonSystemItem:UIBarButtonSystemItemDone handler:^(id sender) {
-            [self dismissViewControllerAnimated:YES completion:NULL];
-        }];
-    }
-    else {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] bk_initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh handler:^(id sender) {
-            [self loadTorrentList:sender];
-        }];
-    }
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] bk_initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh handler:^(id sender) {
+        [self loadTorrentList:sender];
+    }];
     
     self.localizedStatusStrings = @{@"completed" : NSLocalizedString(@"completed", @"completed"),
                                     @"waiting" : NSLocalizedString(@"waiting", @"waiting"),

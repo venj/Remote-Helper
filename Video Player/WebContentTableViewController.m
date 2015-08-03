@@ -66,11 +66,6 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
     __weak typeof(self) weakself = self;
     __block UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] bk_initWithTitle:NSLocalizedString(@"More", @"More") style:UIBarButtonItemStylePlain handler:^(id sender) {
         weakself.sheet = [[UIActionSheet alloc] bk_initWithTitle:NSLocalizedString(@"Please select your operation", @"Please select your operation")];
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            [weakself.sheet bk_addButtonWithTitle:NSLocalizedString(@"Torrents", @"Torrents") handler:^{
-                [weakself showTorrentsViewer:sender];
-            }];
-        }
         [weakself.sheet bk_addButtonWithTitle:NSLocalizedString(@"Transmission", @"Transmission") handler:^{
             [weakself showTransmission:nil];
         }];

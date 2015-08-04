@@ -24,6 +24,15 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
     [super viewDidLoad];
     self.title = [NSString stringWithFormat:NSLocalizedString(@"Found %ld links", @"Found %ld links"), (long)[self.validLinks count]];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:reuseIdentifier];
+    
+    if ([self.validLinks count] > 1) {
+        __weak typeof(self) weakself = self;
+        UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] bk_initWithTitle:NSLocalizedString(@"Copy All", @"Copy All") style:UIBarButtonItemStylePlain handler:^(id sender) {
+            [UIPasteboard generalPasteboard].string = [self.validLinks componentsJoinedByString:@"\n"];
+            [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Copied", @"Copied") inView:weakself.navigationController.view];
+        }];
+        self.navigationItem.rightBarButtonItem = rightItem;
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -45,26 +54,11 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
-
-    cell.textLabel.text = [self processThunderLink:self.validLinks[indexPath.row]];
+    
+    NSString *processedLink = [self processThunderLink:self.validLinks[indexPath.row]];
+    cell.textLabel.text = [self readableNameForLink:processedLink];
     
     return cell;
-}
-
-- (NSString *)processThunderLink:(NSString *)link {
-    if ([link containsString:@"thunder://"]) {
-        NSString *encodedString = [link substringFromIndex:10];
-        NSString *decodedString = [encodedString decodedBase64String];
-        if (decodedString == nil) {
-            return link;
-        }
-        else {
-            return [decodedString substringWithRange:NSMakeRange(2, [decodedString length] - 4)];
-        }
-    }
-    else {
-        return link;
-    }
 }
 
 - (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -103,6 +97,8 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
     [alert show];
 }
 
+#pragma mark - Actions
+
 - (void)download:(NSString *)link {
     __weak typeof(self) weakself = self;
     NSString *protocal = [[link componentsSeparatedByString:@":"] firstObject];
@@ -125,6 +121,34 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
             [[AppDelegate shared]  showHudWithMessage:NSLocalizedString(@"No 'DS Download' found.", @"No 'DS Download' found.") inView:weakself.navigationController.view];
         }
     }
+}
+
+#pragma mark - Helpers
+
+- (NSString *)processThunderLink:(NSString *)link {
+    NSString *thunderProtocalString = @"thunder://";
+    if ([link rangeOfString:thunderProtocalString].location == 0) {
+        NSString *encodedString = [link substringFromIndex:[thunderProtocalString length]];
+        NSString *decodedString = [encodedString decodedBase64String];
+        if (decodedString == nil) {
+            return link;
+        }
+        else {
+            NSString *escapedLink = [decodedString substringWithRange:NSMakeRange(2, [decodedString length] - 4)];
+            return [escapedLink stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        }
+    }
+    else {
+        return link;
+    }
+}
+
+- (NSString *)readableNameForLink:(NSString *)link {
+    NSString *readableName = link;
+    if ([link rangeOfString:@"http"].location == 0 || [link rangeOfString:@"ftp"].location == 0) {
+        readableName = [link pathComponents].lastObject;
+    }
+    return readableName;
 }
 
 @end

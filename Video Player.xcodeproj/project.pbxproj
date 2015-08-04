@@ -210,7 +210,7 @@
 		252DFA741753784400FF8199 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Home;
 				TargetAttributes = {
 					252DFA7B1753784400FF8199 = {
@@ -351,6 +351,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -407,6 +408,7 @@
 				GCC_PREFIX_HEADER = "Video Player/Video Player-Prefix.pch";
 				INFOPLIST_FILE = "Video Player/Video Player-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "cf59a066-8187-40a2-a7c8-78f3c4e3de4d";
 				WRAPPER_EXTENSION = app;
@@ -425,6 +427,7 @@
 				GCC_PREFIX_HEADER = "Video Player/Video Player-Prefix.pch";
 				INFOPLIST_FILE = "Video Player/Video Player-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "cf59a066-8187-40a2-a7c8-78f3c4e3de4d";
 				WRAPPER_EXTENSION = app;

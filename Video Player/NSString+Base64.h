@@ -10,4 +10,5 @@
 
 @interface NSString (Base64)
 - (NSString *)base64String;
+- (NSString *)decodedBase64String;
 @end

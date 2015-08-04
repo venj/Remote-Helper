@@ -9,6 +9,8 @@
 #import "ValidLinksTableViewController.h"
 #import "AppDelegate.h"
 #import <MBProgressHUD/MBProgressHUD.h>
+#import "NSString+Base64.h"
+#import <iOS8Colors/UIColor+iOS8Colors.h>
 
 static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
 
@@ -44,9 +46,25 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
 
-    cell.textLabel.text = self.validLinks[indexPath.row];
+    cell.textLabel.text = [self processThunderLink:self.validLinks[indexPath.row]];
     
     return cell;
+}
+
+- (NSString *)processThunderLink:(NSString *)link {
+    if ([link containsString:@"thunder://"]) {
+        NSString *encodedString = [link substringFromIndex:10];
+        NSString *decodedString = [encodedString decodedBase64String];
+        if (decodedString == nil) {
+            return link;
+        }
+        else {
+            return [decodedString substringWithRange:NSMakeRange(2, [decodedString length] - 4)];
+        }
+    }
+    else {
+        return link;
+    }
 }
 
 - (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {

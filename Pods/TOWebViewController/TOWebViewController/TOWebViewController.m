@@ -804,12 +804,22 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
         [self.webView goBack];
     }
     else {
-        [self.navigationController popViewControllerAnimated:YES];
+        if (self.beingPresentedModally) {
+            [self.presentingViewController dismissModalViewControllerAnimated:YES];
+        }
+        else {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
     }
 }
 
 - (void)close:(id)sender {
-    [self.navigationController popViewControllerAnimated:YES];
+    if (self.beingPresentedModally) {
+        [self.presentingViewController dismissModalViewControllerAnimated:YES];
+    }
+    else {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (void)updateLeftBarButtonItems {

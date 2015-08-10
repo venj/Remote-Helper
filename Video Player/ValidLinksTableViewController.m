@@ -52,7 +52,8 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
 }
 
 - (NSString *)processThunderLink:(NSString *)link {
-    if ([link containsString:@"thunder://"]) {
+    NSString *protocal = [[link componentsSeparatedByString:@":"] firstObject];
+    if ([protocal isEqualToString:@"thunder"]) {   // thunder
         NSString *encodedString = [link substringFromIndex:10];
         NSString *decodedString = [encodedString decodedBase64String];
         if (decodedString == nil) {
@@ -60,6 +61,16 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
         }
         else {
             return [decodedString substringWithRange:NSMakeRange(2, [decodedString length] - 4)];
+        }
+    }
+    else if ([protocal isEqualToString:@"ed2k"]) { // ed2k
+        NSArray *parts = [link componentsSeparatedByString:@"|"];
+        NSUInteger index = [parts indexOfObject:@"file"];
+        if (index != NSNotFound && [parts count] > index + 2) {
+            return parts[index + 1];
+        }
+        else {
+            return link;
         }
     }
     else {

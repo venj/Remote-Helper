@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "VPSearchResultController.h"
+#import <BlocksKit+UIKit.h>
 
 @implementation VPSearchResultController
 

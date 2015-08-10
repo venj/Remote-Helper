@@ -274,6 +274,18 @@
     }
 }
 
+- (NSArray *)getXunleiUsernameAndPassword {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *username = [defaults objectForKey:XunleiUserNameKey];
+    NSString *password = [defaults objectForKey:XunleiPasswordKey];
+    if (username && password) {
+        return @[username, password];
+    }
+    else {
+        return @[@"username", @"password"];
+    }
+}
+
 - (BOOL)shouldSendWebRequest {
     // Return YES for all
     return YES;

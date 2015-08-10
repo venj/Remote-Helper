@@ -56,7 +56,11 @@
  @return An array with username and password.
 */
 - (NSArray *)getUsernameAndPassword;
-
+/*!
+ @brief Read username and password for Xunlei lixian.
+ @return An array with username and password.
+ */
+- (NSArray *)getXunleiUsernameAndPassword;
 /*!
  @brief Compose a remote link for torrents date list according to user server settings.
  @return Absolute remote link for torrents date list.

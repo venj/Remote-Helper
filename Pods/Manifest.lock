@@ -20,6 +20,7 @@ PODS:
   - InAppSettingsKit (2.3.2)
   - iOS8Colors (0.1.2):
     - HexColors (~> 2.2.1)
+  - JSONKit (1.5pre)
   - LTHPasscodeViewController (3.3.3)
   - MBProgressHUD (0.9.1)
   - MMAppSwitcher (0.2.0)
@@ -37,6 +38,7 @@ DEPENDENCIES:
   - BlocksKit (~> 2.2.3)
   - InAppSettingsKit (~> 2.1)
   - iOS8Colors (~> 0.1.2)
+  - JSONKit (~> 1.5pre)
   - LTHPasscodeViewController (~> 3.3.2)
   - MBProgressHUD (~> 0.8)
   - MMAppSwitcher (~> 0.2.0)
@@ -61,6 +63,7 @@ SPEC CHECKSUMS:
   HexColors: abfd172e329dab59888614ccba6f216cec59289d
   InAppSettingsKit: 496b66f63086f9fd97d027bb29628c041358bc38
   iOS8Colors: 1f6023790704b9119727bf14408182ca33faf31b
+  JSONKit: bae313ce6a6c444f40489a6c0b023f399888871f
   LTHPasscodeViewController: 01d2c19b6e2aefcd34f4a63d880cf3718da27fdc
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
   MMAppSwitcher: 6e813046b201593d1a1d06188a6f6336f06b7be2

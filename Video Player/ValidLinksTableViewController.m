@@ -11,6 +11,8 @@
 #import <MBProgressHUD/MBProgressHUD.h>
 #import "NSString+Base64.h"
 #import <iOS8Colors/UIColor+iOS8Colors.h>
+#import "HYXunleiLixianAPI.h"
+#import <BlocksKit+UIKit.h>
 
 static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
 
@@ -71,7 +73,7 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
         NSString *name = decodedLink;
         for (NSString *kvStr in kvPairs) {
             NSArray *kv = [kvStr componentsSeparatedByString:@"="];
-            if ([kv[0] isEqualToString:@"dn"] && ![kv[1] isEqualToString:@""]) {
+            if (([kv[0] isEqualToString:@"dn"] || [kv[0] isEqualToString:@"btname"]) && ![kv[1] isEqualToString:@""]) {
                 name = [kv[1] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
                 break;
             }
@@ -115,7 +117,48 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
         }
     }];
     downloadAction.backgroundColor = [UIColor iOS8orangeColor];
-    return @[copyAction, downloadAction];
+    UITableViewRowAction *lixianAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:NSLocalizedString(@"Lixian", @"Lixian") handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+        if ([self.tableView isEditing]) {
+            [self.tableView setEditing:NO animated:YES];
+        }
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:weakself.navigationController.view animated:YES];
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            NSString *link = weakself.validLinks[indexPath.row];
+            NSString *protocal = [[link componentsSeparatedByString:@":"] firstObject];
+            HYXunleiLixianAPI *tondarAPI = [[HYXunleiLixianAPI alloc] init];
+            [tondarAPI logOut];
+            NSArray *xunleiAccount = [[AppDelegate shared] getXunleiUsernameAndPassword];
+            if ([tondarAPI loginWithUsername:xunleiAccount[0] Password:xunleiAccount[1] isPasswordEncode:NO]) {
+                NSString *dcid = @"";
+                if ([protocal isEqualToString:@"magnet"]) {
+                    dcid = [tondarAPI addMegnetTask:link];
+                }
+                else {
+                    dcid = [tondarAPI addNormalTask:link];
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ([dcid isEqualToString:@""]) {
+                        [hud hide:YES];
+                        [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Failed to add task.", @"Failed to add task.") inView:weakself.navigationController.view];
+                    }
+                    else {
+                        [hud hide:YES];
+                        [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Lixian added.", @"Lixian added.") inView:weakself.navigationController.view];
+                    }
+                });
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Login Failed.", @"Login Failed.") inView:weakself.navigationController.view];
+                });
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [hud hide:YES];
+            });
+        });
+    }];
+    lixianAction.backgroundColor = [UIColor iOS8greenColor];
+    return @[copyAction, lixianAction, downloadAction];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath { }

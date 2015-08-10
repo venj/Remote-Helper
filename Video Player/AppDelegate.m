@@ -26,6 +26,8 @@
 @property (nonatomic, copy) NSString *downloadPath;
 @end
 
+static HYXunleiLixianAPI *__api;
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -50,7 +52,9 @@
     self.tabbarController.delegate = self;
     self.tabbarController.viewControllers = @[fileListNavController, torrentsListNavigationController];
     self.window.rootViewController = self.tabbarController;
-
+    // Xunlei login status set NO;
+    self.xunleiUserLoggedIn = NO;
+    
     NSUserDefaults *defults = [NSUserDefaults standardUserDefaults];
     NSString *appVersionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     NSString *appBuildString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
@@ -107,6 +111,13 @@
 
 + (AppDelegate *)shared {
     return (AppDelegate *)[UIApplication sharedApplication].delegate;
+}
+
++ (HYXunleiLixianAPI *)sharedAPI {
+    if (__api == nil) {
+        __api = [[HYXunleiLixianAPI alloc] init];
+    }
+    return __api;
 }
 
 #pragma mark - AirPlay Status Change Notification
@@ -266,6 +277,18 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *username = [defaults objectForKey:TransmissionUserNameKey];
     NSString *password = [defaults objectForKey:TransmissionPasswordKey];
+    if (username && password) {
+        return @[username, password];
+    }
+    else {
+        return @[@"username", @"password"];
+    }
+}
+
+- (NSArray *)getXunleiUsernameAndPassword {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *username = [defaults objectForKey:XunleiUserNameKey];
+    NSString *password = [defaults objectForKey:XunleiPasswordKey];
     if (username && password) {
         return @[username, password];
     }

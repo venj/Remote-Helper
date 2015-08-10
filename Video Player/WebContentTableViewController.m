@@ -22,6 +22,7 @@
 #import "VCFileAttributeHelper.h"
 #import "AppDelegate.h"
 #import "ValidLinksTableViewController.h"
+#import "HYXunleiLixianAPI.h"
 
 static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifier";
 
@@ -328,6 +329,26 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
             });
         });
     }
+    else if ([specifier.key isEqualToString:VerifyXunleiKey]) {
+        HYXunleiLixianAPI *tondarAPI = [[HYXunleiLixianAPI alloc] init];
+        [tondarAPI logOut];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:sender.navigationController.view animated:YES];
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            NSArray *xunleiAccount = [[AppDelegate shared] getXunleiUsernameAndPassword];
+            if ([tondarAPI loginWithUsername:xunleiAccount[0] Password:xunleiAccount[1] isPasswordEncode:NO]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [hud hide:YES];
+                    [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Logged in.", @"Logged in.") inView:sender.navigationController.view];
+                });
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [hud hide:YES];
+                    [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Username or password error.", @"Username or password error.") inView:sender.navigationController.view];
+                });
+            }
+        });
+    }
 }
 
 #pragma mark - Helper methods
@@ -352,7 +373,7 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
 
 - (void)processHTML:(NSString *)html {
     NSMutableSet *validAddresses = [[NSMutableSet alloc] init];
-    NSArray *patterns = @[@"magnet:\\?[^\"'&<]+", @"ed2k://[^\"'&<]+", @"thunder://[^\"'&<]+"];
+    NSArray *patterns = @[@"magnet:\\?[^\"'<]+", @"ed2k://[^\"'&<]+", @"thunder://[^\"'&<]+"];
     for (NSString *pattern in patterns) {
         NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
         [regex enumerateMatchesInString:html options:0 range:NSMakeRange(0, [html length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {

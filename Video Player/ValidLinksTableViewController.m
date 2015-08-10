@@ -11,6 +11,8 @@
 #import <MBProgressHUD/MBProgressHUD.h>
 #import "NSString+Base64.h"
 #import <iOS8Colors/UIColor+iOS8Colors.h>
+#import "HYXunleiLixianAPI.h"
+#import <BlocksKit+UIKit.h>
 
 static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
 
@@ -54,11 +56,55 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
-    
-    NSString *processedLink = [self processThunderLink:self.validLinks[indexPath.row]];
-    cell.textLabel.text = [self readableNameForLink:processedLink];
+
+    cell.textLabel.text = [self processLinkToName:self.validLinks[indexPath.row]];
     
     return cell;
+}
+
+- (NSString *)processLinkToName:(NSString *)link {
+    NSString *decodedLink = [link stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *protocal = [[decodedLink componentsSeparatedByString:@":"] firstObject];
+    if ([protocal isEqualToString:@"thunder"]) {   // thunder
+        NSString *encodedString = [link substringFromIndex:10];
+        NSString *decodedString = [encodedString decodedBase64String];
+        if (decodedString == nil) {
+            return decodedLink;
+        }
+        else {
+            NSString *normalizedThunderLink = [decodedString substringWithRange:NSMakeRange(2, [decodedString length] - 4)];
+            return [self processLinkToName:normalizedThunderLink];
+        }
+    }
+    else if ([protocal isEqualToString:@"magnet"]) { // magnet
+        NSString *queryString = [[decodedLink componentsSeparatedByString:@"?"] lastObject];
+        NSArray *kvPairs = [[queryString stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"] componentsSeparatedByString:@"&"];
+        NSString *name = decodedLink;
+        for (NSString *kvStr in kvPairs) {
+            NSArray *kv = [kvStr componentsSeparatedByString:@"="];
+            if (([kv[0] isEqualToString:@"dn"] || [kv[0] isEqualToString:@"btname"]) && ![kv[1] isEqualToString:@""]) {
+                name = [kv[1] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+                break;
+            }
+        }
+        return name;
+    }
+    else if ([protocal isEqualToString:@"ed2k"]) { // ed2k
+        NSArray *parts = [decodedLink componentsSeparatedByString:@"|"];
+        NSUInteger index = [parts indexOfObject:@"file"];
+        if (index != NSNotFound && [parts count] > index + 2) {
+            return parts[index + 1];
+        }
+        else {
+            return decodedLink;
+        }
+    }
+    else if ([protocal isEqualToString:@"ftp"] || [protocal isEqualToString:@"http"] || [protocal isEqualToString:@"https"]) {
+        return [[decodedLink componentsSeparatedByString:@"/"] lastObject];
+    }
+    else {
+        return decodedLink;
+    }
 }
 
 - (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -80,7 +126,54 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
         }
     }];
     downloadAction.backgroundColor = [UIColor iOS8orangeColor];
-    return @[copyAction, downloadAction];
+    UITableViewRowAction *lixianAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:NSLocalizedString(@"Lixian", @"Lixian") handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+        if ([self.tableView isEditing]) {
+            [self.tableView setEditing:NO animated:YES];
+        }
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:weakself.navigationController.view animated:YES];
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            NSString *link = weakself.validLinks[indexPath.row];
+            NSString *protocal = [[link componentsSeparatedByString:@":"] firstObject];
+            // Login Test
+            HYXunleiLixianAPI *tondarAPI = [AppDelegate sharedAPI];
+            NSArray *xunleiAccount = [[AppDelegate shared] getXunleiUsernameAndPassword];
+            if (![AppDelegate shared].xunleiUserLoggedIn) {
+                [AppDelegate shared].xunleiUserLoggedIn = [tondarAPI loginWithUsername:xunleiAccount[0] Password:xunleiAccount[1] isPasswordEncode:NO];
+                if (![AppDelegate shared].isXunleiUserLoggedIn) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Login Failed.", @"Login Failed.") inView:weakself.navigationController.view];
+                    });
+                    // Failed to login.
+                    return;
+                }
+            }
+            // Delay 1 second to make task add more successful.
+            sleep(1);
+            // Login success.
+            NSString *dcid = @"";
+            if ([protocal isEqualToString:@"magnet"]) {
+                dcid = [tondarAPI addMegnetTask:link];
+            }
+            else {
+                dcid = [tondarAPI addNormalTask:link];
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([dcid isEqualToString:@""]) {
+                    [hud hide:YES];
+                    [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Failed to add task.", @"Failed to add task.") inView:weakself.navigationController.view];
+                }
+                else {
+                    [hud hide:YES];
+                    [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Lixian added.", @"Lixian added.") inView:weakself.navigationController.view];
+                }
+            });
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [hud hide:YES];
+            });
+        });
+    }];
+    lixianAction.backgroundColor = [UIColor iOS8greenColor];
+    return @[copyAction, lixianAction, downloadAction];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath { }
@@ -141,14 +234,6 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
     else {
         return link;
     }
-}
-
-- (NSString *)readableNameForLink:(NSString *)link {
-    NSString *readableName = link;
-    if ([link rangeOfString:@"http"].location == 0 || [link rangeOfString:@"ftp"].location == 0) {
-        readableName = [link pathComponents].lastObject;
-    }
-    return readableName;
 }
 
 @end

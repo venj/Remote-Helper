@@ -125,33 +125,39 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             NSString *link = weakself.validLinks[indexPath.row];
             NSString *protocal = [[link componentsSeparatedByString:@":"] firstObject];
-            HYXunleiLixianAPI *tondarAPI = [[HYXunleiLixianAPI alloc] init];
-            [tondarAPI logOut];
+            // Login Test
+            HYXunleiLixianAPI *tondarAPI = [AppDelegate sharedAPI];
             NSArray *xunleiAccount = [[AppDelegate shared] getXunleiUsernameAndPassword];
-            if ([tondarAPI loginWithUsername:xunleiAccount[0] Password:xunleiAccount[1] isPasswordEncode:NO]) {
-                NSString *dcid = @"";
-                if ([protocal isEqualToString:@"magnet"]) {
-                    dcid = [tondarAPI addMegnetTask:link];
+            if (![AppDelegate shared].xunleiUserLoggedIn) {
+                [AppDelegate shared].xunleiUserLoggedIn = [tondarAPI loginWithUsername:xunleiAccount[0] Password:xunleiAccount[1] isPasswordEncode:NO];
+                if (![AppDelegate shared].isXunleiUserLoggedIn) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Login Failed.", @"Login Failed.") inView:weakself.navigationController.view];
+                    });
+                    // Failed to login.
+                    return;
                 }
-                else {
-                    dcid = [tondarAPI addNormalTask:link];
-                }
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if ([dcid isEqualToString:@""]) {
-                        [hud hide:YES];
-                        [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Failed to add task.", @"Failed to add task.") inView:weakself.navigationController.view];
-                    }
-                    else {
-                        [hud hide:YES];
-                        [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Lixian added.", @"Lixian added.") inView:weakself.navigationController.view];
-                    }
-                });
+            }
+            // Delay 1 second to make task add more successful.
+            sleep(1);
+            // Login success.
+            NSString *dcid = @"";
+            if ([protocal isEqualToString:@"magnet"]) {
+                dcid = [tondarAPI addMegnetTask:link];
             }
             else {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Login Failed.", @"Login Failed.") inView:weakself.navigationController.view];
-                });
+                dcid = [tondarAPI addNormalTask:link];
             }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([dcid isEqualToString:@""]) {
+                    [hud hide:YES];
+                    [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Failed to add task.", @"Failed to add task.") inView:weakself.navigationController.view];
+                }
+                else {
+                    [hud hide:YES];
+                    [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Lixian added.", @"Lixian added.") inView:weakself.navigationController.view];
+                }
+            });
             dispatch_async(dispatch_get_main_queue(), ^{
                 [hud hide:YES];
             });

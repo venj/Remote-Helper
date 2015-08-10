@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #define REQUEST_TIME_OUT 10.
+#import "HYXunleiLixianAPI.h"
 
 @class WebContentTableViewController;
 
@@ -20,13 +21,14 @@
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) UISplitViewController *splitViewController;
 @property (strong, nonatomic) WebContentTableViewController *fileListViewController;
-
+// Record Xunlei login status for app life cycle
+@property (nonatomic, assign, getter=isXunleiUserLoggedIn) BOOL xunleiUserLoggedIn;
 /*!
  @brief Return the AppDelegate singleton for sharing data and states between View Controllers.
  @return The AppDelegate singleton.
  */
 + (AppDelegate *)shared;
-
++ (HYXunleiLixianAPI *)sharedAPI;
 /*!
  @brief Passed in a file relative path to get the remote link for the path.
  @param path Specify a relative path.

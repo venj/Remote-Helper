@@ -61,7 +61,8 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
             return decodedLink;
         }
         else {
-            return [decodedString substringWithRange:NSMakeRange(2, [decodedString length] - 4)];
+            NSString *normalizedThunderLink = [decodedString substringWithRange:NSMakeRange(2, [decodedString length] - 4)];
+            return [self processLinkToName:normalizedThunderLink];
         }
     }
     else if ([protocal isEqualToString:@"magnet"]) { // magnet
@@ -86,6 +87,9 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
         else {
             return decodedLink;
         }
+    }
+    else if ([protocal isEqualToString:@"ftp"] || [protocal isEqualToString:@"http"] || [protocal isEqualToString:@"https"]) {
+        return [[decodedLink componentsSeparatedByString:@"/"] lastObject];
     }
     else {
         return decodedLink;

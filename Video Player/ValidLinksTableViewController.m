@@ -141,14 +141,15 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
                 [AppDelegate shared].xunleiUserLoggedIn = [tondarAPI loginWithUsername:xunleiAccount[0] Password:xunleiAccount[1] isPasswordEncode:NO];
                 if (![AppDelegate shared].isXunleiUserLoggedIn) {
                     dispatch_async(dispatch_get_main_queue(), ^{
+                        [hud hide:YES];
                         [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Login Failed.", @"Login Failed.") inView:weakself.navigationController.view];
                     });
                     // Failed to login.
                     return;
                 }
             }
-            // Delay 1 second to make task add more successful.
-            sleep(1);
+            // Delay 2 second to make task add more successful.
+            sleep(2);
             // Login success.
             NSString *dcid = @"";
             if ([protocal isEqualToString:@"magnet"]) {

@@ -24,14 +24,13 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum{
+typedef NS_ENUM(NSInteger, TaskStatus) {
     sWaiting=0,
     sDownloadding=1,
     sComplete=2,
     sFail=3,
     sPending=4
-}TaskStatus;
-
+};
 
 @interface XunleiItemInfo : NSObject<NSCoding>
 

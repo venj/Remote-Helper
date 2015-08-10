@@ -25,13 +25,13 @@
 #import "HYXunleiLixianAPI.h"
 #import "md5.h"
 #import "ParseElements.h"
-#import <JSONKit/JSONKit.h>
 #import "NSString+RE.h"
 #import "URlEncode.h"
 #import "XunleiItemInfo.h"
 #import "Kuai.h"
 #import "ConvertURL.h"
 #import "LCHTTPConnection.h"
+#import "NSString+GFJson.h"
 
 typedef enum {
     TLTAll,
@@ -440,7 +440,7 @@ typedef enum {
         siteData = [siteData substringToIndex:[siteData length] - 1];
         NSLog(@"%@", siteData);
 
-        NSArray *arr=[[[siteData objectFromJSONString] objectForKey:@"info"] objectForKey:@"tasks"];
+        NSArray *arr=[[[siteData JSONObject] objectForKey:@"info"] objectForKey:@"tasks"];
 
         NSLog(@"%@", arr);
         
@@ -521,7 +521,7 @@ typedef enum {
         NSString *re=@"^fill_bt_list\\((.+)\\)\\s*$";
         NSString *s=[siteData stringByMatching:re capture:1];
         
-        NSDictionary *dic=[s objectFromJSONString];
+        NSDictionary *dic=[s JSONObject];
         NSDictionary *result=[dic objectForKey:@"Result"];
         //dcid Value
         //NSString *dcid=[result objectForKey:@"Infoid"];
@@ -1035,7 +1035,7 @@ typedef enum {
         [commitRequest setPostValue:info.dcid forKey:@"cid[]"];
         [commitRequest setPostValue:info.originalURL forKey:@"url[]"];
         [commitRequest setPostValue:info.name forKey:@"taskname[]"];
-        [commitRequest setPostValue:[NSString stringWithFormat:@"%u",info.status] forKey:@"download_status[]"];
+        [commitRequest setPostValue:[NSString stringWithFormat:@"%ld",(long)info.status] forKey:@"download_status[]"];
         [commitRequest setPostValue:@"1" forKey:@"type"];
         [commitRequest setPostValue:@"0" forKey:@"class_id"];
         NSString *responseString=[commitRequest post:[requestURL absoluteString]];
@@ -1059,7 +1059,7 @@ typedef enum {
     
     NSString* siteData=[[[request get:urlString] stringByReplacingOccurrencesOfString:@"jsonp1234567890(" withString:@""] stringByReplacingOccurrencesOfString:@"})" withString:@"}"];
     
-    NSLog(@"%@", [siteData objectFromJSONString]);
+    NSLog(@"%@", [siteData JSONObject]);
     
     return siteData;
 }
@@ -1075,7 +1075,7 @@ typedef enum {
     [commitRequest setPostValue:detailTaskPostValue forKey:@"tasks"];
     NSString *response=[commitRequest post:[requestURL absoluteString]];
     if(response){
-        NSDictionary *rDict=[response objectFromJSONString];
+        NSDictionary *rDict=[response JSONObject];
         if([rDict objectForKey:@"succ"] && [[rDict objectForKey:@"succ"] intValue]==1){
             return YES;
         }
@@ -1088,7 +1088,8 @@ typedef enum {
 
 -(BOOL) deleteYunTasksByIDArray:(NSArray *)ids{
     BOOL returnResult=NO;
-    NSString *jsontext=[ids JSONString];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:ids options:0 error:nil];
+    NSString *jsontext=[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     NSURL *url=[NSURL URLWithString:@"http://dynamic.cloud.vip.xunlei.com/interface/cloud_delete_task"];
     LCHTTPConnection*request = [LCHTTPConnection new];
     
@@ -1096,7 +1097,7 @@ typedef enum {
 
     NSString *response=[request post:[url absoluteString]];
     if(response){
-        NSDictionary *resJson=[response objectFromJSONString];
+        NSDictionary *resJson=[response JSONObject];
         if([[resJson objectForKey:@"result"] intValue]==0){
             returnResult=YES;
         }

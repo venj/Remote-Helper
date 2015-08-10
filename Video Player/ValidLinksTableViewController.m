@@ -46,35 +46,49 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
 
-    cell.textLabel.text = [self processThunderLink:self.validLinks[indexPath.row]];
+    cell.textLabel.text = [self processLinkToName:self.validLinks[indexPath.row]];
     
     return cell;
 }
 
-- (NSString *)processThunderLink:(NSString *)link {
-    NSString *protocal = [[link componentsSeparatedByString:@":"] firstObject];
+- (NSString *)processLinkToName:(NSString *)link {
+    NSString *decodedLink = [link stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *protocal = [[decodedLink componentsSeparatedByString:@":"] firstObject];
     if ([protocal isEqualToString:@"thunder"]) {   // thunder
         NSString *encodedString = [link substringFromIndex:10];
         NSString *decodedString = [encodedString decodedBase64String];
         if (decodedString == nil) {
-            return link;
+            return decodedLink;
         }
         else {
             return [decodedString substringWithRange:NSMakeRange(2, [decodedString length] - 4)];
         }
     }
+    else if ([protocal isEqualToString:@"magnet"]) { // magnet
+        NSString *queryString = [[decodedLink componentsSeparatedByString:@"?"] lastObject];
+        NSArray *kvPairs = [[queryString stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"] componentsSeparatedByString:@"&"];
+        NSString *name = decodedLink;
+        for (NSString *kvStr in kvPairs) {
+            NSArray *kv = [kvStr componentsSeparatedByString:@"="];
+            if ([kv[0] isEqualToString:@"dn"] && ![kv[1] isEqualToString:@""]) {
+                name = [kv[1] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+                break;
+            }
+        }
+        return name;
+    }
     else if ([protocal isEqualToString:@"ed2k"]) { // ed2k
-        NSArray *parts = [link componentsSeparatedByString:@"|"];
+        NSArray *parts = [decodedLink componentsSeparatedByString:@"|"];
         NSUInteger index = [parts indexOfObject:@"file"];
         if (index != NSNotFound && [parts count] > index + 2) {
             return parts[index + 1];
         }
         else {
-            return link;
+            return decodedLink;
         }
     }
     else {
-        return link;
+        return decodedLink;
     }
 }
 

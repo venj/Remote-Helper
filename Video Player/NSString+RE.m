@@ -13,7 +13,7 @@
 -(NSArray*) arrayOfCaptureComponentsMatchedByRegex:(NSString*) regex{
     NSMutableArray *result=[NSMutableArray arrayWithCapacity:0];
     //    NSString *htmlString = @"A long string containing Name:</td><td>A name here</td> amongst other things";
-    NSRegularExpression *nameExpression = [NSRegularExpression regularExpressionWithPattern:regex options:NSRegularExpressionSearch error:nil];
+    NSRegularExpression *nameExpression = [NSRegularExpression regularExpressionWithPattern:regex options:NSRegularExpressionCaseInsensitive error:nil];
     
     NSArray *matches = [nameExpression matchesInString:self
                                                options:0
@@ -36,7 +36,7 @@
 - (NSArray *) captureComponentsMatchedByRegex:(NSString *)regex capture:(NSInteger) capture{
     NSMutableArray *result=[NSMutableArray arrayWithCapacity:0];
     //    NSString *htmlString = @"A long string containing Name:</td><td>A name here</td> amongst other things";
-    NSRegularExpression *nameExpression = [NSRegularExpression regularExpressionWithPattern:regex options:NSRegularExpressionSearch error:nil];
+    NSRegularExpression *nameExpression = [NSRegularExpression regularExpressionWithPattern:regex options:NSRegularExpressionCaseInsensitive error:nil];
     
     NSArray *matches = [nameExpression matchesInString:self
                                                options:0
@@ -53,7 +53,7 @@
 - (NSString *) stringByMatching:(NSString *)regex capture:(NSInteger)capture{
     NSString *result=nil;
 //    NSString *htmlString = @"A long string containing Name:</td><td>A name here</td> amongst other things";
-    NSRegularExpression *nameExpression = [NSRegularExpression regularExpressionWithPattern:regex options:NSRegularExpressionSearch error:nil];
+    NSRegularExpression *nameExpression = [NSRegularExpression regularExpressionWithPattern:regex options:NSRegularExpressionCaseInsensitive error:nil];
     
     NSArray *matches = [nameExpression matchesInString:self
                                                options:0

@@ -28,18 +28,17 @@
 #import "NSString+RE.h"
 #import "URlEncode.h"
 #import "XunleiItemInfo.h"
-#import "Kuai.h"
 #import "ConvertURL.h"
 #import "LCHTTPConnection.h"
 #import "NSString+GFJson.h"
 
-typedef enum {
+typedef NS_ENUM(NSUInteger, TaskListType) {
     TLTAll,
     TLTDownloadding,
     TLTComplete,
     TLTOutofDate,
-    TLTDeleted
-} TaskListType;
+    TLTDeleted,
+};
 
 @implementation HYXunleiLixianAPI
 
@@ -869,49 +868,48 @@ typedef enum {
         NSLog(@"%@",d);
     }
     if(8==data.count){
-        dcid=[newData objectAtIndex:0];
-        gcid=[newData objectAtIndex:1];
-        size=[newData objectAtIndex:2];
-        filename=[newData objectAtIndex:3];
-        goldbeen=[newData objectAtIndex:4];
-        silverbeen=[newData objectAtIndex:5];
-        is_full=[newData objectAtIndex:6];
-        random=[newData objectAtIndex:7];
+        dcid = newData[0];
+        gcid = newData[1];
+        size = newData[2];
+        filename = newData[3];
+        goldbeen = newData[4];
+        silverbeen = newData[5];
+        is_full = newData[6];
+        random = newData[7];
     }
     else if(9==data.count){
-        dcid=[newData objectAtIndex:0];
-        gcid=[newData objectAtIndex:1];
-        size=[newData objectAtIndex:2];
-        filename=[newData objectAtIndex:3];
-        goldbeen=[newData objectAtIndex:4];
-        silverbeen=[newData objectAtIndex:5];
-        is_full=[newData objectAtIndex:6];
-        random=[newData objectAtIndex:7];
-        ext=[newData objectAtIndex:8];
+        dcid = newData[0];
+        gcid = newData[1];
+        size = newData[2];
+        filename = newData[3];
+        goldbeen = newData[4];
+        silverbeen = newData[5];
+        is_full = newData[6];
+        random = newData[7];
+        ext = newData[8];
     }else if(10==data.count){
-        dcid=[newData objectAtIndex:0];
-        gcid=[newData objectAtIndex:1];
-        size=[newData objectAtIndex:2];
-        someKey=[newData objectAtIndex:3];
-        filename=[newData objectAtIndex:4];
-        goldbeen=[newData objectAtIndex:5];
-        silverbeen=[newData objectAtIndex:6];
-        is_full=[newData objectAtIndex:7];
-        random=[newData objectAtIndex:8];
-        ext=[newData objectAtIndex:9];
+        dcid = newData[0];
+        gcid = newData[1];
+        size = newData[2];
+        someKey = newData[3];
+        filename = newData[4];
+        goldbeen = newData[5];
+        silverbeen = newData[6];
+        is_full = newData[7];
+        random = newData[8];
+        ext = newData[9];
     } else if (data.count == 11) {
-        dcid=[newData objectAtIndex:0];
-        gcid=[newData objectAtIndex:1];
-        size=[newData objectAtIndex:2];
-        someKey=[newData objectAtIndex:3];
-        filename=[newData objectAtIndex:4];
-        goldbeen=[newData objectAtIndex:5];
-        silverbeen=[newData objectAtIndex:6];
-        is_full=[newData objectAtIndex:7];
-        noCacheIE=[newData objectAtIndex:8];
-        ext=[newData objectAtIndex:9];
+        dcid = newData[0];
+        gcid = newData[1];
+        size = newData[2];
+        someKey = newData[3];
+        filename = newData[4];
+        goldbeen = newData[5];
+        silverbeen = newData[6];
+        is_full = newData[7];
+        noCacheIE = newData[8];
+        ext = newData[9];
         unknownData = newData[10];
-        
     }
     //filename如果是中文放到URL中会有编码问题，需要转码
     NSString *newFilename=[URlEncode encodeToPercentEscapeString:filename];
@@ -1044,86 +1042,6 @@ typedef enum {
         }
     }
     return returnResult;
-}
-#pragma mark - Yun ZhuanMa Methods
-
--(NSString *)getCloudPlayData:(NSString *)url {
-    
-    NSString *encodedValue = (__bridge NSString*)CFURLCreateStringByAddingPercentEscapes(nil,(CFStringRef)url, nil,(CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8);
-    
-    NSString *urlString=[NSString stringWithFormat:@"http://i.vod.xunlei.com/req_get_method_vod?url=%@&platform=1&jsonp=jsonp1234567890&userid=%@&sessionid=%@",encodedValue, [self userID], [self cookieValueWithName:@"sessionid"]];
-    NSLog(@"%@", urlString);
-    
-    //获取BT task页面内容
-    LCHTTPConnection *request=[LCHTTPConnection new];
-    
-    NSString* siteData=[[[request get:urlString] stringByReplacingOccurrencesOfString:@"jsonp1234567890(" withString:@""] stringByReplacingOccurrencesOfString:@"})" withString:@"}"];
-    
-    NSLog(@"%@", [siteData JSONObject]);
-    
-    return siteData;
-}
-
-//Yun Zhuan Ma
--(BOOL) addYunTaskWithFileSize:(NSString*) size downloadURL:(NSString*) url dcid:(NSString*) cid fileName:(NSString*) aName Quality:(YUNZHUANMAQuality) q{
-    NSString *gcid=[ParseElements GCID:url];
-    NSURL *requestURL=[NSURL URLWithString:@"http://dynamic.cloud.vip.xunlei.com/interface/cloud_build_task/"];
-    NSString *detailTaskPostValue=[NSString stringWithFormat:@"[{\"section_type\":\"c7\",\"filesize\":\"%@\",\"gcid\":\"%@\",\"cid\":\"%@\",\"filename\":\"%@\"}]",size,gcid,cid,aName];
-    LCHTTPConnection* commitRequest = [LCHTTPConnection new];
-    NSString *cloudFormat=[NSString stringWithFormat:@"%d",q];
-    [commitRequest setPostValue:cloudFormat  forKey:@"cloud_format"];
-    [commitRequest setPostValue:detailTaskPostValue forKey:@"tasks"];
-    NSString *response=[commitRequest post:[requestURL absoluteString]];
-    if(response){
-        NSDictionary *rDict=[response JSONObject];
-        if([rDict objectForKey:@"succ"] && [[rDict objectForKey:@"succ"] intValue]==1){
-            return YES;
-        }
-    }
-    return NO;
-}
--(BOOL) deleteYunTaskByID:(NSString*) anId{
-    return [self deleteYunTasksByIDArray:@[anId]];
-}
-
--(BOOL) deleteYunTasksByIDArray:(NSArray *)ids{
-    BOOL returnResult=NO;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:ids options:0 error:nil];
-    NSString *jsontext=[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    NSURL *url=[NSURL URLWithString:@"http://dynamic.cloud.vip.xunlei.com/interface/cloud_delete_task"];
-    LCHTTPConnection*request = [LCHTTPConnection new];
-    
-    [request setPostValue:jsontext forKey:@"tasks"];
-
-    NSString *response=[request post:[url absoluteString]];
-    if(response){
-        NSDictionary *resJson=[response JSONObject];
-        if([[resJson objectForKey:@"result"] intValue]==0){
-            returnResult=YES;
-        }
-    }
-    return returnResult;
-}
-#pragma mark - Xunlei KuaiChuan ...迅雷快传
--(BOOL) addAllKuaiTasksToLixianByURL:(NSURL*) kuaiURL{
-    BOOL result=NO;
-    Kuai *k=[Kuai new];
-    NSArray *infos=[k kuaiItemInfoArrayByKuaiURL:kuaiURL];
-    for(KuaiItemInfo *i in infos){
-        NSString *url=i.urlString;
-        NSString* t=[self addNormalTask:url];
-        if(t) result=YES;
-    }
-    return result;
-}
--(NSArray*) getKuaiItemInfos:(NSURL*) kuaiURL{
-    Kuai *k=[Kuai new];
-    return [k kuaiItemInfoArrayByKuaiURL:kuaiURL];
-}
-
--(NSString*) generateXunleiURLStringByKuaiItemInfo:(KuaiItemInfo*) info{
-    Kuai *k=[Kuai new];
-    return [k generateLixianUrl:info];
 }
 
 #pragma mark - Other Useful Methods

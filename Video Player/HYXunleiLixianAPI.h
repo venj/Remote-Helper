@@ -23,12 +23,6 @@
 
 #import <Foundation/Foundation.h>
 @class XunleiItemInfo;
-@class KuaiItemInfo;
-typedef enum{
-    QMiddleQuality=1,
-    QLowQuality=2,
-    QHighQuality=3
-}YUNZHUANMAQuality;
 
 @interface HYXunleiLixianAPI : NSObject
 -(XunleiItemInfo *) getTaskWithTaskID:(NSString*) aTaskID;
@@ -96,28 +90,9 @@ typedef enum{
 -(BOOL) restartTask:(XunleiItemInfo*) info;
 -(BOOL) restartMutiTasksByTaskItemInfo:(NSArray*) infos;
 #pragma mark - Rename Task
-//TO DO
-#pragma mark - YunZhuanMa Task
-//云转码任务列表
--(NSMutableArray*) readAllYunTasks;
--(NSMutableArray *) readYunTasksWithPage:(NSUInteger) pg retIfHasNextPage:(BOOL *) hasNextPageBool;
-//添加任务到云转码
--(BOOL) addYunTaskWithFileSize:(NSString*) size downloadURL:(NSString*) url dcid:(NSString*) cid fileName:(NSString*) aName Quality:(YUNZHUANMAQuality) q;
-//云转码删除任务
--(BOOL) deleteYunTaskByID:(NSString*) anId;
--(BOOL) deleteYunTasksByIDArray:(NSArray *)ids;
-
-#pragma mark - Xunlei KuaiChuan ...迅雷快传
-//通过提供KuaiItemInfo来直接创建迅雷离线地址，KuaiItemInfo可以通过getKuaiItemInfos:获得
--(NSString*) generateXunleiURLStringByKuaiItemInfo:(KuaiItemInfo*) info;
-//生成KuaiItemInfoArray
--(NSArray*) getKuaiItemInfos:(NSURL*) kuaiURL;
-//添加快传页面的连接到迅雷离线
--(BOOL) addAllKuaiTasksToLixianByURL:(NSURL*) kuaiURL;
 // 添加BT任务
 - (NSString *)addBTTask:(NSString *)filePath selection:(NSArray *)array hasFetchedFileList:(NSDictionary *)dataField;
 - (NSDictionary *)fetchBTFileList:(NSString *)filePath;
 - (NSString *)fileSize:(float)size; //一个根据length返回文件大小的方法
 
--(NSString *)getCloudPlayData:(NSString *)url;
 @end

@@ -17,7 +17,7 @@ PODS:
     - BlocksKit/DynamicDelegate
   - DACircularProgress (2.3.1)
   - HexColors (2.2.1)
-  - InAppSettingsKit (2.3.2)
+  - InAppSettingsKit (2.6)
   - iOS8Colors (0.1.2):
     - HexColors (~> 2.2.1)
   - LTHPasscodeViewController (3.3.3)
@@ -59,7 +59,7 @@ SPEC CHECKSUMS:
   BlocksKit: 7f422b971407001178d181a43b99014ea2591fe6
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   HexColors: abfd172e329dab59888614ccba6f216cec59289d
-  InAppSettingsKit: 496b66f63086f9fd97d027bb29628c041358bc38
+  InAppSettingsKit: cc56d3ec45f11352a16d5b210da8a3fa1b9d05ed
   iOS8Colors: 1f6023790704b9119727bf14408182ca33faf31b
   LTHPasscodeViewController: 01d2c19b6e2aefcd34f4a63d880cf3718da27fdc
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad

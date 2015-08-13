@@ -139,6 +139,7 @@
  @param path The relative path for the video to be played.
  @return An <code>NSURL</code> object for a local file or a remote address.
  */
+- (void)showTorrentSearchAlertInNavigationController:(UINavigationController *)navigationController;
 - (void)showHudWithMessage:(NSString *)message inView:(UIView *)aView;
 - (NSURL *)videoPlayURLWithPath:(NSString *)path;
 - (void)parseSessionAndAddTask:(NSString *)magnet completionHandler:(void (^__strong)(void))completionHandler errorHandler:(void (^__strong)(void))errorHandler;

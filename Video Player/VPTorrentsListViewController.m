@@ -298,37 +298,7 @@
     if (self.searchItem) { return self.searchItem; }
     __weak typeof(self) weakSelf = self;
     self.searchItem = [[UIBarButtonItem alloc] bk_initWithBarButtonSystemItem:UIBarButtonSystemItemSearch handler:^(id sender) {
-        UIAlertView *alert = [[UIAlertView alloc] bk_initWithTitle:NSLocalizedString(@"Search", @"Search") message:NSLocalizedString(@"Please enter video serial:", @"Please enter video serial:")];
-        alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-        [alert bk_addButtonWithTitle:NSLocalizedString(@"Search", @"Search") handler:^{
-            NSString *keyword = [alert textFieldAtIndex:0].text;
-            NSMutableURLRequest *addTorrentRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] dbSearchPathWithKeyword:keyword]]];
-            addTorrentRequest.timeoutInterval = REQUEST_TIME_OUT;
-            [addTorrentRequest setAllHTTPHeaderFields:@{@"User-Agent" : [[AppDelegate shared] customUserAgent]}];
-            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-            hud.mode = MBProgressHUDModeIndeterminate;
-            hud.removeFromSuperViewOnHide = YES;
-            AFJSONRequestOperation *trOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:addTorrentRequest success:^(NSURLRequest *req, NSHTTPURLResponse *res, id anotherJSON) {
-                if ([anotherJSON[@"success"] boolValue] == true) {
-                    VPSearchResultController *searchController = [[VPSearchResultController alloc] initWithStyle:UITableViewStylePlain];
-                    searchController.torrents = anotherJSON[@"results"];
-                    searchController.keyword = keyword;
-                    [weakSelf.navigationController pushViewController:searchController animated:YES];
-                }
-                else {
-                    NSString *errorMessage = anotherJSON[@"message"];
-                    [[AppDelegate shared] showHudWithMessage:NSLocalizedString(errorMessage, errorMessage) inView:self.navigationController.view];
-                }
-                [hud hide:YES];
-            } failure:^(NSURLRequest *req, NSHTTPURLResponse *res, NSError *err, id anotherJSON) {
-                [hud hide:YES];
-                [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.") inView:self.navigationController.view];
-            }];
-            if ([[AppDelegate shared] useSSL]) { [trOperation setAllowsInvalidSSLCertificate:YES]; }
-            [trOperation start];
-        }];
-        [alert bk_setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:nil];
-        [alert show];
+        [[AppDelegate shared] showTorrentSearchAlertInNavigationController:weakSelf.navigationController];
     }];
     
     return self.searchItem;

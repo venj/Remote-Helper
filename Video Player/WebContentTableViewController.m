@@ -77,6 +77,9 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
         [weakself.sheet bk_addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings") handler:^{
             [weakself showSettings:sender];
         }];
+        [weakself.sheet bk_addButtonWithTitle:NSLocalizedString(@"Torrent Search", @"Torrent Search") handler:^{
+            [weakself torrentSearch:sender];
+        }];
         [weakself.sheet bk_addButtonWithTitle:NSLocalizedString(@"Cache Browser", @"Cache Browser") handler:^{
             [weakself browseCache:sender];
         }];
@@ -253,6 +256,10 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakself presentViewController:pbNavigationController animated:YES completion:NULL];
     });
+}
+
+- (void)torrentSearch:(id)sender {
+    [[AppDelegate shared] showTorrentSearchAlertInNavigationController:self.navigationController];
 }
 
 - (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {

@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "VPSearchResultController.h"
 #import <BlocksKit+UIKit.h>
+#import <TOWebViewController/TOWebViewController.h>
 
 @implementation VPSearchResultController
 
@@ -16,6 +17,16 @@
 {
     [super viewDidLoad];
     self.title = [[NSString alloc] initWithFormat:@"%@: %@ (%lu)", NSLocalizedString(@"Search", @"Search"), self.keyword, (unsigned long)[self.torrents count]];
+    NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:@"^[A-Za-z]{2,6}-\\d{2,4}$" options:NSRegularExpressionCaseInsensitive error:nil];
+    if ([regex matchesInString:self.keyword options:NSMatchingAnchored range:NSMakeRange(0, [self.keyword length])] > 0) {
+        __weak typeof(self) weakself = self;
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] bk_initWithImage:[UIImage imageNamed:@"wiki"] style:UIBarButtonItemStylePlain handler:^(id sender) {
+            TOWebViewController *webViewController = [[TOWebViewController alloc] initWithURLString:[NSString stringWithFormat:@"http://www.javlibrary.com/cn/vl_searchbyid.php?keyword=%@", [[self.keyword stringByReplacingOccurrencesOfString:@" " withString:@""] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+            webViewController.showUrlWhileLoading = NO;
+            webViewController.hidesBottomBarWhenPushed = YES;
+            [weakself.navigationController pushViewController:webViewController animated:YES];
+        }];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {

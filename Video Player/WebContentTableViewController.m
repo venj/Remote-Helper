@@ -147,6 +147,7 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
     TOWebViewController *webViewController = [[TOWebViewController alloc] initWithURL:[NSURL URLWithString:urlString]];
     webViewController.showUrlWhileLoading = NO;
     webViewController.hidesBottomBarWhenPushed = YES;
+    webViewController.urlRequest.cachePolicy = NSURLCacheStorageAllowed;
     typeof(self) weakself = self;
     UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] bk_initWithBarButtonSystemItem:UIBarButtonSystemItemSearch handler:^(id sender) {
         NSString *html = [webViewController.webView stringByEvaluatingJavaScriptFromString:@"document.body.innerHTML"];

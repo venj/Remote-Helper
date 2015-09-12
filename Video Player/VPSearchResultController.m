@@ -17,7 +17,7 @@
 {
     [super viewDidLoad];
     self.title = [[NSString alloc] initWithFormat:@"%@: %@ (%lu)", NSLocalizedString(@"Search", @"Search"), self.keyword, (unsigned long)[self.torrents count]];
-    NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:@"^[A-Za-z]{2,6}-\\d{2,4}$" options:NSRegularExpressionCaseInsensitive error:nil];
+    NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:@"^[A-Za-z]{2,6}-\\d{2,6}$" options:NSRegularExpressionCaseInsensitive error:nil];
     if ([regex numberOfMatchesInString:self.keyword options:NSMatchingAnchored range:NSMakeRange(0, [self.keyword length])] > 0) {
         __weak typeof(self) weakself = self;
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] bk_initWithImage:[UIImage imageNamed:@"wiki"] style:UIBarButtonItemStylePlain handler:^(id sender) {

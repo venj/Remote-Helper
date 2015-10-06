@@ -108,6 +108,15 @@ static HYXunleiLixianAPI *__api;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification object:nil];
 }
 
+- (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler {
+    if ([shortcutItem.type isEqualToString:@"me.venj.Video-Player.openaddresses"]) {
+        [self.tabbarController setSelectedIndex:0];
+    }
+    else if ([shortcutItem.type isEqualToString:@"me.venj.Video-Player.opentorrents"]) {
+        [self.tabbarController setSelectedIndex:1];
+    }
+}
+
 #pragma mark - Singleton
 
 + (AppDelegate *)shared {

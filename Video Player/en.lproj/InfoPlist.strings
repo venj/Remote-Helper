@@ -1,3 +1,5 @@
 /* Localized versions of Info.plist keys */
 
 "CFBundleDisplayName" = "Remote Helper";
+"Addresses" = "Addresses";
+"Torrents" = "Torrents";

@@ -59,6 +59,11 @@
     searchBar.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
     searchBar.delegate = self;
     searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+
+    // Revert back to old UITableView behavior
+    if ([self.tableView respondsToSelector:@selector(cellLayoutMarginsFollowReadableWidth)]) {
+        self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
+    }
     
     self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:searchBar contentsController:self];
     self.searchController.delegate = self;

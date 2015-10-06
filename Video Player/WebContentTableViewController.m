@@ -93,6 +93,11 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
     if (![defaults boolForKey:ServerSetupDone]) {
         [self showSettings:nil];
     }
+
+    // Revert back to old UITableView behavior
+    if ([self.tableView respondsToSelector:@selector(cellLayoutMarginsFollowReadableWidth)]) {
+        self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {

@@ -35,6 +35,11 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
         }];
         self.navigationItem.rightBarButtonItem = rightItem;
     }
+
+    // Revert back to old UITableView behavior
+    if ([self.tableView respondsToSelector:@selector(cellLayoutMarginsFollowReadableWidth)]) {
+        self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
+    }
 }
 
 - (void)didReceiveMemoryWarning {

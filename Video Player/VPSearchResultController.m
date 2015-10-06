@@ -27,6 +27,11 @@
             [weakself.navigationController pushViewController:webViewController animated:YES];
         }];
     }
+    
+    // Revert back to old UITableView behavior
+    if ([self.tableView respondsToSelector:@selector(cellLayoutMarginsFollowReadableWidth)]) {
+        self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {

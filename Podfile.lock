@@ -20,9 +20,9 @@ PODS:
   - InAppSettingsKit (2.6)
   - iOS8Colors (0.1.2):
     - HexColors (~> 2.2.1)
-  - LTHPasscodeViewController (3.3.3)
+  - LTHPasscodeViewController (3.6.6)
   - MBProgressHUD (0.9.1)
-  - MMAppSwitcher (0.2.0)
+  - MMAppSwitcher (0.1.0)
   - MWPhotoBrowser (2.1.1):
     - DACircularProgress (~> 2.3)
     - MBProgressHUD (~> 0.9)
@@ -30,29 +30,33 @@ PODS:
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
   - SDWebImage/Core (3.7.3)
-  - TOWebViewController (2.0.17)
+  - TOWebViewController (2.0.19)
 
 DEPENDENCIES:
   - AFNetworking (~> 1.3.4)
   - BlocksKit (~> 2.2.3)
   - InAppSettingsKit (~> 2.1)
   - iOS8Colors (~> 0.1.2)
-  - LTHPasscodeViewController (~> 3.3.2)
+  - LTHPasscodeViewController (~> 3.6.6)
   - MBProgressHUD (~> 0.8)
-  - MMAppSwitcher (~> 0.2.0)
+  - MMAppSwitcher (from `https://github.com/venj/MMAppSwitcher.git`, branch `master`)
   - MWPhotoBrowser (~> 2.1.1)
-  - TOWebViewController (from `https://github.com/venj/TOWebViewController.git`, tag
-    `2.0.17.3`)
+  - TOWebViewController (from `https://github.com/venj/TOWebViewController.git`)
 
 EXTERNAL SOURCES:
+  MMAppSwitcher:
+    :branch: master
+    :git: https://github.com/venj/MMAppSwitcher.git
   TOWebViewController:
     :git: https://github.com/venj/TOWebViewController.git
-    :tag: 2.0.17.3
 
 CHECKOUT OPTIONS:
+  MMAppSwitcher:
+    :commit: 3aee031a6a425dcc46f46cae50215d7bd023547c
+    :git: https://github.com/venj/MMAppSwitcher.git
   TOWebViewController:
+    :commit: 54bb3f9624ee97383307d43364665f2ef439bf3a
     :git: https://github.com/venj/TOWebViewController.git
-    :tag: 2.0.17.3
 
 SPEC CHECKSUMS:
   AFNetworking: cf8e418e16f0c9c7e5c3150d019a3c679d015018
@@ -61,11 +65,11 @@ SPEC CHECKSUMS:
   HexColors: abfd172e329dab59888614ccba6f216cec59289d
   InAppSettingsKit: cc56d3ec45f11352a16d5b210da8a3fa1b9d05ed
   iOS8Colors: 1f6023790704b9119727bf14408182ca33faf31b
-  LTHPasscodeViewController: 01d2c19b6e2aefcd34f4a63d880cf3718da27fdc
+  LTHPasscodeViewController: a3e58128587c8b44d38a0634e989808cb852fc55
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
-  MMAppSwitcher: 6e813046b201593d1a1d06188a6f6336f06b7be2
+  MMAppSwitcher: d90bcd02e336d0beb91b2ba8adaa282dd5838378
   MWPhotoBrowser: ba0d0c09ffda3a7ea10093518738c502c1c7141c
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
-  TOWebViewController: aada427e7eba199bbaee77ddee3243c8172f4053
+  TOWebViewController: accd62ec0acc8d5c2e1e195c6f7ff7654c3c840c
 
 COCOAPODS: 0.38.2

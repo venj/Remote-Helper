@@ -148,9 +148,10 @@ static HYXunleiLixianAPI *__api;
 
 
 #pragma mark - MMAppSwitcher
-- (UIView *)appSwitcher:(MMAppSwitcher *)appSwitcher viewForCardWithSize:(CGSize)size {
-    CGRect frame = CGRectMake(0.0, 0.0, size.width, size.height);
-    UIView *view = [[UIView alloc] initWithFrame:frame];
+- (UIView *)viewForCard {
+    CGRect frame = CGRectZero;
+    UIVisualEffectView *view = [[UIVisualEffectView alloc] initWithEffect:nil];
+    view.frame = frame;
     view.backgroundColor = [UIColor whiteColor];
     return view;
 }

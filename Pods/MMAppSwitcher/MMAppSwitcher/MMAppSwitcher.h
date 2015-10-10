@@ -51,6 +51,6 @@
  * @param size The 'native' size of the card as how the app interface appears
  * in the app switcher. Refer to table above for reference.
  **/
-- (UIView *)appSwitcher:(MMAppSwitcher *)appSwitcher viewForCardWithSize:(CGSize)size;
+- (UIView *)viewForCard;
 
 @end

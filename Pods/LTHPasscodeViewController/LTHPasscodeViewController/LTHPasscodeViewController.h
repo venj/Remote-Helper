@@ -88,6 +88,10 @@
  */
 @property (nonatomic, assign) CGFloat   verticalGap;
 /**
+ @brief The offset between the top label and middle position.
+ */
+@property (nonatomic, assign) CGFloat   verticalOffset;
+/**
  @brief The gap between the passcode digits and the failed label.
  */
 @property (nonatomic, assign) CGFloat   failedAttemptLabelGap;
@@ -119,6 +123,10 @@
  @brief The background color for the view.
  */
 @property (nonatomic, strong) UIColor   *backgroundColor;
+/**
+ @brief The background image for the coverview.
+ */
+@property (nonatomic, strong) UIImage   *backgroundImage;
 /**
  @brief The background color for the cover view that appears on top of the app, visible in the multitasking.
  */
@@ -243,6 +251,12 @@
  @brief A Boolean value that indicates whether the back bar button is hidden (@c YES) or not (@c NO). Default is @c YES.
  */
 @property (nonatomic, assign) BOOL hidesBackButton;
+
+/**
+ @brief A Boolean value that indicates whether the right bar button is hidden (@c YES) or not (@c NO). Default is @c YES.
+ */
+@property (nonatomic, assign) BOOL hidesCancelButton;
+
 /**
  @brief A Boolean value that indicates whether Touch ID can be used (@c YES) or not (@c NO). Default is @c YES.
  */
@@ -288,6 +302,10 @@
  @details               @c inViewController and @c asModal are needed because the delegate is of type id, and the passcode needs to be presented somewhere and with a specific style - modal or pushed.
  */
 - (void)setIsSimple:(BOOL)isSimple inViewController:(UIViewController *)viewController asModal:(BOOL)isModal;
+/**
+ @brief The passcode view will be shown by default when entering the app from background. This method disables this behavior by removing the observer for UIApplicationDidEnterBackgroundNotification and UIApplicationWillEnterForegroundNotification.
+ */
+- (void)disablePasscodeWhenApplicationEntersBackground;
 /**
  @brief  Returns a Boolean value that indicates whether a passcode exists (@c YES) or not (@c NO).
  @return @c YES if a passcode is enabled. This also means it is enabled, unless custom logic was added to the library.

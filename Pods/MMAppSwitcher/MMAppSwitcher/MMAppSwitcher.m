@@ -15,11 +15,9 @@
 
 @interface MMAppSwitcher()
 
-@property (nonatomic, weak) id<MMAppSwitcherDataSource> datasource;
+@property (nonatomic, weak) id<MMAppSwitcherDataSource> dataSource;
 @property (nonatomic, strong) UIView *view;
 @property (nonatomic, strong) UIWindow *window;
-@property (nonatomic, strong) UIWindow *originalWindow;
-@property (nonatomic, assign) BOOL showStatusBar;
 
 @end
 
@@ -31,17 +29,15 @@ static MMAppSwitcher *_sharedInstance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _sharedInstance = [MMAppSwitcher new];
-        _sharedInstance.originalWindow = [[UIApplication sharedApplication] keyWindow];
-        _sharedInstance.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        _sharedInstance.window.backgroundColor = [UIColor blackColor];
-        _sharedInstance.window.windowLevel = UIWindowLevelStatusBar;
+        _sharedInstance.window = [[UIApplication sharedApplication] delegate].window;
+        _sharedInstance.window.backgroundColor = [UIColor clearColor];
     });
     return _sharedInstance;
 }
 
 - (void)setDataSource:(id<MMAppSwitcherDataSource>)dataSource {
-    _datasource = dataSource;
-    if (_datasource) {
+    _dataSource = dataSource;
+    if (_dataSource) {
         [self enableNotifications];
     } else {
         [self disableNotifications];
@@ -58,13 +54,17 @@ static MMAppSwitcher *_sharedInstance;
 }
 
 - (void)loadCard {
-    if ([self.datasource respondsToSelector:@selector(appSwitcher:viewForCardWithSize:)]) {
-        UIView *view = [self.datasource appSwitcher:self viewForCardWithSize:[self cardSizeForCurrentOrientation]];
+    if ([self.dataSource respondsToSelector:@selector(viewForCard)]) {
+        CGSize cardSize = [self cardSizeForCurrentOrientation];
+        CGRect cardFrame = (CGRect){0, 0, cardSize};
+        UIView *view = [self.dataSource viewForCard];
+        view.frame = cardFrame;
+        [view layoutIfNeeded];
         if (view) {
             [self.view removeFromSuperview];
             UIImageView *cardView = [view mm_rasterizedView];
             self.view = cardView;
-            self.view.frame = (CGRect){0, 0, self.window.bounds.size};
+            self.view.frame = cardFrame;
             [self.window addSubview:self.view];
         } else {
             [self.view removeFromSuperview];
@@ -79,41 +79,27 @@ static MMAppSwitcher *_sharedInstance;
 
 #pragma mark - Helper methods
 
-- (BOOL)viewControllerBasedStatusBarAppearanceEnabled {
-    CFBooleanRef viewControllerBasedStatusBarAppearance = CFBundleGetValueForInfoDictionaryKey(CFBundleGetMainBundle(), (CFStringRef)@"UIViewControllerBasedStatusBarAppearance");
-    if (viewControllerBasedStatusBarAppearance==kCFBooleanTrue) {
-        return YES;
-    } else {
-        return NO;
-    }
-}
-
 - (CGSize)cardSizeForCurrentOrientation {
-    CGRect screenBounds = [UIScreen mainScreen].bounds;
-    CGSize cardSize;
-    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
-        cardSize = (CGSize){ceilf(0.475*screenBounds.size.width), ceilf(0.475*screenBounds.size.height)};
-    } else {
-        cardSize = (CGSize){ceilf(0.5*screenBounds.size.width), ceilf(0.5*screenBounds.size.height)};
+    CGFloat x, y;
+    CGSize screenSize = [UIScreen mainScreen].bounds.size;
+    screenSize.width > screenSize.height ? (x = screenSize.width, y = screenSize.height) : (y = screenSize.width, x = screenSize.height);
+    if ([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft || [UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeRight) {
+        return CGSizeMake(x, y);
     }
-    return cardSize;
+    else {
+        return CGSizeMake(y, x);
+    }
 }
-
 
 #pragma mark - Notifications
 
 - (void)appWillEnterForeground {
     [self.view removeFromSuperview];
     self.view = nil;
-    self.window.hidden = YES;
-    [[UIApplication sharedApplication] setStatusBarHidden:self.showStatusBar];
 }
 
 - (void)appDidEnterBackground {
-     self.showStatusBar = [[UIApplication sharedApplication] isStatusBarHidden];
-    [[UIApplication sharedApplication] setStatusBarHidden:YES];
     [self loadCard];
-    self.window.hidden = NO;
 }
 
 @end

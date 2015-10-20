@@ -1,18 +1,18 @@
 {
   "name": "MMAppSwitcher",
-  "version": "0.1.0",
-  "summary": "Customize your card view in iOS7's app switcher (multitasking view)",
-  "homepage": "https://github.com/vpdn/MMAppSwitcher/",
+  "version": "0.3.0",
+  "summary": "Customize your card view in iOS8's app switcher (multitasking view)",
+  "homepage": "https://github.com/venj/MMAppSwitcher/",
   "license": "MIT",
   "authors": {
     "vpdn": "vp@dinhmail.de"
   },
   "source": {
-    "git": "https://github.com/vpdn/MMAppSwitcher.git",
-    "tag": "0.1.0"
+    "git": "https://github.com/venj/MMAppSwitcher.git",
+    "branch": "master"
   },
   "platforms": {
-    "ios": "7.0"
+    "ios": "8.0"
   },
   "source_files": "MMAppSwitcher",
   "requires_arc": true

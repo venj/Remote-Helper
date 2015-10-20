@@ -45,7 +45,8 @@ static MMAppSwitcher *_sharedInstance;
 }
 
 - (void)enableNotifications {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cleanupCard) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cleanupCard) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
@@ -93,9 +94,11 @@ static MMAppSwitcher *_sharedInstance;
 
 #pragma mark - Notifications
 
-- (void)appWillEnterForeground {
-    [self.view removeFromSuperview];
-    self.view = nil;
+- (void)cleanupCard {
+    if (self.view) {
+        [self.view removeFromSuperview];
+        self.view = nil;
+    }
 }
 
 - (void)appDidEnterBackground {

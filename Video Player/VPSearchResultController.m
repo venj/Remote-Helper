@@ -21,7 +21,7 @@
     if ([regex numberOfMatchesInString:self.keyword options:NSMatchingAnchored range:NSMakeRange(0, [self.keyword length])] > 0) {
         __weak typeof(self) weakself = self;
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] bk_initWithImage:[UIImage imageNamed:@"wiki"] style:UIBarButtonItemStylePlain handler:^(id sender) {
-            TOWebViewController *webViewController = [[TOWebViewController alloc] initWithURLString:[NSString stringWithFormat:@"http://www.javlibrary.com/cn/vl_searchbyid.php?keyword=%@", [[self.keyword stringByReplacingOccurrencesOfString:@" " withString:@""] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+            TOWebViewController *webViewController = [[TOWebViewController alloc] initWithURLString:[NSString stringWithFormat:@"http://www.javlib3.com/cn/vl_searchbyid.php?keyword=%@", [[self.keyword stringByReplacingOccurrencesOfString:@" " withString:@""] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
             webViewController.showUrlWhileLoading = NO;
             webViewController.hidesBottomBarWhenPushed = YES;
             [weakself.navigationController pushViewController:webViewController animated:YES];

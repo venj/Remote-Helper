@@ -9,5 +9,5 @@ pod 'MWPhotoBrowser', '~> 2.1.1'
 pod 'MBProgressHUD', '~> 0.8'
 pod 'TOWebViewController', :git => 'https://github.com/venj/TOWebViewController.git'
 pod 'LTHPasscodeViewController', '~> 3.6.6'
-pod 'MMAppSwitcher', :git => 'https://github.com/venj/MMAppSwitcher.git', :branch => "master"
+pod 'MMAppSwitcher', :git => 'https://github.com/venj/MMAppSwitcher.git'
 pod 'iOS8Colors', '~> 0.1.2'

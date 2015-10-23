@@ -12,6 +12,7 @@
 #import <MBProgressHUD/MBProgressHUD.h>
 #import <BlocksKit+UIKit.h>
 #import <TOWebViewController/TOWebViewController.h>
+#import <SDWebImage/SDWebImageManager.h>
 #import "AppDelegate.h"
 #import "VPSearchResultController.h"
 #import "Common.h"
@@ -172,31 +173,27 @@
     }
     NSString *date = [list[indexPath.row] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     __weak VPTorrentsListViewController *blockSelf = self;
-    NSURL *movieListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] searchPathWithKeyword:date]];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:movieListURL];
-    request.timeoutInterval = REQUEST_TIME_OUT;
-    [request setAllHTTPHeaderFields:@{@"User-Agent" : [[AppDelegate shared] customUserAgent]}];
     UIView *aView = self.navigationController.view;
     [MBProgressHUD showHUDAddedTo:aView animated:YES];
-    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+    AFHTTPSessionManager *manager = [[AppDelegate shared] refreshedManager];
+    [manager GET:[[AppDelegate shared] searchPathWithKeyword:date] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         [MBProgressHUD hideHUDForView:aView animated:YES];
-        if ([JSON count] == 0) { return; }
-        blockSelf.mwPhotos = [blockSelf mwPhotosArrayWithPhothsArray:JSON];
+        if ([responseObject count] == 0) { return; }
+        blockSelf.mwPhotos = [blockSelf mwPhotosArrayWithPhothsArray:responseObject];
         MWPhotoBrowser *photoBrowser = [[MWPhotoBrowser alloc] initWithDelegate:blockSelf];
         photoBrowser.displayActionButton = NO;
         photoBrowser.displayNavArrows = YES;
         photoBrowser.zoomPhotosToFill = NO;
+        SDWebImageManager *manager = [SDWebImageManager sharedManager];
         NSInteger sIndex = index;
-        if (sIndex > [JSON count] - 1) sIndex = ([JSON count] - 1);
-        self.photos = JSON; //Save for add torrent.
+        if (sIndex > [responseObject count] - 1) sIndex = ([responseObject count] - 1);
+        self.photos = responseObject; //Save for add torrent.
         [photoBrowser setCurrentPhotoIndex:sIndex];
-        [self.navigationController pushViewController:photoBrowser animated:YES];
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        [blockSelf.navigationController pushViewController:photoBrowser animated:YES];
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
         [MBProgressHUD hideHUDForView:aView animated:YES];
         [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.") inView:self.navigationController.view];
     }];
-    if ([[AppDelegate shared] useSSL]) { [operation setAllowsInvalidSSLCertificate:YES]; }
-    [operation start];
 }
 
 #pragma mark - SearchDisplayController Delegate
@@ -216,26 +213,21 @@
 
 - (void)loadTorrentList:(id)sender {
     __weak VPTorrentsListViewController *blockSelf = self;
-    NSURL *torrentsListURL = [[NSURL alloc] initWithString:[[AppDelegate shared] torrentsListPath]];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:torrentsListURL];
-    request.timeoutInterval = REQUEST_TIME_OUT;
-    [request setAllHTTPHeaderFields:@{@"User-Agent" : [[AppDelegate shared] customUserAgent]}];
     UIView *aView = self.navigationController.view;
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:aView animated:YES];
     hud.removeFromSuperViewOnHide = YES;
     self.navigationItem.rightBarButtonItem.enabled = NO;
-    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+    AFHTTPSessionManager *manager = [[AppDelegate shared] refreshedManager];
+    [manager GET:[[AppDelegate shared] torrentsListPath] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         [hud hide:YES];
         blockSelf.navigationItem.rightBarButtonItem.enabled = YES;
-        blockSelf.datesList = JSON;
+        blockSelf.datesList = responseObject;
         [blockSelf.tableView reloadData];
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
         [MBProgressHUD hideHUDForView:aView animated:YES];
         [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.") inView:self.navigationController.view];
         blockSelf.navigationItem.rightBarButtonItem.enabled = YES;
     }];
-    if ([[AppDelegate shared] useSSL]) { [operation setAllowsInvalidSSLCertificate:YES]; }
-    [operation start];
 }
 
 #pragma mark - MWPhotoBrowser delegate
@@ -273,28 +265,21 @@
 - (UIBarButtonItem *)hashItemWithIndex:(NSUInteger)index {
     self.hashItem = [[UIBarButtonItem alloc] bk_initWithImage:[UIImage imageNamed:@"magnet"] style:UIBarButtonItemStylePlain handler:^(id sender) {
         NSString *base64FileName = [self.photos[index] base64String];
-        NSMutableURLRequest *hashTorrentRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] hashTorrentWithName:base64FileName]]];
-        [hashTorrentRequest setTimeoutInterval:REQUEST_TIME_OUT];
-        [hashTorrentRequest setAllHTTPHeaderFields:@{@"User-Agent" : [[AppDelegate shared] customUserAgent]}];
         __weak typeof(self) weakself = self;
-        AFJSONRequestOperation *trOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:hashTorrentRequest success:^(NSURLRequest *req, NSHTTPURLResponse *res, id anotherJSON) {
-            NSString *title, *message;
-            title = NSLocalizedString(@"Torrent Hash", @"Torrent Hash");
-            message = [NSString stringWithFormat:@"magnet:?xt=urn:btih:%@", [anotherJSON[@"hash"] uppercaseString]];
+        AFHTTPSessionManager *manager = [[AppDelegate shared] refreshedManager];
+        [manager GET:[[AppDelegate shared] hashTorrentWithName:base64FileName] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+            NSString *message = [NSString stringWithFormat:@"magnet:?xt=urn:btih:%@", [responseObject[@"hash"] uppercaseString]];
             UIPasteboard *pb = [UIPasteboard generalPasteboard];
             pb.string = message;
-            
             [[AppDelegate shared] parseSessionAndAddTask:message completionHandler:^{
                 [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Task added.", @"Task added.") inView:weakself.navigationController.view];
             } errorHandler:^{
                 [[AppDelegate shared]  showHudWithMessage:NSLocalizedString(@"Unknow error.", @"Unknow error.") inView:weakself.navigationController.view];
             }];
-        } failure:^(NSURLRequest *req, NSHTTPURLResponse *res, NSError *err, id anotherJSON) {
-            NSLog(@"%@", [err localizedDescription]);
+        } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+            NSLog(@"%@", [error localizedDescription]);
             [[AppDelegate shared]  showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.") inView:weakself.navigationController.view];
         }];
-        if ([[AppDelegate shared] useSSL]) { [trOperation setAllowsInvalidSSLCertificate:YES]; }
-        [trOperation start];
     }];
     return self.hashItem;
 }

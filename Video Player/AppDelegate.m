@@ -14,8 +14,8 @@
 #import <MMAppSwitcher/MMAppSwitcher.h>
 #import <LTHPasscodeViewController/LTHPasscodeViewController.h>
 #import <BlocksKit+UIKit.h>
+#import <AFNetworking/AFNetworking.h>
 #import "VPTorrentsListViewController.h"
-#import "SBAPIManager.h"
 #import <MBProgressHUD/MBProgressHUD.h>
 #import "VPSearchResultController.h"
 #define SSL_ADD_S ([self useSSL] ? @"s" : @"")
@@ -37,7 +37,8 @@ static HYXunleiLixianAPI *__api;
     
     // App Swicher
     [[MMAppSwitcher sharedInstance] setDataSource:self];
-    
+    // AFNetworking Common
+    [self refreshedManager];
     // File List
     self.fileListViewController = [[WebContentTableViewController alloc] initWithStyle:UITableViewStylePlain];
     self.fileListViewController.title = NSLocalizedString(@"Addresses", @"Addresses");
@@ -282,7 +283,7 @@ static HYXunleiLixianAPI *__api;
     }
 }
 
-- (NSArray *)getUsernameAndPassword {
+- (NSArray<NSString *> * _Nonnull)getUsernameAndPassword {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *username = [defaults objectForKey:TransmissionUserNameKey];
     NSString *password = [defaults objectForKey:TransmissionPasswordKey];
@@ -383,30 +384,26 @@ static HYXunleiLixianAPI *__api;
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     [alert bk_addButtonWithTitle:NSLocalizedString(@"Search", @"Search") handler:^{
         NSString *keyword = [alert textFieldAtIndex:0].text;
-        NSMutableURLRequest *addTorrentRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[[AppDelegate shared] dbSearchPathWithKeyword:keyword]]];
-        addTorrentRequest.timeoutInterval = REQUEST_TIME_OUT;
-        [addTorrentRequest setAllHTTPHeaderFields:@{@"User-Agent" : [[AppDelegate shared] customUserAgent]}];
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:navigationController.view animated:YES];
         hud.mode = MBProgressHUDModeIndeterminate;
         hud.removeFromSuperViewOnHide = YES;
-        AFJSONRequestOperation *trOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:addTorrentRequest success:^(NSURLRequest *req, NSHTTPURLResponse *res, id anotherJSON) {
-            if ([anotherJSON[@"success"] boolValue] == true) {
+        AFHTTPSessionManager *manager = [self refreshedManager];
+        [manager GET:[[AppDelegate shared] dbSearchPathWithKeyword:keyword] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+            if ([responseObject[@"success"] boolValue] == true) {
                 VPSearchResultController *searchController = [[VPSearchResultController alloc] initWithStyle:UITableViewStylePlain];
-                searchController.torrents = anotherJSON[@"results"];
+                searchController.torrents = responseObject[@"results"];
                 searchController.keyword = keyword;
                 [navigationController pushViewController:searchController animated:YES];
             }
             else {
-                NSString *errorMessage = anotherJSON[@"message"];
+                NSString *errorMessage = responseObject[@"message"];
                 [[AppDelegate shared] showHudWithMessage:NSLocalizedString(errorMessage, errorMessage) inView:navigationController.view];
             }
             [hud hide:YES];
-        } failure:^(NSURLRequest *req, NSHTTPURLResponse *res, NSError *err, id anotherJSON) {
+        } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
             [hud hide:YES];
             [[AppDelegate shared] showHudWithMessage:NSLocalizedString(@"Connection failed.", @"Connection failed.") inView:navigationController.view];
         }];
-        if ([[AppDelegate shared] useSSL]) { [trOperation setAllowsInvalidSSLCertificate:YES]; }
-        [trOperation start];
     }];
     [alert bk_setCancelButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel") handler:nil];
     [alert show];
@@ -417,9 +414,9 @@ static HYXunleiLixianAPI *__api;
 - (void)parseSessionAndAddTask:(NSString *)magnet completionHandler:(void (^__strong)(void))completionHandler errorHandler:(void (^__strong)(void))errorHandler {
     __weak typeof(self) weakself = self;
     NSDictionary *sessionParams = @{@"method" : @"session-get"};
-    SBAPIManager *manager = [self refreshedManager];
-    [manager setDefaultHeader:@"X-Transmission-Session-Id" value:weakself.sessionHeader];
-    [manager postPath:@"/transmission/rpc" parameters:sessionParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    AFHTTPSessionManager *manager = [self refreshedManagerWithAuthentication:YES];
+    [manager.requestSerializer setValue:weakself.sessionHeader forHTTPHeaderField:@"X-Transmission-Session-Id"];
+    [manager POST:[self rpcLink] parameters:sessionParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         NSString *result = [responseObject objectForKey:@"result"];
         if ([result isEqualToString:@"success"]) {
             NSDictionary *responseDict = responseObject;
@@ -429,20 +426,21 @@ static HYXunleiLixianAPI *__api;
                 [weakself downloadTask:magnet toDir:weakself.downloadPath completionHandler:completionHandler errorHandler:errorHandler];
             }
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        if ([operation.response statusCode] == 409) {
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+        NSHTTPURLResponse *response = (NSHTTPURLResponse *)task.response;
+        if ([response statusCode] == 409) {
             // GetSession
-            weakself.sessionHeader = [operation.response allHeaderFields][@"X-Transmission-Session-Id"];
-            [manager setDefaultHeader:@"X-Transmission-Session-Id" value:weakself.sessionHeader];
-            [manager postPath:@"/transmission/rpc" parameters:sessionParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            weakself.sessionHeader = [response allHeaderFields][@"X-Transmission-Session-Id"];
+            AFHTTPSessionManager *manager = [self refreshedManagerWithAuthentication:YES];
+            [manager.requestSerializer setValue:weakself.sessionHeader forHTTPHeaderField:@"X-Transmission-Session-Id"];
+            [manager POST:[self rpcLink] parameters:sessionParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
                 NSDictionary *responseDict = responseObject;
                 NSString *result = responseDict[@"result"];
                 if ([result isEqualToString:@"success"]) {
                     weakself.downloadPath = responseDict[@"arguments"][@"download-dir"];
                     [weakself downloadTask:magnet toDir:weakself.downloadPath completionHandler:completionHandler errorHandler:errorHandler];
                 }
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                // error stuff here
+            } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Unkown error.", @"Unknow error.") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
                 [alert show];
             }];
@@ -453,23 +451,39 @@ static HYXunleiLixianAPI *__api;
 - (void)downloadTask:(NSString *)magnet toDir:(NSString *)dir completionHandler:(void (^__strong)(void))completionHandler errorHandler:(void (^__strong)(void))errorHandler {
     NSDictionary *params = @{@"method" : @"torrent-add", @"arguments": @{ @"paused" : @(NO), @"download-dir" : dir, @"filename" : magnet } };
     __weak typeof(self) weakself = self;
-    SBAPIManager *manager = [self refreshedManager];
-    [manager setDefaultHeader:@"X-Transmission-Session-Id" value:weakself.sessionHeader];
-    [manager postPath:@"/transmission/rpc" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    AFHTTPSessionManager *manager = [self refreshedManager];
+    [manager.requestSerializer setValue:weakself.sessionHeader forHTTPHeaderField:@"X-Transmission-Session-Id"];
+    [manager POST:[self rpcLink] parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         NSString *result = [responseObject objectForKey:@"result"];
         if ([result isEqualToString:@"success"]) {
             completionHandler();
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
         errorHandler();
     }];
 }
 
-- (SBAPIManager *)refreshedManager {
-    NSString *link = [[AppDelegate shared] getTransmissionServerAddressWithUserNameAndPassword:NO];
-    NSArray *userNameAndPassword = [[AppDelegate shared] getUsernameAndPassword];
-    SBAPIManager *manager = [[SBAPIManager alloc] initWithBaseURL:[[NSURL alloc] initWithString:link]];
-    [manager setUsername:userNameAndPassword[0] andPassword:userNameAndPassword[1]];
+- (NSString *)rpcLink {
+    NSURL *rpcURL = [[[NSURL alloc] initWithString:[[AppDelegate shared] getTransmissionServerAddressWithUserNameAndPassword:NO]]URLByAppendingPathComponent:@"/transmission/rpc"];
+    return [rpcURL absoluteString];
+}
+
+- (AFHTTPSessionManager *)refreshedManager {
+    return [self refreshedManagerWithAuthentication:NO];
+}
+
+- (AFHTTPSessionManager *)refreshedManagerWithAuthentication:(BOOL)withAuth {
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    if (withAuth) {
+        NSArray<NSString *>* usernameAndPassword = [[AppDelegate shared] getUsernameAndPassword];
+        [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:usernameAndPassword[0] password:usernameAndPassword[1]];
+    }
+    [manager.requestSerializer setTimeoutInterval:REQUEST_TIME_OUT];
+    [manager.requestSerializer setValue:[[AppDelegate shared] customUserAgent] forHTTPHeaderField:@"User-Agent"];
+    if ([[AppDelegate shared] useSSL]) {
+        manager.securityPolicy.allowInvalidCertificates = YES;
+        manager.securityPolicy.validatesDomainName = NO;
+    }
     return manager;
 }
 

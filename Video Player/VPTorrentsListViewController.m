@@ -144,6 +144,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if ([[AppDelegate shared] showCellularHUD]) { return; }
     [self showPhotoBrowserForTableView:tableView atIndexPath:indexPath initialPhotoIndex:0];
 }
 
@@ -184,7 +185,6 @@
         photoBrowser.displayActionButton = NO;
         photoBrowser.displayNavArrows = YES;
         photoBrowser.zoomPhotosToFill = NO;
-        SDWebImageManager *manager = [SDWebImageManager sharedManager];
         NSInteger sIndex = index;
         if (sIndex > [responseObject count] - 1) sIndex = ([responseObject count] - 1);
         self.photos = responseObject; //Save for add torrent.
@@ -212,6 +212,7 @@
 #pragma mark - Action Method
 
 - (void)loadTorrentList:(id)sender {
+    if ([[AppDelegate shared] showCellularHUD]) { return; }
     __weak VPTorrentsListViewController *blockSelf = self;
     UIView *aView = self.navigationController.view;
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:aView animated:YES];

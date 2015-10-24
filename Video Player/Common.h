@@ -29,5 +29,6 @@
 #define LocalFileSize @"kLocalFileSize"
 #define DeviceFreeSpace @"kDeviceFreeSpace"
 #define RequestUseSSL @"kRequestUseSSL"
+#define RequestUseCellularNetwork @"kRequestUseCellularNetwork"
 #define CustomRequestUserAgent @"kCustomRequestUserAgent"
 #endif

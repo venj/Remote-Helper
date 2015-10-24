@@ -39,6 +39,8 @@ static HYXunleiLixianAPI *__api;
     [[MMAppSwitcher sharedInstance] setDataSource:self];
     // AFNetworking Common
     [self refreshedManager];
+    // Reachability
+    [[AFNetworkReachabilityManager sharedManager] startMonitoring];
     // File List
     self.fileListViewController = [[WebContentTableViewController alloc] initWithStyle:UITableViewStylePlain];
     self.fileListViewController.title = NSLocalizedString(@"Addresses", @"Addresses");
@@ -107,6 +109,8 @@ static HYXunleiLixianAPI *__api;
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification object:nil];
+    // Reachability
+    [[AFNetworkReachabilityManager sharedManager] stopMonitoring];
 }
 
 - (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler {
@@ -161,10 +165,23 @@ static HYXunleiLixianAPI *__api;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if ([defaults objectForKey:RequestUseSSL] == nil) {
         [defaults setBool:YES forKey:RequestUseSSL];
+        [defaults synchronize];
         return YES;
     }
     else {
         return [defaults boolForKey:RequestUseSSL];
+    }
+}
+
+- (BOOL)useCellularNetwork {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults objectForKey:RequestUseCellularNetwork] == nil) {
+        [defaults setBool:YES forKey:RequestUseCellularNetwork];
+        [defaults synchronize];
+        return YES;
+    }
+    else {
+        return [defaults boolForKey:RequestUseCellularNetwork];
     }
 }
 
@@ -380,6 +397,7 @@ static HYXunleiLixianAPI *__api;
 }
 
 - (void)showTorrentSearchAlertInNavigationController:(UINavigationController *)navigationController {
+    if ([[AppDelegate shared] showCellularHUD]) { return; }
     UIAlertView *alert = [[UIAlertView alloc] bk_initWithTitle:NSLocalizedString(@"Search", @"Search") message:NSLocalizedString(@"Please enter video serial:", @"Please enter video serial:")];
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     [alert bk_addButtonWithTitle:NSLocalizedString(@"Search", @"Search") handler:^{
@@ -484,6 +502,7 @@ static HYXunleiLixianAPI *__api;
         manager.securityPolicy.allowInvalidCertificates = YES;
         manager.securityPolicy.validatesDomainName = NO;
     }
+    manager.requestSerializer.allowsCellularAccess = [[AppDelegate shared] useCellularNetwork] ? YES : NO;
     return manager;
 }
 
@@ -495,5 +514,13 @@ static HYXunleiLixianAPI *__api;
     [hud hide:YES afterDelay:1];
 }
 
+- (BOOL)showCellularHUD {
+    // Show cellular network hud
+    if (![self useCellularNetwork] && ![[AFNetworkReachabilityManager sharedManager] isReachableViaWiFi]) {
+        [self showHudWithMessage:NSLocalizedString(@"Cellular data is turned off.", @"Cellular data is turned off.") inView:self.window];
+        return YES;
+    }
+    return NO;
+}
 
 @end

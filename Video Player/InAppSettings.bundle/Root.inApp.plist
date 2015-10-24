@@ -159,6 +159,16 @@
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
 		<dict>
+			<key>Default Value</key>
+			<true/>
+			<key>Title</key>
+			<string>Use Cellular Network</string>
+			<key>Key</key>
+			<string>kRequestUseCellularNetwork</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+		</dict>
+		<dict>
 			<key>Title</key>
 			<string>Xunlei Lixian</string>
 			<key>Type</key>

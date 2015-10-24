@@ -147,4 +147,6 @@
 - (void)parseSessionAndAddTask:(NSString *)magnet completionHandler:(void (^__strong)(void))completionHandler errorHandler:(void (^__strong)(void))errorHandler;
 - (NSString *)customUserAgent;
 - (BOOL)useSSL;
+- (BOOL)useCellularNetwork;
+- (BOOL)showCellularHUD;
 @end

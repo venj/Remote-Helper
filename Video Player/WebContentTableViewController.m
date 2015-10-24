@@ -98,6 +98,7 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
     if ([self.tableView respondsToSelector:@selector(cellLayoutMarginsFollowReadableWidth)]) {
         self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
     }
+    [[AppDelegate shared] showCellularHUD];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
@@ -148,6 +149,7 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if ([[AppDelegate shared] showCellularHUD]) { return; }
     NSString *urlString = self.addresses[indexPath.row];
     TOWebViewController *webViewController = [[TOWebViewController alloc] initWithURL:[NSURL URLWithString:urlString]];
     webViewController.showUrlWhileLoading = NO;
@@ -237,6 +239,8 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
 }
 
 - (void)showTransmission:(id)sender {
+    if ([[AppDelegate shared] showCellularHUD]) { return; }
+
     NSString *link = [[AppDelegate shared] getTransmissionServerAddress];
     TOWebViewController *transmissionWebViewController = [[TOWebViewController alloc] initWithURLString:link];
     transmissionWebViewController.urlRequest.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;

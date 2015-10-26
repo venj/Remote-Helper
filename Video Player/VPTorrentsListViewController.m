@@ -144,7 +144,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([[AppDelegate shared] showCellularHUD]) { return; }
     [self showPhotoBrowserForTableView:tableView atIndexPath:indexPath initialPhotoIndex:0];
 }
 
@@ -164,6 +163,7 @@
 }
 
 - (void)showPhotoBrowserForTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath initialPhotoIndex:(NSInteger)index {
+    if ([[AppDelegate shared] showCellularHUD]) { return; }
     [self.searchController.searchBar resignFirstResponder];
     NSArray *list;
     if (tableView == self.tableView) {

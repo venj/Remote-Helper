@@ -1,7 +1,7 @@
 Video Player
 ============
 
-一个简单的在线视频播放器，请配合[服务器端](https://github.com/venj/movie_server)一起使用。
+一个简单的远程下载客户端，请配合[服务器端](https://github.com/venj/movie_server)一起使用。
 
 把这个项目开源了，仅供玩耍。
 
@@ -9,6 +9,14 @@ Video Player
 
 新功能介绍
 ---------
+
+**1.5 (172)**
+
+- 加入蜂窝数据使用控制
+- iPhone 6S的桌面菜单（然并卵的功能）
+- iOS 9多任务支持
+- 群晖Download Station整合
+- Web内容下载链接解析
 
 **1.5 (132)**
 

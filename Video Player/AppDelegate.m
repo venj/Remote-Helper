@@ -18,6 +18,7 @@
 #import "VPTorrentsListViewController.h"
 #import <MBProgressHUD/MBProgressHUD.h>
 #import "VPSearchResultController.h"
+#import "Video_Player-Swift.h"
 #define SSL_ADD_S ([self useSSL] ? @"s" : @"")
 
 @interface AppDelegate () <UISplitViewControllerDelegate, LTHPasscodeViewControllerDelegate, MMAppSwitcherDataSource, UITabBarControllerDelegate>
@@ -432,7 +433,7 @@ static HYXunleiLixianAPI *__api;
 - (void)parseSessionAndAddTask:(NSString *)magnet completionHandler:(void (^__strong)(void))completionHandler errorHandler:(void (^__strong)(void))errorHandler {
     __weak typeof(self) weakself = self;
     NSDictionary *sessionParams = @{@"method" : @"session-get"};
-    AFHTTPSessionManager *manager = [self refreshedManagerWithAuthentication:YES];
+    AFHTTPSessionManager *manager = [self refreshedManagerWithAuthentication:YES withJSON:YES];
     [manager.requestSerializer setValue:weakself.sessionHeader forHTTPHeaderField:@"X-Transmission-Session-Id"];
     [manager POST:[self rpcLink] parameters:sessionParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         NSString *result = [responseObject objectForKey:@"result"];
@@ -449,7 +450,7 @@ static HYXunleiLixianAPI *__api;
         if ([response statusCode] == 409) {
             // GetSession
             weakself.sessionHeader = [response allHeaderFields][@"X-Transmission-Session-Id"];
-            AFHTTPSessionManager *manager = [self refreshedManagerWithAuthentication:YES];
+            AFHTTPSessionManager *manager = [self refreshedManagerWithAuthentication:YES withJSON:YES];
             [manager.requestSerializer setValue:weakself.sessionHeader forHTTPHeaderField:@"X-Transmission-Session-Id"];
             [manager POST:[self rpcLink] parameters:sessionParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
                 NSDictionary *responseDict = responseObject;
@@ -469,7 +470,7 @@ static HYXunleiLixianAPI *__api;
 - (void)downloadTask:(NSString *)magnet toDir:(NSString *)dir completionHandler:(void (^__strong)(void))completionHandler errorHandler:(void (^__strong)(void))errorHandler {
     NSDictionary *params = @{@"method" : @"torrent-add", @"arguments": @{ @"paused" : @(NO), @"download-dir" : dir, @"filename" : magnet } };
     __weak typeof(self) weakself = self;
-    AFHTTPSessionManager *manager = [self refreshedManager];
+    AFHTTPSessionManager *manager = [self refreshedManagerWithAuthentication:YES withJSON:YES];
     [manager.requestSerializer setValue:weakself.sessionHeader forHTTPHeaderField:@"X-Transmission-Session-Id"];
     [manager POST:[self rpcLink] parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         NSString *result = [responseObject objectForKey:@"result"];
@@ -491,7 +492,12 @@ static HYXunleiLixianAPI *__api;
 }
 
 - (AFHTTPSessionManager *)refreshedManagerWithAuthentication:(BOOL)withAuth {
+    return [self refreshedManagerWithAuthentication:withAuth withJSON:NO];
+}
+
+- (AFHTTPSessionManager *)refreshedManagerWithAuthentication:(BOOL)withAuth withJSON:(BOOL)withJSON {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    if (withJSON) { manager.requestSerializer = [AFJSONRequestSerializer serializer]; }
     if (withAuth) {
         NSArray<NSString *>* usernameAndPassword = [[AppDelegate shared] getUsernameAndPassword];
         [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:usernameAndPassword[0] password:usernameAndPassword[1]];

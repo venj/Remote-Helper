@@ -36,6 +36,7 @@
 		25B0AA7C1753A67300141B0E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */; };
 		25CEC8DA1B6F37410078FF40 /* ValidLinksTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25CEC8D91B6F37410078FF40 /* ValidLinksTableViewController.m */; };
 		25D90C7A1B33BF12003C5B6E /* VPSearchResultController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D90C791B33BF12003C5B6E /* VPSearchResultController.m */; };
+		25F94A621BE5E9FF009C9195 /* NSDictionary+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F94A611BE5E9FF009C9195 /* NSDictionary+JSON.swift */; };
 		94B491531CEE457B8C2AE085 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E3B0BCB77ECB434F89430D12 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -92,6 +93,8 @@
 		25CEC8D91B6F37410078FF40 /* ValidLinksTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ValidLinksTableViewController.m; sourceTree = "<group>"; };
 		25D90C781B33BF12003C5B6E /* VPSearchResultController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VPSearchResultController.h; sourceTree = "<group>"; };
 		25D90C791B33BF12003C5B6E /* VPSearchResultController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VPSearchResultController.m; sourceTree = "<group>"; };
+		25F94A601BE5E9FE009C9195 /* Video Player-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Video Player-Bridging-Header.h"; sourceTree = "<group>"; };
+		25F94A611BE5E9FF009C9195 /* NSDictionary+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDictionary+JSON.swift"; sourceTree = "<group>"; };
 		4D49BE61A10F01745516BF6D /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		E3B0BCB77ECB434F89430D12 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC7CF9F5B9F61ADECD46FF2A /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -210,6 +213,8 @@
 				25310E3D177ACA9500D4A212 /* VCFileAttributeHelper.m */,
 				25840DD61B6C448E0098A6CC /* NSString+Base64.h */,
 				25840DD71B6C448E0098A6CC /* NSString+Base64.m */,
+				25F94A611BE5E9FF009C9195 /* NSDictionary+JSON.swift */,
+				25F94A601BE5E9FE009C9195 /* Video Player-Bridging-Header.h */,
 			);
 			name = Others;
 			sourceTree = "<group>";
@@ -267,6 +272,7 @@
 		252DFA741753784400FF8199 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0710;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Home;
 				TargetAttributes = {
@@ -382,6 +388,7 @@
 				256D29101B788ED0000A324B /* md5.m in Sources */,
 				25840DD81B6C448E0098A6CC /* NSString+Base64.m in Sources */,
 				25D90C7A1B33BF12003C5B6E /* VPSearchResultController.m in Sources */,
+				25F94A621BE5E9FF009C9195 /* NSDictionary+JSON.swift in Sources */,
 				2571E73E1762C9240036C61D /* VPTorrentsListViewController.m in Sources */,
 				25310E3F177ACA9500D4A212 /* VCFileAttributeHelper.m in Sources */,
 				256D29141B788ED0000A324B /* URlEncode.m in Sources */,
@@ -485,15 +492,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Video Player/Video Player-Prefix.pch";
 				INFOPLIST_FILE = "Video Player/Video Player-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Video Player/Video Player-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -504,15 +515,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Video Player/Video Player-Prefix.pch";
 				INFOPLIST_FILE = "Video Player/Video Player-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Video Player/Video Player-Bridging-Header.h";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

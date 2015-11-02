@@ -18,6 +18,7 @@
 #import "VPTorrentsListViewController.h"
 #import <MBProgressHUD/MBProgressHUD.h>
 #import "VPSearchResultController.h"
+#import "Video_Player-Swift.h"
 #define SSL_ADD_S ([self useSSL] ? @"s" : @"")
 
 @interface AppDelegate () <UISplitViewControllerDelegate, LTHPasscodeViewControllerDelegate, MMAppSwitcherDataSource, UITabBarControllerDelegate>
@@ -37,8 +38,6 @@ static HYXunleiLixianAPI *__api;
     
     // App Swicher
     [[MMAppSwitcher sharedInstance] setDataSource:self];
-    // AFNetworking Common
-    [self refreshedManager];
     // Reachability
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
     // File List
@@ -64,7 +63,6 @@ static HYXunleiLixianAPI *__api;
     NSString *appBuildString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
     [defults setObject:[NSString stringWithFormat:@"%@(%@)", appVersionString, appBuildString] forKey:CurrentVersionKey];
     [defults synchronize];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(airplayStateChanged:) name:MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification object:nil];
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -108,7 +106,6 @@ static HYXunleiLixianAPI *__api;
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification object:nil];
     // Reachability
     [[AFNetworkReachabilityManager sharedManager] stopMonitoring];
 }
@@ -128,24 +125,6 @@ static HYXunleiLixianAPI *__api;
     return (AppDelegate *)[UIApplication sharedApplication].delegate;
 }
 
-+ (HYXunleiLixianAPI *)sharedAPI {
-    if (__api == nil) {
-        __api = [[HYXunleiLixianAPI alloc] init];
-    }
-    return __api;
-}
-
-#pragma mark - AirPlay Status Change Notification
-
-- (void)airplayStateChanged:(NSNotification *)note {
-    if ([(MPMoviePlayerController *)(note.object) isAirPlayVideoActive]) {
-        [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
-    }
-    else {
-        [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
-    }
-}
-
 #pragma mark - UISplitViewController Delegate
 - (BOOL)splitViewController:(UISplitViewController *)svc shouldHideViewController:(UIViewController *)vc inOrientation:(UIInterfaceOrientation)orientation {
     return NO;
@@ -161,239 +140,10 @@ static HYXunleiLixianAPI *__api;
 
 #pragma mark - Helper Methods
 
-- (BOOL)useSSL {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults objectForKey:RequestUseSSL] == nil) {
-        [defaults setBool:YES forKey:RequestUseSSL];
-        [defaults synchronize];
-        return YES;
-    }
-    else {
-        return [defaults boolForKey:RequestUseSSL];
-    }
-}
-
-- (BOOL)useCellularNetwork {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults objectForKey:RequestUseCellularNetwork] == nil) {
-        [defaults setBool:YES forKey:RequestUseCellularNetwork];
-        [defaults synchronize];
-        return YES;
-    }
-    else {
-        return [defaults boolForKey:RequestUseCellularNetwork];
-    }
-}
-
-- (NSString *)customUserAgent {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults objectForKey:CustomRequestUserAgent] == nil) {
-        return @"";
-    }
-    else {
-        return [defaults stringForKey:CustomRequestUserAgent];
-    }
-}
-
 - (void)showPassLock {
     if ([LTHPasscodeViewController doesPasscodeExist]) {
         [[LTHPasscodeViewController sharedUser] showLockScreenWithAnimation:YES withLogout:NO andLogoutTitle:nil];
     }
-}
-
-- (NSString *)torrentsListPath {
-    NSString *link = [[NSString alloc] initWithFormat:@"http%@://%@/torrents", SSL_ADD_S, [self baseLink]];
-    return link;
-}
-
-- (NSString *)dbSearchPathWithKeyword:(NSString *)keyword {
-    NSString *link = [[NSString alloc] initWithFormat:@"http%@://%@/db_search?keyword=%@", SSL_ADD_S, [self baseLink], [keyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    return link;
-}
-
-- (NSString *)searchPathWithKeyword:(NSString *)keyword {
-    NSString *link = [[NSString alloc] initWithFormat:@"http%@://%@/search/%@", SSL_ADD_S, [self baseLink], keyword];
-    return link;
-}
-
-- (NSString *)addTorrentWithName:(NSString *)name async:(BOOL)async {
-    NSString *link = [[NSString alloc] initWithFormat:@"http%@://%@/lx/%@", SSL_ADD_S, [self baseLink], name];
-    if (async) {
-        link = [link stringByAppendingFormat:@"/1"];
-    }
-    else {
-        link = [link stringByAppendingFormat:@"/0"];
-    }
-    return link;
-}
-
-- (NSString *)hashTorrentWithName:(NSString *)name {
-    NSString *link = [[NSString alloc] initWithFormat:@"http%@://%@/hash/%@", SSL_ADD_S, [self baseLink], name];
-    return link;
-}
-
-- (NSString *)fileLinkWithPath:(NSString *)path {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *host = [defaults objectForKey:ServerHostKey];
-    if (!host) host = @"192.168.1.1";
-    NSString *port = [defaults objectForKey:ServerPortKey];
-    if (!port) port = @"80";
-    if (!path || [path isEqualToString:@""])
-        path = @"/";
-    else if (![[path substringToIndex:1] isEqualToString:@"/"])
-        path = [[NSString alloc]  initWithFormat:@"/%@", path];
-    NSString *link = [[NSString alloc] initWithFormat:@"http%@://%@:%@%@", SSL_ADD_S, host, port, path];
-    return link;
-}
-
-- (NSString *)fileOperation:(NSString *)operation withPath:(NSString *)path fileName:(NSString *)fileName {
-    if (!path) {
-        path = @"/";
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setObject:path forKey:ServerPathKey];
-        [defaults synchronize];
-    }
-    NSString *link = [[NSString alloc] initWithFormat:@"http%@://%@%@%@/%@", SSL_ADD_S, [self baseLink], path, operation, fileName];
-    return link;
-}
-
-- (NSString *)baseLink {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *host = [defaults objectForKey:ServerHostKey];
-    if (!host) host = @"192.168.1.1";
-    NSString *port = [defaults objectForKey:ServerPortKey];
-    if (!port) port = @"80";
-    NSString *subpath = [defaults objectForKey:ServerPathKey];
-    if (!subpath || [subpath isEqualToString:@"/"]) {
-        subpath = @"";
-    }
-    else {
-        if (![[subpath substringToIndex:1] isEqualToString:@"/"])
-            subpath = [[NSString alloc] initWithFormat:@"/%@", subpath];
-        if ([[subpath substringFromIndex:(subpath.length - 1)] isEqualToString:@"/"])
-            subpath = [subpath substringToIndex:subpath.length - 1];
-    }
-    return [[NSString alloc] initWithFormat:@"%@:%@%@", host, port, subpath];
-}
-
-- (NSString *)getTransmissionServerAddress {
-    return [self getTransmissionServerAddressWithUserNameAndPassword:YES];
-}
-
-- (NSString *)getTransmissionRPCAddress {
-    NSString *server = [self getTransmissionServerAddressWithUserNameAndPassword:NO];
-    return [server stringByAppendingPathComponent:@"transmission/rpc"];
-}
-
-- (NSString *)getTransmissionServerAddressWithUserNameAndPassword:(BOOL)withUserNameAndPassword {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *address = [defaults objectForKey:TransmissionAddressKey];
-    if (address == nil) {
-        address = @"127.0.0.1:9091";
-    }
-    NSArray *userpass = [self getUsernameAndPassword];
-    if ([userpass[0] length] > 0 && [userpass[1] length] > 0 && withUserNameAndPassword) {
-        return [NSString stringWithFormat:@"http://%@:%@@%@",userpass[0], userpass[1], address];
-    }
-    else {
-        return [NSString stringWithFormat:@"http://%@", address];
-    }
-}
-
-- (NSArray<NSString *> * _Nonnull)getUsernameAndPassword {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *username = [defaults objectForKey:TransmissionUserNameKey];
-    NSString *password = [defaults objectForKey:TransmissionPasswordKey];
-    if (username && password) {
-        return @[username, password];
-    }
-    else {
-        return @[@"username", @"password"];
-    }
-}
-
-- (NSArray *)getXunleiUsernameAndPassword {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *username = [defaults objectForKey:XunleiUserNameKey];
-    NSString *password = [defaults objectForKey:XunleiPasswordKey];
-    if (username && password) {
-        return @[username, password];
-    }
-    else {
-        return @[@"username", @"password"];
-    }
-}
-
-- (BOOL)shouldSendWebRequest {
-    // Return YES for all
-    return YES;
-}
-
-- (uint64_t)freeDiskSpace {
-    uint64_t totalSpace = 0;
-    uint64_t totalFreeSpace = 0;
-    NSError *error = nil;
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSDictionary *dictionary = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error: &error];
-    
-    if (dictionary) {
-        NSNumber *fileSystemSizeInBytes = [dictionary objectForKey: NSFileSystemSize];
-        NSNumber *freeFileSystemSizeInBytes = [dictionary objectForKey:NSFileSystemFreeSize];
-        totalSpace = [fileSystemSizeInBytes unsignedLongLongValue];
-        totalFreeSpace = [freeFileSystemSizeInBytes unsignedLongLongValue];
-    }
-    
-    return totalFreeSpace;
-}
-
-- (NSString *)fileSizeStringWithInteger:(uint64_t)size {
-    NSString *sizeString;
-    if (size > 1024 * 1024 * 1024) {
-        sizeString = [NSString stringWithFormat:@"%.1f GB", size / (1024. * 1024 * 1024)];
-    }
-    else if (size > 1024 * 1024) {
-        sizeString = [NSString stringWithFormat:@"%.1f MB", size / (1024. * 1024)];
-    }
-    else if (size > 1024) {
-        sizeString = [NSString stringWithFormat:@"%.1f KB", size / 1024.];
-    }
-    else {
-        sizeString = [NSString stringWithFormat:@"%llu B", size];
-    }
-    return sizeString;
-}
-
-- (uint64_t)localFileSize {
-    uint64_t size = 0;
-    NSString *documentsDirectory = [self documentsDirectory];
-    NSDirectoryEnumerator *fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:documentsDirectory];
-    for (NSString *fileName in fileEnumerator)
-    {
-        NSString *filePath = [documentsDirectory stringByAppendingPathComponent:fileName];
-        NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
-        size += [attrs fileSize];
-    }
-    return size;
-}
-
-- (NSString *)documentsDirectory {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    return documentsDirectory;
-}
-
-- (NSString *)fileToDownloadWithPath:(NSString *)path {
-    NSString *documentsDirectory = [[AppDelegate shared] documentsDirectory];
-    NSString *fileToDownload = [documentsDirectory stringByAppendingPathComponent:[path lastPathComponent]];
-    return fileToDownload;
-}
-
-- (NSURL *)videoPlayURLWithPath:(NSString *)path {
-    NSString *localFile = [self fileToDownloadWithPath:path];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:localFile])
-        return [NSURL fileURLWithPath:localFile];
-    else
-        return [NSURL URLWithString:[[[AppDelegate shared] fileLinkWithPath:path] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 }
 
 - (void)showTorrentSearchAlertInNavigationController:(UINavigationController *)navigationController {
@@ -405,8 +155,8 @@ static HYXunleiLixianAPI *__api;
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:navigationController.view animated:YES];
         hud.mode = MBProgressHUDModeIndeterminate;
         hud.removeFromSuperViewOnHide = YES;
-        AFHTTPSessionManager *manager = [self refreshedManager];
-        [manager GET:[[AppDelegate shared] dbSearchPathWithKeyword:keyword] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        AFHTTPSessionManager *manager = [[Helper defaultHelper] refreshedManager];
+        [manager GET:[[Helper defaultHelper] dbSearchPathWithKeyword:keyword] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
             if ([responseObject[@"success"] boolValue] == true) {
                 VPSearchResultController *searchController = [[VPSearchResultController alloc] initWithStyle:UITableViewStylePlain];
                 searchController.torrents = responseObject[@"results"];
@@ -432,9 +182,9 @@ static HYXunleiLixianAPI *__api;
 - (void)parseSessionAndAddTask:(NSString *)magnet completionHandler:(void (^__strong)(void))completionHandler errorHandler:(void (^__strong)(void))errorHandler {
     __weak typeof(self) weakself = self;
     NSDictionary *sessionParams = @{@"method" : @"session-get"};
-    AFHTTPSessionManager *manager = [self refreshedManagerWithAuthentication:YES withJSON:YES];
+    AFHTTPSessionManager *manager = [[Helper defaultHelper] refreshedManagerWithAuthentication:YES withJSON:YES];
     [manager.requestSerializer setValue:weakself.sessionHeader forHTTPHeaderField:@"X-Transmission-Session-Id"];
-    [manager POST:[self rpcLink] parameters:sessionParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+    [manager POST:[[Helper defaultHelper] transmissionRPCAddress] parameters:sessionParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         NSString *result = [responseObject objectForKey:@"result"];
         if ([result isEqualToString:@"success"]) {
             NSDictionary *responseDict = responseObject;
@@ -449,9 +199,9 @@ static HYXunleiLixianAPI *__api;
         if ([response statusCode] == 409) {
             // GetSession
             weakself.sessionHeader = [response allHeaderFields][@"X-Transmission-Session-Id"];
-            AFHTTPSessionManager *manager = [self refreshedManagerWithAuthentication:YES withJSON:YES];
+            AFHTTPSessionManager *manager = [[Helper defaultHelper] refreshedManagerWithAuthentication:YES withJSON:YES];
             [manager.requestSerializer setValue:weakself.sessionHeader forHTTPHeaderField:@"X-Transmission-Session-Id"];
-            [manager POST:[self rpcLink] parameters:sessionParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+            [manager POST:[[Helper defaultHelper] transmissionRPCAddress] parameters:sessionParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
                 NSDictionary *responseDict = responseObject;
                 NSString *result = responseDict[@"result"];
                 if ([result isEqualToString:@"success"]) {
@@ -469,9 +219,9 @@ static HYXunleiLixianAPI *__api;
 - (void)downloadTask:(NSString *)magnet toDir:(NSString *)dir completionHandler:(void (^__strong)(void))completionHandler errorHandler:(void (^__strong)(void))errorHandler {
     NSDictionary *params = @{@"method" : @"torrent-add", @"arguments": @{ @"paused" : @(NO), @"download-dir" : dir, @"filename" : magnet } };
     __weak typeof(self) weakself = self;
-    AFHTTPSessionManager *manager = [self refreshedManagerWithAuthentication:YES withJSON:YES];
+    AFHTTPSessionManager *manager = [[Helper defaultHelper] refreshedManagerWithAuthentication:YES withJSON:YES];
     [manager.requestSerializer setValue:weakself.sessionHeader forHTTPHeaderField:@"X-Transmission-Session-Id"];
-    [manager POST:[self rpcLink] parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+    [manager POST:[[Helper defaultHelper] transmissionRPCAddress] parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         NSString *result = [responseObject objectForKey:@"result"];
         if ([result isEqualToString:@"success"]) {
             completionHandler();
@@ -479,36 +229,6 @@ static HYXunleiLixianAPI *__api;
     } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
         errorHandler();
     }];
-}
-
-- (NSString *)rpcLink {
-    NSURL *rpcURL = [[[NSURL alloc] initWithString:[[AppDelegate shared] getTransmissionServerAddressWithUserNameAndPassword:NO]]URLByAppendingPathComponent:@"/transmission/rpc"];
-    return [rpcURL absoluteString];
-}
-
-- (AFHTTPSessionManager *)refreshedManager {
-    return [self refreshedManagerWithAuthentication:true];
-}
-
-- (AFHTTPSessionManager *)refreshedManagerWithAuthentication:(BOOL)withAuth {
-    return [self refreshedManagerWithAuthentication:withAuth withJSON:false];
-}
-
-- (AFHTTPSessionManager *)refreshedManagerWithAuthentication:(BOOL)withAuth withJSON:(BOOL)withJSON {
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    if (withJSON) { manager.requestSerializer = [AFJSONRequestSerializer serializer]; }
-    if (withAuth) {
-        NSArray<NSString *>* usernameAndPassword = [[AppDelegate shared] getUsernameAndPassword];
-        [manager.requestSerializer setAuthorizationHeaderFieldWithUsername:usernameAndPassword[0] password:usernameAndPassword[1]];
-    }
-    [manager.requestSerializer setTimeoutInterval:REQUEST_TIME_OUT];
-    [manager.requestSerializer setValue:[[AppDelegate shared] customUserAgent] forHTTPHeaderField:@"User-Agent"];
-    if ([[AppDelegate shared] useSSL]) {
-        manager.securityPolicy.allowInvalidCertificates = YES;
-        manager.securityPolicy.validatesDomainName = NO;
-    }
-    manager.requestSerializer.allowsCellularAccess = [[AppDelegate shared] useCellularNetwork] ? YES : NO;
-    return manager;
 }
 
 - (void)showHudWithMessage:(NSString *)message inView:(UIView *)aView {
@@ -521,7 +241,7 @@ static HYXunleiLixianAPI *__api;
 
 - (BOOL)showCellularHUD {
     // Show cellular network hud
-    if (![self useCellularNetwork] && ![[AFNetworkReachabilityManager sharedManager] isReachableViaWiFi]) {
+    if (![[Helper defaultHelper] userCellularNetwork] && ![[AFNetworkReachabilityManager sharedManager] isReachableViaWiFi]) {
         [self showHudWithMessage:NSLocalizedString(@"Cellular data is turned off.", @"Cellular data is turned off.") inView:self.window];
         return YES;
     }

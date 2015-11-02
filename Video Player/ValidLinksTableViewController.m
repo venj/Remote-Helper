@@ -9,7 +9,6 @@
 #import "ValidLinksTableViewController.h"
 #import "AppDelegate.h"
 #import <MBProgressHUD/MBProgressHUD.h>
-#import "NSString+Base64.h"
 #import <iOS8Colors/UIColor+iOS8Colors.h>
 #import "HYXunleiLixianAPI.h"
 #import <BlocksKit+UIKit.h>

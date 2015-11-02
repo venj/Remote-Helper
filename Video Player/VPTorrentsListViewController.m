@@ -16,7 +16,6 @@
 #import "AppDelegate.h"
 #import "VPSearchResultController.h"
 #import "Common.h"
-#import "NSString+Base64.h"
 
 @interface VPTorrentsListViewController () <MWPhotoBrowserDelegate, UISearchDisplayDelegate, UISearchBarDelegate>
 @property (nonatomic, strong) NSArray *datesList;

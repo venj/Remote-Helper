@@ -18,7 +18,6 @@
 #import "VPTorrentsListViewController.h"
 #import <MBProgressHUD/MBProgressHUD.h>
 #import "VPSearchResultController.h"
-#import "Video_Player-Swift.h"
 #define SSL_ADD_S ([self useSSL] ? @"s" : @"")
 
 @interface AppDelegate () <UISplitViewControllerDelegate, LTHPasscodeViewControllerDelegate, MMAppSwitcherDataSource, UITabBarControllerDelegate>

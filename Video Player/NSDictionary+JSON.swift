@@ -6,9 +6,10 @@
 //  Copyright © 2015年 Home. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
-extension NSDictionary {
+@available(iOS 5.0, OSX 10.7, *)
+public extension NSDictionary {
     var JSONString: String? {
         get {
             guard let data = self.JSONData else { return nil }

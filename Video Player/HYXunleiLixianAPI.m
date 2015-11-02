@@ -30,7 +30,7 @@
 #import "XunleiItemInfo.h"
 #import "ConvertURL.h"
 #import "LCHTTPConnection.h"
-#import "NSString+GFJson.h"
+#import "Video_Player-Swift.h"
 
 typedef NS_ENUM(NSUInteger, TaskListType) {
     TLTAll,

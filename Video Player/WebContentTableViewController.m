@@ -19,7 +19,6 @@
 #import <TOWebViewController/TOWebViewController.h>
 #import "VPTorrentsListViewController.h"
 #import "Common.h"
-#import "VCFileAttributeHelper.h"
 #import "AppDelegate.h"
 #import "ValidLinksTableViewController.h"
 #import "HYXunleiLixianAPI.h"

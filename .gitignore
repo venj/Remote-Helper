@@ -1,5 +1,8 @@
 # Created by http://www.gitignore.io
 
+# ignore cocoapods
+Pods/
+
 ### Objective-C ###
 # Xcode
 #

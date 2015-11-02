@@ -13,7 +13,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <MMAppSwitcher/MMAppSwitcher.h>
 #import <LTHPasscodeViewController/LTHPasscodeViewController.h>
-#import <BlocksKit+UIKit.h>
+#import "BlocksKit+UIKit.h"
 #import <AFNetworking/AFNetworking.h>
 #import "VPTorrentsListViewController.h"
 #import <MBProgressHUD/MBProgressHUD.h>

@@ -38,7 +38,7 @@
 		25CEC8DA1B6F37410078FF40 /* ValidLinksTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25CEC8D91B6F37410078FF40 /* ValidLinksTableViewController.m */; };
 		25D90C7A1B33BF12003C5B6E /* VPSearchResultController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D90C791B33BF12003C5B6E /* VPSearchResultController.m */; };
 		25F94A621BE5E9FF009C9195 /* NSDictionary+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F94A611BE5E9FF009C9195 /* NSDictionary+JSON.swift */; };
-		94B491531CEE457B8C2AE085 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E3B0BCB77ECB434F89430D12 /* libPods.a */; };
+		DA1F6273CF78CB292CFFB0F8 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB160D8EE8E668F3F4BE545 /* Pods.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -93,8 +93,8 @@
 		25D90C791B33BF12003C5B6E /* VPSearchResultController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VPSearchResultController.m; sourceTree = "<group>"; };
 		25F94A601BE5E9FE009C9195 /* Video Player-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Video Player-Bridging-Header.h"; sourceTree = "<group>"; };
 		25F94A611BE5E9FF009C9195 /* NSDictionary+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDictionary+JSON.swift"; sourceTree = "<group>"; };
+		4BB160D8EE8E668F3F4BE545 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D49BE61A10F01745516BF6D /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		E3B0BCB77ECB434F89430D12 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC7CF9F5B9F61ADECD46FF2A /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -109,7 +109,7 @@
 				252DFA801753784400FF8199 /* UIKit.framework in Frameworks */,
 				252DFA821753784400FF8199 /* Foundation.framework in Frameworks */,
 				252DFA841753784400FF8199 /* CoreGraphics.framework in Frameworks */,
-				94B491531CEE457B8C2AE085 /* libPods.a in Frameworks */,
+				DA1F6273CF78CB292CFFB0F8 /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,7 +143,7 @@
 				252DFA7F1753784400FF8199 /* UIKit.framework */,
 				252DFA811753784400FF8199 /* Foundation.framework */,
 				252DFA831753784400FF8199 /* CoreGraphics.framework */,
-				E3B0BCB77ECB434F89430D12 /* libPods.a */,
+				4BB160D8EE8E668F3F4BE545 /* Pods.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

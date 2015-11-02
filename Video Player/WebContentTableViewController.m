@@ -9,13 +9,13 @@
 #import "WebContentTableViewController.h"
 #import <AFNetworking/AFNetworking.h>
 #import <MediaPlayer/MediaPlayer.h>
-#import <IASKAppSettingsViewController.h>
-#import <IASKSettingsReader.h>
+#import "IASKAppSettingsViewController.h"
+#import "IASKSettingsReader.h"
 #import <SDWebImage/SDImageCache.h>
 #import <LTHPasscodeViewController/LTHPasscodeViewController.h>
 #import <MWPhotoBrowser/MWPhotoBrowser.h>
 #import <MBProgressHUD/MBProgressHUD.h>
-#import <BlocksKit+UIKit.h>
+#import "BlocksKit+UIKit.h"
 #import <TOWebViewController/TOWebViewController.h>
 #import "VPTorrentsListViewController.h"
 #import "Common.h"

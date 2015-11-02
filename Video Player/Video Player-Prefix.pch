@@ -16,5 +16,4 @@
     #import <BlocksKit/BlocksKit.h>
     #import "BlocksKit+UIKit.h"
     #import <iOS8Colors/UIColor+iOS8Colors.h>
-    #import "Video_Player-Swift.h"
 #endif

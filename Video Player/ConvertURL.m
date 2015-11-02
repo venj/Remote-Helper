@@ -7,6 +7,7 @@
 //
 
 #import "ConvertURL.h"
+#import "Video_Player-Swift.h"
 
 @implementation ConvertURL
 

@@ -9,6 +9,7 @@
 #ifndef Common_h
 #define Common_h
 
+#define REQUEST_TIME_OUT 10.0
 #define ServerHostKey @"kServerHostKey"
 #define ServerPortKey @"kServerPortKey"
 #define ServerPathKey @"kServerPathKey"

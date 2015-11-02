@@ -12,6 +12,7 @@
 #import <iOS8Colors/UIColor+iOS8Colors.h>
 #import "HYXunleiLixianAPI.h"
 #import "BlocksKit+UIKit.h"
+#import "Video_Player-Swift.h"
 
 static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
 
@@ -139,8 +140,8 @@ static NSString *reuseIdentifier = @"ValidLinksTableViewCellIdentifier";
             NSString *link = weakself.validLinks[indexPath.row];
             NSString *protocal = [[link componentsSeparatedByString:@":"] firstObject];
             // Login Test
-            HYXunleiLixianAPI *tondarAPI = [AppDelegate sharedAPI];
-            NSArray *xunleiAccount = [[AppDelegate shared] getXunleiUsernameAndPassword];
+            HYXunleiLixianAPI *tondarAPI = [Helper sharedAPI];
+            NSArray *xunleiAccount = [[Helper defaultHelper] xunleiUsernameAndPassword];
             if (![AppDelegate shared].xunleiUserLoggedIn) {
                 [AppDelegate shared].xunleiUserLoggedIn = [tondarAPI loginWithUsername:xunleiAccount[0] Password:xunleiAccount[1] isPasswordEncode:NO];
                 if (![AppDelegate shared].isXunleiUserLoggedIn) {

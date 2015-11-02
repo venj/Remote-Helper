@@ -16,6 +16,7 @@
 #import "AppDelegate.h"
 #import "VPSearchResultController.h"
 #import "Common.h"
+#import "Video_Player-Swift.h"
 
 @interface VPTorrentsListViewController () <MWPhotoBrowserDelegate, UISearchDisplayDelegate, UISearchBarDelegate>
 @property (nonatomic, strong) NSArray *datesList;
@@ -175,8 +176,8 @@
     __weak VPTorrentsListViewController *blockSelf = self;
     UIView *aView = self.navigationController.view;
     [MBProgressHUD showHUDAddedTo:aView animated:YES];
-    AFHTTPSessionManager *manager = [[AppDelegate shared] refreshedManager];
-    [manager GET:[[AppDelegate shared] searchPathWithKeyword:date] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+    AFHTTPSessionManager *manager = [[Helper defaultHelper] refreshedManager];
+    [manager GET:[[Helper defaultHelper] searchPathWithKeyword:date] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         [MBProgressHUD hideHUDForView:aView animated:YES];
         if ([responseObject count] == 0) { return; }
         blockSelf.mwPhotos = [blockSelf mwPhotosArrayWithPhothsArray:responseObject];
@@ -217,8 +218,8 @@
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:aView animated:YES];
     hud.removeFromSuperViewOnHide = YES;
     self.navigationItem.rightBarButtonItem.enabled = NO;
-    AFHTTPSessionManager *manager = [[AppDelegate shared] refreshedManager];
-    [manager GET:[[AppDelegate shared] torrentsListPath] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+    AFHTTPSessionManager *manager = [[Helper defaultHelper] refreshedManager];
+    [manager GET:[[Helper defaultHelper] torrentsListPath] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         [hud hide:YES];
         blockSelf.navigationItem.rightBarButtonItem.enabled = YES;
         blockSelf.datesList = responseObject;
@@ -248,7 +249,7 @@
     NSMutableArray *mwPhotos = [NSMutableArray array];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *path = [defaults objectForKey:ServerPathKey];
-    NSString *linkBase = [[AppDelegate shared] fileLinkWithPath:path];
+    NSString *linkBase = [[Helper defaultHelper] fileLinkWithPath:path];
     for (NSString *photo in photos) {
         NSString *fileName = [photo stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         MWPhoto *p = [MWPhoto photoWithURL:[NSURL URLWithString:[linkBase stringByAppendingPathComponent:fileName]]];
@@ -266,8 +267,8 @@
     self.hashItem = [[UIBarButtonItem alloc] bk_initWithImage:[UIImage imageNamed:@"magnet"] style:UIBarButtonItemStylePlain handler:^(id sender) {
         NSString *base64FileName = [self.photos[index] base64String];
         __weak typeof(self) weakself = self;
-        AFHTTPSessionManager *manager = [[AppDelegate shared] refreshedManager];
-        [manager GET:[[AppDelegate shared] hashTorrentWithName:base64FileName] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        AFHTTPSessionManager *manager = [[Helper defaultHelper] refreshedManager];
+        [manager GET:[[Helper defaultHelper] hashTorrentWithName:base64FileName] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
             NSString *message = [NSString stringWithFormat:@"magnet:?xt=urn:btih:%@", [responseObject[@"hash"] uppercaseString]];
             UIPasteboard *pb = [UIPasteboard generalPasteboard];
             pb.string = message;

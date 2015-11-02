@@ -23,6 +23,7 @@
 
 
 #import "ParseElements.h"
+#import "Video_Player-Swift.h"
 
 @implementation ParseElements
 

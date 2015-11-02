@@ -22,6 +22,7 @@
 #import "AppDelegate.h"
 #import "ValidLinksTableViewController.h"
 #import "HYXunleiLixianAPI.h"
+#import "Video_Player-Swift.h"
 
 static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifier";
 
@@ -203,13 +204,13 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
 - (void)showSettings:(id)sender {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSInteger cacheSizeInBytes = [[SDImageCache sharedImageCache] getSize];
-    NSString *cacheSize = [[AppDelegate shared] fileSizeStringWithInteger:cacheSizeInBytes];
+    NSString *cacheSize = [[Helper defaultHelper] fileSizeStringWithInteger:cacheSizeInBytes];
     [defaults setObject:cacheSize forKey:ImageCacheSizeKey];
     NSString *status = [LTHPasscodeViewController doesPasscodeExist] ? NSLocalizedString(@"On", @"On"): NSLocalizedString(@"Off", @"Off");
     [defaults setObject:status forKey:PasscodeLockStatus];
-    NSString *localFileSize = [[AppDelegate shared] fileSizeStringWithInteger:[[AppDelegate shared] localFileSize]];
+    NSString *localFileSize = [[Helper defaultHelper] fileSizeStringWithInteger:[[Helper defaultHelper] localFileSize]];
     [defaults setObject:localFileSize forKey:LocalFileSize];
-    NSString *deviceFreeSpace = [[AppDelegate shared] fileSizeStringWithInteger:[[AppDelegate shared] freeDiskSpace]];
+    NSString *deviceFreeSpace = [[Helper defaultHelper] fileSizeStringWithInteger:[[Helper defaultHelper] freeDiskSpace]];
     [defaults setObject:deviceFreeSpace forKey:DeviceFreeSpace];
     [defaults synchronize];
     self.settingsViewController = [[IASKAppSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
@@ -240,7 +241,7 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
 - (void)showTransmission:(id)sender {
     if ([[AppDelegate shared] showCellularHUD]) { return; }
 
-    NSString *link = [[AppDelegate shared] getTransmissionServerAddress];
+    NSString *link = [[Helper defaultHelper] transmissionServerAddress];
     TOWebViewController *transmissionWebViewController = [[TOWebViewController alloc] initWithURLString:link];
     transmissionWebViewController.urlRequest.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
     transmissionWebViewController.title = @"Transmission";
@@ -334,7 +335,7 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             [[SDImageCache sharedImageCache] clearDisk]; // Clear Image Cache
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            NSString *localFileSize = [[AppDelegate shared] fileSizeStringWithInteger:[[AppDelegate shared] localFileSize]];
+            NSString *localFileSize = [[Helper defaultHelper] fileSizeStringWithInteger:[[Helper defaultHelper] localFileSize]];
             [defaults setObject:localFileSize forKey:LocalFileSize];
             [defaults synchronize];
             [sender synchronizeSettings];
@@ -350,7 +351,7 @@ static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifie
         [tondarAPI logOut];
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:sender.navigationController.view animated:YES];
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            NSArray *xunleiAccount = [[AppDelegate shared] getXunleiUsernameAndPassword];
+            NSArray *xunleiAccount = [[Helper defaultHelper] xunleiUsernameAndPassword];
             if ([tondarAPI loginWithUsername:xunleiAccount[0] Password:xunleiAccount[1] isPasswordEncode:NO]) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [hud hide:YES];

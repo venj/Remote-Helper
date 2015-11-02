@@ -487,11 +487,11 @@ static HYXunleiLixianAPI *__api;
 }
 
 - (AFHTTPSessionManager *)refreshedManager {
-    return [self refreshedManagerWithAuthentication:NO];
+    return [self refreshedManagerWithAuthentication:true];
 }
 
 - (AFHTTPSessionManager *)refreshedManagerWithAuthentication:(BOOL)withAuth {
-    return [self refreshedManagerWithAuthentication:withAuth withJSON:NO];
+    return [self refreshedManagerWithAuthentication:withAuth withJSON:false];
 }
 
 - (AFHTTPSessionManager *)refreshedManagerWithAuthentication:(BOOL)withAuth withJSON:(BOOL)withJSON {

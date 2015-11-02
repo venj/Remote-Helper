@@ -25,8 +25,6 @@
 #import "HYXunleiLixianAPI.h"
 #import "md5.h"
 #import "ParseElements.h"
-#import "NSString+RE.h"
-#import "URlEncode.h"
 #import "XunleiItemInfo.h"
 #import "ConvertURL.h"
 #import "LCHTTPConnection.h"
@@ -666,7 +664,7 @@ typedef NS_ENUM(NSUInteger, TaskListType) {
             }
             
             [commitRequest setPostValue:[self userID] forKey:@"uid"];
-            [commitRequest setPostValue:[URlEncode encodeToPercentEscapeString:btname] forKey:@"btname"];
+            [commitRequest setPostValue:btname.percentEncodedString forKey:@"btname"];
             [commitRequest setPostValue:dcid forKey:@"cid"];
             [commitRequest setPostValue:@"0" forKey:@"goldbean"];
             [commitRequest setPostValue:@"0" forKey:@"silverbean"];
@@ -750,7 +748,7 @@ typedef NS_ENUM(NSUInteger, TaskListType) {
     NSString *btname;
     NSString *findex;
     NSString *sindex;
-    NSString *enUrl=[URlEncode encodeToPercentEscapeString:url];
+    NSString *enUrl=url.percentEncodedString;
     NSString *timestamp=[self _currentTimeString];
     NSString *callURLString=[NSString stringWithFormat:@"http://dynamic.cloud.vip.xunlei.com/interface/url_query?callback=queryUrl&u=%@&random=%@",enUrl,timestamp];
     NSURL *callURL=[NSURL URLWithString:callURLString];
@@ -823,7 +821,7 @@ typedef NS_ENUM(NSUInteger, TaskListType) {
 -(NSString *) addNormalTask:(NSString *)url{
     ConvertURL *curl=[ConvertURL new];
     NSString *decodeurl=[curl urlUnmask:url];
-    NSString *enUrl=[URlEncode encodeToPercentEscapeString:decodeurl];
+    NSString *enUrl=decodeurl.percentEncodedString;
     NSString *timestamp=[self _currentTimeString];
     NSString *callURLString=[NSString stringWithFormat:@"http://dynamic.cloud.vip.xunlei.com/interface/task_check?callback=queryCid&url=%@&random=%@&tcache=%@",enUrl,timestamp,timestamp];
 //    NSURL *callURL=[NSURL URLWithString:callURLString];
@@ -912,7 +910,7 @@ typedef NS_ENUM(NSUInteger, TaskListType) {
         unknownData = newData[10];
     }
     //filename如果是中文放到URL中会有编码问题，需要转码
-    NSString *newFilename=[URlEncode encodeToPercentEscapeString:filename];
+    NSString *newFilename=filename.percentEncodedString;
     
     double UTCTime=[[NSDate date] timeIntervalSince1970];
     NSString *currentTime=[NSString stringWithFormat:@"%f",UTCTime*1000];
@@ -932,7 +930,7 @@ typedef NS_ENUM(NSUInteger, TaskListType) {
     //NSLog(@"%@",commitURL2);
     LCHTTPConnection *commitRequest2=[LCHTTPConnection new];
     [commitRequest2 get:commitString2];
-    
+
     return dcid;
 }
 

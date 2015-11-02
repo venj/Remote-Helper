@@ -8,6 +8,7 @@
 
 import Foundation
 
+@available(iOS 5.1, *)
 public class FileAttributeHelper {
     @objc
     class func haveSkipBackupAttributeForItemAtURL(url: NSURL) -> Bool {

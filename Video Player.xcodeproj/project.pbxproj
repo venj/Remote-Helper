@@ -12,6 +12,8 @@
 		2502ABDF1BE6FBEC004882FE /* NSString+Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2502ABDE1BE6FBEC004882FE /* NSString+Base64.swift */; };
 		2502ABE11BE6FE78004882FE /* NSData+Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2502ABE01BE6FE78004882FE /* NSData+Base64.swift */; };
 		2502ABE31BE70507004882FE /* FileAttributeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2502ABE21BE70507004882FE /* FileAttributeHelper.swift */; };
+		2502ABE51BE7156A004882FE /* NSString+Regex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2502ABE41BE7156A004882FE /* NSString+Regex.swift */; };
+		2502ABE71BE723A2004882FE /* NSString+URLEncode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2502ABE61BE723A1004882FE /* NSString+URLEncode.swift */; };
 		252DFA801753784400FF8199 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA7F1753784400FF8199 /* UIKit.framework */; };
 		252DFA821753784400FF8199 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA811753784400FF8199 /* Foundation.framework */; };
 		252DFA841753784400FF8199 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA831753784400FF8199 /* CoreGraphics.framework */; };
@@ -23,9 +25,7 @@
 		256D290D1B788ED0000A324B /* HYXunleiLixianAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D28FB1B788ED0000A324B /* HYXunleiLixianAPI.m */; };
 		256D290F1B788ED0000A324B /* LCHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D28FF1B788ED0000A324B /* LCHTTPConnection.m */; };
 		256D29101B788ED0000A324B /* md5.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D29011B788ED0000A324B /* md5.m */; };
-		256D29121B788ED0000A324B /* NSString+RE.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D29051B788ED0000A324B /* NSString+RE.m */; };
 		256D29131B788ED0000A324B /* ParseElements.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D29071B788ED0000A324B /* ParseElements.m */; };
-		256D29141B788ED0000A324B /* URlEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D29091B788ED0000A324B /* URlEncode.m */; };
 		256D29151B788ED0000A324B /* XunleiItemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D290B1B788ED0000A324B /* XunleiItemInfo.m */; };
 		256EA4BF177D5F830081309B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 256EA4BD177D5F830081309B /* Localizable.strings */; };
 		2571E73E1762C9240036C61D /* VPTorrentsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2571E73C1762C9240036C61D /* VPTorrentsListViewController.m */; };
@@ -47,6 +47,8 @@
 		2502ABDE1BE6FBEC004882FE /* NSString+Base64.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+Base64.swift"; sourceTree = "<group>"; };
 		2502ABE01BE6FE78004882FE /* NSData+Base64.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+Base64.swift"; sourceTree = "<group>"; };
 		2502ABE21BE70507004882FE /* FileAttributeHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileAttributeHelper.swift; sourceTree = "<group>"; };
+		2502ABE41BE7156A004882FE /* NSString+Regex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+Regex.swift"; sourceTree = "<group>"; };
+		2502ABE61BE723A1004882FE /* NSString+URLEncode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+URLEncode.swift"; sourceTree = "<group>"; };
 		252DFA7C1753784400FF8199 /* Video Player.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Video Player.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		252DFA7F1753784400FF8199 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		252DFA811753784400FF8199 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -66,12 +68,8 @@
 		256D28FF1B788ED0000A324B /* LCHTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCHTTPConnection.m; sourceTree = "<group>"; };
 		256D29001B788ED0000A324B /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md5.h; sourceTree = "<group>"; };
 		256D29011B788ED0000A324B /* md5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = md5.m; sourceTree = "<group>"; };
-		256D29041B788ED0000A324B /* NSString+RE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+RE.h"; sourceTree = "<group>"; };
-		256D29051B788ED0000A324B /* NSString+RE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+RE.m"; sourceTree = "<group>"; };
 		256D29061B788ED0000A324B /* ParseElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseElements.h; sourceTree = "<group>"; };
 		256D29071B788ED0000A324B /* ParseElements.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseElements.m; sourceTree = "<group>"; };
-		256D29081B788ED0000A324B /* URlEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = URlEncode.h; sourceTree = "<group>"; };
-		256D29091B788ED0000A324B /* URlEncode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = URlEncode.m; sourceTree = "<group>"; };
 		256D290A1B788ED0000A324B /* XunleiItemInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XunleiItemInfo.h; sourceTree = "<group>"; };
 		256D290B1B788ED0000A324B /* XunleiItemInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XunleiItemInfo.m; sourceTree = "<group>"; };
 		256EA4BC177D5ED30081309B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
@@ -198,13 +196,11 @@
 			children = (
 				256D28F81B788ED0000A324B /* ConvertURL.h */,
 				256D28F91B788ED0000A324B /* ConvertURL.m */,
-				256D29081B788ED0000A324B /* URlEncode.h */,
-				256D29091B788ED0000A324B /* URlEncode.m */,
 				256D29001B788ED0000A324B /* md5.h */,
 				256D29011B788ED0000A324B /* md5.m */,
-				256D29041B788ED0000A324B /* NSString+RE.h */,
-				256D29051B788ED0000A324B /* NSString+RE.m */,
 				2502ABE21BE70507004882FE /* FileAttributeHelper.swift */,
+				2502ABE61BE723A1004882FE /* NSString+URLEncode.swift */,
+				2502ABE41BE7156A004882FE /* NSString+Regex.swift */,
 				2502ABDE1BE6FBEC004882FE /* NSString+Base64.swift */,
 				2502ABE01BE6FE78004882FE /* NSData+Base64.swift */,
 				2502ABDC1BE6F84B004882FE /* NSString+JSON.swift */,
@@ -370,10 +366,11 @@
 			files = (
 				256D290F1B788ED0000A324B /* LCHTTPConnection.m in Sources */,
 				25CEC8DA1B6F37410078FF40 /* ValidLinksTableViewController.m in Sources */,
+				2502ABE71BE723A2004882FE /* NSString+URLEncode.swift in Sources */,
 				256D29151B788ED0000A324B /* XunleiItemInfo.m in Sources */,
 				2502ABDD1BE6F84B004882FE /* NSString+JSON.swift in Sources */,
-				256D29121B788ED0000A324B /* NSString+RE.m in Sources */,
 				252DFA8C1753784400FF8199 /* main.m in Sources */,
+				2502ABE51BE7156A004882FE /* NSString+Regex.swift in Sources */,
 				252DFA901753784400FF8199 /* AppDelegate.m in Sources */,
 				2502ABDB1BE6F761004882FE /* Helper.swift in Sources */,
 				2502ABE31BE70507004882FE /* FileAttributeHelper.swift in Sources */,
@@ -387,7 +384,6 @@
 				25F94A621BE5E9FF009C9195 /* NSDictionary+JSON.swift in Sources */,
 				2502ABDF1BE6FBEC004882FE /* NSString+Base64.swift in Sources */,
 				2571E73E1762C9240036C61D /* VPTorrentsListViewController.m in Sources */,
-				256D29141B788ED0000A324B /* URlEncode.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

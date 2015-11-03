@@ -23,9 +23,7 @@
 
 
 #import "HYXunleiLixianAPI.h"
-#import "md5.h"
 #import "ParseElements.h"
-#import "XunleiItemInfo.h"
 #import "LCHTTPConnection.h"
 #import "Video_Player-Swift.h"
 
@@ -53,7 +51,7 @@ typedef NS_ENUM(NSUInteger, TaskListType) {
         return NO;
     }
     
-    NSString *enPassword=passwordEncode ? [md5 md5HexDigestwithString:[NSString stringWithFormat:@"%@%@",aPassword,[vCode uppercaseString]]] : [self _encodePassword:aPassword withVerifyCode:vCode];
+    NSString *enPassword=passwordEncode ? [NSString stringWithFormat:@"%@%@",aPassword,[vCode uppercaseString]].md5 : [self _encodePassword:aPassword withVerifyCode:vCode];
     
     //第一步登陆，验证用户名密码
     NSURL *url = [NSURL URLWithString:LoginURL];
@@ -94,16 +92,16 @@ typedef NS_ENUM(NSUInteger, TaskListType) {
 }
 
 -(NSString *)encodePasswordTwiceMD5:(NSString *)aPassword {
-    return [md5 md5HexDigestwithString:([md5 md5HexDigestwithString:aPassword])];
+    return aPassword.md5.md5;
 }
 
 //加密密码
 -(NSString *) _encodePassword:(NSString *) aPassword withVerifyCode:(NSString *) aVerifyCode{
-    NSString *enPwd_tmp=[md5 md5HexDigestwithString:([md5 md5HexDigestwithString:aPassword])];
+    NSString *enPwd_tmp= aPassword.md5.md5;
     NSString *upperVerifyCode=[aVerifyCode uppercaseString];
     //join the two strings
     enPwd_tmp=[NSString stringWithFormat:@"%@%@",enPwd_tmp,upperVerifyCode];
-    NSString *pwd=[md5 md5HexDigestwithString:enPwd_tmp];
+    NSString *pwd=enPwd_tmp.md5;
     NSLog(@"%@",pwd);
     return pwd;
 }

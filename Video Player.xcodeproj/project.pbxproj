@@ -23,12 +23,12 @@
 		252DFA8C1753784400FF8199 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 252DFA8B1753784400FF8199 /* main.m */; };
 		252DFA901753784400FF8199 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 252DFA8F1753784400FF8199 /* AppDelegate.m */; };
 		254CBE401BE8481F0050A288 /* URLConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE3F1BE8481F0050A288 /* URLConverter.swift */; };
+		254CBE421BE857520050A288 /* NSString+MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE411BE857520050A288 /* NSString+MD5.swift */; };
+		254CBE471BE85EC20050A288 /* XunleiItemInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE461BE85EC20050A288 /* XunleiItemInfo.swift */; };
 		2561854E1B6F8D1B0073ACD3 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 256185501B6F8D1B0073ACD3 /* Launch Screen.xib */; };
 		256D290D1B788ED0000A324B /* HYXunleiLixianAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D28FB1B788ED0000A324B /* HYXunleiLixianAPI.m */; };
 		256D290F1B788ED0000A324B /* LCHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D28FF1B788ED0000A324B /* LCHTTPConnection.m */; };
-		256D29101B788ED0000A324B /* md5.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D29011B788ED0000A324B /* md5.m */; };
 		256D29131B788ED0000A324B /* ParseElements.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D29071B788ED0000A324B /* ParseElements.m */; };
-		256D29151B788ED0000A324B /* XunleiItemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D290B1B788ED0000A324B /* XunleiItemInfo.m */; };
 		256EA4BF177D5F830081309B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 256EA4BD177D5F830081309B /* Localizable.strings */; };
 		2571E73E1762C9240036C61D /* VPTorrentsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2571E73C1762C9240036C61D /* VPTorrentsListViewController.m */; };
 		2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2581D48717544A4C00EF3867 /* InAppSettings.bundle */; };
@@ -65,17 +65,15 @@
 		252DFA8E1753784400FF8199 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		252DFA8F1753784400FF8199 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		254CBE3F1BE8481F0050A288 /* URLConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLConverter.swift; sourceTree = "<group>"; };
+		254CBE411BE857520050A288 /* NSString+MD5.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+MD5.swift"; sourceTree = "<group>"; };
+		254CBE461BE85EC20050A288 /* XunleiItemInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XunleiItemInfo.swift; sourceTree = "<group>"; };
 		2561854F1B6F8D1B0073ACD3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/Launch Screen.xib"; sourceTree = "<group>"; };
 		256D28FA1B788ED0000A324B /* HYXunleiLixianAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYXunleiLixianAPI.h; sourceTree = "<group>"; };
 		256D28FB1B788ED0000A324B /* HYXunleiLixianAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYXunleiLixianAPI.m; sourceTree = "<group>"; };
 		256D28FE1B788ED0000A324B /* LCHTTPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCHTTPConnection.h; sourceTree = "<group>"; };
 		256D28FF1B788ED0000A324B /* LCHTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCHTTPConnection.m; sourceTree = "<group>"; };
-		256D29001B788ED0000A324B /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md5.h; sourceTree = "<group>"; };
-		256D29011B788ED0000A324B /* md5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = md5.m; sourceTree = "<group>"; };
 		256D29061B788ED0000A324B /* ParseElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseElements.h; sourceTree = "<group>"; };
 		256D29071B788ED0000A324B /* ParseElements.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseElements.m; sourceTree = "<group>"; };
-		256D290A1B788ED0000A324B /* XunleiItemInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XunleiItemInfo.h; sourceTree = "<group>"; };
-		256D290B1B788ED0000A324B /* XunleiItemInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XunleiItemInfo.m; sourceTree = "<group>"; };
 		256EA4BC177D5ED30081309B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		256EA4BE177D5F830081309B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		256EA4C0177D5F8E0081309B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -197,10 +195,9 @@
 		256D28F71B788B5A000A324B /* Others */ = {
 			isa = PBXGroup;
 			children = (
-				256D29001B788ED0000A324B /* md5.h */,
-				256D29011B788ED0000A324B /* md5.m */,
 				254CBE3F1BE8481F0050A288 /* URLConverter.swift */,
 				2502ABE21BE70507004882FE /* FileAttributeHelper.swift */,
+				254CBE411BE857520050A288 /* NSString+MD5.swift */,
 				2502ABE61BE723A1004882FE /* NSString+URLEncode.swift */,
 				2502ABE91BE73AB7004882FE /* NSString+Path.swift */,
 				2502ABE41BE7156A004882FE /* NSString+Regex.swift */,
@@ -223,8 +220,7 @@
 				256D28FF1B788ED0000A324B /* LCHTTPConnection.m */,
 				256D29061B788ED0000A324B /* ParseElements.h */,
 				256D29071B788ED0000A324B /* ParseElements.m */,
-				256D290A1B788ED0000A324B /* XunleiItemInfo.h */,
-				256D290B1B788ED0000A324B /* XunleiItemInfo.m */,
+				254CBE461BE85EC20050A288 /* XunleiItemInfo.swift */,
 			);
 			name = TonarAPI;
 			sourceTree = "<group>";
@@ -371,8 +367,8 @@
 				256D290F1B788ED0000A324B /* LCHTTPConnection.m in Sources */,
 				25CEC8DA1B6F37410078FF40 /* ValidLinksTableViewController.m in Sources */,
 				2502ABE71BE723A2004882FE /* NSString+URLEncode.swift in Sources */,
-				256D29151B788ED0000A324B /* XunleiItemInfo.m in Sources */,
 				2502ABDD1BE6F84B004882FE /* NSString+JSON.swift in Sources */,
+				254CBE471BE85EC20050A288 /* XunleiItemInfo.swift in Sources */,
 				252DFA8C1753784400FF8199 /* main.m in Sources */,
 				2502ABE51BE7156A004882FE /* NSString+Regex.swift in Sources */,
 				252DFA901753784400FF8199 /* AppDelegate.m in Sources */,
@@ -383,7 +379,7 @@
 				256D290D1B788ED0000A324B /* HYXunleiLixianAPI.m in Sources */,
 				256D29131B788ED0000A324B /* ParseElements.m in Sources */,
 				2502ABEC1BE748F1004882FE /* Int+FileSize.swift in Sources */,
-				256D29101B788ED0000A324B /* md5.m in Sources */,
+				254CBE421BE857520050A288 /* NSString+MD5.swift in Sources */,
 				25D90C7A1B33BF12003C5B6E /* VPSearchResultController.m in Sources */,
 				2502ABE11BE6FE78004882FE /* NSData+Base64.swift in Sources */,
 				25F94A621BE5E9FF009C9195 /* NSDictionary+JSON.swift in Sources */,

@@ -10,6 +10,16 @@ import Foundation
 
 @available(iOS 4.0, OSX 10.6, *)
 public extension NSString {
+    func matches(pattern: String, regularExpressionOptions:NSRegularExpressionOptions = [.CaseInsensitive], matchingOptions:NSMatchingOptions = []) -> Bool {
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: regularExpressionOptions) else { return false }
+        if regex.numberOfMatchesInString(self as String, options: matchingOptions, range:self.rangeOfString(self as String)) > 0 {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+
     func arrayOfCaptureComponentsMatchedByRegex(pattern: String) -> [[String]] {
         var result: [[String]] = [[]]
         guard let regex = try? NSRegularExpression(pattern: pattern, options:[.CaseInsensitive]) else { return result }

@@ -27,6 +27,7 @@
 		254CBE471BE85EC20050A288 /* XunleiItemInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE461BE85EC20050A288 /* XunleiItemInfo.swift */; };
 		254CBE491BE86CAC0050A288 /* ParseElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE481BE86CAC0050A288 /* ParseElements.swift */; };
 		254CBE4B1BE877440050A288 /* ValidLinksTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE4A1BE877440050A288 /* ValidLinksTableViewController.swift */; };
+		254CBE4D1BE890210050A288 /* VPSearchResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE4C1BE890210050A288 /* VPSearchResultController.swift */; };
 		2561854E1B6F8D1B0073ACD3 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 256185501B6F8D1B0073ACD3 /* Launch Screen.xib */; };
 		256D290D1B788ED0000A324B /* HYXunleiLixianAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D28FB1B788ED0000A324B /* HYXunleiLixianAPI.m */; };
 		256D290F1B788ED0000A324B /* LCHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D28FF1B788ED0000A324B /* LCHTTPConnection.m */; };
@@ -38,7 +39,6 @@
 		25B0AA7417537B2D00141B0E /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7317537B2D00141B0E /* MediaPlayer.framework */; };
 		25B0AA7A1753A66C00141B0E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA791753A66C00141B0E /* SystemConfiguration.framework */; };
 		25B0AA7C1753A67300141B0E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */; };
-		25D90C7A1B33BF12003C5B6E /* VPSearchResultController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D90C791B33BF12003C5B6E /* VPSearchResultController.m */; };
 		25F94A621BE5E9FF009C9195 /* NSDictionary+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F94A611BE5E9FF009C9195 /* NSDictionary+JSON.swift */; };
 		DA1F6273CF78CB292CFFB0F8 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB160D8EE8E668F3F4BE545 /* Pods.framework */; };
 /* End PBXBuildFile section */
@@ -69,6 +69,7 @@
 		254CBE461BE85EC20050A288 /* XunleiItemInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XunleiItemInfo.swift; sourceTree = "<group>"; };
 		254CBE481BE86CAC0050A288 /* ParseElements.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseElements.swift; sourceTree = "<group>"; };
 		254CBE4A1BE877440050A288 /* ValidLinksTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValidLinksTableViewController.swift; sourceTree = "<group>"; };
+		254CBE4C1BE890210050A288 /* VPSearchResultController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VPSearchResultController.swift; sourceTree = "<group>"; };
 		2561854F1B6F8D1B0073ACD3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/Launch Screen.xib"; sourceTree = "<group>"; };
 		256D28FA1B788ED0000A324B /* HYXunleiLixianAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYXunleiLixianAPI.h; sourceTree = "<group>"; };
 		256D28FB1B788ED0000A324B /* HYXunleiLixianAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYXunleiLixianAPI.m; sourceTree = "<group>"; };
@@ -86,8 +87,6 @@
 		25B0AA7317537B2D00141B0E /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		25B0AA791753A66C00141B0E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
-		25D90C781B33BF12003C5B6E /* VPSearchResultController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VPSearchResultController.h; sourceTree = "<group>"; };
-		25D90C791B33BF12003C5B6E /* VPSearchResultController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VPSearchResultController.m; sourceTree = "<group>"; };
 		25F94A601BE5E9FE009C9195 /* Video Player-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Video Player-Bridging-Header.h"; sourceTree = "<group>"; };
 		25F94A611BE5E9FF009C9195 /* NSDictionary+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDictionary+JSON.swift"; sourceTree = "<group>"; };
 		4BB160D8EE8E668F3F4BE545 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -157,8 +156,7 @@
 				25B0AA7117537A9D00141B0E /* WebContentTableViewController.m */,
 				2571E73B1762C9240036C61D /* VPTorrentsListViewController.h */,
 				2571E73C1762C9240036C61D /* VPTorrentsListViewController.m */,
-				25D90C781B33BF12003C5B6E /* VPSearchResultController.h */,
-				25D90C791B33BF12003C5B6E /* VPSearchResultController.m */,
+				254CBE4C1BE890210050A288 /* VPSearchResultController.swift */,
 				256185501B6F8D1B0073ACD3 /* Launch Screen.xib */,
 				258CD00F1A3B28B400B3EB55 /* Images.xcassets */,
 				252DFA861753784400FF8199 /* Supporting Files */,
@@ -364,6 +362,7 @@
 				2502ABE71BE723A2004882FE /* NSString+URLEncode.swift in Sources */,
 				2502ABDD1BE6F84B004882FE /* NSString+JSON.swift in Sources */,
 				254CBE471BE85EC20050A288 /* XunleiItemInfo.swift in Sources */,
+				254CBE4D1BE890210050A288 /* VPSearchResultController.swift in Sources */,
 				252DFA8C1753784400FF8199 /* main.m in Sources */,
 				2502ABE51BE7156A004882FE /* NSString+Regex.swift in Sources */,
 				252DFA901753784400FF8199 /* AppDelegate.m in Sources */,
@@ -376,7 +375,6 @@
 				254CBE4B1BE877440050A288 /* ValidLinksTableViewController.swift in Sources */,
 				254CBE421BE857520050A288 /* NSString+MD5.swift in Sources */,
 				254CBE491BE86CAC0050A288 /* ParseElements.swift in Sources */,
-				25D90C7A1B33BF12003C5B6E /* VPSearchResultController.m in Sources */,
 				2502ABE11BE6FE78004882FE /* NSData+Base64.swift in Sources */,
 				25F94A621BE5E9FF009C9195 /* NSDictionary+JSON.swift in Sources */,
 				2502ABEA1BE73AB7004882FE /* NSString+Path.swift in Sources */,

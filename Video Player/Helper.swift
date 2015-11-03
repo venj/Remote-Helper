@@ -115,8 +115,13 @@ public class Helper : NSObject {
 
     func transmissionServerAddress(withUserNameAndPassword withUnP:Bool = true) -> String {
         let defaults = NSUserDefaults.standardUserDefaults()
-        var address = defaults.stringForKey(TransmissionAddressKey)
-        if address == nil { address = "127.0.0.1:9091" }
+        var address: String
+        if let addr = defaults.stringForKey(TransmissionAddressKey) {
+            address = addr
+        }
+        else {
+            address = "127.0.0.1:9091"
+        }
         let userpass = self.usernameAndPassword
         if userpass[0].characters.count > 0 && userpass[1].characters.count > 0 && withUnP {
             return "http://\(userpass[0]):\(userpass[1])@\(address)"
@@ -135,7 +140,9 @@ public class Helper : NSObject {
     }
 
     func dbSearchPath(withKeyword keyword: String) -> String {
-        return "http\(self.SSL_ADD_S)://\(self.baseLink())/db_search?keyword=\(keyword.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet()))"
+        let kw = keyword.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet())
+        let escapedKeyword = kw == nil ? "" : kw!
+        return "http\(self.SSL_ADD_S)://\(self.baseLink())/db_search?keyword=\(escapedKeyword)"
     }
 
     func searchPath(withKeyword keyword: String) -> String {

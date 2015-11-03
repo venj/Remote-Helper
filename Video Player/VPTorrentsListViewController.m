@@ -14,7 +14,6 @@
 #import <MWPhotoBrowser/MWPhotoBrowser.h>
 #import "BlocksKit+UIKit.h"
 #import "AppDelegate.h"
-#import "VPSearchResultController.h"
 #import "Common.h"
 #import "Video_Player-Swift.h"
 

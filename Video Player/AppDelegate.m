@@ -16,7 +16,6 @@
 #import "Common.h"
 #import "BlocksKit+UIKit.h"
 #import "VPTorrentsListViewController.h"
-#import "VPSearchResultController.h"
 #import "Video_Player-Swift.h"
 
 @interface AppDelegate () <UISplitViewControllerDelegate, LTHPasscodeViewControllerDelegate, MMAppSwitcherDataSource, UITabBarControllerDelegate>
@@ -154,7 +153,8 @@ static HYXunleiLixianAPI *__api;
         hud.mode = MBProgressHUDModeIndeterminate;
         hud.removeFromSuperViewOnHide = YES;
         AFHTTPSessionManager *manager = [[Helper defaultHelper] refreshedManager];
-        [manager GET:[[Helper defaultHelper] dbSearchPathWithKeyword:keyword] parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        NSString *dbSearchPath = [[Helper defaultHelper] dbSearchPathWithKeyword:keyword];
+        [manager GET:dbSearchPath parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
             if ([responseObject[@"success"] boolValue] == true) {
                 VPSearchResultController *searchController = [[VPSearchResultController alloc] initWithStyle:UITableViewStylePlain];
                 searchController.torrents = responseObject[@"results"];
@@ -182,7 +182,8 @@ static HYXunleiLixianAPI *__api;
     NSDictionary *sessionParams = @{@"method" : @"session-get"};
     AFHTTPSessionManager *manager = [[Helper defaultHelper] refreshedManagerWithAuthentication:YES withJSON:YES];
     [manager.requestSerializer setValue:weakself.sessionHeader forHTTPHeaderField:@"X-Transmission-Session-Id"];
-    [manager POST:[[Helper defaultHelper] transmissionRPCAddress] parameters:sessionParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+    NSString *address = [[Helper defaultHelper] transmissionRPCAddress];
+    [manager POST:address parameters:sessionParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         NSString *result = [responseObject objectForKey:@"result"];
         if ([result isEqualToString:@"success"]) {
             NSDictionary *responseDict = responseObject;

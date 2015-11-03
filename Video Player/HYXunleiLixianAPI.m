@@ -26,7 +26,6 @@
 #import "md5.h"
 #import "ParseElements.h"
 #import "XunleiItemInfo.h"
-#import "ConvertURL.h"
 #import "LCHTTPConnection.h"
 #import "Video_Player-Swift.h"
 
@@ -819,8 +818,7 @@ typedef NS_ENUM(NSUInteger, TaskListType) {
 //add normal task(http,ed2k...)
 //返回dcid作为文件标示
 -(NSString *) addNormalTask:(NSString *)url{
-    ConvertURL *curl=[ConvertURL new];
-    NSString *decodeurl=[curl urlUnmask:url];
+    NSString *decodeurl= [URLConverter decode:url error:nil];
     NSString *enUrl=decodeurl.percentEncodedString;
     NSString *timestamp=[self _currentTimeString];
     NSString *callURLString=[NSString stringWithFormat:@"http://dynamic.cloud.vip.xunlei.com/interface/task_check?callback=queryCid&url=%@&random=%@&tcache=%@",enUrl,timestamp,timestamp];

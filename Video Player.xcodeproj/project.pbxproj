@@ -22,8 +22,8 @@
 		252DFA8A1753784400FF8199 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 252DFA881753784400FF8199 /* InfoPlist.strings */; };
 		252DFA8C1753784400FF8199 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 252DFA8B1753784400FF8199 /* main.m */; };
 		252DFA901753784400FF8199 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 252DFA8F1753784400FF8199 /* AppDelegate.m */; };
+		254CBE401BE8481F0050A288 /* URLConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE3F1BE8481F0050A288 /* URLConverter.swift */; };
 		2561854E1B6F8D1B0073ACD3 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 256185501B6F8D1B0073ACD3 /* Launch Screen.xib */; };
-		256D290C1B788ED0000A324B /* ConvertURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D28F91B788ED0000A324B /* ConvertURL.m */; };
 		256D290D1B788ED0000A324B /* HYXunleiLixianAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D28FB1B788ED0000A324B /* HYXunleiLixianAPI.m */; };
 		256D290F1B788ED0000A324B /* LCHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D28FF1B788ED0000A324B /* LCHTTPConnection.m */; };
 		256D29101B788ED0000A324B /* md5.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D29011B788ED0000A324B /* md5.m */; };
@@ -64,9 +64,8 @@
 		252DFA8D1753784400FF8199 /* Video Player-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Video Player-Prefix.pch"; sourceTree = "<group>"; };
 		252DFA8E1753784400FF8199 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		252DFA8F1753784400FF8199 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		254CBE3F1BE8481F0050A288 /* URLConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLConverter.swift; sourceTree = "<group>"; };
 		2561854F1B6F8D1B0073ACD3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/Launch Screen.xib"; sourceTree = "<group>"; };
-		256D28F81B788ED0000A324B /* ConvertURL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConvertURL.h; sourceTree = "<group>"; };
-		256D28F91B788ED0000A324B /* ConvertURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConvertURL.m; sourceTree = "<group>"; };
 		256D28FA1B788ED0000A324B /* HYXunleiLixianAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYXunleiLixianAPI.h; sourceTree = "<group>"; };
 		256D28FB1B788ED0000A324B /* HYXunleiLixianAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYXunleiLixianAPI.m; sourceTree = "<group>"; };
 		256D28FE1B788ED0000A324B /* LCHTTPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCHTTPConnection.h; sourceTree = "<group>"; };
@@ -198,10 +197,9 @@
 		256D28F71B788B5A000A324B /* Others */ = {
 			isa = PBXGroup;
 			children = (
-				256D28F81B788ED0000A324B /* ConvertURL.h */,
-				256D28F91B788ED0000A324B /* ConvertURL.m */,
 				256D29001B788ED0000A324B /* md5.h */,
 				256D29011B788ED0000A324B /* md5.m */,
+				254CBE3F1BE8481F0050A288 /* URLConverter.swift */,
 				2502ABE21BE70507004882FE /* FileAttributeHelper.swift */,
 				2502ABE61BE723A1004882FE /* NSString+URLEncode.swift */,
 				2502ABE91BE73AB7004882FE /* NSString+Path.swift */,
@@ -381,7 +379,7 @@
 				2502ABDB1BE6F761004882FE /* Helper.swift in Sources */,
 				2502ABE31BE70507004882FE /* FileAttributeHelper.swift in Sources */,
 				25B0AA7217537A9D00141B0E /* WebContentTableViewController.m in Sources */,
-				256D290C1B788ED0000A324B /* ConvertURL.m in Sources */,
+				254CBE401BE8481F0050A288 /* URLConverter.swift in Sources */,
 				256D290D1B788ED0000A324B /* HYXunleiLixianAPI.m in Sources */,
 				256D29131B788ED0000A324B /* ParseElements.m in Sources */,
 				2502ABEC1BE748F1004882FE /* Int+FileSize.swift in Sources */,

@@ -25,7 +25,7 @@ public extension NSString {
         return result
     }
     
-    func captureComponentsMatchedByRegex(pattern: String, capture captureIndex: Int = 0) -> [String] {
+    func captureComponentsMatchedByRegex(pattern: String, capture captureIndex: Int = 1) -> [String] {
         let matches = self.arrayOfCaptureComponentsMatchedByRegex(pattern)
         var result: [String] = []
         for match in matches {
@@ -35,7 +35,7 @@ public extension NSString {
         return result
     }
 
-    func stringByMatching(pattern: String, capture captureIndex: Int = 0) -> String? {
+    func stringByMatching(pattern: String, capture captureIndex: Int = 1) -> String? {
         let matches = self.arrayOfCaptureComponentsMatchedByRegex(pattern)
         var result: String? = nil
         for match in matches {

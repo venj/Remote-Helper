@@ -6,17 +6,16 @@
 //  Copyright (c) 2013年 Home. All rights reserved.
 //
 
+@import SDWebImage;
+@import MMAppSwitcher;
+@import LTHPasscodeViewController;
+@import AFNetworking;
+@import MBProgressHUD;
 #import "AppDelegate.h"
 #import "WebContentTableViewController.h"
 #import "Common.h"
-#import <SDWebImage/SDImageCache.h>
-#import <MediaPlayer/MediaPlayer.h>
-#import <MMAppSwitcher/MMAppSwitcher.h>
-#import <LTHPasscodeViewController/LTHPasscodeViewController.h>
 #import "BlocksKit+UIKit.h"
-#import <AFNetworking/AFNetworking.h>
 #import "VPTorrentsListViewController.h"
-#import <MBProgressHUD/MBProgressHUD.h>
 #import "VPSearchResultController.h"
 #import "Video_Player-Swift.h"
 

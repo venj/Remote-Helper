@@ -9,9 +9,9 @@
 @import MBProgressHUD;
 @import SDWebImage;
 @import TOWebViewController;
+@import AFNetworking;
 #import "VPTorrentsListViewController.h"
 #import <MWPhotoBrowser/MWPhotoBrowser.h>
-#import <AFNetworking/AFNetworking.h>
 #import "BlocksKit+UIKit.h"
 #import "AppDelegate.h"
 #import "VPSearchResultController.h"

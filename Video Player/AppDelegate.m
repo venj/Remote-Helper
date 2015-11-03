@@ -15,7 +15,6 @@
 #import "WebContentTableViewController.h"
 #import "Common.h"
 #import "BlocksKit+UIKit.h"
-#import "VPTorrentsListViewController.h"
 #import "Video_Player-Swift.h"
 
 @interface AppDelegate () <UISplitViewControllerDelegate, LTHPasscodeViewControllerDelegate, MMAppSwitcherDataSource, UITabBarControllerDelegate>

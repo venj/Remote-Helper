@@ -16,6 +16,7 @@
 		2502ABE71BE723A2004882FE /* NSString+URLEncode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2502ABE61BE723A1004882FE /* NSString+URLEncode.swift */; };
 		2502ABEA1BE73AB7004882FE /* NSString+Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2502ABE91BE73AB7004882FE /* NSString+Path.swift */; };
 		2502ABEC1BE748F1004882FE /* Int+FileSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2502ABEB1BE748F1004882FE /* Int+FileSize.swift */; };
+		250354CF1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354CE1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift */; };
 		252DFA801753784400FF8199 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA7F1753784400FF8199 /* UIKit.framework */; };
 		252DFA821753784400FF8199 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA811753784400FF8199 /* Foundation.framework */; };
 		252DFA841753784400FF8199 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA831753784400FF8199 /* CoreGraphics.framework */; };
@@ -32,7 +33,6 @@
 		256D290D1B788ED0000A324B /* HYXunleiLixianAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D28FB1B788ED0000A324B /* HYXunleiLixianAPI.m */; };
 		256D290F1B788ED0000A324B /* LCHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D28FF1B788ED0000A324B /* LCHTTPConnection.m */; };
 		256EA4BF177D5F830081309B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 256EA4BD177D5F830081309B /* Localizable.strings */; };
-		2571E73E1762C9240036C61D /* VPTorrentsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2571E73C1762C9240036C61D /* VPTorrentsListViewController.m */; };
 		2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2581D48717544A4C00EF3867 /* InAppSettings.bundle */; };
 		258CD0101A3B28B400B3EB55 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 258CD00F1A3B28B400B3EB55 /* Images.xcassets */; };
 		25B0AA7217537A9D00141B0E /* WebContentTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B0AA7117537A9D00141B0E /* WebContentTableViewController.m */; };
@@ -54,6 +54,7 @@
 		2502ABE81BE733C3004882FE /* Common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
 		2502ABE91BE73AB7004882FE /* NSString+Path.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+Path.swift"; sourceTree = "<group>"; };
 		2502ABEB1BE748F1004882FE /* Int+FileSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Int+FileSize.swift"; sourceTree = "<group>"; };
+		250354CE1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VPTorrentsListViewController.swift; sourceTree = "<group>"; };
 		252DFA7C1753784400FF8199 /* Video Player.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Video Player.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		252DFA7F1753784400FF8199 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		252DFA811753784400FF8199 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -78,8 +79,6 @@
 		256EA4BC177D5ED30081309B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		256EA4BE177D5F830081309B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		256EA4C0177D5F8E0081309B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		2571E73B1762C9240036C61D /* VPTorrentsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = VPTorrentsListViewController.h; sourceTree = "<group>"; };
-		2571E73C1762C9240036C61D /* VPTorrentsListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VPTorrentsListViewController.m; sourceTree = "<group>"; };
 		2581D48717544A4C00EF3867 /* InAppSettings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InAppSettings.bundle; sourceTree = "<group>"; };
 		258CD00F1A3B28B400B3EB55 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		25B0AA7017537A9D00141B0E /* WebContentTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebContentTableViewController.h; sourceTree = "<group>"; };
@@ -154,8 +153,7 @@
 				254CBE4A1BE877440050A288 /* ValidLinksTableViewController.swift */,
 				25B0AA7017537A9D00141B0E /* WebContentTableViewController.h */,
 				25B0AA7117537A9D00141B0E /* WebContentTableViewController.m */,
-				2571E73B1762C9240036C61D /* VPTorrentsListViewController.h */,
-				2571E73C1762C9240036C61D /* VPTorrentsListViewController.m */,
+				250354CE1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift */,
 				254CBE4C1BE890210050A288 /* VPSearchResultController.swift */,
 				256185501B6F8D1B0073ACD3 /* Launch Screen.xib */,
 				258CD00F1A3B28B400B3EB55 /* Images.xcassets */,
@@ -375,11 +373,11 @@
 				254CBE4B1BE877440050A288 /* ValidLinksTableViewController.swift in Sources */,
 				254CBE421BE857520050A288 /* NSString+MD5.swift in Sources */,
 				254CBE491BE86CAC0050A288 /* ParseElements.swift in Sources */,
+				250354CF1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift in Sources */,
 				2502ABE11BE6FE78004882FE /* NSData+Base64.swift in Sources */,
 				25F94A621BE5E9FF009C9195 /* NSDictionary+JSON.swift in Sources */,
 				2502ABEA1BE73AB7004882FE /* NSString+Path.swift in Sources */,
 				2502ABDF1BE6FBEC004882FE /* NSString+Base64.swift in Sources */,
-				2571E73E1762C9240036C61D /* VPTorrentsListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

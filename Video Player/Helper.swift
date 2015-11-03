@@ -97,7 +97,7 @@ public class Helper : NSObject {
         return "\(host!):\(port!)\(subPath!)"
     }
 
-    func fileLink(withPath path:String) -> String {
+    func fileLink(withPath path:String!) -> String {
         let defaults = NSUserDefaults.standardUserDefaults()
         var host = defaults.stringForKey(ServerHostKey)
         if host == nil { host = "192.168.1.1" }
@@ -183,11 +183,13 @@ public class Helper : NSObject {
         return self.documentsDirectory().vc_stringByAppendingPathComponent(path.vc_lastPathComponent())
     }
 
-    func refreshedManager() -> AFHTTPSessionManager {
+    @objc(refreshedManager)
+    func _refreshedManager() -> AFHTTPSessionManager {
         return self.refreshedManager(withAuthentication: true, withJSON: false)
     }
 
-    func refreshedManager(withAuthentication auth: Bool = true) -> AFHTTPSessionManager {
+    @objc(refreshedManagerWithAuthentication:)
+    func _refreshedManager(withAuthentication auth: Bool = true) -> AFHTTPSessionManager {
         return self.refreshedManager(withAuthentication: auth, withJSON: false)
     }
 

@@ -16,7 +16,6 @@
 #import "IASKAppSettingsViewController.h"
 #import "IASKSettingsReader.h"
 #import "BlocksKit+UIKit.h"
-#import "VPTorrentsListViewController.h"
 #import "Common.h"
 #import "AppDelegate.h"
 #import "HYXunleiLixianAPI.h"

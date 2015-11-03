@@ -23,7 +23,6 @@
 
 
 #import "HYXunleiLixianAPI.h"
-#import "ParseElements.h"
 #import "LCHTTPConnection.h"
 #import "Video_Player-Swift.h"
 
@@ -589,7 +588,7 @@ typedef NS_ENUM(NSUInteger, TaskListType) {
             XunleiItemInfo *info=[XunleiItemInfo new];
             NSString *taskContent=[tmp objectAtIndex:0];
             
-            NSMutableDictionary *taskInfoDic=[ParseElements taskInfo:taskContent];
+            NSMutableDictionary *taskInfoDic=[[ParseElements taskInfo:taskContent] mutableCopy];
             NSString* taskLoadingProcess=[ParseElements taskLoadProcess:taskContent];
             NSString* taskRetainDays=[ParseElements taskRetainDays:taskContent];
             NSString* taskAddTime=[ParseElements taskAddTime:taskContent];

@@ -6,28 +6,25 @@
 //  Copyright (c) 2013年 Home. All rights reserved.
 //
 
+@import AFNetworking;
+@import SDWebImage;
+@import LTHPasscodeViewController;
+@import MBProgressHUD;
+@import TOWebViewController;
+#import <MWPhotoBrowser/MWPhotoBrowser.h>
 #import "WebContentTableViewController.h"
-#import <AFNetworking/AFNetworking.h>
-#import <MediaPlayer/MediaPlayer.h>
 #import "IASKAppSettingsViewController.h"
 #import "IASKSettingsReader.h"
-#import <SDWebImage/SDImageCache.h>
-#import <LTHPasscodeViewController/LTHPasscodeViewController.h>
-#import <MWPhotoBrowser/MWPhotoBrowser.h>
-#import <MBProgressHUD/MBProgressHUD.h>
 #import "BlocksKit+UIKit.h"
-#import <TOWebViewController/TOWebViewController.h>
 #import "VPTorrentsListViewController.h"
 #import "Common.h"
 #import "AppDelegate.h"
-#import "ValidLinksTableViewController.h"
 #import "HYXunleiLixianAPI.h"
 #import "Video_Player-Swift.h"
 
 static NSString *reuseIdentifier = @"WebContentTableViewControllerReuseIdentifier";
 
 @interface WebContentTableViewController () <IASKSettingsDelegate, MWPhotoBrowserDelegate>
-@property (nonatomic, strong) MPMoviePlayerViewController *mpViewController;
 @property (nonatomic, strong) IASKAppSettingsViewController *settingsViewController;
 @property (nonatomic, strong) UIActionSheet *sheet;
 @property (nonatomic, strong) NSArray *mwPhotos;

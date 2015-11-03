@@ -231,6 +231,7 @@ static HYXunleiLixianAPI *__api;
 }
 
 - (void)showHudWithMessage:(NSString *)message inView:(UIView *)aView {
+    if (aView == nil) { aView = self.window; }
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:aView animated:YES];
     hud.mode = MBProgressHUDModeText;
     hud.removeFromSuperViewOnHide = YES;

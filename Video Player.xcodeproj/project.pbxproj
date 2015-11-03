@@ -26,6 +26,7 @@
 		254CBE421BE857520050A288 /* NSString+MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE411BE857520050A288 /* NSString+MD5.swift */; };
 		254CBE471BE85EC20050A288 /* XunleiItemInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE461BE85EC20050A288 /* XunleiItemInfo.swift */; };
 		254CBE491BE86CAC0050A288 /* ParseElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE481BE86CAC0050A288 /* ParseElements.swift */; };
+		254CBE4B1BE877440050A288 /* ValidLinksTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE4A1BE877440050A288 /* ValidLinksTableViewController.swift */; };
 		2561854E1B6F8D1B0073ACD3 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 256185501B6F8D1B0073ACD3 /* Launch Screen.xib */; };
 		256D290D1B788ED0000A324B /* HYXunleiLixianAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D28FB1B788ED0000A324B /* HYXunleiLixianAPI.m */; };
 		256D290F1B788ED0000A324B /* LCHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 256D28FF1B788ED0000A324B /* LCHTTPConnection.m */; };
@@ -37,7 +38,6 @@
 		25B0AA7417537B2D00141B0E /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7317537B2D00141B0E /* MediaPlayer.framework */; };
 		25B0AA7A1753A66C00141B0E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA791753A66C00141B0E /* SystemConfiguration.framework */; };
 		25B0AA7C1753A67300141B0E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */; };
-		25CEC8DA1B6F37410078FF40 /* ValidLinksTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25CEC8D91B6F37410078FF40 /* ValidLinksTableViewController.m */; };
 		25D90C7A1B33BF12003C5B6E /* VPSearchResultController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D90C791B33BF12003C5B6E /* VPSearchResultController.m */; };
 		25F94A621BE5E9FF009C9195 /* NSDictionary+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F94A611BE5E9FF009C9195 /* NSDictionary+JSON.swift */; };
 		DA1F6273CF78CB292CFFB0F8 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB160D8EE8E668F3F4BE545 /* Pods.framework */; };
@@ -68,6 +68,7 @@
 		254CBE411BE857520050A288 /* NSString+MD5.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+MD5.swift"; sourceTree = "<group>"; };
 		254CBE461BE85EC20050A288 /* XunleiItemInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XunleiItemInfo.swift; sourceTree = "<group>"; };
 		254CBE481BE86CAC0050A288 /* ParseElements.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseElements.swift; sourceTree = "<group>"; };
+		254CBE4A1BE877440050A288 /* ValidLinksTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValidLinksTableViewController.swift; sourceTree = "<group>"; };
 		2561854F1B6F8D1B0073ACD3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/Launch Screen.xib"; sourceTree = "<group>"; };
 		256D28FA1B788ED0000A324B /* HYXunleiLixianAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYXunleiLixianAPI.h; sourceTree = "<group>"; };
 		256D28FB1B788ED0000A324B /* HYXunleiLixianAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYXunleiLixianAPI.m; sourceTree = "<group>"; };
@@ -85,8 +86,6 @@
 		25B0AA7317537B2D00141B0E /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		25B0AA791753A66C00141B0E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
-		25CEC8D81B6F37410078FF40 /* ValidLinksTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ValidLinksTableViewController.h; sourceTree = "<group>"; };
-		25CEC8D91B6F37410078FF40 /* ValidLinksTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ValidLinksTableViewController.m; sourceTree = "<group>"; };
 		25D90C781B33BF12003C5B6E /* VPSearchResultController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VPSearchResultController.h; sourceTree = "<group>"; };
 		25D90C791B33BF12003C5B6E /* VPSearchResultController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VPSearchResultController.m; sourceTree = "<group>"; };
 		25F94A601BE5E9FE009C9195 /* Video Player-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Video Player-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -153,10 +152,9 @@
 				252DFA8E1753784400FF8199 /* AppDelegate.h */,
 				252DFA8F1753784400FF8199 /* AppDelegate.m */,
 				2502ABDA1BE6F761004882FE /* Helper.swift */,
+				254CBE4A1BE877440050A288 /* ValidLinksTableViewController.swift */,
 				25B0AA7017537A9D00141B0E /* WebContentTableViewController.h */,
 				25B0AA7117537A9D00141B0E /* WebContentTableViewController.m */,
-				25CEC8D81B6F37410078FF40 /* ValidLinksTableViewController.h */,
-				25CEC8D91B6F37410078FF40 /* ValidLinksTableViewController.m */,
 				2571E73B1762C9240036C61D /* VPTorrentsListViewController.h */,
 				2571E73C1762C9240036C61D /* VPTorrentsListViewController.m */,
 				25D90C781B33BF12003C5B6E /* VPSearchResultController.h */,
@@ -172,6 +170,7 @@
 			isa = PBXGroup;
 			children = (
 				2502ABE81BE733C3004882FE /* Common.h */,
+				25F94A601BE5E9FE009C9195 /* Video Player-Bridging-Header.h */,
 				252DFA871753784400FF8199 /* Video Player-Info.plist */,
 				256EA4BD177D5F830081309B /* Localizable.strings */,
 				252DFA881753784400FF8199 /* InfoPlist.strings */,
@@ -205,7 +204,6 @@
 				2502ABDC1BE6F84B004882FE /* NSString+JSON.swift */,
 				25F94A611BE5E9FF009C9195 /* NSDictionary+JSON.swift */,
 				2502ABEB1BE748F1004882FE /* Int+FileSize.swift */,
-				25F94A601BE5E9FE009C9195 /* Video Player-Bridging-Header.h */,
 			);
 			name = Others;
 			sourceTree = "<group>";
@@ -363,7 +361,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				256D290F1B788ED0000A324B /* LCHTTPConnection.m in Sources */,
-				25CEC8DA1B6F37410078FF40 /* ValidLinksTableViewController.m in Sources */,
 				2502ABE71BE723A2004882FE /* NSString+URLEncode.swift in Sources */,
 				2502ABDD1BE6F84B004882FE /* NSString+JSON.swift in Sources */,
 				254CBE471BE85EC20050A288 /* XunleiItemInfo.swift in Sources */,
@@ -376,6 +373,7 @@
 				254CBE401BE8481F0050A288 /* URLConverter.swift in Sources */,
 				256D290D1B788ED0000A324B /* HYXunleiLixianAPI.m in Sources */,
 				2502ABEC1BE748F1004882FE /* Int+FileSize.swift in Sources */,
+				254CBE4B1BE877440050A288 /* ValidLinksTableViewController.swift in Sources */,
 				254CBE421BE857520050A288 /* NSString+MD5.swift in Sources */,
 				254CBE491BE86CAC0050A288 /* ParseElements.swift in Sources */,
 				25D90C7A1B33BF12003C5B6E /* VPSearchResultController.m in Sources */,

@@ -6,13 +6,13 @@
 //  Copyright (c) 2013年 Home. All rights reserved.
 //
 
+@import MBProgressHUD;
+@import SDWebImage;
+@import TOWebViewController;
 #import "VPTorrentsListViewController.h"
 #import <MWPhotoBrowser/MWPhotoBrowser.h>
 #import <AFNetworking/AFNetworking.h>
-#import <MBProgressHUD/MBProgressHUD.h>
 #import "BlocksKit+UIKit.h"
-#import <TOWebViewController/TOWebViewController.h>
-#import <SDWebImage/SDWebImageManager.h>
 #import "AppDelegate.h"
 #import "VPSearchResultController.h"
 #import "Common.h"

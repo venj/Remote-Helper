@@ -131,7 +131,8 @@ public class Helper : NSObject {
         }
     }
 
-    func transmissionServerAddress() -> String {
+    @objc(transmissionServerAddress)
+    func _transmissionServerAddress() -> String {
         return self.transmissionServerAddress(withUserNameAndPassword: true)
     }
 

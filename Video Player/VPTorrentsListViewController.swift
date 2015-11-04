@@ -31,21 +31,22 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             for photo in photos {
                 guard let url = NSURL(string: linkBase) else { break }
                 let fullURL = url.URLByAppendingPathComponent(photo)
-                print(fullURL)
                 let p = MWPhoto(URL: fullURL)
+                p.caption = photo.componentsSeparatedByString("/").last
                 mwPhotos.append(p)
             }
         }
     }
-    
+
+    var currentPhotoIndex: Int = 0
     var filteredDatesList: [String]!
     var searchController: UISearchDisplayController!
     var cloudItem: UIBarButtonItem!
-    var hashItem: UIBarButtonItem!
+    lazy var hashItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(image: UIImage(named:"magnet"), style: .Plain, target: self, action: "hashTorrent")
+        return item
+    }()
     lazy var searchItem: UIBarButtonItem = {
-        func showSearch() {
-            AppDelegate.shared().showTorrentSearchAlertInNavigationController(self.navigationController)
-        }
         let item = UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: "showSearch")
         return item
     }()
@@ -159,7 +160,34 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }
 
     func photoBrowser(photoBrowser: MWPhotoBrowser!, didDisplayPhotoAtIndex index: UInt) {
-        photoBrowser.navigationItem.rightBarButtonItems  = [searchItem, self.hashItem(withIndex:Int(index))]
+        currentPhotoIndex = Int(index)
+        photoBrowser.navigationItem.rightBarButtonItems  = [searchItem, hashItem]
+    }
+
+    //MARK: - Action
+    func showSearch() {
+        AppDelegate.shared().showTorrentSearchAlertInNavigationController(self.navigationController)
+    }
+
+    func hashTorrent() {
+        guard let base64FileName = photos[currentPhotoIndex].base64String() else { return }
+        let manager = Helper.defaultHelper.refreshedManager()
+        let hud = MBProgressHUD.showHUDAddedTo(navigationController?.view, animated: true)
+        manager.GET(Helper.defaultHelper.hashTorrent(withName: base64FileName as String), parameters:nil, success: { [unowned self] (_, responseObject) in
+            guard let hash = responseObject["hash"] as? String else { return }
+            let message = "magnet:?xt=urn:btih:\(hash.uppercaseString)"
+            UIPasteboard.generalPasteboard().string = message
+            AppDelegate.shared().parseSessionAndAddTask(message, completionHandler: { [unowned self] in
+                hud.hide(true)
+                AppDelegate.shared().showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."), inView: self.navigationController?.view)
+            }, errorHandler: { [unowned self] in
+                hud.hide(true)
+                AppDelegate.shared().showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."), inView: self.navigationController?.view)
+            })
+        }, failure: { [unowned self] (_, _) in
+            hud.hide(true)
+            AppDelegate.shared().showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."), inView: self.navigationController?.view)
+        })
     }
 
     //MARK: - Helper
@@ -209,25 +237,4 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             AppDelegate.shared().showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed.") , inView: self.navigationController?.view)
         })
     }
-
-    func hashItem(withIndex index:Int) -> UIBarButtonItem {
-        func hash() {
-            guard let base64FileName = photos[index].base64String() else { return }
-            let manager = Helper.defaultHelper.refreshedManager()
-            manager.GET(Helper.defaultHelper.hashTorrent(withName: base64FileName as String), parameters: nil, success: { [unowned self] (_, responseObject) in
-                guard let hash = responseObject["hash"] as? String else { return }
-                let message = "magnet:?xt=urn:btih:\(hash.uppercaseString)"
-                UIPasteboard.generalPasteboard().string = message
-                AppDelegate.shared().parseSessionAndAddTask(message, completionHandler: { [unowned self] in
-                    AppDelegate.shared().showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."), inView: self.navigationController?.view)
-                }, errorHandler: { [unowned self] in
-                    AppDelegate.shared().showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."), inView: self.navigationController?.view)
-                })
-            }, failure: { [unowned self] (_, _) in
-                AppDelegate.shared().showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."), inView: self.navigationController?.view)
-            })
-        }
-        return UIBarButtonItem(image: UIImage(named:"magnet"), style: .Plain, target: self, action: "hash")
-    }
-
 }

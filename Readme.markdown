@@ -3,6 +3,8 @@
 
 **最近我正在将此项目的各部分逐渐改为用Swift实现。所以每天都会有大量的代码变化，敬请注意。**
 
+**项目的Swift化会带来引入退行bug！**
+
 一个简单的远程下载客户端，请配合[服务器端](https://github.com/venj/movie_server)一起使用。
 
 * 切换为AFNetworking 3.0.0之后，SDWebImage突然开始不认自定义SSL证书了。暂时在MWPhoto中加了`SDWebImageAllowInvalidSSLCertificates`选项，绕过证书检查。不知道是否有办法全局绕过SSL证书检查。*

@@ -23,13 +23,6 @@ class VPSearchResultController: UITableViewController {
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "wiki"), style: .Plain, target: self, action: "showWiki")
         }
 
-        func showWiki() {
-            let webViewController = TOWebViewController(URLString: "http://www.javlib3.com/cn/vl_searchbyid.php?keyword=\(keyword)")
-            webViewController.showUrlWhileLoading = false
-            webViewController.hidesBottomBarWhenPushed = true
-            self.navigationController?.pushViewController(webViewController, animated: true)
-        }
-
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
             tableView.cellLayoutMarginsFollowReadableWidth = false
@@ -99,6 +92,14 @@ class VPSearchResultController: UITableViewController {
         let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .Cancel, handler: nil)
         alertController.addAction(cancelAction)
         presentViewController(alertController, animated: true, completion: nil)
+    }
+
+    //MARK: - Action
+    func showWiki() {
+        let webViewController = TOWebViewController(URLString: "http://www.javlib3.com/cn/vl_searchbyid.php?keyword=\(keyword)")
+        webViewController.showUrlWhileLoading = false
+        webViewController.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(webViewController, animated: true)
     }
 
     //MARK: - Helper

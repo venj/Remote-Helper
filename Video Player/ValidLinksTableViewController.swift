@@ -22,7 +22,7 @@ class ValidLinksTableViewController: UITableViewController {
 
         func copyAll() {
             UIPasteboard.generalPasteboard().string = self.validLinks.joinWithSeparator("\n")
-            AppDelegate.shared().showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"), inView: navigationController?.view)
+            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"), inView: navigationController?.view)
         }
 
         if self.validLinks.count > 1 {
@@ -74,7 +74,7 @@ class ValidLinksTableViewController: UITableViewController {
         let copyAction = UITableViewRowAction(style: .Normal, title: NSLocalizedString("Copy Link", comment: "Copy Link")) { [unowned self] (_, _) in
             if self.tableView.editing { self.tableView.setEditing(false, animated: true) }
             UIPasteboard.generalPasteboard().string = link
-            AppDelegate.shared().showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"), inView: self.navigationController?.view)
+            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"), inView: self.navigationController?.view)
         }
         copyAction.backgroundColor = UIColor.iOS8purpleColor()
 
@@ -97,7 +97,7 @@ class ValidLinksTableViewController: UITableViewController {
                     if !xunleiAPI.loginWithUsername(xunleiAccount[0], password: xunleiAccount[1], isPasswordEncode: false) {
                         dispatch_async(dispatch_get_main_queue()) { [unowned self] in
                             hud.hide(true)
-                            AppDelegate.shared().showHudWithMessage(NSLocalizedString("Login Failed.", comment: "Login Failed."), inView:self.navigationController?.view)
+                            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Login Failed.", comment: "Login Failed."), inView:self.navigationController?.view)
                             return
                         }
                     }
@@ -116,10 +116,10 @@ class ValidLinksTableViewController: UITableViewController {
                 dispatch_async(dispatch_get_main_queue()) { [unowned self] in
                     hud.hide(true)
                     if dcid == "" {
-                        AppDelegate.shared().showHudWithMessage(NSLocalizedString("Failed to add task.", comment: "Failed to add task."), inView: self.navigationController?.view)
+                        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Failed to add task.", comment: "Failed to add task."), inView: self.navigationController?.view)
                     }
                     else {
-                        AppDelegate.shared().showHudWithMessage(NSLocalizedString("Lixian added.", comment: "Lixian added."), inView: self.navigationController?.view)
+                        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Lixian added.", comment: "Lixian added."), inView: self.navigationController?.view)
                     }
                 }
             }
@@ -135,10 +135,10 @@ class ValidLinksTableViewController: UITableViewController {
         if protocal == "magnet" {
             let hud = MBProgressHUD.showHUDAddedTo(navigationController?.view, animated:true)
             hud.removeFromSuperViewOnHide = true
-            AppDelegate.shared().parseSessionAndAddTask(link, completionHandler: {
+            Helper.defaultHelper.parseSessionAndAddTask(link, completionHandler: {
                 hud.hide(true)
                 }, errorHandler: { [unowned self] in
-                    AppDelegate.shared().showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."), inView: self.navigationController?.view)
+                    Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."), inView: self.navigationController?.view)
                 })
         }
         else {
@@ -147,7 +147,7 @@ class ValidLinksTableViewController: UITableViewController {
                 UIApplication.sharedApplication().openURL(url)
             }
             else {
-                AppDelegate.shared().showHudWithMessage(NSLocalizedString("No 'DS Download' found.", comment: "No 'DS Download' found."), inView: self.navigationController?.view)
+                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("No 'DS Download' found.", comment: "No 'DS Download' found."), inView: self.navigationController?.view)
             }
         }
     }

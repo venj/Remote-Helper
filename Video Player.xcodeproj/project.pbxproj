@@ -19,12 +19,11 @@
 		250354CF1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354CE1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift */; };
 		250354D11BE9911700E9F93A /* WebContentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354D01BE9911700E9F93A /* WebContentTableViewController.swift */; };
 		250354D31BE9999E00E9F93A /* String+Range.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354D21BE9999E00E9F93A /* String+Range.swift */; };
+		250354D51BE9BEC900E9F93A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354D41BE9BEC900E9F93A /* AppDelegate.swift */; };
 		252DFA801753784400FF8199 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA7F1753784400FF8199 /* UIKit.framework */; };
 		252DFA821753784400FF8199 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA811753784400FF8199 /* Foundation.framework */; };
 		252DFA841753784400FF8199 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA831753784400FF8199 /* CoreGraphics.framework */; };
 		252DFA8A1753784400FF8199 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 252DFA881753784400FF8199 /* InfoPlist.strings */; };
-		252DFA8C1753784400FF8199 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 252DFA8B1753784400FF8199 /* main.m */; };
-		252DFA901753784400FF8199 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 252DFA8F1753784400FF8199 /* AppDelegate.m */; };
 		254CBE401BE8481F0050A288 /* URLConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE3F1BE8481F0050A288 /* URLConverter.swift */; };
 		254CBE421BE857520050A288 /* NSString+MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE411BE857520050A288 /* NSString+MD5.swift */; };
 		254CBE471BE85EC20050A288 /* XunleiItemInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE461BE85EC20050A288 /* XunleiItemInfo.swift */; };
@@ -58,16 +57,13 @@
 		250354CE1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VPTorrentsListViewController.swift; sourceTree = "<group>"; };
 		250354D01BE9911700E9F93A /* WebContentTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebContentTableViewController.swift; sourceTree = "<group>"; };
 		250354D21BE9999E00E9F93A /* String+Range.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Range.swift"; sourceTree = "<group>"; };
+		250354D41BE9BEC900E9F93A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		252DFA7C1753784400FF8199 /* Video Player.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Video Player.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		252DFA7F1753784400FF8199 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		252DFA811753784400FF8199 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		252DFA831753784400FF8199 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		252DFA871753784400FF8199 /* Video Player-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Video Player-Info.plist"; sourceTree = "<group>"; };
 		252DFA891753784400FF8199 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		252DFA8B1753784400FF8199 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		252DFA8D1753784400FF8199 /* Video Player-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Video Player-Prefix.pch"; sourceTree = "<group>"; };
-		252DFA8E1753784400FF8199 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		252DFA8F1753784400FF8199 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		254CBE3F1BE8481F0050A288 /* URLConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLConverter.swift; sourceTree = "<group>"; };
 		254CBE411BE857520050A288 /* NSString+MD5.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+MD5.swift"; sourceTree = "<group>"; };
 		254CBE461BE85EC20050A288 /* XunleiItemInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XunleiItemInfo.swift; sourceTree = "<group>"; };
@@ -148,8 +144,7 @@
 			isa = PBXGroup;
 			children = (
 				25310E40177ACB1600D4A212 /* 3rd Party */,
-				252DFA8E1753784400FF8199 /* AppDelegate.h */,
-				252DFA8F1753784400FF8199 /* AppDelegate.m */,
+				250354D41BE9BEC900E9F93A /* AppDelegate.swift */,
 				2502ABDA1BE6F761004882FE /* Helper.swift */,
 				254CBE4A1BE877440050A288 /* ValidLinksTableViewController.swift */,
 				250354D01BE9911700E9F93A /* WebContentTableViewController.swift */,
@@ -170,8 +165,6 @@
 				252DFA871753784400FF8199 /* Video Player-Info.plist */,
 				256EA4BD177D5F830081309B /* Localizable.strings */,
 				252DFA881753784400FF8199 /* InfoPlist.strings */,
-				252DFA8B1753784400FF8199 /* main.m */,
-				252DFA8D1753784400FF8199 /* Video Player-Prefix.pch */,
 				2581D48717544A4C00EF3867 /* InAppSettings.bundle */,
 			);
 			name = "Supporting Files";
@@ -357,15 +350,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				250354D51BE9BEC900E9F93A /* AppDelegate.swift in Sources */,
 				256D290F1B788ED0000A324B /* LCHTTPConnection.m in Sources */,
 				2502ABE71BE723A2004882FE /* NSString+URLEncode.swift in Sources */,
 				2502ABDD1BE6F84B004882FE /* NSString+JSON.swift in Sources */,
 				254CBE471BE85EC20050A288 /* XunleiItemInfo.swift in Sources */,
 				250354D31BE9999E00E9F93A /* String+Range.swift in Sources */,
 				254CBE4D1BE890210050A288 /* VPSearchResultController.swift in Sources */,
-				252DFA8C1753784400FF8199 /* main.m in Sources */,
 				2502ABE51BE7156A004882FE /* NSString+Regex.swift in Sources */,
-				252DFA901753784400FF8199 /* AppDelegate.m in Sources */,
 				2502ABDB1BE6F761004882FE /* Helper.swift in Sources */,
 				2502ABE31BE70507004882FE /* FileAttributeHelper.swift in Sources */,
 				254CBE401BE8481F0050A288 /* URLConverter.swift in Sources */,
@@ -483,8 +475,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Video Player/Video Player-Prefix.pch";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = "Video Player/Video Player-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -506,8 +498,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Video Player/Video Player-Prefix.pch";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = "Video Player/Video Player-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

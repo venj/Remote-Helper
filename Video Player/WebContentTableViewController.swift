@@ -82,7 +82,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        if AppDelegate.shared().showCellularHUD() { return }
+        if Helper.defaultHelper.showCellularHUD() { return }
         let urlString = self.addresses[indexPath.row]
         webViewController = TOWebViewController(URLString: urlString)
         webViewController.showUrlWhileLoading = false
@@ -126,7 +126,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                 sender.synchronizeSettings()
                 dispatch_async(dispatch_get_main_queue()) {
                     hud.hide(true)
-                    AppDelegate.shared().showHudWithMessage(NSLocalizedString("Cache Cleared!", comment: "Cache Cleared!"), inView: sender.navigationController?.view)
+                    Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Cache Cleared!", comment: "Cache Cleared!"), inView: sender.navigationController?.view)
                     sender.tableView.reloadData()
                 }
             }
@@ -140,13 +140,13 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                 if api.loginWithUsername(xunleiAccount[0], password: xunleiAccount[1], isPasswordEncode: false) {
                     dispatch_async(dispatch_get_main_queue()) {
                         hud.hide(true)
-                        AppDelegate.shared().showHudWithMessage(NSLocalizedString("Logged in.", comment: "Logged in.") , inView: sender.navigationController?.view)
+                        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Logged in.", comment: "Logged in.") , inView: sender.navigationController?.view)
                     }
                 }
                 else {
                     dispatch_async(dispatch_get_main_queue()) {
                         hud.hide(true)
-                        AppDelegate.shared().showHudWithMessage(NSLocalizedString("Username or password error.", comment: "Username or password error.") , inView: sender.navigationController?.view)
+                        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Username or password error.", comment: "Username or password error.") , inView: sender.navigationController?.view)
                     }
                 }
             }
@@ -243,7 +243,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     }
 
     func showTransmission() {
-        if AppDelegate.shared().showCellularHUD() { return }
+        if Helper.defaultHelper.showCellularHUD() { return }
         let link = Helper.defaultHelper.transmissionServerAddress()
         let transmissionWebViewController = TOWebViewController(URLString: link)
         transmissionWebViewController.urlRequest.cachePolicy = .ReloadIgnoringLocalCacheData
@@ -257,7 +257,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     //MARK: - Helper
     func torrentSearch() {
-        AppDelegate.shared().showTorrentSearchAlertInNavigationController(navigationController)
+        Helper.defaultHelper.showTorrentSearchAlertInViewController(navigationController!)
     }
 
     func processHTML(html: String) {
@@ -275,7 +275,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             })
         }
         if validAddresses.count <= 0 {
-            AppDelegate.shared().showHudWithMessage(NSLocalizedString("No downloadable link.", comment: "No downloadable link."), inView: self.navigationController?.view)
+            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("No downloadable link.", comment: "No downloadable link."), inView: self.navigationController?.view)
         }
         else {
             let linksViewController = ValidLinksTableViewController()

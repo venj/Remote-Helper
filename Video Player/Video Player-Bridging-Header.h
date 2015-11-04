@@ -4,6 +4,4 @@
 
 #import "HYXunleiLixianAPI.h"
 #import "Common.h"
-#import "AFNetworking.h"
 #import <CommonCrypto/CommonDigest.h>
-#import "AppDelegate.h"

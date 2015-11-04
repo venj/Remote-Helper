@@ -128,10 +128,10 @@ class VPSearchResultController: UITableViewController {
     }
 
     func addTorrentToTransmission(torrent: [String:AnyObject]) {
-        AppDelegate.shared().parseSessionAndAddTask(torrent["magnet"] as! String, completionHandler: { [unowned self] in
-            AppDelegate.shared().showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."), inView: self.navigationController?.view)
+        Helper.defaultHelper.parseSessionAndAddTask(torrent["magnet"] as! String, completionHandler: { [unowned self] in
+            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."), inView: self.navigationController?.view)
         }, errorHandler: { [unowned self] in
-            AppDelegate.shared().showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."), inView: self.navigationController?.view)
+            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."), inView: self.navigationController?.view)
         })
     }
 }

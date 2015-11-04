@@ -166,7 +166,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     //MARK: - Action
     func showSearch() {
-        AppDelegate.shared().showTorrentSearchAlertInNavigationController(self.navigationController)
+        Helper.defaultHelper.showTorrentSearchAlertInViewController(self.navigationController!)
     }
 
     func hashTorrent() {
@@ -177,16 +177,16 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             guard let hash = responseObject["hash"] as? String else { return }
             let message = "magnet:?xt=urn:btih:\(hash.uppercaseString)"
             UIPasteboard.generalPasteboard().string = message
-            AppDelegate.shared().parseSessionAndAddTask(message, completionHandler: { [unowned self] in
+            Helper.defaultHelper.parseSessionAndAddTask(message, completionHandler: { [unowned self] in
                 hud.hide(true)
-                AppDelegate.shared().showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."), inView: self.navigationController?.view)
+                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."), inView: self.navigationController?.view)
             }, errorHandler: { [unowned self] in
                 hud.hide(true)
-                AppDelegate.shared().showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."), inView: self.navigationController?.view)
+                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."), inView: self.navigationController?.view)
             })
         }, failure: { [unowned self] (_, _) in
             hud.hide(true)
-            AppDelegate.shared().showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."), inView: self.navigationController?.view)
+            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."), inView: self.navigationController?.view)
         })
     }
 
@@ -194,7 +194,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     func showPhotoBrowser(forTableView tableView: UITableView, atIndexPath indexPath: NSIndexPath, initialPhotoIndex index: Int = 0) {
         let list = tableView == self.tableView ? self.datesList : self.filteredDatesList
         guard indexPath.row < list.count else { return }
-        if AppDelegate.shared().showCellularHUD() { return }
+        if Helper.defaultHelper.showCellularHUD() { return }
         searchController.searchBar.resignFirstResponder()
         guard let date = list[indexPath.row].stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet()) else { return }
         let hud = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
@@ -216,12 +216,12 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             self.navigationController?.pushViewController(photoBrowser, animated: true)
         }, failure: { [unowned self] (_, _) in
             hud.hide(true)
-            AppDelegate.shared().showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed.") , inView: self.navigationController?.view)
+            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed.") , inView: self.navigationController?.view)
         })
     }
 
     func loadTorrentList(sender: AnyObject?) {
-        if AppDelegate.shared().showCellularHUD() { return }
+        if Helper.defaultHelper.showCellularHUD() { return }
         let hud = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
         hud.removeFromSuperViewOnHide = true
         navigationItem.rightBarButtonItem?.enabled = false
@@ -234,7 +234,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         } , failure: { [unowned self] (_, _) in
             hud.hide(true)
             self.navigationItem.rightBarButtonItem?.enabled = true
-            AppDelegate.shared().showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed.") , inView: self.navigationController?.view)
+            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed.") , inView: self.navigationController?.view)
         })
     }
 }

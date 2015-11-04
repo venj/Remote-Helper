@@ -248,11 +248,13 @@
             [cookie_str setString:[cookie_str stringByAppendingFormat:@"%@=%@; ", cookie.name, cookie.value]];
         }
     }
+    NSLog(@"cookie string: %@", cookie_str);
     [_urlRequest setValue:cookie_str forHTTPHeaderField:@"Cookie"];
     
     NSHTTPURLResponse* urlResponse = nil;
     NSData *responseData = [NSURLConnection sendSynchronousRequest:_urlRequest returningResponse:&urlResponse error:NULL];
     NSString *responseResult = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+    NSLog(@"%@", [urlResponse allHeaderFields]);
     if ([[urlResponse allHeaderFields] objectForKey:@"Set-Cookie"]) {
         NSArray *cookies=[NSHTTPCookie cookiesWithResponseHeaderFields:[urlResponse allHeaderFields] forURL:[NSURL URLWithString:@".vip.xunlei.com"]];
         for(NSHTTPCookie *t in cookies){

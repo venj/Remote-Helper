@@ -272,7 +272,7 @@ public class Helper : NSObject {
                 if response.statusCode == 409 {
                     self.sessionHeader = response.allHeaderFields["X-Transmission-Session-Id"] as! String
                     let manager = self.refreshedManager(withAuthentication: true, withJSON: true)
-                    manager.requestSerializer.setValue(self.sessionHeader, forKey: "X-Transmission-Session-Id")
+                    manager.requestSerializer.setValue(self.sessionHeader, forHTTPHeaderField: "X-Transmission-Session-Id")
                     manager.POST(self.transmissionRPCAddress(), parameters: sessionParams, success: { (_, responseObject) in
                         let result = responseObject["result"] as! String
                         if result == "success" {

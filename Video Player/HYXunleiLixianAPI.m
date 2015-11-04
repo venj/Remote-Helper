@@ -23,8 +23,8 @@
 
 
 #import "HYXunleiLixianAPI.h"
-#import "LCHTTPConnection.h"
 #import "Video_Player-Swift.h"
+#import "LCHTTPConnection.h"
 
 typedef NS_ENUM(NSUInteger, TaskListType) {
     TLTAll,
@@ -54,7 +54,7 @@ typedef NS_ENUM(NSUInteger, TaskListType) {
     
     //第一步登陆，验证用户名密码
     NSURL *url = [NSURL URLWithString:LoginURL];
-    LCHTTPConnection *request=[LCHTTPConnection new];
+    LCHTTPConnection *request=[LCHTTPConnection sharedZZHTTPConnection];
     [request setPostValue:aName forKey:@"u"];
     [request setPostValue:enPassword forKey:@"p"];
     [request setPostValue:vCode forKey:@"verifycode"];
@@ -62,7 +62,7 @@ typedef NS_ENUM(NSUInteger, TaskListType) {
     [request setPostValue:@"720" forKey:@"login_hour"];
     [request post:[url absoluteString]];
     //把response中的Cookie添加到CookieStorage
-    NSLog(@"%@", [request responseCookies]);
+    NSLog(@"cookies: %@", [request responseCookies]);
 
     [self _addResponseCookietoCookieStorage:[request responseCookies]];
     

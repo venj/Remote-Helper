@@ -24,7 +24,6 @@
 
 #import "HYXunleiLixianAPI.h"
 #import "Video_Player-Swift.h"
-#import "LCHTTPConnection.h"
 
 typedef NS_ENUM(NSUInteger, TaskListType) {
     TLTAll,
@@ -54,7 +53,7 @@ typedef NS_ENUM(NSUInteger, TaskListType) {
     
     //第一步登陆，验证用户名密码
     NSURL *url = [NSURL URLWithString:LoginURL];
-    LCHTTPConnection *request=[LCHTTPConnection sharedZZHTTPConnection];
+    LCHTTPConnection *request=[LCHTTPConnection new];
     [request setPostValue:aName forKey:@"u"];
     [request setPostValue:enPassword forKey:@"p"];
     [request setPostValue:vCode forKey:@"verifycode"];

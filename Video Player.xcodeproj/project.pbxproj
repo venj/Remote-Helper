@@ -20,7 +20,7 @@
 		250354D11BE9911700E9F93A /* WebContentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354D01BE9911700E9F93A /* WebContentTableViewController.swift */; };
 		250354D31BE9999E00E9F93A /* String+Range.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354D21BE9999E00E9F93A /* String+Range.swift */; };
 		250354D51BE9BEC900E9F93A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354D41BE9BEC900E9F93A /* AppDelegate.swift */; };
-		250354DA1BEA05C700E9F93A /* LCHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 250354D81BEA05C700E9F93A /* LCHTTPConnection.m */; };
+		250354DC1BEA380500E9F93A /* LCHTTPConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354DB1BEA380500E9F93A /* LCHTTPConnection.swift */; };
 		252DFA801753784400FF8199 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA7F1753784400FF8199 /* UIKit.framework */; };
 		252DFA821753784400FF8199 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA811753784400FF8199 /* Foundation.framework */; };
 		252DFA841753784400FF8199 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA831753784400FF8199 /* CoreGraphics.framework */; };
@@ -58,8 +58,7 @@
 		250354D01BE9911700E9F93A /* WebContentTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebContentTableViewController.swift; sourceTree = "<group>"; };
 		250354D21BE9999E00E9F93A /* String+Range.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Range.swift"; sourceTree = "<group>"; };
 		250354D41BE9BEC900E9F93A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		250354D81BEA05C700E9F93A /* LCHTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCHTTPConnection.m; sourceTree = "<group>"; };
-		250354D91BEA05C700E9F93A /* LCHTTPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCHTTPConnection.h; sourceTree = "<group>"; };
+		250354DB1BEA380500E9F93A /* LCHTTPConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LCHTTPConnection.swift; sourceTree = "<group>"; };
 		252DFA7C1753784400FF8199 /* Video Player.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Video Player.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		252DFA7F1753784400FF8199 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		252DFA811753784400FF8199 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -203,8 +202,7 @@
 			children = (
 				256D28FA1B788ED0000A324B /* HYXunleiLixianAPI.h */,
 				256D28FB1B788ED0000A324B /* HYXunleiLixianAPI.m */,
-				250354D81BEA05C700E9F93A /* LCHTTPConnection.m */,
-				250354D91BEA05C700E9F93A /* LCHTTPConnection.h */,
+				250354DB1BEA380500E9F93A /* LCHTTPConnection.swift */,
 				254CBE481BE86CAC0050A288 /* ParseElements.swift */,
 				254CBE461BE85EC20050A288 /* XunleiItemInfo.swift */,
 			);
@@ -360,6 +358,7 @@
 				2502ABDB1BE6F761004882FE /* Helper.swift in Sources */,
 				2502ABE31BE70507004882FE /* FileAttributeHelper.swift in Sources */,
 				254CBE401BE8481F0050A288 /* URLConverter.swift in Sources */,
+				250354DC1BEA380500E9F93A /* LCHTTPConnection.swift in Sources */,
 				256D290D1B788ED0000A324B /* HYXunleiLixianAPI.m in Sources */,
 				2502ABEC1BE748F1004882FE /* Int+FileSize.swift in Sources */,
 				254CBE4B1BE877440050A288 /* ValidLinksTableViewController.swift in Sources */,
@@ -368,7 +367,6 @@
 				250354CF1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift in Sources */,
 				2502ABE11BE6FE78004882FE /* NSData+Base64.swift in Sources */,
 				25F94A621BE5E9FF009C9195 /* NSDictionary+JSON.swift in Sources */,
-				250354DA1BEA05C700E9F93A /* LCHTTPConnection.m in Sources */,
 				2502ABEA1BE73AB7004882FE /* NSString+Path.swift in Sources */,
 				250354D11BE9911700E9F93A /* WebContentTableViewController.swift in Sources */,
 				2502ABDF1BE6FBEC004882FE /* NSString+Base64.swift in Sources */,

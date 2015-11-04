@@ -18,6 +18,7 @@ public class LCHTTPConnection : NSObject {
 
     public func get(urlString:String) -> String? {
         let urlRequest = NSMutableURLRequest()
+        urlRequest.URL = NSURL(string: urlString)
         urlRequest.addValue("User-Agent:Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.106 Safari/535.2" , forHTTPHeaderField: "User-Agent")
         urlRequest.timeoutInterval = 15
         urlRequest.addValue("http://lixian.vip.xunlei.com/", forHTTPHeaderField: "Referer")
@@ -116,7 +117,6 @@ public class LCHTTPConnection : NSObject {
             let value = kv["value"]
             postValueString += "\(key!)=\(value!)&"
         }
-        print("postValueString: \(postValueString)") // Debug
         urlRequest.HTTPBody = postValueString.dataUsingEncoding(NSUTF8StringEncoding)
 
         refreshCookie(forRequest: urlRequest)
@@ -174,21 +174,27 @@ public class LCHTTPConnection : NSObject {
 
     private func send(syncRequest request: NSMutableURLRequest) -> String? {
         var urlResponse: NSURLResponse? = nil // should be exactly like this!!!
-        guard let responseData = try? NSURLConnection.sendSynchronousRequest(request, returningResponse: &urlResponse) as NSData else { return nil }
-        let responseString = String(data: responseData, encoding: NSUTF8StringEncoding)
-        guard let response = urlResponse as? NSHTTPURLResponse else { return nil }
-        if (response.allHeaderFields["Set-Cookie"] != nil) {
-            let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(response.allHeaderFields as! [String:String], forURL: NSURL(string: ".vip.xunlei.com")!)
-            for cookie in cookies {
-                setCookie(withKey: cookie.name, value: cookie.value)
+        do {
+            let responseData = try NSURLConnection.sendSynchronousRequest(request, returningResponse: &urlResponse)
+            let responseString = String(data: responseData, encoding: NSUTF8StringEncoding)
+            guard let response = urlResponse as? NSHTTPURLResponse else { return nil }
+            if (response.allHeaderFields["Set-Cookie"] != nil) {
+                let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(response.allHeaderFields as! [String:String], forURL: NSURL(string: ".vip.xunlei.com")!)
+                for cookie in cookies {
+                    setCookie(withKey: cookie.name, value: cookie.value)
+                }
+            }
+            let statusCode = response.statusCode
+            if statusCode >= 200 && statusCode < 400 {
+                return responseString
+            }
+            else { // Error
+                print("Error status: \(statusCode), \(NSHTTPURLResponse.localizedStringForStatusCode(statusCode))")
             }
         }
-
-        if response.statusCode >= 200 && response.statusCode < 400 {
-            return responseString
+        catch let error as NSError {
+            print("Network error: \(error.localizedDescription)")
         }
-        else {
-            return nil
-        }
+        return nil
     }
 }

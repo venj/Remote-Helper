@@ -21,6 +21,7 @@
 		250354D31BE9999E00E9F93A /* String+Range.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354D21BE9999E00E9F93A /* String+Range.swift */; };
 		250354D51BE9BEC900E9F93A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354D41BE9BEC900E9F93A /* AppDelegate.swift */; };
 		250354DC1BEA380500E9F93A /* LCHTTPConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354DB1BEA380500E9F93A /* LCHTTPConnection.swift */; };
+		250354DE1BEA41F300E9F93A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354DD1BEA41F300E9F93A /* Constants.swift */; };
 		252DFA801753784400FF8199 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA7F1753784400FF8199 /* UIKit.framework */; };
 		252DFA821753784400FF8199 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA811753784400FF8199 /* Foundation.framework */; };
 		252DFA841753784400FF8199 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA831753784400FF8199 /* CoreGraphics.framework */; };
@@ -51,7 +52,6 @@
 		2502ABE21BE70507004882FE /* FileAttributeHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileAttributeHelper.swift; sourceTree = "<group>"; };
 		2502ABE41BE7156A004882FE /* NSString+Regex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+Regex.swift"; sourceTree = "<group>"; };
 		2502ABE61BE723A1004882FE /* NSString+URLEncode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+URLEncode.swift"; sourceTree = "<group>"; };
-		2502ABE81BE733C3004882FE /* Common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
 		2502ABE91BE73AB7004882FE /* NSString+Path.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+Path.swift"; sourceTree = "<group>"; };
 		2502ABEB1BE748F1004882FE /* Int+FileSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Int+FileSize.swift"; sourceTree = "<group>"; };
 		250354CE1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VPTorrentsListViewController.swift; sourceTree = "<group>"; };
@@ -59,6 +59,7 @@
 		250354D21BE9999E00E9F93A /* String+Range.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Range.swift"; sourceTree = "<group>"; };
 		250354D41BE9BEC900E9F93A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		250354DB1BEA380500E9F93A /* LCHTTPConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LCHTTPConnection.swift; sourceTree = "<group>"; };
+		250354DD1BEA41F300E9F93A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		252DFA7C1753784400FF8199 /* Video Player.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Video Player.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		252DFA7F1753784400FF8199 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		252DFA811753784400FF8199 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -145,6 +146,7 @@
 				25310E40177ACB1600D4A212 /* 3rd Party */,
 				250354D41BE9BEC900E9F93A /* AppDelegate.swift */,
 				2502ABDA1BE6F761004882FE /* Helper.swift */,
+				250354DD1BEA41F300E9F93A /* Constants.swift */,
 				254CBE4A1BE877440050A288 /* ValidLinksTableViewController.swift */,
 				250354D01BE9911700E9F93A /* WebContentTableViewController.swift */,
 				250354CE1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift */,
@@ -159,7 +161,6 @@
 		252DFA861753784400FF8199 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				2502ABE81BE733C3004882FE /* Common.h */,
 				25F94A601BE5E9FE009C9195 /* Video Player-Bridging-Header.h */,
 				252DFA871753784400FF8199 /* Video Player-Info.plist */,
 				256EA4BD177D5F830081309B /* Localizable.strings */,
@@ -354,6 +355,7 @@
 				254CBE471BE85EC20050A288 /* XunleiItemInfo.swift in Sources */,
 				250354D31BE9999E00E9F93A /* String+Range.swift in Sources */,
 				254CBE4D1BE890210050A288 /* VPSearchResultController.swift in Sources */,
+				250354DE1BEA41F300E9F93A /* Constants.swift in Sources */,
 				2502ABE51BE7156A004882FE /* NSString+Regex.swift in Sources */,
 				2502ABDB1BE6F761004882FE /* Helper.swift in Sources */,
 				2502ABE31BE70507004882FE /* FileAttributeHelper.swift in Sources */,

@@ -3,5 +3,4 @@
 //
 
 #import "HYXunleiLixianAPI.h"
-#import "Common.h"
 #import <CommonCrypto/CommonDigest.h>

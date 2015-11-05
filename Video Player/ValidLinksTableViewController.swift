@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import MBProgressHUD
 import iOS8Colors
 
 class ValidLinksTableViewController: UITableViewController {
@@ -22,7 +21,7 @@ class ValidLinksTableViewController: UITableViewController {
 
         func copyAll() {
             UIPasteboard.generalPasteboard().string = self.validLinks.joinWithSeparator("\n")
-            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"), inView: navigationController?.view)
+            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
         }
 
         if self.validLinks.count > 1 {
@@ -74,7 +73,7 @@ class ValidLinksTableViewController: UITableViewController {
         let copyAction = UITableViewRowAction(style: .Normal, title: NSLocalizedString("Copy Link", comment: "Copy Link")) { [unowned self] (_, _) in
             if self.tableView.editing { self.tableView.setEditing(false, animated: true) }
             UIPasteboard.generalPasteboard().string = link
-            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"), inView: self.navigationController?.view)
+            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
         }
         copyAction.backgroundColor = UIColor.iOS8purpleColor()
 
@@ -88,15 +87,15 @@ class ValidLinksTableViewController: UITableViewController {
         // Lixian
         let lixianAction = UITableViewRowAction(style: .Default, title: NSLocalizedString("Lixian", comment: "Lixian")) { [unowned self] (_, _) in
             if self.tableView.editing { self.tableView.setEditing(false, animated: true) }
-            let hud = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
+            let hud = Helper.defaultHelper.showHUD()
             dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
                 let protocal = link.componentsSeparatedByString(":")[0]
                 let xunleiAccount = Helper.defaultHelper.xunleiUsernameAndPassword
                 if !AppDelegate.shared().xunleiUserLoggedIn {
                     if !LXAPIHelper.login(withUsername:xunleiAccount[0], password: xunleiAccount[1], encoded: false) {
-                        dispatch_async(dispatch_get_main_queue()) { [unowned self] in
-                            hud.hide(true)
-                            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Login Failed.", comment: "Login Failed."), inView:self.navigationController?.view)
+                        dispatch_async(dispatch_get_main_queue()) {
+                            hud.hide()
+                            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Login Failed.", comment: "Login Failed."))
                             return
                         }
                     }
@@ -112,13 +111,13 @@ class ValidLinksTableViewController: UITableViewController {
                 else {
                     dcid = LXAPIHelper.addNormalTask(link)
                 }
-                dispatch_async(dispatch_get_main_queue()) { [unowned self] in
-                    hud.hide(true)
+                dispatch_async(dispatch_get_main_queue()) {
+                    hud.hide()
                     if dcid == "" {
-                        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Failed to add task.", comment: "Failed to add task."), inView: self.navigationController?.view)
+                        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Failed to add task.", comment: "Failed to add task."))
                     }
                     else {
-                        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Lixian added.", comment: "Lixian added."), inView: self.navigationController?.view)
+                        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Lixian added.", comment: "Lixian added."))
                     }
                 }
             }
@@ -132,13 +131,12 @@ class ValidLinksTableViewController: UITableViewController {
     func download(link:String) {
         let protocal = link.componentsSeparatedByString(":")[0]
         if protocal == "magnet" {
-            let hud = MBProgressHUD.showHUDAddedTo(navigationController?.view, animated:true)
-            hud.removeFromSuperViewOnHide = true
+            let hud = Helper.defaultHelper.showHUD()
             Helper.defaultHelper.parseSessionAndAddTask(link, completionHandler: {
-                hud.hide(true)
-                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."), inView: self.navigationController?.view)
-            }, errorHandler: { [unowned self] in
-                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."), inView: self.navigationController?.view)
+                hud.hide()
+                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
+            }, errorHandler: {
+                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."))
             })
         }
         else {
@@ -147,7 +145,7 @@ class ValidLinksTableViewController: UITableViewController {
                 UIApplication.sharedApplication().openURL(url)
             }
             else {
-                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("No 'DS Download' found.", comment: "No 'DS Download' found."), inView: self.navigationController?.view)
+                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("No 'DS Download' found.", comment: "No 'DS Download' found."))
             }
         }
     }

@@ -3,9 +3,9 @@ use_frameworks!
 source 'https://github.com/CocoaPods/Specs.git'
 
 pod 'AFNetworking', '~> 3.0.0-beta.1'
-pod 'InAppSettingsKit', '~> 2.1'
+pod 'InAppSettingsKit', '~> 2.6'
 pod 'MWPhotoBrowser', '~> 2.1.1'
-pod 'MBProgressHUD', '~> 0.8'
+pod 'PKHUD', '~> 2.2.4'
 pod 'TOWebViewController', :git => 'https://github.com/venj/TOWebViewController.git'
 pod 'LTHPasscodeViewController', '~> 3.6.8'
 pod 'MMAppSwitcher', :git => 'https://github.com/venj/MMAppSwitcher.git'

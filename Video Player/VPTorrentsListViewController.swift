@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import MBProgressHUD
 import SDWebImage
 import TOWebViewController
 import MWPhotoBrowser
@@ -172,21 +171,21 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     func hashTorrent() {
         guard let base64FileName = photos[currentPhotoIndex].base64String() else { return }
         let manager = Helper.defaultHelper.refreshedManager()
-        let hud = MBProgressHUD.showHUDAddedTo(navigationController?.view, animated: true)
-        manager.GET(Helper.defaultHelper.hashTorrent(withName: base64FileName), parameters:nil, success: { [unowned self] (_, responseObject) in
+        let hud = Helper.defaultHelper.showHUD()
+        manager.GET(Helper.defaultHelper.hashTorrent(withName: base64FileName), parameters:nil, success: { (_, responseObject) in
             guard let hash = responseObject["hash"] as? String else { return }
             let message = "magnet:?xt=urn:btih:\(hash.uppercaseString)"
             UIPasteboard.generalPasteboard().string = message
-            Helper.defaultHelper.parseSessionAndAddTask(message, completionHandler: { [unowned self] in
-                hud.hide(true)
-                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."), inView: self.navigationController?.view)
-            }, errorHandler: { [unowned self] in
-                hud.hide(true)
-                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."), inView: self.navigationController?.view)
+            Helper.defaultHelper.parseSessionAndAddTask(message, completionHandler: {
+                hud.hide()
+                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
+            }, errorHandler: {
+                hud.hide()
+                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."))
             })
-        }, failure: { [unowned self] (_, _) in
-            hud.hide(true)
-            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."), inView: self.navigationController?.view)
+        }, failure: { (_, _) in
+            hud.hide()
+            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
         })
     }
 
@@ -197,11 +196,10 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         if Helper.defaultHelper.showCellularHUD() { return }
         searchController.searchBar.resignFirstResponder()
         guard let date = list[indexPath.row].stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet()) else { return }
-        let hud = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
-        hud.removeFromSuperViewOnHide = true
+        let hud = Helper.defaultHelper.showHUD()
         let manager = Helper.defaultHelper.refreshedManager()
         manager.GET(Helper.defaultHelper.searchPath(withKeyword: date), parameters: nil, success: { [unowned self] (_, responseObject) in
-            hud.hide(true)
+            hud.hide()
             guard let photos = responseObject as? [String] else { return }
             self.photos = photos
             let photoBrowser = MWPhotoBrowser(delegate: self)
@@ -214,27 +212,26 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             }
             photoBrowser.setCurrentPhotoIndex(UInt(sIndex))
             self.navigationController?.pushViewController(photoBrowser, animated: true)
-        }, failure: { [unowned self] (_, _) in
-            hud.hide(true)
-            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed.") , inView: self.navigationController?.view)
+        }, failure: { (_, _) in
+            hud.hide()
+            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
         })
     }
 
     func loadTorrentList(sender: AnyObject?) {
         if Helper.defaultHelper.showCellularHUD() { return }
-        let hud = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
-        hud.removeFromSuperViewOnHide = true
+        let hud = Helper.defaultHelper.showHUD()
         navigationItem.rightBarButtonItem?.enabled = false
         let manager = Helper.defaultHelper.refreshedManager()
         manager.GET(Helper.defaultHelper.torrentsListPath(), parameters: nil, success: { [unowned self] (_, responseObject) in
-            hud.hide(true)
+            hud.hide()
             self.navigationItem.rightBarButtonItem?.enabled = true
             self.datesList = responseObject as! [String]
             self.tableView.reloadData()
-        } , failure: { [unowned self] (_, _) in
-            hud.hide(true)
+        } , failure: { (_, _) in
+            hud.hide()
             self.navigationItem.rightBarButtonItem?.enabled = true
-            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed.") , inView: self.navigationController?.view)
+            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
         })
     }
 }

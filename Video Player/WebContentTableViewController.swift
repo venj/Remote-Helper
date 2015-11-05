@@ -9,7 +9,6 @@
 import UIKit
 import SDWebImage
 import LTHPasscodeViewController
-import MBProgressHUD
 import TOWebViewController
 import MWPhotoBrowser
 import InAppSettingsKit
@@ -116,7 +115,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             }
         }
         else if specifier.key() == ClearCacheNowKey {
-            let hud = MBProgressHUD.showHUDAddedTo(sender.navigationController?.view, animated: true)
+            let hud = Helper.defaultHelper.showHUD()
             dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
                 SDImageCache.sharedImageCache().clearDisk()
                 let defaults = NSUserDefaults.standardUserDefaults()
@@ -125,27 +124,27 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                 defaults.synchronize()
                 sender.synchronizeSettings()
                 dispatch_async(dispatch_get_main_queue()) {
-                    hud.hide(true)
-                    Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Cache Cleared!", comment: "Cache Cleared!"), inView: sender.navigationController?.view)
+                    hud.hide()
+                    Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Cache Cleared!", comment: "Cache Cleared!"))
                     sender.tableView.reloadData()
                 }
             }
         }
         else if specifier.key() == VerifyXunleiKey {
             LXAPIHelper.logout()
-            let hud = MBProgressHUD.showHUDAddedTo(sender.navigationController?.view, animated: true)
+            let hud = Helper.defaultHelper.showHUD()
             dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
                 let xunleiAccount = Helper.defaultHelper.xunleiUsernameAndPassword
                 if LXAPIHelper.login(withUsername: xunleiAccount[0], password: xunleiAccount[1], encoded: false) {
                     dispatch_async(dispatch_get_main_queue()) {
-                        hud.hide(true)
-                        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Logged in.", comment: "Logged in.") , inView: sender.navigationController?.view)
+                        hud.hide()
+                        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Logged in.", comment: "Logged in."))
                     }
                 }
                 else {
                     dispatch_async(dispatch_get_main_queue()) {
-                        hud.hide(true)
-                        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Username or password error.", comment: "Username or password error.") , inView: sender.navigationController?.view)
+                        hud.hide()
+                        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Username or password error.", comment: "Username or password error."))
                     }
                 }
             }
@@ -274,7 +273,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             })
         }
         if validAddresses.count <= 0 {
-            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("No downloadable link.", comment: "No downloadable link."), inView: self.navigationController?.view)
+            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("No downloadable link.", comment: "No downloadable link."))
         }
         else {
             let linksViewController = ValidLinksTableViewController()

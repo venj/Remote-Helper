@@ -14,7 +14,6 @@ class VPSearchResultController: UITableViewController {
     var torrents: [[String:AnyObject]] = []
     var keyword: String = ""
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
         title = String(format: NSLocalizedString("%@: %@ (%lu)", comment: "%@: %@ (%lu)"), arguments: [NSLocalizedString("Search", comment:"Search"), keyword, torrents.count])
@@ -128,10 +127,10 @@ class VPSearchResultController: UITableViewController {
     }
 
     func addTorrentToTransmission(torrent: [String:AnyObject]) {
-        Helper.defaultHelper.parseSessionAndAddTask(torrent["magnet"] as! String, completionHandler: { [unowned self] in
-            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."), inView: self.navigationController?.view)
-        }, errorHandler: { [unowned self] in
-            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."), inView: self.navigationController?.view)
+        Helper.defaultHelper.parseSessionAndAddTask(torrent["magnet"] as! String, completionHandler: {
+            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
+        }, errorHandler: {
+            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."))
         })
     }
 }

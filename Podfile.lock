@@ -26,6 +26,7 @@ PODS:
     - DACircularProgress (~> 2.3)
     - MBProgressHUD (~> 0.9)
     - SDWebImage (!= 3.7.2, ~> 3.7)
+  - PKHUD (2.2.4)
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
   - SDWebImage/Core (3.7.3)
@@ -33,12 +34,12 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 3.0.0-beta.1)
-  - InAppSettingsKit (~> 2.1)
+  - InAppSettingsKit (~> 2.6)
   - iOS8Colors (~> 0.1.2)
   - LTHPasscodeViewController (~> 3.6.8)
-  - MBProgressHUD (~> 0.8)
   - MMAppSwitcher (from `https://github.com/venj/MMAppSwitcher.git`)
   - MWPhotoBrowser (~> 2.1.1)
+  - PKHUD (~> 2.2.4)
   - TOWebViewController (from `https://github.com/venj/TOWebViewController.git`)
 
 EXTERNAL SOURCES:
@@ -65,6 +66,7 @@ SPEC CHECKSUMS:
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
   MMAppSwitcher: 11d6f3c08fc70fe1f1386223f89d4f96f95e8061
   MWPhotoBrowser: ba0d0c09ffda3a7ea10093518738c502c1c7141c
+  PKHUD: 4ec64535c98da203a3eb7303a58e13ac0bff1f8f
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
   TOWebViewController: accd62ec0acc8d5c2e1e195c6f7ff7654c3c840c
 

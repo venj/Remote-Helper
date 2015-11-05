@@ -8,7 +8,7 @@
 
 import UIKit
 import AFNetworking
-import MBProgressHUD
+import PKHUD
 
 @objc
 public class Helper : NSObject {
@@ -17,6 +17,7 @@ public class Helper : NSObject {
     private var sessionHeader: String = ""
     private var downloadPath: String = ""
 
+    //MARK: - Properties
     var useSSL:Bool {
         let defaults = NSUserDefaults.standardUserDefaults()
         if defaults.objectForKey(RequestUseSSL) == nil {
@@ -75,6 +76,7 @@ public class Helper : NSObject {
         }
     }
 
+    //MARK: - Link Helpers
     func torrentsListPath() -> String {
         return "http\(self.SSL_ADD_S)://\(self.baseLink())/torrents";
     }
@@ -162,6 +164,7 @@ public class Helper : NSObject {
         return "http\(self.SSL_ADD_S)://\(self.baseLink())/hash/\(name)"
     }
 
+    //MARK: - Local Files and ImageCache Helpers
     func documentsDirectory() -> String {
         return NSSearchPathForDirectoriesInDomains(.DocumentationDirectory, .UserDomainMask, true).first!
     }
@@ -188,6 +191,11 @@ public class Helper : NSObject {
         return self.documentsDirectory().vc_stringByAppendingPathComponent(path.vc_lastPathComponent())
     }
 
+    func fileSizeString(withInteger integer: Int) -> String {
+        return integer.fileSizeString
+    }
+
+    //MARK: - AFNetworking Helpers
     @objc(refreshedManager)
     func _refreshedManager() -> AFHTTPSessionManager {
         return self.refreshedManager(withAuthentication: true, withJSON: false)
@@ -196,10 +204,6 @@ public class Helper : NSObject {
     @objc(refreshedManagerWithAuthentication:)
     func _refreshedManager(withAuthentication auth: Bool = true) -> AFHTTPSessionManager {
         return self.refreshedManager(withAuthentication: auth, withJSON: false)
-    }
-
-    func fileSizeString(withInteger integer: Int) -> String {
-        return integer.fileSizeString
     }
 
     func refreshedManager(withAuthentication auth: Bool = true, withJSON JSON: Bool = false) -> AFHTTPSessionManager {
@@ -219,23 +223,77 @@ public class Helper : NSObject {
         return manager
     }
 
+    //MARK: - UI Related Helpers
     func showCellularHUD() -> Bool {
         if !self.userCellularNetwork && !AFNetworkReachabilityManager.sharedManager().reachableViaWiFi {
-            self.showHudWithMessage(NSLocalizedString("Cellular data is turned off.", comment: "Cellular data is turned off."), inView: UIApplication.sharedApplication().delegate!.window!)
+            self.showHudWithMessage(NSLocalizedString("Cellular data is turned off.", comment: "Cellular data is turned off."))
             return true
         }
         return false
     }
 
-    func showHudWithMessage(message: String, inView view:UIView?) {
-        let aView = (view == nil) ? AppDelegate.shared().window!.window! : view!
-        let hud = MBProgressHUD.showHUDAddedTo(aView, animated:true)
-        hud.mode = .Text;
-        hud.removeFromSuperViewOnHide = true;
-        hud.labelText = message;
-        hud.hide(true, afterDelay: 2)
+    func showHudWithMessage(message: String) {
+        let hud = PKHUD.sharedHUD
+        hud.contentView = PKHUDTextView(text: message)
+        hud.show()
+        hud.hide(afterDelay: 2)
     }
 
+    func showHUD() -> PKHUD {
+        let hud = PKHUD.sharedHUD
+        hud.contentView = PKHUDProgressView()
+        hud.show()
+        return hud
+    }
+
+    func dismissMe(sender: UIBarButtonItem) {
+        AppDelegate.shared().window?.rootViewController?.dismissViewControllerAnimated(true, completion: nil)
+    }
+
+    func showTorrentSearchAlertInViewController(viewController:UIViewController) {
+        if (self.showCellularHUD()) { return }
+        let alertController = UIAlertController(title: NSLocalizedString("Search", comment: "Search"), message: NSLocalizedString("Please enter video serial:", comment: "Please enter video serial:"), preferredStyle: .Alert)
+        alertController.addTextFieldWithConfigurationHandler { (textField) in
+            textField.keyboardType = .ASCIICapable
+        }
+        let searchAction = UIAlertAction(title: NSLocalizedString("Search", comment: "Search"), style: .Default) { _ in
+            let keyword = alertController.textFields![0].text!
+            let hud = self.showHUD()
+            let manager = self.refreshedManager()
+            let dbSearchPath = self.dbSearchPath(withKeyword: keyword)
+            manager.GET(dbSearchPath, parameters: nil, success: { (_, responseObject) -> Void in
+                let success = responseObject["success"] as? Int == 1 ? true : false
+                if success {
+                    let searchResultController = VPSearchResultController()
+                    guard let torrents = responseObject["results"] as? [[String: AnyObject]] else { return }
+                    searchResultController.torrents = torrents
+                    searchResultController.keyword = keyword
+                    if let navigationController = viewController as? UINavigationController {
+                        navigationController.pushViewController(searchResultController, animated: true)
+                    }
+                    else {
+                        let searchResultNavigationController = UINavigationController(rootViewController: searchResultController)
+                        searchResultNavigationController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target:self, action: "dismissMe")
+                        viewController.presentViewController(searchResultNavigationController, animated: true, completion: nil)
+                    }
+                }
+                else {
+                    let errorMessage = responseObject["message"] as? String
+                    self.showHudWithMessage(NSLocalizedString("\(errorMessage)", comment: "\(errorMessage)"))
+                }
+                hud.hide()
+                }, failure: { (_, _) -> Void in
+                    hud.hide()
+                    self.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+            })
+        }
+        alertController.addAction(searchAction)
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .Cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        viewController.presentViewController(alertController, animated: true, completion: nil)
+    }
+
+    //MARK: - Transmission Remote Download Helpers
     func downloadTask(magnet:String, toDir dir: String, completionHandler:(() -> Void)? = nil,  errorHandler:(() -> Void)? = nil) {
         let params = ["method" : "torrent-add", "arguments": ["paused" : false, "download-dir" : dir, "filename" : magnet]]
         let manager = self.refreshedManager(withAuthentication: true, withJSON: true)
@@ -290,55 +348,6 @@ public class Helper : NSObject {
                 }
             })
     }
-
-    func dismissMe(sender: UIBarButtonItem) {
-        AppDelegate.shared().window?.rootViewController?.dismissViewControllerAnimated(true, completion: nil)
-    }
-
-    func showTorrentSearchAlertInViewController(viewController:UIViewController) {
-        if (self.showCellularHUD()) { return }
-        let alertController = UIAlertController(title: NSLocalizedString("Search", comment: "Search"), message: NSLocalizedString("Please enter video serial:", comment: "Please enter video serial:"), preferredStyle: .Alert)
-        alertController.addTextFieldWithConfigurationHandler { (textField) in
-            textField.keyboardType = .ASCIICapable
-        }
-        let searchAction = UIAlertAction(title: NSLocalizedString("Search", comment: "Search"), style: .Default) { _ in
-            let keyword = alertController.textFields![0].text!
-            let hud = MBProgressHUD.showHUDAddedTo(viewController.view, animated: true)
-            hud.removeFromSuperViewOnHide = true
-            let manager = self.refreshedManager()
-            let dbSearchPath = self.dbSearchPath(withKeyword: keyword)
-            manager.GET(dbSearchPath, parameters: nil, success: { (_, responseObject) -> Void in
-                let success = responseObject["success"] as? Int == 1 ? true : false
-                if success {
-                    let searchResultController = VPSearchResultController()
-                    guard let torrents = responseObject["results"] as? [[String: AnyObject]] else { return }
-                    searchResultController.torrents = torrents
-                    searchResultController.keyword = keyword
-                    if let navigationController = viewController as? UINavigationController {
-                        navigationController.pushViewController(searchResultController, animated: true)
-                    }
-                    else {
-                        let searchResultNavigationController = UINavigationController(rootViewController: searchResultController)
-                        searchResultNavigationController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target:self, action: "dismissMe")
-                        viewController.presentViewController(searchResultNavigationController, animated: true, completion: nil)
-                    }
-                }
-                else {
-                    let errorMessage = responseObject["message"] as? String
-                    self.showHudWithMessage(NSLocalizedString("\(errorMessage)", comment: "\(errorMessage)"), inView: viewController.view)
-                }
-                hud.hide(true)
-                }, failure: { (_, _) -> Void in
-                    hud.hide(true)
-                    self.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."), inView: viewController.view)
-            })
-        }
-        alertController.addAction(searchAction)
-        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .Cancel, handler: nil)
-        alertController.addAction(cancelAction)
-        viewController.presentViewController(alertController, animated: true, completion: nil)
-    }
-
 }
 
 

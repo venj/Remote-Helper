@@ -9,14 +9,14 @@
 import Foundation
 
 @available(iOS 7.0, OSX 10.9, *)
-public extension NSString {
-    func base64String() -> NSString? {
+public extension String {
+    func base64String() -> String? {
         guard let data = self.dataUsingEncoding(NSUTF8StringEncoding) else { return nil }
         return data.base64EncodedStringWithOptions([])
     }
 
-    func decodedBase64String() -> NSString? {
-        guard let data = NSData(base64EncodedString: (self as String), options: []) else { return nil }
-        return NSString(data: data, encoding: NSUTF8StringEncoding)
+    func decodedBase64String() -> String? {
+        guard let data = NSData(base64EncodedString: self, options: []) else { return nil }
+        return String(data: data, encoding: NSUTF8StringEncoding)
     }
 }

@@ -63,7 +63,7 @@ public class URLConverter : NSObject {
         case .Thunder:
             pattern = "AA(.+?)ZZ"
         case .QQ:
-            return decodedString as String
+            return decodedString
         case .Flashget:
             pattern = "[FLASHGET](.+?)[FLASHGET]"
         case .Unknown: // Return original url string while type unknown

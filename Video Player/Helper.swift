@@ -13,7 +13,6 @@ import MBProgressHUD
 @objc
 public class Helper : NSObject {
     public static let defaultHelper = Helper()
-    public static let sharedAPI = HYXunleiLixianAPI()
 
     private var sessionHeader: String = ""
     private var downloadPath: String = ""
@@ -246,8 +245,8 @@ public class Helper : NSObject {
             if result == "success" {
                 completionHandler?()
             }
-            }, failure:  { (_, _) in
-                errorHandler?()
+        }, failure:  { (_, _) in
+            errorHandler?()
         })
     }
 
@@ -256,8 +255,6 @@ public class Helper : NSObject {
         let manager = self.refreshedManager(withAuthentication: true, withJSON: true)
         manager.requestSerializer.setValue(sessionHeader, forHTTPHeaderField: "X-Transmission-Session-Id")
         manager.POST(self.transmissionRPCAddress(), parameters: sessionParams, success: { [unowned self] (_, responseObject) in
-            let result = responseObject["result"] as! String
-            if result == "success" {
                 let result = responseObject["result"] as! String
                 if result == "success" {
                     self.downloadPath = (responseObject["arguments"] as! [String: AnyObject])["download-dir"] as! String
@@ -266,7 +263,6 @@ public class Helper : NSObject {
                 else {
                     errorHandler?()
                 }
-            }
             }, failure: { [unowned self] (task, _) in
                 let response = task.response as! NSHTTPURLResponse
                 if response.statusCode == 409 {
@@ -282,14 +278,16 @@ public class Helper : NSObject {
                         else {
                             errorHandler?()
                         }
-                        }, failure: { (_, _) -> Void in
-                            let alertController = UIAlertController(title: NSLocalizedString("Error", comment:"Error"), message: NSLocalizedString("Unkown error.", comment: "Unknow error."), preferredStyle: .Alert)
-                            let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .Cancel, handler: nil)
-                            alertController.addAction(cancelAction)
-                            AppDelegate.shared().window?.rootViewController?.presentViewController(alertController, animated: true, completion: nil)
+                    }, failure: { (_, _) -> Void in
+                        let alertController = UIAlertController(title: NSLocalizedString("Error", comment:"Error"), message: NSLocalizedString("Unkown error.", comment: "Unknow error."), preferredStyle: .Alert)
+                        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .Cancel, handler: nil)
+                        alertController.addAction(cancelAction)
+                        AppDelegate.shared().window?.rootViewController?.presentViewController(alertController, animated: true, completion: nil)
                     })
                 }
-                errorHandler?()
+                else {
+                    errorHandler?()
+                }
             })
     }
 

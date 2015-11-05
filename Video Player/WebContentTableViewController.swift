@@ -132,12 +132,11 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             }
         }
         else if specifier.key() == VerifyXunleiKey {
-            let api = HYXunleiLixianAPI()
-            api.logOut()
+            LXAPIHelper.logout()
             let hud = MBProgressHUD.showHUDAddedTo(sender.navigationController?.view, animated: true)
             dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
                 let xunleiAccount = Helper.defaultHelper.xunleiUsernameAndPassword
-                if api.loginWithUsername(xunleiAccount[0], password: xunleiAccount[1], isPasswordEncode: false) {
+                if LXAPIHelper.login(withUsername: xunleiAccount[0], password: xunleiAccount[1], encoded: false) {
                     dispatch_async(dispatch_get_main_queue()) {
                         hud.hide(true)
                         Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Logged in.", comment: "Logged in.") , inView: sender.navigationController?.view)

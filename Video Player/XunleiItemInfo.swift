@@ -61,4 +61,8 @@ public class XunleiItemInfo : NSObject, NSCoding {
         self.ifvod = aDecoder.decodeObjectForKey("ifVod") as! String
         self.isBT = aDecoder.decodeObjectForKey("isBT") as! String
     }
+
+    public convenience override init() {
+        self.init(coder:NSCoder())!
+    }
 }

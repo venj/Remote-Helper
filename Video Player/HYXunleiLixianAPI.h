@@ -26,30 +26,6 @@
 
 @interface HYXunleiLixianAPI : NSObject
 -(XunleiItemInfo *) getTaskWithTaskID:(NSString*) aTaskID;
-#pragma mark - Cookies Methods
--(NSString *) cookieValueWithName:(NSString *)aName;
--(NSHTTPCookie *) setCookieWithKey:(NSString *) key Value:(NSString *) value;
--(BOOL) hasCookie:(NSString*) aKey;
-#pragma mark - Login/LogOut Methods
-//Login
--(BOOL) loginWithUsername:(NSString *) aName Password:(NSString *) aPassword isPasswordEncode:(BOOL)passwordEncode;
--(NSString *)encodePasswordTwiceMD5:(NSString *)aPassword;
--(BOOL) isLogin;
--(void) logOut;
-#pragma mark - UserID,UserNmae
-//UserID,UserName
--(NSString *)userID;
--(NSString *)userName;
-#pragma mark - GDriveID
-//GdriveID是一个关键Cookie，在下载文件的时候需要用它进行验证
--(NSString*)GDriveID;
--(BOOL) isGDriveIDInCookie;
--(void) setGdriveID:(NSString*) gdriveid;
-#pragma mark - Referer
-//获得Referer
--(NSString*) refererWithStringFormat;
--(NSURL*) refererWithURLFormat;
-
 
 #pragma mark - Task
 //获得不同下载状态的任务列表

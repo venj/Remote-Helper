@@ -80,9 +80,9 @@ public class ParseElements : NSObject {
         return result
     }
 
-    public class func nextPageSubURL(taskContent: String) -> String {
+    public class func nextPageSubURL(taskContent: String) -> String? {
         let pattern = "<li\\s*class=\"next\"><a\\s*href=\"([^\"]+)\">[^<>]*</a></li>"
-        guard let result = taskContent.stringByMatching(pattern, capture:1) else { return "unknown info" }
+        guard let result = taskContent.stringByMatching(pattern, capture:1) else { return nil }
         return result
     }
 

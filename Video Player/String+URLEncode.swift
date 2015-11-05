@@ -8,11 +8,11 @@
 
 import Foundation
 
-public extension NSString {
+public extension String {
     var percentEncodedString: String {
         get {
             let rfc3986ReservedCharacterSet = NSCharacterSet(charactersInString: "!*'();:@&=+$,/?%#[]")
-            guard let str = self.stringByAddingPercentEncodingWithAllowedCharacters(rfc3986ReservedCharacterSet.invertedSet) else { return self as String }
+            guard let str = self.stringByAddingPercentEncodingWithAllowedCharacters(rfc3986ReservedCharacterSet.invertedSet) else { return self }
             return str
         }
     }
@@ -20,7 +20,7 @@ public extension NSString {
     var decodedPercentEncodingString: String {
         get {
             let str = self.stringByReplacingOccurrencesOfString("+", withString: " ")
-            guard let s = str.stringByRemovingPercentEncoding else { return self as String }
+            guard let s = str.stringByRemovingPercentEncoding else { return self }
             return s
         }
     }

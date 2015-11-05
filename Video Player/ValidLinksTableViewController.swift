@@ -91,10 +91,9 @@ class ValidLinksTableViewController: UITableViewController {
             let hud = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
             dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
                 let protocal = link.componentsSeparatedByString(":")[0]
-                let xunleiAPI = Helper.sharedAPI
                 let xunleiAccount = Helper.defaultHelper.xunleiUsernameAndPassword
                 if !AppDelegate.shared().xunleiUserLoggedIn {
-                    if !xunleiAPI.loginWithUsername(xunleiAccount[0], password: xunleiAccount[1], isPasswordEncode: false) {
+                    if !LXAPIHelper.login(withUsername:xunleiAccount[0], password: xunleiAccount[1], encoded: false) {
                         dispatch_async(dispatch_get_main_queue()) { [unowned self] in
                             hud.hide(true)
                             Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Login Failed.", comment: "Login Failed."), inView:self.navigationController?.view)
@@ -108,10 +107,10 @@ class ValidLinksTableViewController: UITableViewController {
                 sleep(2)
                 var dcid = ""
                 if protocal == "magnet" {
-                    dcid = xunleiAPI.addMegnetTask(link)
+                    dcid = LXAPIHelper.addMegnetTask(link)
                 }
                 else {
-                    dcid = xunleiAPI.addNormalTask(link)
+                    dcid = LXAPIHelper.addNormalTask(link)
                 }
                 dispatch_async(dispatch_get_main_queue()) { [unowned self] in
                     hud.hide(true)
@@ -137,9 +136,10 @@ class ValidLinksTableViewController: UITableViewController {
             hud.removeFromSuperViewOnHide = true
             Helper.defaultHelper.parseSessionAndAddTask(link, completionHandler: {
                 hud.hide(true)
-                }, errorHandler: { [unowned self] in
-                    Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."), inView: self.navigationController?.view)
-                })
+                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."), inView: self.navigationController?.view)
+            }, errorHandler: { [unowned self] in
+                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."), inView: self.navigationController?.view)
+            })
         }
         else {
             guard let url = NSURL(string: link) else { return }

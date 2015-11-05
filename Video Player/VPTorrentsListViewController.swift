@@ -173,7 +173,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         guard let base64FileName = photos[currentPhotoIndex].base64String() else { return }
         let manager = Helper.defaultHelper.refreshedManager()
         let hud = MBProgressHUD.showHUDAddedTo(navigationController?.view, animated: true)
-        manager.GET(Helper.defaultHelper.hashTorrent(withName: base64FileName as String), parameters:nil, success: { [unowned self] (_, responseObject) in
+        manager.GET(Helper.defaultHelper.hashTorrent(withName: base64FileName), parameters:nil, success: { [unowned self] (_, responseObject) in
             guard let hash = responseObject["hash"] as? String else { return }
             let message = "magnet:?xt=urn:btih:\(hash.uppercaseString)"
             UIPasteboard.generalPasteboard().string = message

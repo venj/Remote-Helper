@@ -9,10 +9,11 @@
 import Foundation
 
 @available(iOS 4.0, OSX 10.6, *)
-public extension NSString {
+public extension String {
     func matches(pattern: String, regularExpressionOptions:NSRegularExpressionOptions = [.CaseInsensitive], matchingOptions:NSMatchingOptions = []) -> Bool {
         guard let regex = try? NSRegularExpression(pattern: pattern, options: regularExpressionOptions) else { return false }
-        if regex.numberOfMatchesInString(self as String, options: matchingOptions, range:self.rangeOfString(self as String)) > 0 {
+        let nsRange = NSRange(location: 0, length: self.characters.count)
+        if regex.numberOfMatchesInString(self, options: matchingOptions, range:nsRange) > 0 {
             return true
         }
         else {
@@ -23,12 +24,13 @@ public extension NSString {
     func arrayOfCaptureComponentsMatchedByRegex(pattern: String) -> [[String]] {
         var result: [[String]] = [[]]
         guard let regex = try? NSRegularExpression(pattern: pattern, options:[.CaseInsensitive]) else { return result }
-        let matches = regex.matchesInString((self as String), options: [], range: self.rangeOfString(self as String))
+        let nsRange = NSRange(location: 0, length: self.characters.count)
+        let matches = regex.matchesInString(self, options: [], range: nsRange)
         for match in matches {
             var subResult: [String] = []
             for var i = 0; i < match.numberOfRanges; ++i {
-                let range = match.rangeAtIndex(i)
-                subResult.append(self.substringWithRange(range))
+                let nsRange = match.rangeAtIndex(i)
+                subResult.append(self.substringWithRange(self.rangeFromNSRange(nsRange)!))
             }
             result.append(subResult)
         }

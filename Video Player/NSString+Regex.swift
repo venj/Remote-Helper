@@ -32,7 +32,7 @@ public extension String {
                 let nsRange = match.rangeAtIndex(i)
                 subResult.append(self.substringWithRange(self.rangeFromNSRange(nsRange)!))
             }
-            result.append(subResult)
+            if !subResult.isEmpty { result.append(subResult) }
         }
         return result
     }

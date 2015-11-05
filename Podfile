@@ -4,7 +4,6 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 pod 'AFNetworking', '~> 3.0.0-beta.1'
 pod 'InAppSettingsKit', '~> 2.1'
-pod 'BlocksKit', '~> 2.2.3'
 pod 'MWPhotoBrowser', '~> 2.1.1'
 pod 'MBProgressHUD', '~> 0.8'
 pod 'TOWebViewController', :git => 'https://github.com/venj/TOWebViewController.git'

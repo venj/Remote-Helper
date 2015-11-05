@@ -14,21 +14,6 @@ PODS:
   - AFNetworking/Serialization (3.0.0-beta.1)
   - AFNetworking/UIKit (3.0.0-beta.1):
     - AFNetworking/NSURLSession
-  - BlocksKit (2.2.5):
-    - BlocksKit/All (= 2.2.5)
-  - BlocksKit/All (2.2.5):
-    - BlocksKit/Core
-    - BlocksKit/DynamicDelegate
-    - BlocksKit/MessageUI
-    - BlocksKit/UIKit
-  - BlocksKit/Core (2.2.5)
-  - BlocksKit/DynamicDelegate (2.2.5)
-  - BlocksKit/MessageUI (2.2.5):
-    - BlocksKit/Core
-    - BlocksKit/DynamicDelegate
-  - BlocksKit/UIKit (2.2.5):
-    - BlocksKit/Core
-    - BlocksKit/DynamicDelegate
   - DACircularProgress (2.3.1)
   - HexColors (2.2.1)
   - InAppSettingsKit (2.6)
@@ -48,7 +33,6 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 3.0.0-beta.1)
-  - BlocksKit (~> 2.2.3)
   - InAppSettingsKit (~> 2.1)
   - iOS8Colors (~> 0.1.2)
   - LTHPasscodeViewController (~> 3.6.8)
@@ -73,7 +57,6 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AFNetworking: 1100906802d9479aa0949e8e2cbc1d4e6beba327
-  BlocksKit: 7f422b971407001178d181a43b99014ea2591fe6
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   HexColors: abfd172e329dab59888614ccba6f216cec59289d
   InAppSettingsKit: cc56d3ec45f11352a16d5b210da8a3fa1b9d05ed

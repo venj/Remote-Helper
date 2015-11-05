@@ -206,7 +206,6 @@ class LXAPIHelper : NSObject {
             var preArray0 = preString0.arrayOfCaptureComponentsMatchedByRegex(re3)
             var preMArray:[String] = []
             for a in preArray0 {
-                if a.count < 2 { continue }
                 preMArray.append(a[1])
             }
             findex = preMArray.joinWithSeparator("_")
@@ -215,7 +214,6 @@ class LXAPIHelper : NSObject {
             preArray0 = preString0.arrayOfCaptureComponentsMatchedByRegex(re3)
             var preMArray1:[String] = []
             for a in preArray0 {
-                if a.count < 2 { continue }
                 preMArray1.append(a[1])
             }
             sindex = preMArray1.joinWithSeparator("_")

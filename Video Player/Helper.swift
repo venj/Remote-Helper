@@ -195,6 +195,14 @@ public class Helper : NSObject {
         return integer.fileSizeString
     }
 
+    //MARK: - UserDefaults Helpers
+
+    func save(value: AnyObject, forKey key:String) {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setObject(value, forKey: key)
+        defaults.synchronize()
+    }
+
     //MARK: - AFNetworking Helpers
     @objc(refreshedManager)
     func _refreshedManager() -> AFHTTPSessionManager {

@@ -9,9 +9,9 @@
 import UIKit
 import MMAppSwitcher
 import SDWebImage
-import LTHPasscodeViewController
 import MBProgressHUD
 import AFNetworking
+import PasscodeLock
 
 @UIApplicationMain
 class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource, UITabBarControllerDelegate {
@@ -19,6 +19,12 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
     var fileListViewController: WebContentTableViewController!
     var tabbarController: UITabBarController!
     var xunleiUserLoggedIn: Bool = false
+
+    lazy var passcodeLockPresenter: PasscodeLockPresenter = {
+        let configuration = PasscodeLockConfiguration()
+        let presenter = PasscodeLockPresenter(mainWindow: self.window, configuration: configuration)
+        return presenter
+    }()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
@@ -40,13 +46,19 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
         tabbarController.delegate = self
         tabbarController.viewControllers = [fileListNavigationController, torrentListNavigationController]
         window?.rootViewController = tabbarController
+        // Passcode Lock
+        passcodeLockPresenter.presentPasscodeLock()
         // Window
         self.window?.makeKeyAndVisible()
         return true
     }
 
     func applicationWillResignActive(application: UIApplication) {
-        MMAppSwitcher.sharedInstance().setNeedsUpdate()
+        let repository = UserDefaultsPasscodeRepository()
+        if !repository.hasPasscode {
+            MMAppSwitcher.sharedInstance().setNeedsUpdate()
+        }
+
         if NSUserDefaults.standardUserDefaults().boolForKey(ClearCacheOnExitKey) == true {
             let app = UIApplication.sharedApplication()
             var identifier: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
@@ -62,11 +74,10 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
-        window?.rootViewController?.dismissViewControllerAnimated(false, completion: nil)
+        passcodeLockPresenter.presentPasscodeLock()
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
-        showPasslock()
     }
 
     func applicationWillTerminate(application: UIApplication) {
@@ -93,12 +104,5 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
         let view = UIView()
         view.backgroundColor = UIColor.whiteColor()
         return view
-    }
-
-    //MARK: - Helpers
-    func showPasslock() {
-        if LTHPasscodeViewController.doesPasscodeExist() {
-            LTHPasscodeViewController.sharedUser().showLockScreenWithAnimation(true, withLogout: false, andLogoutTitle: nil)
-        }
     }
 }

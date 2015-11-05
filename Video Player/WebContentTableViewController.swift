@@ -8,7 +8,7 @@
 
 import UIKit
 import SDWebImage
-import LTHPasscodeViewController
+import PasscodeLock
 import TOWebViewController
 import MWPhotoBrowser
 import InAppSettingsKit
@@ -107,11 +107,37 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     func settingsViewController(sender: IASKAppSettingsViewController!, buttonTappedForSpecifier specifier: IASKSpecifier!) {
         if specifier.key() == PasscodeLockConfig {
-            if LTHPasscodeViewController.doesPasscodeExist() {
-                LTHPasscodeViewController.sharedUser().showForEnablingPasscodeInViewController(sender, asModal: false)
+            let repository = UserDefaultsPasscodeRepository()
+            let configuration = PasscodeLockConfiguration(repository: repository)
+            if !repository.hasPasscode {
+                let passcodeVC = PasscodeLockViewController(state: .SetPasscode, configuration: configuration)
+                passcodeVC.successCallback = { lock in
+                    let status = NSLocalizedString("On", comment: "打开")
+                    Helper.defaultHelper.save(status, forKey: PasscodeLockStatus)
+                }
+                passcodeVC.dismissCompletionCallback = {
+                    sender.tableView.reloadData()
+                }
+                sender.navigationController?.pushViewController(passcodeVC, animated: true)
             }
             else {
-                LTHPasscodeViewController.sharedUser().showForDisablingPasscodeInViewController(sender, asModal: false)
+                let alert = UIAlertController(title: NSLocalizedString("Disable passcode", comment: "Disable passcode lock alert title"), message: NSLocalizedString("You are going to disable passcode lock. Continue?", comment: "Disable passcode lock alert body"), preferredStyle: .Alert)
+                let confirmAction = UIAlertAction(title: NSLocalizedString("Continue", comment: "继续"), style: .Default, handler: { _ in
+                    let passcodeVC = PasscodeLockViewController(state: .RemovePasscode, configuration: configuration)
+                    passcodeVC.successCallback = { lock in
+                        lock.repository.deletePasscode()
+                        let status = NSLocalizedString("Off", comment: "关闭")
+                        Helper.defaultHelper.save(status, forKey: PasscodeLockStatus)
+                    }
+                    passcodeVC.dismissCompletionCallback = {
+                        sender.tableView.reloadData()
+                    }
+                    sender.navigationController?.pushViewController(passcodeVC, animated: true)
+                })
+                alert.addAction(confirmAction)
+                let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "取消"), style: .Cancel, handler: nil)
+                alert.addAction(cancelAction)
+                sender.presentViewController(alert, animated: true, completion: nil)
             }
         }
         else if specifier.key() == ClearCacheNowKey {
@@ -220,7 +246,8 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         let cacheSizeInBytes = SDImageCache.sharedImageCache().getSize()
         let cacheSize = Helper.defaultHelper.fileSizeString(withInteger: Int(cacheSizeInBytes)) // Maybe problematic on 32-bit system
         defaults.setObject(cacheSize, forKey: ImageCacheSizeKey)
-        let status = LTHPasscodeViewController.doesPasscodeExist() ? NSLocalizedString("On", comment: "On") : NSLocalizedString("Off", comment:"Off")
+        let passcodeRepo = UserDefaultsPasscodeRepository()
+        let status = passcodeRepo.hasPasscode ? NSLocalizedString("On", comment: "打开") : NSLocalizedString("Off", comment: "关闭")
         defaults.setObject(status, forKey: PasscodeLockStatus)
         let localFileSize = Helper.defaultHelper.fileSizeString(withInteger: Helper.defaultHelper.localFileSize())
         defaults.setObject(localFileSize, forKey: LocalFileSize)

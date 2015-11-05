@@ -1,21 +1,28 @@
 远程下载助手
 ===========
 
-**最近我正在将此项目的各部分逐渐改为用Swift实现。所以每天都会有大量的代码变化，敬请注意。**
-
-**项目的Swift化会引入退行bug！**
-
 一个简单的远程下载客户端，请配合[服务器端](https://github.com/venj/movie_server)一起使用。
 
-* 切换为AFNetworking 3.0.0之后，SDWebImage突然开始不认自定义SSL证书了。暂时在MWPhoto中加了`SDWebImageAllowInvalidSSLCertificates`选项，绕过证书检查。不知道是否有办法全局绕过SSL证书检查。*
+**已知问题**
+
+1. 项目Swift化基本完成，最后一个步骤是AFNetworking。
+2. 项目的Swift化会引入退行bug。
+3. 升级到AFNetworking 3.0.0之后，SDWebImage无法识别自定义SSL证书。
+	- 临时解决方案：在MWPhoto中的请求中，设置`SDWebImageAllowInvalidSSLCertificates`选项
+4. 应用配色和图标会有进一步的更改。
 
 新功能介绍
 ---------
 
+**2.0 (???)**
+
+- 没有新特征！！！
+- 源码除了部分第三方库，全面Swift化
+
 **1.5 (172)**
 
 - 加入蜂窝数据使用控制
-- iPhone 6S的桌面菜单（然并卵的功能）
+- iPhone 6S的Force Touch桌面菜单（然并卵）
 - iOS 9多任务支持
 - 群晖Download Station整合
 - Web内容下载链接解析
@@ -175,16 +182,8 @@
     + 如果应用程序位于后台（并没有被杀死的时候）再次打开程序可能会出现之前浏览的画面大约0.?秒
     + 密码锁以全屏Modal的方式在iPad上显示，用来避免程序主界面无法被完全覆盖
 
-已知问题
--------
-
-- 在视频缓冲的时候，如果用户点击“Done”按钮退出播放，在某些情况下，视频依然会在后台加载并播放。
-
-
 版权许可
 -------
-
-**CocoaPods打包进来的的代码不适用本协议。**
 
 [The MIT License (MIT)](http://opensource.org/licenses/MIT)
 Copyright (c) 2013 venj

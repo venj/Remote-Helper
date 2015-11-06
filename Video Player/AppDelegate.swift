@@ -45,7 +45,10 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
         tabbarController = UITabBarController()
         tabbarController.delegate = self
         tabbarController.viewControllers = [fileListNavigationController, torrentListNavigationController]
+        tabbarController.tabBar.tintColor = Helper.defaultHelper.mainThemeColor()
         window?.rootViewController = tabbarController
+        // Status Style
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
         // Passcode Lock
         passcodeLockPresenter.presentPasscodeLock()
         // Window

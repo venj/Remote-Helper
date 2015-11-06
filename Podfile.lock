@@ -14,6 +14,7 @@ PODS:
   - AFNetworking/Serialization (3.0.0-beta.1)
   - AFNetworking/UIKit (3.0.0-beta.1):
     - AFNetworking/NSURLSession
+  - Alamofire (3.1.1)
   - DACircularProgress (2.3.1)
   - HexColors (2.2.1)
   - InAppSettingsKit (2.6)
@@ -34,6 +35,7 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 3.0.0-beta.1)
+  - Alamofire (~> 3.1.1)
   - InAppSettingsKit (~> 2.6)
   - iOS8Colors (~> 0.1.2)
   - MMAppSwitcher (from `https://github.com/venj/MMAppSwitcher.git`)
@@ -65,6 +67,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AFNetworking: 1100906802d9479aa0949e8e2cbc1d4e6beba327
+  Alamofire: 9b0a7188b961a03914a99304488bd226b0e46c0e
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   HexColors: abfd172e329dab59888614ccba6f216cec59289d
   InAppSettingsKit: cc56d3ec45f11352a16d5b210da8a3fa1b9d05ed

@@ -39,6 +39,11 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             self.showSettings()
         }
 
+        // Theme
+        navigationController?.navigationBar.barTintColor = Helper.defaultHelper.mainThemeColor()
+        navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+        navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
+
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
             tableView.cellLayoutMarginsFollowReadableWidth = false
@@ -50,6 +55,15 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         // Dispose of any resources that can be recreated.
     }
 
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        UIApplication.sharedApplication().setStatusBarStyle(.LightContent, animated: true)
+    }
+    
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -258,7 +272,17 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         settingsViewController = IASKAppSettingsViewController(style: .Grouped)
         settingsViewController.delegate = self
         settingsViewController.showCreditsFooter = false
+        if #available(iOS 9.0, *) {
+            UIView.appearanceWhenContainedInInstancesOfClasses([IASKAppSettingsViewController.self]).tintColor = Helper.defaultHelper.mainThemeColor()
+            UISwitch.appearanceWhenContainedInInstancesOfClasses([IASKAppSettingsViewController.self]).onTintColor = Helper.defaultHelper.mainThemeColor()
+        } else {
+            //TODO: How to handle deprecated iOS 8 themeing? 
+        }
         let settingsNavigationController = UINavigationController(rootViewController: settingsViewController)
+        // Theme
+        settingsNavigationController.navigationBar.barTintColor = Helper.defaultHelper.mainThemeColor()
+        settingsNavigationController.navigationBar.tintColor = UIColor.whiteColor()
+        settingsNavigationController.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
             settingsViewController.modalPresentationStyle = .FormSheet
         }
@@ -274,7 +298,12 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         transmissionWebViewController.urlRequest.cachePolicy = .ReloadIgnoringLocalCacheData
         transmissionWebViewController.title = "Transmission"
         transmissionWebViewController.showUrlWhileLoading = false
+        transmissionWebViewController.view.tintColor = Helper.defaultHelper.mainThemeColor()
         let transmissionNavigationController = UINavigationController(rootViewController: transmissionWebViewController)
+        // Theme
+        transmissionNavigationController.navigationBar.barTintColor = Helper.defaultHelper.mainThemeColor()
+        transmissionNavigationController.navigationBar.tintColor = UIColor.whiteColor()
+        transmissionNavigationController.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
         dispatch_async(dispatch_get_main_queue()) { [unowned self] in
             self.presentViewController(transmissionNavigationController, animated:true, completion: nil)
         }

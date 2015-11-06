@@ -232,6 +232,10 @@ public class Helper : NSObject {
     }
 
     //MARK: - UI Related Helpers
+    func mainThemeColor() -> UIColor {
+        return UIColor(red:0.94, green:0.44, blue:0.19, alpha:1)
+    }
+
     func showCellularHUD() -> Bool {
         if !self.userCellularNetwork && !AFNetworkReachabilityManager.sharedManager().reachableViaWiFi {
             self.showHudWithMessage(NSLocalizedString("Cellular data is turned off.", comment: "Cellular data is turned off."))

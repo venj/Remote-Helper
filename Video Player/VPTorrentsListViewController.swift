@@ -67,6 +67,12 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         tableView.tableHeaderView = searchBar
         self.loadTorrentList(nil)
 
+        // Theme
+        navigationController?.navigationBar.barTintColor = Helper.defaultHelper.mainThemeColor()
+        navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+        navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
+        tableView.tintColor = Helper.defaultHelper.mainThemeColor()
+
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
             tableView.cellLayoutMarginsFollowReadableWidth = false
@@ -78,6 +84,10 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         // Dispose of any resources that can be recreated.
     }
 
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
+    }
+    
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {

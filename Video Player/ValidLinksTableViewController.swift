@@ -35,6 +35,9 @@ class ValidLinksTableViewController: UITableViewController {
         }
     }
 
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
+    }
 
     //MARK: - TableView Delegates and Data Source
 

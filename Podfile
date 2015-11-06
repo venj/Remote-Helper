@@ -2,6 +2,7 @@ platform :ios, '8.0'
 use_frameworks!
 source 'https://github.com/CocoaPods/Specs.git'
 
+pod 'Alamofire', '~> 3.1.1'
 pod 'AFNetworking', '~> 3.0.0-beta.1'
 pod 'InAppSettingsKit', '~> 2.6'
 pod 'MWPhotoBrowser', '~> 2.1.1'

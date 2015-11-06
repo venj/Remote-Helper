@@ -47,6 +47,10 @@ class VPSearchResultController: UITableViewController {
         naviControl.navigationBar.barStyle = .Default
     }
 
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
+    }
+
     // MARK: - Table view delegate and data source
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1

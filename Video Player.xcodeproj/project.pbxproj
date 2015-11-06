@@ -37,6 +37,7 @@
 		255A7D251BEB8DC700E6012B /* PasscodeLockConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255A7D231BEB8DC700E6012B /* PasscodeLockConfiguration.swift */; };
 		255A7D2A1BEB902400E6012B /* PasscodeLockView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 255A7D291BEB902400E6012B /* PasscodeLockView.xib */; };
 		255A7D2B1BEB904E00E6012B /* PasscodeLock.strings in Resources */ = {isa = PBXBuildFile; fileRef = 255A7D2D1BEB904E00E6012B /* PasscodeLock.strings */; };
+		255A7D301BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255A7D2F1BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift */; };
 		2561854E1B6F8D1B0073ACD3 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 256185501B6F8D1B0073ACD3 /* Launch Screen.xib */; };
 		256EA4BF177D5F830081309B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 256EA4BD177D5F830081309B /* Localizable.strings */; };
 		2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2581D48717544A4C00EF3867 /* InAppSettings.bundle */; };
@@ -82,6 +83,7 @@
 		255A7D291BEB902400E6012B /* PasscodeLockView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PasscodeLockView.xib; sourceTree = "<group>"; };
 		255A7D2C1BEB904E00E6012B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/PasscodeLock.strings; sourceTree = "<group>"; };
 		255A7D2E1BEB905600E6012B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/PasscodeLock.strings"; sourceTree = "<group>"; };
+		255A7D2F1BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UINavigationController+StatusBarStyle.swift"; sourceTree = "<group>"; };
 		2561854F1B6F8D1B0073ACD3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/Launch Screen.xib"; sourceTree = "<group>"; };
 		256EA4BC177D5ED30081309B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		256EA4BE177D5F830081309B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -214,6 +216,7 @@
 				2502ABDC1BE6F84B004882FE /* String+JSON.swift */,
 				25F94A611BE5E9FF009C9195 /* NSDictionary+JSON.swift */,
 				2502ABEB1BE748F1004882FE /* Int+FileSize.swift */,
+				255A7D2F1BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -387,6 +390,7 @@
 				254CBE4B1BE877440050A288 /* ValidLinksTableViewController.swift in Sources */,
 				254CBE421BE857520050A288 /* String+MD5.swift in Sources */,
 				255A7D241BEB8DC700E6012B /* UserDefaultsPasscodeRepository.swift in Sources */,
+				255A7D301BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift in Sources */,
 				254CBE491BE86CAC0050A288 /* ParseElements.swift in Sources */,
 				250354CF1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift in Sources */,
 				2502ABE11BE6FE78004882FE /* NSData+Base64.swift in Sources */,

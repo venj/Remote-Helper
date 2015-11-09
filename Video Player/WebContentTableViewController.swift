@@ -102,6 +102,8 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         webViewController.hidesBottomBarWhenPushed = true
         webViewController.urlRequest.cachePolicy = .ReturnCacheDataElseLoad
         webViewController.additionalBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: "fetchHTMLAndParse")]
+        // Theme
+        webViewController.view.tintColor = Helper.defaultHelper.mainThemeColor()
         navigationController?.pushViewController(webViewController, animated: true)
     }
 
@@ -224,14 +226,14 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             self.showTransmission()
         }
         sheet.addAction(transmissionAction)
-        let settingsAction = UIAlertAction(title: NSLocalizedString("Settings", comment: "Settings"), style: .Default) { [unowned self] _ in
-            self.showSettings()
-        }
-        sheet.addAction(settingsAction)
         let searchAction = UIAlertAction(title: NSLocalizedString("Torrent Search", comment: "Torrent Search"), style: .Default) { [unowned self] _ in
             self.torrentSearch()
         }
         sheet.addAction(searchAction)
+        let settingsAction = UIAlertAction(title: NSLocalizedString("Settings", comment: "Settings"), style: .Default) { [unowned self] _ in
+            self.showSettings()
+        }
+        sheet.addAction(settingsAction)
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .Cancel, handler: nil)
         sheet.addAction(cancelAction)
         sheet.popoverPresentationController?.delegate = self

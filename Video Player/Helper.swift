@@ -8,7 +8,9 @@
 
 import UIKit
 import AFNetworking
+import Alamofire
 import PKHUD
+import ReachabilitySwift
 
 @objc
 public class Helper : NSObject {
@@ -16,6 +18,9 @@ public class Helper : NSObject {
 
     private var sessionHeader: String = ""
     private var downloadPath: String = ""
+    var reachability: Reachability? = {
+        return try? Reachability.reachabilityForInternetConnection()
+    }()
 
     //MARK: - Properties
     var useSSL:Bool {
@@ -34,15 +39,15 @@ public class Helper : NSObject {
         return self.useSSL ? "s" : ""
     }
 
-    var usernameAndPassword:[String] {
+    var usernameAndPassword:(String, String) {
         let defaults = NSUserDefaults.standardUserDefaults()
         let username = defaults.objectForKey(TransmissionUserNameKey) as? String
         let password = defaults.objectForKey(TransmissionPasswordKey) as? String
         if username != nil && password != nil {
-            return [username!, password!]
+            return (username!, password!)
         }
         else {
-            return ["username", "password"]
+            return ("username", "password")
         }
     }
 
@@ -129,17 +134,12 @@ public class Helper : NSObject {
             address = "127.0.0.1:9091"
         }
         let userpass = self.usernameAndPassword
-        if userpass[0].characters.count > 0 && userpass[1].characters.count > 0 && withUnP {
-            return "http://\(userpass[0]):\(userpass[1])@\(address)"
+        if userpass.0.characters.count > 0 && userpass.1.characters.count > 0 && withUnP {
+            return "http://\(userpass.0):\(userpass.1)@\(address)"
         }
         else {
             return "http://\(address)"
         }
-    }
-
-    @objc(transmissionServerAddress)
-    func _transmissionServerAddress() -> String {
-        return self.transmissionServerAddress(withUserNameAndPassword: true)
     }
 
     func transmissionRPCAddress() -> String {
@@ -203,52 +203,27 @@ public class Helper : NSObject {
         defaults.synchronize()
     }
 
-    //MARK: - AFNetworking Helpers
-    @objc(refreshedManager)
-    func _refreshedManager() -> AFHTTPSessionManager {
-        return self.refreshedManager(withAuthentication: true, withJSON: false)
-    }
-
-    @objc(refreshedManagerWithAuthentication:)
-    func _refreshedManager(withAuthentication auth: Bool = true) -> AFHTTPSessionManager {
-        return self.refreshedManager(withAuthentication: auth, withJSON: false)
-    }
-
-    func refreshedManager(withAuthentication auth: Bool = true, withJSON JSON: Bool = false) -> AFHTTPSessionManager {
-        let manager = AFHTTPSessionManager()
-        if JSON { manager.requestSerializer = AFJSONRequestSerializer() }
-        if auth {
-            let usernameAndPassword = self.usernameAndPassword
-            manager.requestSerializer.setAuthorizationHeaderFieldWithUsername(usernameAndPassword[0], password: usernameAndPassword[1])
-        }
-        manager.requestSerializer.timeoutInterval = REQUEST_TIME_OUT
-        manager.requestSerializer.setValue(self.customUserAgent, forHTTPHeaderField: "User-Agent")
-        if self.useSSL {
-            manager.securityPolicy.allowInvalidCertificates = true
-            manager.securityPolicy.validatesDomainName = false
-        }
-        manager.requestSerializer.allowsCellularAccess = self.userCellularNetwork ? true : false
-        return manager
-    }
-
     //MARK: - UI Related Helpers
     func mainThemeColor() -> UIColor {
         return UIColor(red:0.94, green:0.44, blue:0.19, alpha:1)
     }
 
     func showCellularHUD() -> Bool {
-        if !self.userCellularNetwork && !AFNetworkReachabilityManager.sharedManager().reachableViaWiFi {
-            self.showHudWithMessage(NSLocalizedString("Cellular data is turned off.", comment: "Cellular data is turned off."))
+        guard let reachability = self.reachability else { return false }
+        if !self.userCellularNetwork && !reachability.isReachableViaWiFi() {
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.showHudWithMessage(NSLocalizedString("Cellular data is turned off.", comment: "Cellular data is turned off."))
+            })
             return true
         }
         return false
     }
 
-    func showHudWithMessage(message: String) {
+    func showHudWithMessage(message: String, hideAfterDelay delay: Double = 1.0) {
         let hud = PKHUD.sharedHUD
         hud.contentView = PKHUDTextView(text: message)
         hud.show()
-        hud.hide(afterDelay: 2)
+        hud.hide(afterDelay: delay)
     }
 
     func showHUD() -> PKHUD {
@@ -271,32 +246,36 @@ public class Helper : NSObject {
         let searchAction = UIAlertAction(title: NSLocalizedString("Search", comment: "Search"), style: .Default) { _ in
             let keyword = alertController.textFields![0].text!
             let hud = self.showHUD()
-            let manager = self.refreshedManager()
             let dbSearchPath = self.dbSearchPath(withKeyword: keyword)
-            manager.GET(dbSearchPath, parameters: nil, success: { (_, responseObject) -> Void in
-                let success = responseObject["success"] as? Int == 1 ? true : false
-                if success {
-                    let searchResultController = VPSearchResultController()
-                    guard let torrents = responseObject["results"] as? [[String: AnyObject]] else { return }
-                    searchResultController.torrents = torrents
-                    searchResultController.keyword = keyword
-                    if let navigationController = viewController as? UINavigationController {
-                        navigationController.pushViewController(searchResultController, animated: true)
+            let request = Alamofire.request(.GET, dbSearchPath)
+            request.responseJSON(completionHandler: { response in
+                if response.result.isSuccess {
+                    guard let responseObject = response.result.value as? [String: AnyObject] else { return }
+                    let success = responseObject["success"] as? Int == 1 ? true : false
+                    if success {
+                        let searchResultController = VPSearchResultController()
+                        guard let torrents = responseObject["results"] as? [[String: AnyObject]] else { return }
+                        searchResultController.torrents = torrents
+                        searchResultController.keyword = keyword
+                        if let navigationController = viewController as? UINavigationController {
+                            navigationController.pushViewController(searchResultController, animated: true)
+                        }
+                        else {
+                            let searchResultNavigationController = UINavigationController(rootViewController: searchResultController)
+                            searchResultNavigationController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target:self, action: "dismissMe")
+                            viewController.presentViewController(searchResultNavigationController, animated: true, completion: nil)
+                        }
                     }
                     else {
-                        let searchResultNavigationController = UINavigationController(rootViewController: searchResultController)
-                        searchResultNavigationController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target:self, action: "dismissMe")
-                        viewController.presentViewController(searchResultNavigationController, animated: true, completion: nil)
+                        let errorMessage = responseObject["message"] as? String
+                        self.showHudWithMessage(NSLocalizedString("\(errorMessage)", comment: "\(errorMessage)"))
                     }
+                    hud.hide()
                 }
                 else {
-                    let errorMessage = responseObject["message"] as? String
-                    self.showHudWithMessage(NSLocalizedString("\(errorMessage)", comment: "\(errorMessage)"))
-                }
-                hud.hide()
-                }, failure: { (_, _) -> Void in
                     hud.hide()
                     self.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+                }
             })
         }
         alertController.addAction(searchAction)
@@ -308,23 +287,29 @@ public class Helper : NSObject {
     //MARK: - Transmission Remote Download Helpers
     func downloadTask(magnet:String, toDir dir: String, completionHandler:(() -> Void)? = nil,  errorHandler:(() -> Void)? = nil) {
         let params = ["method" : "torrent-add", "arguments": ["paused" : false, "download-dir" : dir, "filename" : magnet]]
-        let manager = self.refreshedManager(withAuthentication: true, withJSON: true)
-        manager.requestSerializer.setValue(sessionHeader, forHTTPHeaderField: "X-Transmission-Session-Id")
-        manager.POST(self.transmissionRPCAddress(), parameters: params, success: { (_, responseObject) in
-            let result = responseObject["result"] as! String
-            if result == "success" {
-                completionHandler?()
+        let HTTPHeaders = ["X-Transmission-Session-Id" : sessionHeader]
+        let request = Alamofire.request(.POST, self.transmissionRPCAddress(), parameters: params, encoding: .JSON, headers: HTTPHeaders)
+        request.authenticate(user: usernameAndPassword.0, password: usernameAndPassword.1).responseJSON { response in
+            if response.result.isSuccess {
+                let responseObject = response.result.value as! [String: AnyObject]
+                let result = responseObject["result"] as! String
+                if result == "success" {
+                    completionHandler?()
+                }
             }
-        }, failure:  { (_, _) in
-            errorHandler?()
-        })
+            else {
+                errorHandler?()
+            }
+        }
     }
 
     func parseSessionAndAddTask(magnet:String, completionHandler:(() -> Void)? = nil, errorHandler:(() -> Void)? = nil) {
-        let sessionParams = ["method" : "session-get"]
-        let manager = self.refreshedManager(withAuthentication: true, withJSON: true)
-        manager.requestSerializer.setValue(sessionHeader, forHTTPHeaderField: "X-Transmission-Session-Id")
-        manager.POST(self.transmissionRPCAddress(), parameters: sessionParams, success: { [unowned self] (_, responseObject) in
+        let params = ["method" : "session-get"]
+        let HTTPHeaders = ["X-Transmission-Session-Id" : sessionHeader]
+        let request = Alamofire.request(.POST, self.transmissionRPCAddress(), parameters: params, encoding: .JSON, headers: HTTPHeaders)
+        request.authenticate(user: usernameAndPassword.0, password: usernameAndPassword.1).responseJSON { [unowned self] response in
+            if response.result.isSuccess {
+                let responseObject = response.result.value as! [String:AnyObject]
                 let result = responseObject["result"] as! String
                 if result == "success" {
                     self.downloadPath = (responseObject["arguments"] as! [String: AnyObject])["download-dir"] as! String
@@ -333,32 +318,39 @@ public class Helper : NSObject {
                 else {
                     errorHandler?()
                 }
-            }, failure: { [unowned self] (task, _) in
-                let response = task.response as! NSHTTPURLResponse
-                if response.statusCode == 409 {
-                    self.sessionHeader = response.allHeaderFields["X-Transmission-Session-Id"] as! String
-                    let manager = self.refreshedManager(withAuthentication: true, withJSON: true)
-                    manager.requestSerializer.setValue(self.sessionHeader, forHTTPHeaderField: "X-Transmission-Session-Id")
-                    manager.POST(self.transmissionRPCAddress(), parameters: sessionParams, success: { (_, responseObject) in
-                        let result = responseObject["result"] as! String
-                        if result == "success" {
-                            self.downloadPath = (responseObject["arguments"] as! [String: AnyObject])["download-dir"] as! String
-                            self.downloadTask(magnet, toDir: self.downloadPath, completionHandler: completionHandler, errorHandler: errorHandler)
+            }
+            else {
+                if response.response!.statusCode == 409 {
+                    self.sessionHeader = response.response!.allHeaderFields["X-Transmission-Session-Id"] as! String
+
+                    let params = ["method" : "session-get"]
+                    let HTTPHeaders = ["X-Transmission-Session-Id" : self.sessionHeader]
+                    let request = Alamofire.request(.POST, self.transmissionRPCAddress(), parameters: params, encoding: .JSON, headers: HTTPHeaders)
+                    request.authenticate(user: self.usernameAndPassword.0, password: self.usernameAndPassword.1).responseJSON { [unowned self] response in
+                        if response.result.isSuccess {
+                            let responseObject = response.result.value as! [String:AnyObject]
+                            let result = responseObject["result"] as! String
+                            if result == "success" {
+                                self.downloadPath = (responseObject["arguments"] as! [String: AnyObject])["download-dir"] as! String
+                                self.downloadTask(magnet, toDir: self.downloadPath, completionHandler: completionHandler, errorHandler: errorHandler)
+                            }
+                            else {
+                                errorHandler?()
+                            }
                         }
                         else {
-                            errorHandler?()
+                            let alertController = UIAlertController(title: NSLocalizedString("Error", comment:"Error"), message: NSLocalizedString("Unkown error.", comment: "Unknow error."), preferredStyle: .Alert)
+                            let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .Cancel, handler: nil)
+                            alertController.addAction(cancelAction)
+                            AppDelegate.shared().window?.rootViewController?.presentViewController(alertController, animated: true, completion: nil)
                         }
-                    }, failure: { (_, _) -> Void in
-                        let alertController = UIAlertController(title: NSLocalizedString("Error", comment:"Error"), message: NSLocalizedString("Unkown error.", comment: "Unknow error."), preferredStyle: .Alert)
-                        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .Cancel, handler: nil)
-                        alertController.addAction(cancelAction)
-                        AppDelegate.shared().window?.rootViewController?.presentViewController(alertController, animated: true, completion: nil)
-                    })
+                    }
                 }
                 else {
                     errorHandler?()
                 }
-            })
+            }
+        }
     }
 }
 

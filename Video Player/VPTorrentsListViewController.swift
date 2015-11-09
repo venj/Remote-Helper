@@ -10,6 +10,7 @@ import UIKit
 import SDWebImage
 import TOWebViewController
 import MWPhotoBrowser
+import Alamofire
 
 class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegate, UISearchDisplayDelegate, UISearchBarDelegate {
     let CellIdentifier = "VPTorrentsListViewCell"
@@ -120,10 +121,12 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if Helper.defaultHelper.showCellularHUD() { return }
         self.showPhotoBrowser(forTableView: tableView, atIndexPath: indexPath)
     }
 
     override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
+        if Helper.defaultHelper.showCellularHUD() { return }
         let alertController = UIAlertController(title: NSLocalizedString("Initial Index", comment: "Initial Index"), message: NSLocalizedString("Please enter a number for photo index(from 1).", comment: "Please enter a number for photo index(from 1)."), preferredStyle: .Alert)
         alertController.addTextFieldWithConfigurationHandler { (textField) in
             textField.placeholder = "1"
@@ -180,23 +183,27 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     func hashTorrent() {
         guard let base64FileName = photos[currentPhotoIndex].base64String() else { return }
-        let manager = Helper.defaultHelper.refreshedManager()
         let hud = Helper.defaultHelper.showHUD()
-        manager.GET(Helper.defaultHelper.hashTorrent(withName: base64FileName), parameters:nil, success: { (_, responseObject) in
-            guard let hash = responseObject["hash"] as? String else { return }
-            let message = "magnet:?xt=urn:btih:\(hash.uppercaseString)"
-            UIPasteboard.generalPasteboard().string = message
-            Helper.defaultHelper.parseSessionAndAddTask(message, completionHandler: {
+        let request = Alamofire.request(.GET, Helper.defaultHelper.hashTorrent(withName: base64FileName))
+        request.responseJSON { response in
+            if response.result.isSuccess {
+                guard let responseObject = response.result.value as? [String: AnyObject] else { return }
+                guard let hash = responseObject["hash"] as? String else { return }
+                let message = "magnet:?xt=urn:btih:\(hash.uppercaseString)"
+                UIPasteboard.generalPasteboard().string = message
+                Helper.defaultHelper.parseSessionAndAddTask(message, completionHandler: {
+                    hud.hide()
+                    Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
+                }, errorHandler: {
+                    hud.hide()
+                    Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."))
+                })
+            }
+            else {
                 hud.hide()
-                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
-            }, errorHandler: {
-                hud.hide()
-                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."))
-            })
-        }, failure: { (_, _) in
-            hud.hide()
-            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
-        })
+                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+            }
+        }
     }
 
     //MARK: - Helper
@@ -207,41 +214,45 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         searchController.searchBar.resignFirstResponder()
         guard let date = list[indexPath.row].stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet()) else { return }
         let hud = Helper.defaultHelper.showHUD()
-        let manager = Helper.defaultHelper.refreshedManager()
-        manager.GET(Helper.defaultHelper.searchPath(withKeyword: date), parameters: nil, success: { [unowned self] (_, responseObject) in
+        let request = Alamofire.request(.GET, Helper.defaultHelper.searchPath(withKeyword: date))
+        request.responseJSON { response in
             hud.hide()
-            guard let photos = responseObject as? [String] else { return }
-            self.photos = photos
-            let photoBrowser = MWPhotoBrowser(delegate: self)
-            photoBrowser.displayActionButton = false
-            photoBrowser.displayNavArrows = true
-            photoBrowser.zoomPhotosToFill = false
-            var sIndex = index
-            if index > photos.count - 1 {
-                sIndex = photos.count - 1
+            if response.result.isSuccess {
+                guard let photos = response.result.value as? [String] else { return }
+                self.photos = photos
+                let photoBrowser = MWPhotoBrowser(delegate: self)
+                photoBrowser.displayActionButton = false
+                photoBrowser.displayNavArrows = true
+                photoBrowser.zoomPhotosToFill = false
+                var sIndex = index
+                if index > photos.count - 1 {
+                    sIndex = photos.count - 1
+                }
+                photoBrowser.setCurrentPhotoIndex(UInt(sIndex))
+                self.navigationController?.pushViewController(photoBrowser, animated: true)
             }
-            photoBrowser.setCurrentPhotoIndex(UInt(sIndex))
-            self.navigationController?.pushViewController(photoBrowser, animated: true)
-        }, failure: { (_, _) in
-            hud.hide()
-            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
-        })
+            else {
+                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+            }
+        }
     }
 
     func loadTorrentList(sender: AnyObject?) {
         if Helper.defaultHelper.showCellularHUD() { return }
         let hud = Helper.defaultHelper.showHUD()
         navigationItem.rightBarButtonItem?.enabled = false
-        let manager = Helper.defaultHelper.refreshedManager()
-        manager.GET(Helper.defaultHelper.torrentsListPath(), parameters: nil, success: { [unowned self] (_, responseObject) in
+        let request = Alamofire.request(.GET, Helper.defaultHelper.torrentsListPath())
+        request.responseJSON { response in
+            if response.result.isSuccess {
+                self.navigationItem.rightBarButtonItem?.enabled = true
+                self.datesList = response.result.value as! [String]
+                self.tableView.reloadData()
+            }
+            else {
+                self.navigationItem.rightBarButtonItem?.enabled = true
+                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+            }
             hud.hide()
-            self.navigationItem.rightBarButtonItem?.enabled = true
-            self.datesList = responseObject as! [String]
-            self.tableView.reloadData()
-        } , failure: { (_, _) in
-            hud.hide()
-            self.navigationItem.rightBarButtonItem?.enabled = true
-            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
-        })
+        }
     }
 }

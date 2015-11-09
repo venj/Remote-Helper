@@ -5,11 +5,9 @@
 
 **已知问题**
 
-1. 项目Swift化基本完成，最后一个步骤是AFNetworking。
+1. 项目Swift化完成(部分第三方框架除外)。
 2. 项目的Swift化会引入退行bug。
-3. 升级到AFNetworking 3.0.0之后，SDWebImage无法识别自定义SSL证书。
-	- 临时解决方案：在MWPhoto中的请求中，设置`SDWebImageAllowInvalidSSLCertificates`选项
-4. 应用配色和图标会有进一步的更改。
+3. 应用配色有多处不一致的地方。
 
 新功能介绍
 ---------

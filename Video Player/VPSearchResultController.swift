@@ -22,6 +22,12 @@ class VPSearchResultController: UITableViewController {
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "wiki"), style: .Plain, target: self, action: "showWiki")
         }
 
+        // Theme
+        navigationController?.navigationBar.barTintColor = Helper.defaultHelper.mainThemeColor()
+        navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+        navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
+        tableView.tintColor = Helper.defaultHelper.mainThemeColor()
+
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
             tableView.cellLayoutMarginsFollowReadableWidth = false
@@ -43,7 +49,6 @@ class VPSearchResultController: UITableViewController {
         if (naviControl.navigationBarHidden) {
             naviControl.setNavigationBarHidden(false, animated: true)
         }
-        naviControl.navigationBar.tintColor = nil
         naviControl.navigationBar.barStyle = .Default
     }
 
@@ -102,6 +107,7 @@ class VPSearchResultController: UITableViewController {
         let webViewController = TOWebViewController(URLString: "http://www.javlib3.com/cn/vl_searchbyid.php?keyword=\(keyword)")
         webViewController.showUrlWhileLoading = false
         webViewController.hidesBottomBarWhenPushed = true
+        webViewController.view.tintColor = Helper.defaultHelper.mainThemeColor()
         self.navigationController?.pushViewController(webViewController, animated: true)
     }
 

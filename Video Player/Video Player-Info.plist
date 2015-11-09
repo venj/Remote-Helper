@@ -21,11 +21,22 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.6</string>
+	<string>2.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>174</string>
+	<string>200</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>thunder</string>
+		<string>http</string>
+		<string>https</string>
+		<string>magnet</string>
+		<string>ed2k</string>
+		<string>ftp</string>
+		<string>Flashget</string>
+		<string>qqdl</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

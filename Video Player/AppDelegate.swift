@@ -10,8 +10,8 @@ import UIKit
 import MMAppSwitcher
 import SDWebImage
 import MBProgressHUD
-import AFNetworking
 import PasscodeLock
+import Alamofire
 
 @UIApplicationMain
 class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource, UITabBarControllerDelegate {
@@ -30,8 +30,8 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         // App Swicher
         MMAppSwitcher.sharedInstance().setDataSource(self)
-        // Reachability
-        AFNetworkReachabilityManager.sharedManager().startMonitoring()
+        // Configure Alamofire Request Manager
+        configureAlamofireManager()
         // FileList
         fileListViewController = WebContentTableViewController()
         fileListViewController.title = NSLocalizedString("Addresses", comment: "Addresses")
@@ -57,6 +57,11 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
     }
 
     func applicationWillResignActive(application: UIApplication) {
+    }
+
+    func applicationDidEnterBackground(application: UIApplication) {
+        passcodeLockPresenter.presentPasscodeLock()
+
         let repository = UserDefaultsPasscodeRepository()
         if !repository.hasPasscode {
             MMAppSwitcher.sharedInstance().setNeedsUpdate()
@@ -76,15 +81,11 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
         }
     }
 
-    func applicationDidEnterBackground(application: UIApplication) {
-        passcodeLockPresenter.presentPasscodeLock()
-    }
-
     func applicationWillEnterForeground(application: UIApplication) {
     }
 
     func applicationWillTerminate(application: UIApplication) {
-        AFNetworkReachabilityManager.sharedManager().stopMonitoring()
+        
     }
 
     @available(iOS 9.0, *)
@@ -107,5 +108,31 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
         let view = UIView()
         view.backgroundColor = UIColor.whiteColor()
         return view
+    }
+
+    //MARK: - Alamofire Manager
+    func configureAlamofireManager() {
+        let manager = Manager.sharedInstance
+        manager.session.configuration.timeoutIntervalForRequest = REQUEST_TIME_OUT
+        manager.delegate.sessionDidReceiveChallenge = { session, challenge in
+            var disposition: NSURLSessionAuthChallengeDisposition = .PerformDefaultHandling
+            var credential: NSURLCredential?
+
+            if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
+                disposition = NSURLSessionAuthChallengeDisposition.UseCredential
+                credential = NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!)
+            } else {
+                if challenge.previousFailureCount > 0 {
+                    disposition = .CancelAuthenticationChallenge
+                } else {
+                    credential = manager.session.configuration.URLCredentialStorage?.defaultCredentialForProtectionSpace(challenge.protectionSpace)
+
+                    if credential != nil {
+                        disposition = .UseCredential
+                    }
+                }
+            }
+            return (disposition, credential)
+        }
     }
 }

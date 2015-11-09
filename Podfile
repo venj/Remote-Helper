@@ -3,7 +3,7 @@ use_frameworks!
 source 'https://github.com/CocoaPods/Specs.git'
 
 pod 'Alamofire', '~> 3.1.1'
-pod 'AFNetworking', '~> 3.0.0-beta.1'
+pod 'ReachabilitySwift', '~> 2.1' # For Reachability
 pod 'InAppSettingsKit', '~> 2.6'
 pod 'MWPhotoBrowser', '~> 2.1.1'
 pod 'PKHUD', '~> 2.2.4'

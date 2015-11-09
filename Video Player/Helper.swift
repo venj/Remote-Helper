@@ -247,7 +247,7 @@ public class Helper : NSObject {
             let hud = self.showHUD()
             let dbSearchPath = self.dbSearchPath(withKeyword: keyword)
             let request = Alamofire.request(.GET, dbSearchPath)
-            request.responseJSON(completionHandler: { response in
+            request.responseJSON(completionHandler: { [unowned self] response in
                 if response.result.isSuccess {
                     guard let responseObject = response.result.value as? [String: AnyObject] else { return }
                     let success = responseObject["success"] as? Int == 1 ? true : false

@@ -156,7 +156,7 @@ class ValidLinksTableViewController: UITableViewController {
     private func parseName(link: String) -> String {
         guard let decodedLink = link.stringByRemovingPercentEncoding else { return link }
         let protocal = decodedLink.componentsSeparatedByString(":")[0].lowercaseString
-        if protocal == "thunder" {
+        if protocal == "thunder" || protocal == "flashget" || protocal == "qqdl" {
             guard let decodedThunderLink = try? URLConverter.decode(link) else { return decodedLink }
             guard let result = decodedThunderLink.stringByRemovingPercentEncoding else { return decodedThunderLink }
             return parseName(result)

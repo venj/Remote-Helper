@@ -62,6 +62,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         UIApplication.sharedApplication().setStatusBarStyle(.LightContent, animated: true)
+        navigationController?.setToolbarHidden(true, animated: true)
     }
     
     // MARK: - Table view data source
@@ -103,7 +104,8 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         webViewController.urlRequest.cachePolicy = .ReturnCacheDataElseLoad
         webViewController.additionalBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: "fetchHTMLAndParse")]
         // Theme
-        webViewController.view.tintColor = Helper.defaultHelper.mainThemeColor()
+        webViewController.loadingBarTintColor = Helper.defaultHelper.mainThemeColor()
+        webViewController.buttonTintColor = Helper.defaultHelper.mainThemeColor()
         navigationController?.pushViewController(webViewController, animated: true)
     }
 
@@ -300,9 +302,9 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         transmissionWebViewController.urlRequest.cachePolicy = .ReloadIgnoringLocalCacheData
         transmissionWebViewController.title = "Transmission"
         transmissionWebViewController.showUrlWhileLoading = false
-        transmissionWebViewController.view.tintColor = Helper.defaultHelper.mainThemeColor()
+        transmissionWebViewController.loadingBarTintColor = Helper.defaultHelper.mainThemeColor()
+        transmissionWebViewController.buttonTintColor = Helper.defaultHelper.mainThemeColor()
         let transmissionNavigationController = UINavigationController(rootViewController: transmissionWebViewController)
-        // Theme
         transmissionNavigationController.navigationBar.barTintColor = Helper.defaultHelper.mainThemeColor()
         transmissionNavigationController.navigationBar.tintColor = UIColor.whiteColor()
         transmissionNavigationController.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
@@ -318,7 +320,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     func processHTML(html: String) {
         var validAddresses: Set<String> = []
-        let patterns = ["magnet:\\?[^\"'<]+", "ed2k://[^\"'&<]+", "thunder://[^\"'&<]+"]
+        let patterns = ["magnet:\\?[^\"'<]+", "ed2k://[^\"'&<]+", "thunder://[^\"'&<]+", "ftp://[^\"'&<]+", "qqdl://[^\"'&<]+", "Flashget://[^\"'&<]+"]
         for pattern in patterns {
             guard let regex = try? NSRegularExpression(pattern: pattern, options: .CaseInsensitive) else { continue }
             regex.enumerateMatchesInString(html, options: [], range: NSRange(location: 0, length: html.characters.count), usingBlock: { (result, _, _) -> Void in

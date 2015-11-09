@@ -19,7 +19,7 @@ class VPSearchResultController: UITableViewController {
         title = String(format: NSLocalizedString("%@: %@ (%lu)", comment: "%@: %@ (%lu)"), arguments: [NSLocalizedString("Search", comment:"Search"), keyword, torrents.count])
 
         if keyword.matches("^[A-Za-z]{2,6}-\\d{2,6}$", regularExpressionOptions: [.CaseInsensitive], matchingOptions:[.Anchored]) {
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "wiki"), style: .Plain, target: self, action: "showWiki")
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "wiki"), style: .Plain, target: self, action: "showWiki")
         }
 
         // Theme
@@ -45,11 +45,9 @@ class VPSearchResultController: UITableViewController {
         if UIApplication.sharedApplication().statusBarHidden {
             UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: .Slide)
         }
-        guard let naviControl = navigationController else { return }
-        if (naviControl.navigationBarHidden) {
-            naviControl.setNavigationBarHidden(false, animated: true)
-        }
-        naviControl.navigationBar.barStyle = .Default
+        
+        navigationController?.setToolbarHidden(true, animated: true)
+        navigationController?.navigationBar.barStyle = .Default
     }
 
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
@@ -72,7 +70,7 @@ class VPSearchResultController: UITableViewController {
         }
 
         // Configure the cell...
-        let torrent = self.torrents[indexPath.row]
+        let torrent = torrents[indexPath.row]
         cell.textLabel?.text = torrent["name"] as? String
         cell.accessoryType = .DetailDisclosureButton;
 
@@ -85,14 +83,14 @@ class VPSearchResultController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
-        let torrent = self.torrents[indexPath.row]
+        let torrent = torrents[indexPath.row]
         self.addTorrentToTransmission(torrent)
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        let torrent = self.torrents[indexPath.row]
-        let alertController = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: self.describe(torrent), preferredStyle: .Alert)
+        let torrent = torrents[indexPath.row]
+        let alertController = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: describe(torrent), preferredStyle: .Alert)
         let addTorrentAction = UIAlertAction(title: NSLocalizedString("Download", comment: "Download") , style: .Default) { [unowned self] _ in
             self.addTorrentToTransmission(torrent)
         }
@@ -107,8 +105,9 @@ class VPSearchResultController: UITableViewController {
         let webViewController = TOWebViewController(URLString: "http://www.javlib3.com/cn/vl_searchbyid.php?keyword=\(keyword)")
         webViewController.showUrlWhileLoading = false
         webViewController.hidesBottomBarWhenPushed = true
-        webViewController.view.tintColor = Helper.defaultHelper.mainThemeColor()
-        self.navigationController?.pushViewController(webViewController, animated: true)
+        webViewController.loadingBarTintColor = Helper.defaultHelper.mainThemeColor()
+        webViewController.buttonTintColor = Helper.defaultHelper.mainThemeColor()
+        navigationController?.pushViewController(webViewController, animated: true)
     }
 
     //MARK: - Helper

@@ -215,7 +215,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         guard let date = list[indexPath.row].stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet()) else { return }
         let hud = Helper.defaultHelper.showHUD()
         let request = Alamofire.request(.GET, Helper.defaultHelper.searchPath(withKeyword: date))
-        request.responseJSON { response in
+        request.responseJSON { [unowned self] response in
             hud.hide()
             if response.result.isSuccess {
                 guard let photos = response.result.value as? [String] else { return }
@@ -242,7 +242,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         let hud = Helper.defaultHelper.showHUD()
         navigationItem.rightBarButtonItem?.enabled = false
         let request = Alamofire.request(.GET, Helper.defaultHelper.torrentsListPath())
-        request.responseJSON { response in
+        request.responseJSON { [unowned self] response in
             if response.result.isSuccess {
                 self.navigationItem.rightBarButtonItem?.enabled = true
                 self.datesList = response.result.value as! [String]

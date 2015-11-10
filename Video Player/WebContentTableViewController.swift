@@ -288,7 +288,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         settingsNavigationController.navigationBar.tintColor = UIColor.whiteColor()
         settingsNavigationController.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
-            settingsViewController.modalPresentationStyle = .FormSheet
+            settingsNavigationController.modalPresentationStyle = .FormSheet
         }
         dispatch_async(dispatch_get_main_queue()) { [unowned self] in
             self.presentViewController(settingsNavigationController, animated: true, completion: nil)

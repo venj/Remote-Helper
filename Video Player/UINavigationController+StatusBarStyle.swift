@@ -10,7 +10,7 @@ import UIKit
 
 extension UINavigationController {
     override public func preferredStatusBarStyle() -> UIStatusBarStyle {
-        if isBeingPresented() {
+        if presentingViewController != nil {
             // When being presented, presentingViewController should always not nil.
             return presentingViewController!.preferredStatusBarStyle()
         }

@@ -266,7 +266,7 @@ public class Helper : NSObject {
                         }
                     }
                     else {
-                        let errorMessage = responseObject["message"] as? String
+                        let errorMessage = responseObject["message"] as! String
                         self.showHudWithMessage(NSLocalizedString("\(errorMessage)", comment: "\(errorMessage)"))
                     }
                     hud.hide()

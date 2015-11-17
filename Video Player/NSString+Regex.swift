@@ -22,7 +22,7 @@ public extension String {
     }
 
     func arrayOfCaptureComponentsMatchedByRegex(pattern: String) -> [[String]] {
-        var result: [[String]] = [[]]
+        var result: [[String]] = []
         guard let regex = try? NSRegularExpression(pattern: pattern, options:[.CaseInsensitive]) else { return result }
         let nsRange = NSRange(location: 0, length: self.characters.count)
         let matches = regex.matchesInString(self, options: [], range: nsRange)

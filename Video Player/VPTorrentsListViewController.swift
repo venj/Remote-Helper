@@ -176,6 +176,16 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         photoBrowser.navigationItem.rightBarButtonItems  = [searchItem, hashItem]
     }
 
+    func photoBrowser(photoBrowser: MWPhotoBrowser!, titleForPhotoAtIndex index: UInt) -> String! {
+        let cellTitle = tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!)?.textLabel?.text
+        if cellTitle == nil {
+            return nil
+        }
+        else {
+            return "\(cellTitle!) (\(currentPhotoIndex + 1)/\(photos.count))"
+        }
+    }
+
     //MARK: - Action
     func showSearch() {
         Helper.defaultHelper.showTorrentSearchAlertInViewController(self.navigationController!)

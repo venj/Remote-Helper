@@ -102,7 +102,7 @@ class VPSearchResultController: UITableViewController {
 
     //MARK: - Action
     func showWiki() {
-        let webViewController = TOWebViewController(URLString: "http://www.javlib3.com/cn/vl_searchbyid.php?keyword=\(keyword)")
+        let webViewController = TOWebViewController(URLString: "http://www.look4lib.com/cn/vl_searchbyid.php?keyword=\(keyword)")
         webViewController.showUrlWhileLoading = false
         webViewController.hidesBottomBarWhenPushed = true
         webViewController.loadingBarTintColor = Helper.defaultHelper.mainThemeColor()
@@ -136,10 +136,11 @@ class VPSearchResultController: UITableViewController {
     }
 
     func addTorrentToTransmission(torrent: [String:AnyObject]) {
+        Helper.defaultHelper.showHUD()
         Helper.defaultHelper.parseSessionAndAddTask(torrent["magnet"] as! String, completionHandler: {
             Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
         }, errorHandler: {
-            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."))
+            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Transmission server error.", comment: "Transmission server error."))
         })
     }
 }

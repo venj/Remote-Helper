@@ -139,7 +139,7 @@ class ValidLinksTableViewController: UITableViewController {
                 hud.hide()
                 Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
             }, errorHandler: {
-                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Unknow error.", comment: "Unknow error."))
+                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Transmission server error.", comment: "Transmission server error."))
             })
         }
         else {

@@ -206,7 +206,7 @@ public class Helper : NSObject {
     func mainThemeColor() -> UIColor {
         return UIColor(red:0.94, green:0.44, blue:0.19, alpha:1)
     }
-
+    
     func showCellularHUD() -> Bool {
         guard let reachability = self.reachability else { return false }
         if !self.userCellularNetwork && !reachability.isReachableViaWiFi() {
@@ -319,9 +319,8 @@ public class Helper : NSObject {
                 }
             }
             else {
-                if response.response!.statusCode == 409 {
+                if response.response?.statusCode == 409 {
                     self.sessionHeader = response.response!.allHeaderFields["X-Transmission-Session-Id"] as! String
-
                     let params = ["method" : "session-get"]
                     let HTTPHeaders = ["X-Transmission-Session-Id" : self.sessionHeader]
                     let request = Alamofire.request(.POST, self.transmissionRPCAddress(), parameters: params, encoding: .JSON, headers: HTTPHeaders)

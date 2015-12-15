@@ -105,7 +105,12 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         webViewController.additionalBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: "fetchHTMLAndParse")]
         // Theme
         webViewController.loadingBarTintColor = Helper.defaultHelper.mainThemeColor()
-        webViewController.buttonTintColor = Helper.defaultHelper.mainThemeColor()
+        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
+            webViewController.buttonTintColor = Helper.defaultHelper.mainThemeColor()
+        }
+        else {
+            webViewController.buttonTintColor = UIColor.whiteColor()
+        }
         navigationController?.pushViewController(webViewController, animated: true)
     }
 
@@ -303,7 +308,12 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         transmissionWebViewController.title = "Transmission"
         transmissionWebViewController.showUrlWhileLoading = false
         transmissionWebViewController.loadingBarTintColor = Helper.defaultHelper.mainThemeColor()
-        transmissionWebViewController.buttonTintColor = Helper.defaultHelper.mainThemeColor()
+        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
+            transmissionWebViewController.buttonTintColor = Helper.defaultHelper.mainThemeColor()
+        }
+        else {
+            transmissionWebViewController.buttonTintColor = UIColor.whiteColor()
+        }
         let transmissionNavigationController = UINavigationController(rootViewController: transmissionWebViewController)
         transmissionNavigationController.navigationBar.barTintColor = Helper.defaultHelper.mainThemeColor()
         transmissionNavigationController.navigationBar.tintColor = UIColor.whiteColor()

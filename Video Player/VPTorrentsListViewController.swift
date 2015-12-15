@@ -50,6 +50,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         let item = UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: "showSearch")
         return item
     }()
+    var currentSelectedIndexPath: NSIndexPath?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -121,11 +122,13 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        currentSelectedIndexPath = indexPath
         if Helper.defaultHelper.showCellularHUD() { return }
         self.showPhotoBrowser(forTableView: tableView, atIndexPath: indexPath)
     }
 
     override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
+        currentSelectedIndexPath = indexPath
         if Helper.defaultHelper.showCellularHUD() { return }
         let alertController = UIAlertController(title: NSLocalizedString("Initial Index", comment: "Initial Index"), message: NSLocalizedString("Please enter a number for photo index(from 1).", comment: "Please enter a number for photo index(from 1)."), preferredStyle: .Alert)
         alertController.addTextFieldWithConfigurationHandler { (textField) in
@@ -177,7 +180,8 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }
 
     func photoBrowser(photoBrowser: MWPhotoBrowser!, titleForPhotoAtIndex index: UInt) -> String! {
-        let cellTitle = tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!)?.textLabel?.text
+        guard let indexPath = currentSelectedIndexPath else { return nil }
+        let cellTitle = tableView.cellForRowAtIndexPath(indexPath)?.textLabel?.text
         if cellTitle == nil {
             return nil
         }

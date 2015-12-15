@@ -106,7 +106,12 @@ class VPSearchResultController: UITableViewController {
         webViewController.showUrlWhileLoading = false
         webViewController.hidesBottomBarWhenPushed = true
         webViewController.loadingBarTintColor = Helper.defaultHelper.mainThemeColor()
-        webViewController.buttonTintColor = Helper.defaultHelper.mainThemeColor()
+        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
+            webViewController.buttonTintColor = Helper.defaultHelper.mainThemeColor()
+        }
+        else {
+            webViewController.buttonTintColor = UIColor.whiteColor()
+        }
         navigationController?.pushViewController(webViewController, animated: true)
     }
 

@@ -276,6 +276,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         defaults.setObject(localFileSize, forKey: LocalFileSize)
         let deviceFreeSpace = Helper.defaultHelper.fileSizeString(withInteger: Helper.defaultHelper.freeDiskSpace())
         defaults.setObject(deviceFreeSpace, forKey: DeviceFreeSpace)
+        defaults.setObject(Helper.defaultHelper.appVersionString(), forKey: CurrentVersionKey)
         defaults.synchronize()
 
         settingsViewController = IASKAppSettingsViewController(style: .Grouped)

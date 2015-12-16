@@ -202,6 +202,12 @@ public class Helper : NSObject {
         defaults.synchronize()
     }
 
+    func appVersionString() -> String {
+        let versionString = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as? String ?? "1.0"
+        let buildString = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleVersion") as? String ?? "1"
+        return "\(versionString)(\(buildString))"
+    }
+
     //MARK: - UI Related Helpers
     func mainThemeColor() -> UIColor {
         return UIColor(red:0.94, green:0.44, blue:0.19, alpha:1)

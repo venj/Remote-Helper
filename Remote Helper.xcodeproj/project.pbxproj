@@ -66,11 +66,11 @@
 		250354D41BE9BEC900E9F93A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		250354DB1BEA380500E9F93A /* LCHTTPConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LCHTTPConnection.swift; sourceTree = "<group>"; };
 		250354DD1BEA41F300E9F93A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		252DFA7C1753784400FF8199 /* Video Player.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Video Player.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		252DFA7C1753784400FF8199 /* Remote Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Remote Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		252DFA7F1753784400FF8199 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		252DFA811753784400FF8199 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		252DFA831753784400FF8199 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		252DFA871753784400FF8199 /* Video Player-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Video Player-Info.plist"; sourceTree = "<group>"; };
+		252DFA871753784400FF8199 /* Remote Helper-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Remote Helper-Info.plist"; sourceTree = "<group>"; };
 		252DFA891753784400FF8199 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		254CBE3F1BE8481F0050A288 /* URLConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLConverter.swift; sourceTree = "<group>"; };
 		254CBE411BE857520050A288 /* String+MD5.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+MD5.swift"; sourceTree = "<group>"; };
@@ -95,7 +95,7 @@
 		25B0AA791753A66C00141B0E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		25C8BF141BF243AB00CAC32E /* UITabBarController+StatusBarStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITabBarController+StatusBarStyle.swift"; sourceTree = "<group>"; };
-		25F94A601BE5E9FE009C9195 /* Video Player-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Video Player-Bridging-Header.h"; sourceTree = "<group>"; };
+		25F94A601BE5E9FE009C9195 /* Remote Helper-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Remote Helper-Bridging-Header.h"; sourceTree = "<group>"; };
 		25F94A611BE5E9FF009C9195 /* NSDictionary+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDictionary+JSON.swift"; sourceTree = "<group>"; };
 		4BB160D8EE8E668F3F4BE545 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D49BE61A10F01745516BF6D /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
@@ -123,7 +123,7 @@
 		252DFA731753784400FF8199 = {
 			isa = PBXGroup;
 			children = (
-				252DFA851753784400FF8199 /* Video Player */,
+				252DFA851753784400FF8199 /* Remote Helper */,
 				252DFA7E1753784400FF8199 /* Frameworks */,
 				252DFA7D1753784400FF8199 /* Products */,
 				6FC7AC7596CD0584CA80B241 /* Pods */,
@@ -133,7 +133,7 @@
 		252DFA7D1753784400FF8199 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				252DFA7C1753784400FF8199 /* Video Player.app */,
+				252DFA7C1753784400FF8199 /* Remote Helper.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -152,7 +152,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		252DFA851753784400FF8199 /* Video Player */ = {
+		252DFA851753784400FF8199 /* Remote Helper */ = {
 			isa = PBXGroup;
 			children = (
 				25310E40177ACB1600D4A212 /* Libraries */,
@@ -168,15 +168,15 @@
 				258CD00F1A3B28B400B3EB55 /* Images.xcassets */,
 				252DFA861753784400FF8199 /* Supporting Files */,
 			);
-			path = "Video Player";
+			path = "Remote Helper";
 			sourceTree = "<group>";
 		};
 		252DFA861753784400FF8199 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
 				255A7D2D1BEB904E00E6012B /* PasscodeLock.strings */,
-				25F94A601BE5E9FE009C9195 /* Video Player-Bridging-Header.h */,
-				252DFA871753784400FF8199 /* Video Player-Info.plist */,
+				25F94A601BE5E9FE009C9195 /* Remote Helper-Bridging-Header.h */,
+				252DFA871753784400FF8199 /* Remote Helper-Info.plist */,
 				256EA4BD177D5F830081309B /* Localizable.strings */,
 				252DFA881753784400FF8199 /* InfoPlist.strings */,
 				2581D48717544A4C00EF3867 /* InAppSettings.bundle */,
@@ -247,9 +247,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		252DFA7B1753784400FF8199 /* Video Player */ = {
+		252DFA7B1753784400FF8199 /* Remote Helper */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 252DFA991753784400FF8199 /* Build configuration list for PBXNativeTarget "Video Player" */;
+			buildConfigurationList = 252DFA991753784400FF8199 /* Build configuration list for PBXNativeTarget "Remote Helper" */;
 			buildPhases = (
 				0978DA1B3FB84E8086B46963 /* Check Pods Manifest.lock */,
 				252DFA781753784400FF8199 /* Sources */,
@@ -262,9 +262,9 @@
 			);
 			dependencies = (
 			);
-			name = "Video Player";
+			name = "Remote Helper";
 			productName = "Video Player";
-			productReference = 252DFA7C1753784400FF8199 /* Video Player.app */;
+			productReference = 252DFA7C1753784400FF8199 /* Remote Helper.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -290,7 +290,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 252DFA771753784400FF8199 /* Build configuration list for PBXProject "Video Player" */;
+			buildConfigurationList = 252DFA771753784400FF8199 /* Build configuration list for PBXProject "Remote Helper" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -303,7 +303,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				252DFA7B1753784400FF8199 /* Video Player */,
+				252DFA7B1753784400FF8199 /* Remote Helper */,
 			);
 		};
 /* End PBXProject section */
@@ -515,13 +515,13 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: WEN JIE ZHU (T2S97GVK69)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: WEN JIE ZHU (T2S97GVK69)";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				INFOPLIST_FILE = "Video Player/Video Player-Info.plist";
+				INFOPLIST_FILE = "Remote Helper/Remote Helper-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "18a893a9-129c-4cab-bab2-05a07d27f831";
-				SWIFT_OBJC_BRIDGING_HEADER = "Video Player/Video Player-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Remote Helper/Remote Helper-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				WRAPPER_EXTENSION = app;
 			};
@@ -536,13 +536,13 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: WEN JIE ZHU (32Y52676KN)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: WEN JIE ZHU (32Y52676KN)";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				INFOPLIST_FILE = "Video Player/Video Player-Info.plist";
+				INFOPLIST_FILE = "Remote Helper/Remote Helper-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "8d35a2d7-790a-41b8-aba8-4051a065c9d4";
-				SWIFT_OBJC_BRIDGING_HEADER = "Video Player/Video Player-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Remote Helper/Remote Helper-Bridging-Header.h";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -550,7 +550,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		252DFA771753784400FF8199 /* Build configuration list for PBXProject "Video Player" */ = {
+		252DFA771753784400FF8199 /* Build configuration list for PBXProject "Remote Helper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				252DFA971753784400FF8199 /* Debug */,
@@ -559,7 +559,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		252DFA991753784400FF8199 /* Build configuration list for PBXNativeTarget "Video Player" */ = {
+		252DFA991753784400FF8199 /* Build configuration list for PBXNativeTarget "Remote Helper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				252DFA9A1753784400FF8199 /* Debug */,

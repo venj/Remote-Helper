@@ -242,7 +242,8 @@ public class Helper : NSObject {
         AppDelegate.shared().window?.rootViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
 
-    func showTorrentSearchAlertInViewController(viewController:UIViewController) {
+    func showTorrentSearchAlertInViewController(viewController:UIViewController?) {
+        guard let viewController = viewController else { return } // Just do nothing...
         if (self.showCellularHUD()) { return }
         let alertController = UIAlertController(title: NSLocalizedString("Search", comment: "Search"), message: NSLocalizedString("Please enter video serial:", comment: "Please enter video serial:"), preferredStyle: .Alert)
         alertController.addTextFieldWithConfigurationHandler { (textField) in

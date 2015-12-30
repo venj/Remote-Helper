@@ -94,6 +94,9 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
         else if shortcutItem.type == "me.venj.Video-Player.opentorrents" {
             self.tabbarController.selectedIndex = 1
         }
+        else if shortcutItem.type == "me.venj.Video-Player.torrentsearch" {
+            Helper.defaultHelper.showTorrentSearchAlertInViewController(window?.rootViewController)
+        }
     }
 
     //MARK: - Use as singleton

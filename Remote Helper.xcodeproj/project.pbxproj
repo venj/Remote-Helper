@@ -518,7 +518,7 @@
 				INFOPLIST_FILE = "Remote Helper/Remote Helper-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.Video-Player";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "18a893a9-129c-4cab-bab2-05a07d27f831";
 				SWIFT_OBJC_BRIDGING_HEADER = "Remote Helper/Remote Helper-Bridging-Header.h";
@@ -539,7 +539,7 @@
 				INFOPLIST_FILE = "Remote Helper/Remote Helper-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.Video-Player";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "8d35a2d7-790a-41b8-aba8-4051a065c9d4";
 				SWIFT_OBJC_BRIDGING_HEADER = "Remote Helper/Remote Helper-Bridging-Header.h";

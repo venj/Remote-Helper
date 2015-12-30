@@ -12,9 +12,9 @@
     "3A4CCE06-CB94-4DA4-9047-79474F610ECC" : "easynas",
     "60304941CB62CBEB46D79CE0B96D37E4F2072870" : "Video%20Player"
   },
-  "DVTSourceControlWorkspaceBlueprintNameKey" : "Video Player",
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Remote Helper",
   "DVTSourceControlWorkspaceBlueprintVersion" : 203,
-  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Video Player.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Remote Helper.xcworkspace",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "ssh:\/\/bitbucket.org\/venj\/easynas.git",

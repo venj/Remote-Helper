@@ -25,8 +25,7 @@ DEPENDENCIES:
   - iOS8Colors (~> 0.1.2)
   - MMAppSwitcher (from `https://github.com/venj/MMAppSwitcher.git`)
   - MWPhotoBrowser (~> 2.1.1)
-  - PasscodeLock (from `https://github.com/ziogaschr/SwiftPasscodeLock.git`, branch
-    `cocoapods-swift2`)
+  - PasscodeLock (from `https://github.com/ziogaschr/SwiftPasscodeLock.git`, branch `cocoapods-swift2`)
   - PKHUD (~> 2.2.4)
   - ReachabilitySwift (~> 2.1)
   - TOWebViewController (from `https://github.com/venj/TOWebViewController.git`)
@@ -66,4 +65,6 @@ SPEC CHECKSUMS:
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
   TOWebViewController: accd62ec0acc8d5c2e1e195c6f7ff7654c3c840c
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: 3ffe0ee85159cf6b73b16a13632a8f96899f640a
+
+COCOAPODS: 1.0.0.beta.2

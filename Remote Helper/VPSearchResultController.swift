@@ -102,7 +102,7 @@ class VPSearchResultController: UITableViewController {
 
     //MARK: - Action
     func showWiki() {
-        let webViewController = TOWebViewController(URLString: "http://www.look4lib.com/cn/vl_searchbyid.php?keyword=\(keyword)")
+        let webViewController = TOWebViewController(URLString: "http://www.5avlib.com/cn/vl_searchbyid.php?keyword=\(keyword)")
         webViewController.showUrlWhileLoading = false
         webViewController.hidesBottomBarWhenPushed = true
         webViewController.loadingBarTintColor = Helper.defaultHelper.mainThemeColor()

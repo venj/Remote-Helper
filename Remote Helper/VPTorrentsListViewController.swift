@@ -122,6 +122,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
         currentSelectedIndexPath = indexPath
         if Helper.defaultHelper.showCellularHUD() { return }
         self.showPhotoBrowser(forTableView: tableView, atIndexPath: indexPath)

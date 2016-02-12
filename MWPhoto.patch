@@ -1,0 +1,19 @@
+*** ./Pods/MWPhotoBrowser/Pod/Classes/MWPhoto.m	2016-02-11 19:20:40.000000000 +0800
+--- ./Pods/MWPhotoBrowser/Pod/Classes/MWPhoto.m	2016-02-11 19:19:03.000000000 +0800
+***************
+*** 191,197 ****
+      @try {
+          SDWebImageManager *manager = [SDWebImageManager sharedManager];
+          _webImageOperation = [manager downloadImageWithURL:url
+!                                                    options:0
+                                                    progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+                                                        if (expectedSize > 0) {
+                                                            float progress = receivedSize / (float)expectedSize;
+--- 191,197 ----
+      @try {
+          SDWebImageManager *manager = [SDWebImageManager sharedManager];
+          _webImageOperation = [manager downloadImageWithURL:url
+!                                                    options:SDWebImageAllowInvalidSSLCertificates
+                                                    progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+                                                        if (expectedSize > 0) {
+                                                            float progress = receivedSize / (float)expectedSize;

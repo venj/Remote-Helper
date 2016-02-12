@@ -5,6 +5,22 @@
 
 ![截图](screenshots/1.png) 
 
+编译安装
+-------
+
+1. 执行如下命令：
+
+	``` bash
+	git clone https://github.com/venj/Remote-Helper.git
+	cd Remote-Helper
+	gem install cocoapods --pre # For CocoaPods 1.0 beta
+	pod install
+	patch -p1 -i MWPhoto.patch # 绕过MWPhotoBrowser对自定义证书的检查
+	```
+
+2. 用Xcode 7.x打开Remote-Helper.xcworkspace
+3. 编译安装
+
 新功能介绍
 ---------
 

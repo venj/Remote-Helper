@@ -6,7 +6,7 @@ target "Remote Helper" do
   pod 'Alamofire', '~> 3.1.1'
   pod 'ReachabilitySwift', '~> 2.1' # For Reachability
   pod 'InAppSettingsKit', '~> 2.6'
-  pod 'MWPhotoBrowser', '~> 2.1.1'
+  pod 'MWPhotoBrowser', '2.1.0'
   pod 'PKHUD', '~> 2.2.4'
   pod 'TOWebViewController', :git => 'https://github.com/venj/TOWebViewController.git'
   pod 'PasscodeLock', :git => 'https://github.com/ziogaschr/SwiftPasscodeLock.git', :branch => 'cocoapods-swift2'

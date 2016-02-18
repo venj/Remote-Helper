@@ -28,7 +28,7 @@ public extension String {
         let matches = regex.matchesInString(self, options: [], range: nsRange)
         for match in matches {
             var subResult: [String] = []
-            for var i = 0; i < match.numberOfRanges; ++i {
+            for i in 0 ..< match.numberOfRanges {
                 let nsRange = match.rangeAtIndex(i)
                 subResult.append(self.substringWithRange(self.rangeFromNSRange(nsRange)!))
             }

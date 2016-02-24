@@ -17,3 +17,36 @@
                                                     progress:^(NSInteger receivedSize, NSInteger expectedSize) {
                                                         if (expectedSize > 0) {
                                                             float progress = receivedSize / (float)expectedSize;
+
+*** ./Pods/MWPhotoBrowser/Pod/Classes/MWZoomingScrollView.m 2016-02-24 14:21:20.000000000 +0800
+--- ./Pods/MWPhotoBrowser/Pod/Classes/MWZoomingScrollView.m 2016-02-24 14:27:07.000000000 +0800
+***************
+*** 267,293 ****
+          maxScale = 4;
+      }
+      
+-     // Image is smaller than screen so no zooming!
+-     if (xScale >= 1 && yScale >= 1) {
+-         minScale = 1.0;
+-     }
+-     
+      // Set min/max zoom
+      self.maximumZoomScale = maxScale;
+      self.minimumZoomScale = minScale;
+      
+      // Initial zoom
+      self.zoomScale = [self initialZoomScaleWithMinScale];
+-     
+-     // If we're zooming to fill then centralise
+-     if (self.zoomScale != minScale) {
+-         
+-         // Centralise
+-         self.contentOffset = CGPointMake((imageSize.width * self.zoomScale - boundsSize.width) / 2.0,
+-                                          (imageSize.height * self.zoomScale - boundsSize.height) / 2.0);
+  
+-     }
+-     
+      // Disable scrolling initially until the first pinch to fix issues with swiping on an initally zoomed in photo
+      self.scrollEnabled = NO;
+      
+--- 267,279 ----

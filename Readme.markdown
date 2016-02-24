@@ -15,7 +15,7 @@
 	cd Remote-Helper
 	gem install cocoapods --pre # For CocoaPods 1.0 beta
 	pod install
-	patch -p1 -i MWPhoto.patch # 绕过MWPhotoBrowser对自定义证书的检查
+	patch -p1 -i MWPhotoBrowser.patch # 打补丁
 	```
 
 2. 用Xcode 7.x打开Remote-Helper.xcworkspace

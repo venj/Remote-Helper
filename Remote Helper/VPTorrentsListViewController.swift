@@ -79,6 +79,8 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         if #available(iOS 9.0, *) {
             tableView.cellLayoutMarginsFollowReadableWidth = false
         }
+
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "photoPreloadFinished:", name: MWPHOTO_LOADING_DID_END_NOTIFICATION, object: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -126,6 +128,10 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         currentSelectedIndexPath = indexPath
         if Helper.defaultHelper.showCellularHUD() { return }
         self.showPhotoBrowser(forTableView: tableView, atIndexPath: indexPath)
+    }
+
+    func photoPreloadFinished(notification: NSNotification) {
+        print("Photo load fihished! \(notification.object)")
     }
 
     override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
@@ -235,6 +241,10 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             if response.result.isSuccess {
                 guard let photos = response.result.value as? [String] else { return }
                 self.photos = photos
+                self.mwPhotos.forEach {
+                    $0.loadUnderlyingImageAndNotify();
+                    
+                }
                 let photoBrowser = MWPhotoBrowser(delegate: self)
                 photoBrowser.displayActionButton = false
                 photoBrowser.displayNavArrows = true
@@ -265,6 +275,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             }
             else {
                 self.navigationItem.rightBarButtonItem?.enabled = true
+                print(response.result.error?.localizedDescription)
                 Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
             }
             hud.hide()

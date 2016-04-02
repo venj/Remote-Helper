@@ -268,7 +268,7 @@ public class Helper : NSObject {
                         }
                         else {
                             let searchResultNavigationController = UINavigationController(rootViewController: searchResultController)
-                            searchResultNavigationController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target:self, action: "dismissMe")
+                            searchResultNavigationController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target:self, action: #selector(Helper.dismissMe(_:)))
                             viewController.presentViewController(searchResultNavigationController, animated: true, completion: nil)
                         }
                     }

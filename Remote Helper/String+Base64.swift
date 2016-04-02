@@ -17,6 +17,14 @@ public extension String {
 
     func decodedBase64String() -> String? {
         guard let data = NSData(base64EncodedString: self, options: []) else { return nil }
-        return String(data: data, encoding: NSUTF8StringEncoding)
+        let result = String(data: data, encoding: NSUTF8StringEncoding)
+        if result != nil { // UTF-8.
+            return result
+        }
+        else { // GBK. Damn it!
+            let cfgb18030encoding = CFStringEncodings.GB_18030_2000.rawValue
+            let gbkEncoding = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(cfgb18030encoding))
+            return String(data: data, encoding: gbkEncoding)
+        }
     }
 }

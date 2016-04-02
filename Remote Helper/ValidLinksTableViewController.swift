@@ -19,13 +19,8 @@ class ValidLinksTableViewController: UITableViewController {
         title = String(format: NSLocalizedString("Found %ld links", comment: "Found %ld links"), arguments: [self.validLinks.count])
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
 
-        func copyAll() {
-            UIPasteboard.generalPasteboard().string = self.validLinks.joinWithSeparator("\n")
-            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
-        }
-
         if self.validLinks.count > 1 {
-            let rightItem = UIBarButtonItem(title: NSLocalizedString("Copy All", comment:"Copy All"), style: .Plain, target: self, action: "copyAll")
+            let rightItem = UIBarButtonItem(title: NSLocalizedString("Copy All", comment:"Copy All"), style: .Plain, target: self, action: #selector(copyAll))
             self.navigationItem.rightBarButtonItem = rightItem
         }
 
@@ -131,6 +126,12 @@ class ValidLinksTableViewController: UITableViewController {
     }
 
     //MARK: - Helper
+
+    func copyAll() {
+        UIPasteboard.generalPasteboard().string = self.validLinks.joinWithSeparator("\n")
+        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
+    }
+
     func download(link:String) {
         let protocal = link.componentsSeparatedByString(":")[0]
         if protocal == "magnet" {

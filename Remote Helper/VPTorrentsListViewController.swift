@@ -80,7 +80,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             tableView.cellLayoutMarginsFollowReadableWidth = false
         }
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "photoPreloadFinished:", name: MWPHOTO_LOADING_DID_END_NOTIFICATION, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(VPTorrentsListViewController.photoPreloadFinished(_:)), name: MWPHOTO_LOADING_DID_END_NOTIFICATION, object: nil)
     }
 
     override func didReceiveMemoryWarning() {

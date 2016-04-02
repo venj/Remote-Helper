@@ -30,9 +30,9 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         super.viewDidLoad()
         title = NSLocalizedString("Addresses", comment: "Addresses")
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: CellIdentifier)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addAddress")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addAddress))
         readAddresses()
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: NSLocalizedString("More", comment: "More"), style: .Plain, target: self, action: "showActionSheet")
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: NSLocalizedString("More", comment: "More"), style: .Plain, target: self, action: #selector(showActionSheet))
 
         let defaults = NSUserDefaults.standardUserDefaults()
         if !defaults.boolForKey(ServerSetupDone) {
@@ -102,7 +102,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         webViewController.showUrlWhileLoading = false
         webViewController.hidesBottomBarWhenPushed = true
         webViewController.urlRequest.cachePolicy = .ReturnCacheDataElseLoad
-        webViewController.additionalBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: "fetchHTMLAndParse")]
+        webViewController.additionalBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: #selector(fetchHTMLAndParse))]
         // Theme
         webViewController.loadingBarTintColor = Helper.defaultHelper.mainThemeColor()
         if UIDevice.currentDevice().userInterfaceIdiom == .Phone {

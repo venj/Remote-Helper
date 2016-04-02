@@ -49,7 +49,7 @@ public class LCHTTPConnection : NSObject {
             let value = kv["key"]!
             let str = String(format: "Content-Disposition: form-data; name=\"%@\"\r\n\r\n", arguments: [value])
             postBody.appendData(str.dataUsingEncoding(NSUTF8StringEncoding)!)
-            ++i
+            i += 1
             if i != postData.count {
                 postBody.appendData(endItemBoundary .dataUsingEncoding(NSUTF8StringEncoding)!)
             }
@@ -130,7 +130,7 @@ public class LCHTTPConnection : NSObject {
             if val["key"] == key {
                 postData.removeAtIndex(i)
             }
-            ++i
+            i += 1
         }
         var kv: [String:String] = [:]
         kv["key"] = key

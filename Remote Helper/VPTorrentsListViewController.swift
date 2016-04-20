@@ -43,11 +43,11 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     var searchController: UISearchDisplayController!
     var cloudItem: UIBarButtonItem!
     lazy var hashItem: UIBarButtonItem = {
-        let item = UIBarButtonItem(image: UIImage(named:"magnet"), style: .Plain, target: self, action: "hashTorrent")
+        let item = UIBarButtonItem(image: UIImage(named:"magnet"), style: .Plain, target: self, action: #selector(hashTorrent))
         return item
     }()
     lazy var searchItem: UIBarButtonItem = {
-        let item = UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: "showSearch")
+        let item = UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: #selector(showSearch))
         return item
     }()
     var currentSelectedIndexPath: NSIndexPath?
@@ -56,7 +56,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         super.viewDidLoad()
 
         title = NSLocalizedString("Torrents", comment: "Torrents")
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: "loadTorrentList:")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: #selector(loadTorrentList(_:)))
         let searchBar = UISearchBar(frame: CGRect(x: 0.0, y: 0.0, width: 0.0, height: 44.0))
         searchBar.keyboardType = .NumbersAndPunctuation
         searchBar.delegate = self
@@ -80,7 +80,12 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             tableView.cellLayoutMarginsFollowReadableWidth = false
         }
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(VPTorrentsListViewController.photoPreloadFinished(_:)), name: MWPHOTO_LOADING_DID_END_NOTIFICATION, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(photoPreloadFinished(_:)), name: MWPHOTO_LOADING_DID_END_NOTIFICATION, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(showNoMorePhotosHUD(_:)), name: MWPHOTO_NO_MORE_PHOTOS_NOTIFICATION, object: nil)
+    }
+
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self);
     }
 
     override func didReceiveMemoryWarning() {
@@ -132,6 +137,10 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     func photoPreloadFinished(notification: NSNotification) {
         print("Photo load fihished! \(notification.object)")
+    }
+
+    func showNoMorePhotosHUD(notification: NSNotification) {
+        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("No more photos.", comment: "No more photos."));
     }
 
     override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {

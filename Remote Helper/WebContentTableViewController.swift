@@ -18,7 +18,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     var webViewController:TOWebViewController!
     var settingsViewController: IASKAppSettingsViewController!
-    var sheet: UIActionSheet!
     var mwPhotos: [MWPhoto]!
     var addresses: [String] = [] {
         didSet {
@@ -61,7 +60,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        UIApplication.shared.setStatusBarStyle(.lightContent, animated: true)
         navigationController?.setToolbarHidden(true, animated: true)
     }
     
@@ -179,25 +177,10 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                 }
             }
         }
-        else if specifier.key() == VerifyXunleiKey {
-            LXAPIHelper.logout()
-            let hud = Helper.defaultHelper.showHUD()
-            DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
-                let xunleiAccount = Helper.defaultHelper.xunleiUsernameAndPassword
-                if LXAPIHelper.login(withUsername: xunleiAccount[0], password: xunleiAccount[1], encoded: false) {
-                    DispatchQueue.main.async {
-                        hud.hide()
-                        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Logged in.", comment: "Logged in."))
-                    }
-                }
-                else {
-                    DispatchQueue.main.async {
-                        hud.hide()
-                        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Username or password error.", comment: "Username or password error."))
-                    }
-                }
-            }
-        }
+    }
+
+    func tableView(_ tableView: UITableView!, cellFor specifier: IASKSpecifier!) -> UITableViewCell! {
+        return nil
     }
 
     //MARK: - Action

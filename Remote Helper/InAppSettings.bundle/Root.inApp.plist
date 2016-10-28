@@ -170,58 +170,6 @@
 		</dict>
 		<dict>
 			<key>Title</key>
-			<string>Xunlei Lixian</string>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-		</dict>
-		<dict>
-			<key>AutocapitalizationType</key>
-			<string>None</string>
-			<key>AutocorrectionType</key>
-			<string>No</string>
-			<key>DefaultValue</key>
-			<string>username</string>
-			<key>IsSecure</key>
-			<false/>
-			<key>Key</key>
-			<string>kXunleiUserNameKey</string>
-			<key>KeyboardType</key>
-			<string>Alphabet</string>
-			<key>Title</key>
-			<string>Username</string>
-			<key>Type</key>
-			<string>PSTextFieldSpecifier</string>
-		</dict>
-		<dict>
-			<key>AutocapitalizationType</key>
-			<string>None</string>
-			<key>AutocorrectionType</key>
-			<string>No</string>
-			<key>DefaultValue</key>
-			<string>password</string>
-			<key>IsSecure</key>
-			<true/>
-			<key>Key</key>
-			<string>kXunleiPasswordKey</string>
-			<key>KeyboardType</key>
-			<string>Alphabet</string>
-			<key>Title</key>
-			<string>Password</string>
-			<key>Type</key>
-			<string>PSTextFieldSpecifier</string>
-		</dict>
-		<dict>
-			<key>Title</key>
-			<string>Verify Xunlei Account</string>
-			<key>Key</key>
-			<string>kVerifyXunleiKey</string>
-			<key>Type</key>
-			<string>IASKButtonSpecifier</string>
-			<key>IASKTextAlignment</key>
-			<string>IASKUITextAlignmentCenter</string>
-		</dict>
-		<dict>
-			<key>Title</key>
 			<string>Cache</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>

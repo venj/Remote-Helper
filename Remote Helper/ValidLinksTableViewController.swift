@@ -81,48 +81,7 @@ class ValidLinksTableViewController: UITableViewController {
             self.download(link)
         }
         downloadAction.backgroundColor = UIColor.iOS8orange()
-
-        // Lixian
-        let lixianAction = UITableViewRowAction(style: .default, title: NSLocalizedString("Lixian", comment: "Lixian")) { [unowned self] (_, _) in
-            if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
-            let hud = Helper.defaultHelper.showHUD()
-            DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
-                let protocal = link.components(separatedBy: ":")[0]
-                let xunleiAccount = Helper.defaultHelper.xunleiUsernameAndPassword
-                if !AppDelegate.shared().xunleiUserLoggedIn {
-                    if !LXAPIHelper.login(withUsername:xunleiAccount[0], password: xunleiAccount[1], encoded: false) {
-                        DispatchQueue.main.async {
-                            hud.hide()
-                            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Login Failed.", comment: "Login Failed."))
-                            return
-                        }
-                    }
-                    else {
-                        AppDelegate.shared().xunleiUserLoggedIn = true
-                    }
-                }
-                sleep(2)
-                var dcid = ""
-                if protocal == "magnet" {
-                    dcid = LXAPIHelper.addMegnetTask(link)
-                }
-                else {
-                    dcid = LXAPIHelper.addNormalTask(link)
-                }
-                DispatchQueue.main.async {
-                    hud.hide()
-                    if dcid == "" {
-                        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Failed to add task.", comment: "Failed to add task."))
-                    }
-                    else {
-                        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Lixian added.", comment: "Lixian added."))
-                    }
-                }
-            }
-        }
-
-        lixianAction.backgroundColor = UIColor.iOS8green()
-        return [copyAction, lixianAction, downloadAction]
+        return [copyAction, downloadAction]
     }
 
     //MARK: - Helper

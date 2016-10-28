@@ -39,13 +39,12 @@ class VPSearchResultController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    override var prefersStatusBarHidden: Bool {
+        return false
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        if UIApplication.shared.isStatusBarHidden {
-            UIApplication.shared.setStatusBarHidden(false, with: .slide)
-        }
-        
         navigationController?.setToolbarHidden(true, animated: true)
         navigationController?.navigationBar.barStyle = .default
     }

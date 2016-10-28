@@ -9,21 +9,21 @@
 import Foundation
 
 extension String {
-    func vc_stringByAppendingPathComponent(component: String) -> String {
+    func vc_stringByAppendingPathComponent(_ component: String) -> String {
         return self.vc_stringByAppendingPathComponents([component])
     }
 
-    func vc_stringByAppendingPathComponents(components: [String]) -> String {
-        guard var url = NSURL(string: self) else { return self }
+    func vc_stringByAppendingPathComponents(_ components: [String]) -> String {
+        guard var url = URL(string: self) else { return self }
         for component in components {
-            url = url.URLByAppendingPathComponent(component)
+            url = url.appendingPathComponent(component)
         }
         return url.absoluteString
     }
 
     func vc_lastPathComponent() -> String {
-        let url = NSURL(fileURLWithPath: self)
-        guard let components = url.pathComponents else { return self }
+        let url = URL(fileURLWithPath: self)
+        let components = url.pathComponents
         guard components.count > 0 else { return self }
         return components.last!
     }

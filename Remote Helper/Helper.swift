@@ -12,25 +12,27 @@ import PKHUD
 import ReachabilitySwift
 
 @objc
-public class Helper : NSObject {
-    public static let defaultHelper = Helper()
+open class Helper : NSObject {
+    open static let defaultHelper = Helper()
 
-    private var sessionHeader: String = ""
-    private var downloadPath: String = ""
+    fileprivate var sessionHeader: String = ""
+    fileprivate var downloadPath: String = ""
     var reachability: Reachability? = {
-        return try? Reachability.reachabilityForInternetConnection()
+        let reach = Reachability()
+        try? reach?.startNotifier()
+        return reach!
     }()
 
     //MARK: - Properties
     var useSSL:Bool {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if defaults.objectForKey(RequestUseSSL) == nil {
-            defaults.setBool(true, forKey: RequestUseSSL)
+        let defaults = UserDefaults.standard
+        if defaults.object(forKey: RequestUseSSL) == nil {
+            defaults.set(true, forKey: RequestUseSSL)
             defaults.synchronize()
             return true
         }
         else {
-            return defaults.boolForKey(RequestUseSSL)
+            return defaults.bool(forKey: RequestUseSSL)
         }
     }
 
@@ -39,9 +41,9 @@ public class Helper : NSObject {
     }
 
     var usernameAndPassword:(String, String) {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        let username = defaults.objectForKey(TransmissionUserNameKey) as? String
-        let password = defaults.objectForKey(TransmissionPasswordKey) as? String
+        let defaults = UserDefaults.standard
+        let username = defaults.object(forKey: TransmissionUserNameKey) as? String
+        let password = defaults.object(forKey: TransmissionPasswordKey) as? String
         if username != nil && password != nil {
             return (username!, password!)
         }
@@ -51,9 +53,9 @@ public class Helper : NSObject {
     }
 
     var xunleiUsernameAndPassword:[String] {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        let username = defaults.objectForKey(XunleiUserNameKey) as? String
-        let password = defaults.objectForKey(XunleiPasswordKey) as? String
+        let defaults = UserDefaults.standard
+        let username = defaults.object(forKey: XunleiUserNameKey) as? String
+        let password = defaults.object(forKey: XunleiPasswordKey) as? String
         if username != nil && password != nil {
             return [username!, password!]
         }
@@ -63,20 +65,20 @@ public class Helper : NSObject {
     }
 
     var customUserAgent: String? {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        guard let ua = defaults.stringForKey(CustomRequestUserAgent) else { return nil }
+        let defaults = UserDefaults.standard
+        guard let ua = defaults.string(forKey: CustomRequestUserAgent) else { return nil }
         return ua
     }
 
     var userCellularNetwork: Bool {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        if defaults.objectForKey(RequestUseCellularNetwork) == nil {
-            defaults.setBool(true, forKey: RequestUseCellularNetwork)
+        let defaults = UserDefaults.standard
+        if defaults.object(forKey: RequestUseCellularNetwork) == nil {
+            defaults.set(true, forKey: RequestUseCellularNetwork)
             defaults.synchronize()
             return true
         }
         else {
-            return defaults.boolForKey(RequestUseCellularNetwork)
+            return defaults.bool(forKey: RequestUseCellularNetwork)
         }
     }
 
@@ -86,47 +88,47 @@ public class Helper : NSObject {
     }
 
     func baseLink() -> String {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        var host = defaults.stringForKey(ServerHostKey)
+        let defaults = UserDefaults.standard
+        var host = defaults.string(forKey: ServerHostKey)
         if host == nil { host = "192.168.1.1" }
-        var port = defaults.stringForKey(ServerPortKey)
+        var port = defaults.string(forKey: ServerPortKey)
         if port == nil { port = "80" }
-        var subPath = defaults.stringForKey(ServerPathKey)
+        var subPath = defaults.string(forKey: ServerPathKey)
         if subPath == nil || subPath == "/" {
             subPath = ""
         }
         else {
-            if subPath!.substringToIndex(subPath!.startIndex.advancedBy(1)) != "/" {
+            if subPath!.substring(to: subPath!.characters.index(subPath!.startIndex, offsetBy: 1)) != "/" {
                 subPath = "/\(subPath)"
             }
-            let lastCharIndex = subPath!.endIndex.advancedBy(-1)
-            if subPath?.substringFromIndex(lastCharIndex) == "/" {
-                subPath = subPath!.substringToIndex(lastCharIndex)
+            let lastCharIndex = subPath!.characters.index(subPath!.endIndex, offsetBy: -1)
+            if subPath?.substring(from: lastCharIndex) == "/" {
+                subPath = subPath!.substring(to: lastCharIndex)
             }
         }
         return "\(host!):\(port!)\(subPath!)"
     }
 
     func fileLink(withPath path:String!) -> String {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        var host = defaults.stringForKey(ServerHostKey)
+        let defaults = UserDefaults.standard
+        var host = defaults.string(forKey: ServerHostKey)
         if host == nil { host = "192.168.1.1" }
-        var port = defaults.stringForKey(ServerPortKey)
+        var port = defaults.string(forKey: ServerPortKey)
         if port == nil { port = "80" }
         var p = path
         if p == "" {
             p = "/"
         }
-        else if (p.substringToIndex(p.startIndex.advancedBy(1)) != "/") {
+        else if (p?.substring(to: (p?.index((p?.startIndex)!, offsetBy: 1))!) != "/") {
             p = "/\(p)"
         }
-        return "http\(self.SSL_ADD_S)://\(host!):\(port!)\(p)"
+        return "http\(self.SSL_ADD_S)://\(host!):\(port!)\(p!)"
     }
 
     func transmissionServerAddress(withUserNameAndPassword withUnP:Bool = true) -> String {
-        let defaults = NSUserDefaults.standardUserDefaults()
+        let defaults = UserDefaults.standard
         var address: String
-        if let addr = defaults.stringForKey(TransmissionAddressKey) {
+        if let addr = defaults.string(forKey: TransmissionAddressKey) {
             address = addr
         }
         else {
@@ -146,7 +148,7 @@ public class Helper : NSObject {
     }
 
     func dbSearchPath(withKeyword keyword: String) -> String {
-        let kw = keyword.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet())
+        let kw = keyword.addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics)
         let escapedKeyword = kw == nil ? "" : kw!
         return "http\(self.SSL_ADD_S)://\(self.baseLink())/db_search?keyword=\(escapedKeyword)"
     }
@@ -165,23 +167,23 @@ public class Helper : NSObject {
 
     //MARK: - Local Files and ImageCache Helpers
     func documentsDirectory() -> String {
-        return NSSearchPathForDirectoriesInDomains(.DocumentationDirectory, .UserDomainMask, true).first!
+        return NSSearchPathForDirectoriesInDomains(.documentationDirectory, .userDomainMask, true).first!
     }
     
     func freeDiskSpace() -> Int {
-        guard let dictionary = try? NSFileManager.defaultManager().attributesOfFileSystemForPath(self.documentsDirectory()) else { return 0 }
-        let freeFileSystemSizeInBytes = dictionary[NSFileSystemFreeSize] as! Int
+        guard let dictionary = try? FileManager.default.attributesOfFileSystem(forPath: self.documentsDirectory()) else { return 0 }
+        let freeFileSystemSizeInBytes = dictionary[FileAttributeKey.systemFreeSize] as! Int
         return freeFileSystemSizeInBytes
     }
 
     func localFileSize() -> Int {
         var size = 0
         let documentsDirectory = self.documentsDirectory()
-        guard let fileEnumerator = NSFileManager.defaultManager().enumeratorAtPath(documentsDirectory) else { return 0 }
+        guard let fileEnumerator = FileManager.default.enumerator(atPath: documentsDirectory) else { return 0 }
         for fileName in fileEnumerator {
             let filePath = documentsDirectory.vc_stringByAppendingPathComponent(fileName as! String)
-            guard let attrs = try? NSFileManager.defaultManager().attributesOfFileSystemForPath(filePath) else { continue }
-            size += (attrs[NSFileSize] as! Int)
+            guard let attrs = try? FileManager.default.attributesOfFileSystem(forPath: filePath) else { continue }
+            size += (attrs[FileAttributeKey.size] as! Int)
         }
         return size
     }
@@ -196,15 +198,15 @@ public class Helper : NSObject {
 
     //MARK: - UserDefaults Helpers
 
-    func save(value: AnyObject, forKey key:String) {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setObject(value, forKey: key)
+    func save(_ value: Any, forKey key:String) {
+        let defaults = UserDefaults.standard
+        defaults.set(value, forKey: key)
         defaults.synchronize()
     }
 
     func appVersionString() -> String {
-        let versionString = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as? String ?? "1.0"
-        let buildString = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleVersion") as? String ?? "1"
+        let versionString = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
+        let buildString = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1"
         return "\(versionString)(\(buildString))"
     }
 
@@ -215,8 +217,8 @@ public class Helper : NSObject {
     
     func showCellularHUD() -> Bool {
         guard let reachability = self.reachability else { return false }
-        if !self.userCellularNetwork && !reachability.isReachableViaWiFi() {
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+        if !self.userCellularNetwork && !reachability.isReachableViaWiFi {
+            DispatchQueue.main.async(execute: { () -> Void in
                 self.showHudWithMessage(NSLocalizedString("Cellular data is turned off.", comment: "Cellular data is turned off."))
             })
             return true
@@ -224,7 +226,7 @@ public class Helper : NSObject {
         return false
     }
 
-    func showHudWithMessage(message: String, hideAfterDelay delay: Double = 1.0) {
+    func showHudWithMessage(_ message: String, hideAfterDelay delay: Double = 1.0) {
         let hud = PKHUD.sharedHUD
         hud.contentView = PKHUDTextView(text: message)
         hud.show()
@@ -238,22 +240,22 @@ public class Helper : NSObject {
         return hud
     }
 
-    func dismissMe(sender: UIBarButtonItem) {
-        AppDelegate.shared().window?.rootViewController?.dismissViewControllerAnimated(true, completion: nil)
+    func dismissMe(_ sender: UIBarButtonItem) {
+        AppDelegate.shared().window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
 
-    func showTorrentSearchAlertInViewController(viewController:UIViewController?) {
+    func showTorrentSearchAlertInViewController(_ viewController:UIViewController?) {
         guard let viewController = viewController else { return } // Just do nothing...
         if (self.showCellularHUD()) { return }
-        let alertController = UIAlertController(title: NSLocalizedString("Search", comment: "Search"), message: NSLocalizedString("Please enter video serial:", comment: "Please enter video serial:"), preferredStyle: .Alert)
-        alertController.addTextFieldWithConfigurationHandler { (textField) in
-            textField.keyboardType = .ASCIICapable
+        let alertController = UIAlertController(title: NSLocalizedString("Search", comment: "Search"), message: NSLocalizedString("Please enter video serial:", comment: "Please enter video serial:"), preferredStyle: .alert)
+        alertController.addTextField { (textField) in
+            textField.keyboardType = .asciiCapable
         }
-        let searchAction = UIAlertAction(title: NSLocalizedString("Search", comment: "Search"), style: .Default) { _ in
+        let searchAction = UIAlertAction(title: NSLocalizedString("Search", comment: "Search"), style: .default) { _ in
             let keyword = alertController.textFields![0].text!
             let hud = self.showHUD()
             let dbSearchPath = self.dbSearchPath(withKeyword: keyword)
-            let request = Alamofire.request(.GET, dbSearchPath)
+            let request = Alamofire.request(dbSearchPath)
             request.responseJSON(completionHandler: { [unowned self] response in
                 if response.result.isSuccess {
                     guard let responseObject = response.result.value as? [String: AnyObject] else { return }
@@ -268,8 +270,8 @@ public class Helper : NSObject {
                         }
                         else {
                             let searchResultNavigationController = UINavigationController(rootViewController: searchResultController)
-                            searchResultNavigationController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target:self, action: #selector(Helper.dismissMe(_:)))
-                            viewController.presentViewController(searchResultNavigationController, animated: true, completion: nil)
+                            searchResultNavigationController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target:self, action: #selector(Helper.dismissMe(_:)))
+                            viewController.present(searchResultNavigationController, animated: true, completion: nil)
                         }
                     }
                     else {
@@ -285,16 +287,17 @@ public class Helper : NSObject {
             })
         }
         alertController.addAction(searchAction)
-        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .Cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
-        viewController.presentViewController(alertController, animated: true, completion: nil)
+        viewController.present(alertController, animated: true, completion: nil)
     }
 
     //MARK: - Transmission Remote Download Helpers
-    func downloadTask(magnet:String, toDir dir: String, completionHandler:(() -> Void)? = nil,  errorHandler:(() -> Void)? = nil) {
-        let params = ["method" : "torrent-add", "arguments": ["paused" : false, "download-dir" : dir, "filename" : magnet]]
+    func downloadTask(_ magnet:String, toDir dir: String, completionHandler:(() -> Void)? = nil,  errorHandler:(() -> Void)? = nil) {
+        let params = ["method" : "torrent-add", "arguments": ["paused" : false, "download-dir" : dir, "filename" : magnet]] as [String : Any]
         let HTTPHeaders = ["X-Transmission-Session-Id" : sessionHeader]
-        let request = Alamofire.request(.POST, self.transmissionRPCAddress(), parameters: params, encoding: .JSON, headers: HTTPHeaders)
+        //, parameters: params, encoding: .JSON, headers: HTTPHeaders
+        let request = Alamofire.request(self.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)
         request.authenticate(user: usernameAndPassword.0, password: usernameAndPassword.1).responseJSON { response in
             if response.result.isSuccess {
                 let responseObject = response.result.value as! [String: AnyObject]
@@ -309,10 +312,10 @@ public class Helper : NSObject {
         }
     }
 
-    func parseSessionAndAddTask(magnet:String, completionHandler:(() -> Void)? = nil, errorHandler:(() -> Void)? = nil) {
+    func parseSessionAndAddTask(_ magnet:String, completionHandler:(() -> Void)? = nil, errorHandler:(() -> Void)? = nil) {
         let params = ["method" : "session-get"]
         let HTTPHeaders = ["X-Transmission-Session-Id" : sessionHeader]
-        let request = Alamofire.request(.POST, self.transmissionRPCAddress(), parameters: params, encoding: .JSON, headers: HTTPHeaders)
+        let request = Alamofire.request(self.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)
         request.authenticate(user: usernameAndPassword.0, password: usernameAndPassword.1).responseJSON { [unowned self] response in
             if response.result.isSuccess {
                 let responseObject = response.result.value as! [String:AnyObject]
@@ -330,7 +333,7 @@ public class Helper : NSObject {
                     self.sessionHeader = response.response!.allHeaderFields["X-Transmission-Session-Id"] as! String
                     let params = ["method" : "session-get"]
                     let HTTPHeaders = ["X-Transmission-Session-Id" : self.sessionHeader]
-                    let request = Alamofire.request(.POST, self.transmissionRPCAddress(), parameters: params, encoding: .JSON, headers: HTTPHeaders)
+                    let request = Alamofire.request(self.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)
                     request.authenticate(user: self.usernameAndPassword.0, password: self.usernameAndPassword.1).responseJSON { [unowned self] response in
                         if response.result.isSuccess {
                             let responseObject = response.result.value as! [String:AnyObject]
@@ -344,10 +347,10 @@ public class Helper : NSObject {
                             }
                         }
                         else {
-                            let alertController = UIAlertController(title: NSLocalizedString("Error", comment:"Error"), message: NSLocalizedString("Unkown error.", comment: "Unknow error."), preferredStyle: .Alert)
-                            let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .Cancel, handler: nil)
+                            let alertController = UIAlertController(title: NSLocalizedString("Error", comment:"Error"), message: NSLocalizedString("Unkown error.", comment: "Unknow error."), preferredStyle: .alert)
+                            let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
                             alertController.addAction(cancelAction)
-                            AppDelegate.shared().window?.rootViewController?.presentViewController(alertController, animated: true, completion: nil)
+                            AppDelegate.shared().window?.rootViewController?.present(alertController, animated: true, completion: nil)
                         }
                     }
                 }

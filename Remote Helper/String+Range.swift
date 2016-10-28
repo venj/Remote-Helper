@@ -9,13 +9,13 @@
 import Foundation
 
 extension String {
-    func rangeFromNSRange(range : NSRange) -> Range<String.Index>? {
-        let from16 = utf16.startIndex.advancedBy(range.location, limit: utf16.endIndex)
-        let to16 = from16.advancedBy(range.length, limit: utf16.endIndex)
+    func range(from range : NSRange) -> Range<String.Index> {
+        let from16 = utf16.startIndex.advanced(by: range.location)
+        let to16 = from16.advanced(by: range.length)
         if let from = String.Index(from16, within: self),
             let to = String.Index(to16, within: self) {
-                return from ..< to
+            return from ..< to
         }
-        return nil
+        fatalError("Range conversion error")
     }
 }

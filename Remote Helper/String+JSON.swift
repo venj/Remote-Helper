@@ -10,9 +10,9 @@ import Foundation
 
 @available(iOS 5.0, OSX 10.7, *)
 public extension String {
-    func JSONObject(encoding: NSStringEncoding = NSUTF8StringEncoding) -> AnyObject? {
-        guard let data = self.dataUsingEncoding(encoding) else { return nil }
-        guard let JSON = try? NSJSONSerialization.JSONObjectWithData(data, options:[]) else { return nil }
-        return JSON
+    func JSONObject(_ encoding: String.Encoding = String.Encoding.utf8) -> AnyObject? {
+        guard let data = self.data(using: encoding) else { return nil }
+        guard let JSON = try? JSONSerialization.jsonObject(with: data, options:[]) else { return nil }
+        return JSON as AnyObject?
     }
 }

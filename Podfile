@@ -1,16 +1,18 @@
-platform :ios, '8.0'
+platform :ios, '9.0'
 use_frameworks!
 source 'https://github.com/CocoaPods/Specs.git'
 
-target "Remote Helper" do 
-  pod 'Alamofire', '~> 3.1.1'
-  pod 'ReachabilitySwift', '~> 2.1' # For Reachability
-  pod 'InAppSettingsKit', '~> 2.6'
+target "Remote Helper" do
+  # Swift
+  pod 'Alamofire', '~> 4.0.0'
+  pod 'PKHUD', :git => 'https://github.com/venj/PKHUD.git'
+  pod 'PasscodeLock', :git => 'https://github.com/venj/SwiftPasscodeLock.git'
+  pod 'ReachabilitySwift', '~> 3'
+
+  # Objective-C
+  pod 'InAppSettingsKit', '~> 2.7'
   pod 'MWPhotoBrowser', '~> 2.1.1'
-  pod 'PKHUD', '~> 2.2.4'
   pod 'TOWebViewController', :git => 'https://github.com/venj/TOWebViewController.git'
-  pod 'PasscodeLock', :git => 'https://github.com/ziogaschr/SwiftPasscodeLock.git', :branch => 'cocoapods-swift2'
   pod 'MMAppSwitcher', :git => 'https://github.com/venj/MMAppSwitcher.git'
   pod 'iOS8Colors', '~> 0.1.2'
-  pod 'Reveal-iOS-SDK', '~> 1.6.2', :configurations => ['Debug']
 end

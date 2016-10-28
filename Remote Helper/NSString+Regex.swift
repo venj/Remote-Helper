@@ -10,10 +10,10 @@ import Foundation
 
 @available(iOS 4.0, OSX 10.6, *)
 public extension String {
-    func matches(pattern: String, regularExpressionOptions:NSRegularExpressionOptions = [.CaseInsensitive], matchingOptions:NSMatchingOptions = []) -> Bool {
+    func matches(_ pattern: String, regularExpressionOptions:NSRegularExpression.Options = [.caseInsensitive], matchingOptions:NSRegularExpression.MatchingOptions = []) -> Bool {
         guard let regex = try? NSRegularExpression(pattern: pattern, options: regularExpressionOptions) else { return false }
         let nsRange = NSRange(location: 0, length: self.characters.count)
-        if regex.numberOfMatchesInString(self, options: matchingOptions, range:nsRange) > 0 {
+        if regex.numberOfMatches(in: self, options: matchingOptions, range:nsRange) > 0 {
             return true
         }
         else {
@@ -21,23 +21,23 @@ public extension String {
         }
     }
 
-    func arrayOfCaptureComponentsMatchedByRegex(pattern: String) -> [[String]] {
+    func arrayOfCaptureComponentsMatchedByRegex(_ pattern: String) -> [[String]] {
         var result: [[String]] = []
-        guard let regex = try? NSRegularExpression(pattern: pattern, options:[.CaseInsensitive]) else { return result }
+        guard let regex = try? NSRegularExpression(pattern: pattern, options:[.caseInsensitive]) else { return result }
         let nsRange = NSRange(location: 0, length: self.characters.count)
-        let matches = regex.matchesInString(self, options: [], range: nsRange)
+        let matches = regex.matches(in: self, options: [], range: nsRange)
         for match in matches {
             var subResult: [String] = []
             for i in 0 ..< match.numberOfRanges {
-                let nsRange = match.rangeAtIndex(i)
-                subResult.append(self.substringWithRange(self.rangeFromNSRange(nsRange)!))
+                let nsRange = match.rangeAt(i)
+                subResult.append(self.substring(with: self.range(from: nsRange)))
             }
             if !subResult.isEmpty { result.append(subResult) }
         }
         return result
     }
     
-    func captureComponentsMatchedByRegex(pattern: String, capture captureIndex: Int = 1) -> [String] {
+    func captureComponentsMatchedByRegex(_ pattern: String, capture captureIndex: Int = 1) -> [String] {
         let matches = self.arrayOfCaptureComponentsMatchedByRegex(pattern)
         var result: [String] = []
         for match in matches {
@@ -47,7 +47,7 @@ public extension String {
         return result
     }
 
-    func stringByMatching(pattern: String, capture captureIndex: Int = 1) -> String? {
+    func stringByMatching(_ pattern: String, capture captureIndex: Int = 1) -> String? {
         let matches = self.arrayOfCaptureComponentsMatchedByRegex(pattern)
         var result: String? = nil
         for match in matches {

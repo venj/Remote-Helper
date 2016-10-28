@@ -9,57 +9,57 @@
 import Foundation
 
 @objc
-public class XunleiItemInfo : NSObject, NSCoding {
+open class XunleiItemInfo : NSObject, NSCoding {
     let taskStatus = ["waiting", "downloading", "complete", "fail", "pending"]
 
-    public var taskid: String!
-    public var name: String!
-    public var size: String!
-    public var readableSize: String!
-    public var downloadPercent: String!
-    public var retainDays: String!
-    public var addDate: String!
-    public var downloadURL: String!
-    public var originalURL: String!
-    public var isBT: String!
-    public var type: String!
-    public var dcid: String!
-    public var status: Int = 6 // statuses: Waiting = 0, Downloadding = 1, Complete = 2, Fail = 3, Pending = 4, Unknown = 5
-    public var ifvod: String!
+    open var taskid: String!
+    open var name: String!
+    open var size: String!
+    open var readableSize: String!
+    open var downloadPercent: String!
+    open var retainDays: String!
+    open var addDate: String!
+    open var downloadURL: String!
+    open var originalURL: String!
+    open var isBT: String!
+    open var type: String!
+    open var dcid: String!
+    open var status: Int = 6 // statuses: Waiting = 0, Downloadding = 1, Complete = 2, Fail = 3, Pending = 4, Unknown = 5
+    open var ifvod: String!
 
-    public func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(taskStatus[status], forKey: "status")
-        aCoder.encodeObject(self.taskid, forKey:"taskid")
-        aCoder.encodeObject(self.name, forKey:"name")
-        aCoder.encodeObject(self.size, forKey:"size")
-        aCoder.encodeObject(self.readableSize, forKey:"readableSize")
-        aCoder.encodeObject(self.downloadPercent, forKey:"loaddingProcess")
-        aCoder.encodeObject(self.retainDays, forKey:"retainDays")
-        aCoder.encodeObject(self.addDate, forKey:"addTime")
-        aCoder.encodeObject(self.downloadURL, forKey:"downloadURL")
-        aCoder.encodeObject(self.type, forKey:"type")
-        aCoder.encodeObject(self.dcid, forKey:"dcid")
-        aCoder.encodeObject(self.originalURL, forKey:"originalurl")
-        aCoder.encodeObject(self.ifvod, forKey:"ifVod")
-        aCoder.encodeObject(self.isBT, forKey:"isBT")
+    open func encode(with aCoder: NSCoder) {
+        aCoder.encode(taskStatus[status], forKey: "status")
+        aCoder.encode(self.taskid, forKey:"taskid")
+        aCoder.encode(self.name, forKey:"name")
+        aCoder.encode(self.size, forKey:"size")
+        aCoder.encode(self.readableSize, forKey:"readableSize")
+        aCoder.encode(self.downloadPercent, forKey:"loaddingProcess")
+        aCoder.encode(self.retainDays, forKey:"retainDays")
+        aCoder.encode(self.addDate, forKey:"addTime")
+        aCoder.encode(self.downloadURL, forKey:"downloadURL")
+        aCoder.encode(self.type, forKey:"type")
+        aCoder.encode(self.dcid, forKey:"dcid")
+        aCoder.encode(self.originalURL, forKey:"originalurl")
+        aCoder.encode(self.ifvod, forKey:"ifVod")
+        aCoder.encode(self.isBT, forKey:"isBT")
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        let statusString = aDecoder.decodeObjectForKey("status") as! String
-        self.status = taskStatus.indexOf(statusString)!
-        self.taskid = aDecoder.decodeObjectForKey("taskid") as! String
-        self.name = aDecoder.decodeObjectForKey("name") as! String
-        self.size = aDecoder.decodeObjectForKey("size") as! String
-        self.downloadPercent = aDecoder.decodeObjectForKey("loaddingProcess") as! String
-        self.retainDays = aDecoder.decodeObjectForKey("retainDays") as! String
-        self.addDate = aDecoder.decodeObjectForKey("addTime") as! String
-        self.downloadURL = aDecoder.decodeObjectForKey("downloadURL") as! String
-        self.type = aDecoder.decodeObjectForKey("type") as! String
-        self.dcid = aDecoder.decodeObjectForKey("dcid") as! String
-        self.originalURL = aDecoder.decodeObjectForKey("originalurl") as! String
-        self.readableSize = aDecoder.decodeObjectForKey("readableSize") as! String
-        self.ifvod = aDecoder.decodeObjectForKey("ifVod") as! String
-        self.isBT = aDecoder.decodeObjectForKey("isBT") as! String
+        let statusString = aDecoder.decodeObject(forKey: "status") as! String
+        self.status = taskStatus.index(of: statusString)!
+        self.taskid = aDecoder.decodeObject(forKey: "taskid") as! String
+        self.name = aDecoder.decodeObject(forKey: "name") as! String
+        self.size = aDecoder.decodeObject(forKey: "size") as! String
+        self.downloadPercent = aDecoder.decodeObject(forKey: "loaddingProcess") as! String
+        self.retainDays = aDecoder.decodeObject(forKey: "retainDays") as! String
+        self.addDate = aDecoder.decodeObject(forKey: "addTime") as! String
+        self.downloadURL = aDecoder.decodeObject(forKey: "downloadURL") as! String
+        self.type = aDecoder.decodeObject(forKey: "type") as! String
+        self.dcid = aDecoder.decodeObject(forKey: "dcid") as! String
+        self.originalURL = aDecoder.decodeObject(forKey: "originalurl") as! String
+        self.readableSize = aDecoder.decodeObject(forKey: "readableSize") as! String
+        self.ifvod = aDecoder.decodeObject(forKey: "ifVod") as! String
+        self.isBT = aDecoder.decodeObject(forKey: "isBT") as! String
     }
 
     public convenience override init() {

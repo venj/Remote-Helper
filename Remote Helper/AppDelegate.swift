@@ -26,8 +26,8 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
         return presenter
     }()
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
-        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        self.window = UIWindow(frame: UIScreen.main.bounds)
         // App Swicher
         MMAppSwitcher.sharedInstance().setDataSource(self)
         // Configure Alamofire Request Manager
@@ -54,10 +54,10 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
         return true
     }
 
-    func applicationWillResignActive(application: UIApplication) {
+    func applicationWillResignActive(_ application: UIApplication) {
     }
 
-    func applicationDidEnterBackground(application: UIApplication) {
+    func applicationDidEnterBackground(_ application: UIApplication) {
         passcodeLockPresenter.presentPasscodeLock()
 
         let repository = UserDefaultsPasscodeRepository()
@@ -65,29 +65,29 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
             MMAppSwitcher.sharedInstance().setNeedsUpdate()
         }
 
-        if NSUserDefaults.standardUserDefaults().boolForKey(ClearCacheOnExitKey) == true {
-            let app = UIApplication.sharedApplication()
+        if UserDefaults.standard.bool(forKey: ClearCacheOnExitKey) == true {
+            let app = UIApplication.shared
             var identifier: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
-            identifier = app.beginBackgroundTaskWithExpirationHandler({ () -> Void in
+            identifier = app.beginBackgroundTask(expirationHandler: { () -> Void in
                 app.endBackgroundTask(identifier)
                 identifier = UIBackgroundTaskInvalid
             })
-            SDImageCache.sharedImageCache().clearDiskOnCompletion({ () -> Void in
+            SDImageCache.shared().clearDisk(onCompletion: { () -> Void in
                 app.endBackgroundTask(identifier)
                 identifier = UIBackgroundTaskInvalid
             })
         }
     }
 
-    func applicationWillEnterForeground(application: UIApplication) {
+    func applicationWillEnterForeground(_ application: UIApplication) {
     }
 
-    func applicationWillTerminate(application: UIApplication) {
+    func applicationWillTerminate(_ application: UIApplication) {
         
     }
 
     @available(iOS 9.0, *)
-    func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
+    func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
         if shortcutItem.type == "me.venj.Video-Player.openaddresses" {
             self.tabbarController.selectedIndex = 0
         }
@@ -101,35 +101,35 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
 
     //MARK: - Use as singleton
     class func shared() -> AppDelegate {
-        return UIApplication.sharedApplication().delegate as! AppDelegate
+        return UIApplication.shared.delegate as! AppDelegate
     }
 
     //MARK: - MMAppSwitch
     func viewForCard() -> UIView! {
         let view = UIView()
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.white
         return view
     }
 
     //MARK: - Alamofire Manager
     func configureAlamofireManager() {
-        let manager = Manager.sharedInstance
+        let manager = SessionManager.default
         manager.session.configuration.timeoutIntervalForRequest = REQUEST_TIME_OUT
         manager.delegate.sessionDidReceiveChallenge = { session, challenge in
-            var disposition: NSURLSessionAuthChallengeDisposition = .PerformDefaultHandling
-            var credential: NSURLCredential?
+            var disposition: URLSession.AuthChallengeDisposition = .performDefaultHandling
+            var credential: URLCredential?
 
             if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
-                disposition = NSURLSessionAuthChallengeDisposition.UseCredential
-                credential = NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!)
+                disposition = URLSession.AuthChallengeDisposition.useCredential
+                credential = URLCredential(trust: challenge.protectionSpace.serverTrust!)
             } else {
                 if challenge.previousFailureCount > 0 {
-                    disposition = .CancelAuthenticationChallenge
+                    disposition = .cancelAuthenticationChallenge
                 } else {
-                    credential = manager.session.configuration.URLCredentialStorage?.defaultCredentialForProtectionSpace(challenge.protectionSpace)
+                    credential = manager.session.configuration.urlCredentialStorage?.defaultCredential(for: challenge.protectionSpace)
 
                     if credential != nil {
-                        disposition = .UseCredential
+                        disposition = .useCredential
                     }
                 }
             }

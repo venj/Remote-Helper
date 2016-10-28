@@ -10,7 +10,7 @@ import Foundation
 import PasscodeLock
 
 struct PasscodeLockConfiguration: PasscodeLockConfigurationType {
-    
+    public var touchIdReason: String? = NSLocalizedString("Remote Helper needs your finger print to protect your content.", comment: "Remote Helper needs your finger print to protect your content.")
     let repository: PasscodeRepositoryType
     let passcodeLength = 4
     var isTouchIDAllowed = true

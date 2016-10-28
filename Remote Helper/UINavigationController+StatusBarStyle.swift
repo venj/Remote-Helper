@@ -9,14 +9,14 @@
 import UIKit
 
 extension UINavigationController {
-    override public func preferredStatusBarStyle() -> UIStatusBarStyle {
+    override open var preferredStatusBarStyle : UIStatusBarStyle {
         if presentingViewController != nil {
             // When being presented, presentingViewController should always not nil.
-            return presentingViewController!.preferredStatusBarStyle()
+            return presentingViewController!.preferredStatusBarStyle
         }
         else {
-            guard topViewController != nil else { return .Default }
-            return topViewController!.preferredStatusBarStyle()
+            guard topViewController != nil else { return .default }
+            return topViewController!.preferredStatusBarStyle
         }
     }
 }

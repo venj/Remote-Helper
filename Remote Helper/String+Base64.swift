@@ -11,20 +11,20 @@ import Foundation
 @available(iOS 7.0, OSX 10.9, *)
 public extension String {
     func base64String() -> String? {
-        guard let data = self.dataUsingEncoding(NSUTF8StringEncoding) else { return nil }
-        return data.base64EncodedStringWithOptions([])
+        guard let data = self.data(using: String.Encoding.utf8) else { return nil }
+        return data.base64EncodedString(options: [])
     }
 
     func decodedBase64String() -> String? {
-        guard let data = NSData(base64EncodedString: self, options: []) else { return nil }
-        let result = String(data: data, encoding: NSUTF8StringEncoding)
+        guard let data = Data(base64Encoded: self, options: []) else { return nil }
+        let result = String(data: data, encoding: String.Encoding.utf8)
         if result != nil { // UTF-8.
             return result
         }
         else { // GBK. Damn it!
             let cfgb18030encoding = CFStringEncodings.GB_18030_2000.rawValue
             let gbkEncoding = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(cfgb18030encoding))
-            return String(data: data, encoding: gbkEncoding)
+            return String(data: data, encoding: String.Encoding(rawValue: gbkEncoding))
         }
     }
 }

@@ -11,16 +11,16 @@ import Foundation
 public extension String {
     var percentEncodedString: String {
         get {
-            let rfc3986ReservedCharacterSet = NSCharacterSet(charactersInString: "!*'();:@&=+$,/?%#[]")
-            guard let str = self.stringByAddingPercentEncodingWithAllowedCharacters(rfc3986ReservedCharacterSet.invertedSet) else { return self }
+            let rfc3986ReservedCharacterSet = CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[]")
+            guard let str = self.addingPercentEncoding(withAllowedCharacters: rfc3986ReservedCharacterSet.inverted) else { return self }
             return str
         }
     }
 
     var decodedPercentEncodingString: String {
         get {
-            let str = self.stringByReplacingOccurrencesOfString("+", withString: " ")
-            guard let s = str.stringByRemovingPercentEncoding else { return self }
+            let str = self.replacingOccurrences(of: "+", with: " ")
+            guard let s = str.removingPercentEncoding else { return self }
             return s
         }
     }

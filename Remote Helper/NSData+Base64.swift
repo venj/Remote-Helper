@@ -9,12 +9,12 @@
 import Foundation
 
 @available(iOS 7.0, OSX 10.9, *)
-public extension NSData {
-    class func dataWithBase64EncodedString(string: String) -> NSData? {
-        return self.init(base64EncodedString: string, options: [])
+public extension Data {
+    static func dataWithBase64EncodedString(_ string: String) -> Data? {
+        return self.init(base64Encoded: string, options: [])
     }
 
     func base64EncodedString() -> String {
-        return self.base64EncodedStringWithOptions([])
+        return self.base64EncodedString(options: [])
     }
 }

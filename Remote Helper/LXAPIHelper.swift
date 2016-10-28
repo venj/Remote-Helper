@@ -17,15 +17,15 @@ class LXAPIHelper : NSObject {
     //MARK: - General Helper
     // Time Stamp String
     class func currentTimeString() -> String {
-        let UTCTime = NSDate().timeIntervalSince1970
+        let UTCTime = Date().timeIntervalSince1970
         let currentTime = String(format:"%f", arguments: [UTCTime * 1000])
-        return currentTime.componentsSeparatedByString(".")[0]
+        return currentTime.components(separatedBy: ".")[0]
     }
 
     //MARK: - Cookie Helper
     // Make cookie string and set as HTTPRequest header.
     class func refreshCookie(forRequest request:NSMutableURLRequest) {
-        let cookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+        let cookieStorage = HTTPCookieStorage.shared
         var cookieString = ""
         for cookie in cookieStorage.cookies! {
             if cookie.domain.hasSuffix(CookieDomainSuffix) {
@@ -36,16 +36,16 @@ class LXAPIHelper : NSObject {
     }
 
     // Add a cookie to storage and return.
-    class func setCookie(withKey key:String, value:String) -> NSHTTPCookie {
-        var properties:[String: AnyObject] = [:]
-        properties[NSHTTPCookieValue] = value
-        properties[NSHTTPCookieName] = key
-        properties[NSHTTPCookieDomain] = ".vip.xunlei.com"
-        properties[NSHTTPCookiePath] = "/"
-        properties[NSHTTPCookieExpires] = NSDate(timeIntervalSinceNow: 2629743)
-        let cookie = NSHTTPCookie(properties: properties)
-        let cookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
-        cookieStorage.cookieAcceptPolicy = .Always
+    class func setCookie(withKey key:String, value:String) -> HTTPCookie {
+        var properties:[HTTPCookiePropertyKey: Any] = [:]
+        properties[HTTPCookiePropertyKey.value] = value
+        properties[HTTPCookiePropertyKey.name] = key
+        properties[HTTPCookiePropertyKey.domain] = ".vip.xunlei.com"
+        properties[HTTPCookiePropertyKey.path] = "/"
+        properties[HTTPCookiePropertyKey.expires] = Date(timeIntervalSinceNow: 2629743)
+        let cookie = HTTPCookie(properties: properties)
+        let cookieStorage = HTTPCookieStorage.shared
+        cookieStorage.cookieAcceptPolicy = .always
         cookieStorage.setCookie(cookie!)
         // Removed add to responseCookies
         return cookie!
@@ -53,7 +53,7 @@ class LXAPIHelper : NSObject {
 
     // Get cookie value by name
     class func cookieValue(withName name:String) -> String? {
-        let cookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+        let cookieStorage = HTTPCookieStorage.shared
         guard let cookies = cookieStorage.cookies else { return nil }
         var value: String? = nil
         for cookie in cookies {
@@ -65,7 +65,7 @@ class LXAPIHelper : NSObject {
         return value
     }
 
-    class func hasCookie(name:String) -> Bool {
+    class func hasCookie(_ name:String) -> Bool {
         return cookieValue(withName: name) != nil ? true : false
     }
 
@@ -80,8 +80,8 @@ class LXAPIHelper : NSObject {
         return name
     }
 
-    class func encodePassword(password: String, withVerifyCode code: String) -> String {
-        return ("\(password.md5.md5)\(code.uppercaseString)".md5)
+    class func encodePassword(_ password: String, withVerifyCode code: String) -> String {
+        return ("\(password.md5.md5)\(code.uppercased())".md5)
     }
 
     //MARK: - Referer
@@ -93,8 +93,8 @@ class LXAPIHelper : NSObject {
 
     // TODO: Remove me after migration
     @objc(refererWithURLFormat)
-    class func refererURL() -> NSURL {
-        return NSURL(string: refererString())!
+    class func refererURL() -> URL {
+        return URL(string: refererString())!
     }
 
     //MARK: - GDriveID
@@ -106,29 +106,29 @@ class LXAPIHelper : NSObject {
         return (GDriveID() != nil)
     }
 
-    class func setGdriveID(id: String) {
-        setCookie(withKey: "gdriveid", value: id)
+    class func setGdriveID(_ id: String) {
+        _ = setCookie(withKey: "gdriveid", value: id)
     }
 
     // MARK: - Login and logout
     class func logout() {
         let keys = ["vip_isvip","lx_sessionid","vip_level","lx_login","dl_enable","in_xl","ucid","lixian_section","sessionid","usrname","nickname","usernewno","userid","gdriveid"]
         for key in keys {
-            setCookie(withKey: key, value: "")
+            _ = setCookie(withKey: key, value: "")
         }
     }
 
     class func login(withUsername name: String, password: String, encoded:Bool) -> Bool {
         guard let code = verifyCode(withUserName: name) else { return false }
-        let encodedPassword = encoded ? "\(password)\(code.uppercaseString)".md5 : encodePassword(password, withVerifyCode: code)
+        let encodedPassword = encoded ? "\(password)\(code.uppercased())".md5 : encodePassword(password, withVerifyCode: code)
         let connection = LCHTTPConnection.sharedConnection
-        let url = NSURL(string: LoginURL)!
+        let url = URL(string: LoginURL)!
         connection.set(PostValue: name, forKey: "u")
         connection.set(PostValue: encodedPassword, forKey: "p")
         connection.set(PostValue: code, forKey: "verifycode")
         connection.set(PostValue: "0", forKey: "login_enable")
         connection.set(PostValue: "720", forKey: "login_hour")
-        connection.post(url.absoluteString)
+        _ = connection.post(url.absoluteString)
         let timeStamp = LXAPIHelper.currentTimeString()
         let redirectURLString = "http://dynamic.lixian.vip.xunlei.com/login?cachetime=\(timeStamp)&from=0"
         let redirectConnection = LCHTTPConnection.sharedConnection
@@ -141,14 +141,14 @@ class LXAPIHelper : NSObject {
 
     // Get login verify code.
     class func verifyCode(withUserName name: String) -> String? {
-        let cookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
-        cookieStorage.cookieAcceptPolicy = .Always
+        let cookieStorage = HTTPCookieStorage.shared
+        cookieStorage.cookieAcceptPolicy = .always
         let checkURLString = "http://login.xunlei.com/check?u=\(name)&cachetime=\(currentTimeString())"
         let request = LCHTTPConnection.sharedConnection
-        request.get(checkURLString)
+        _ = request.get(checkURLString)
         guard let verifyCode = cookieValue(withName: "check_result") else { return nil }
-        if verifyCode.rangeOfString(":") != nil {
-            return verifyCode.componentsSeparatedByString(":")[1]
+        if verifyCode.range(of: ":") != nil {
+            return verifyCode.components(separatedBy: ":")[1]
         }
         else {
             return nil
@@ -157,15 +157,15 @@ class LXAPIHelper : NSObject {
 
     //MARK: - Request Helper
     class func send(syncRequest request: NSMutableURLRequest) -> String? {
-        var urlResponse: NSURLResponse? = nil // should be exactly like this!!!
+        var urlResponse: URLResponse? = nil // should be exactly like this!!!
         do {
-            let responseData = try NSURLConnection.sendSynchronousRequest(request, returningResponse: &urlResponse)
-            let responseString = String(data: responseData, encoding: NSUTF8StringEncoding)
-            guard let response = urlResponse as? NSHTTPURLResponse else { return nil }
+            let responseData = try NSURLConnection.sendSynchronousRequest(request as URLRequest, returning: &urlResponse)
+            let responseString = String(data: responseData, encoding: String.Encoding.utf8)
+            guard let response = urlResponse as? HTTPURLResponse else { return nil }
             if (response.allHeaderFields["Set-Cookie"] != nil) {
-                let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(response.allHeaderFields as! [String:String], forURL: NSURL(string: ".vip.xunlei.com")!)
+                let cookies = HTTPCookie.cookies(withResponseHeaderFields: response.allHeaderFields as! [String:String], for: URL(string: ".vip.xunlei.com")!)
                 for cookie in cookies {
-                    setCookie(withKey: cookie.name, value: cookie.value)
+                    _ = setCookie(withKey: cookie.name, value: cookie.value)
                 }
             }
             let statusCode = response.statusCode
@@ -173,7 +173,7 @@ class LXAPIHelper : NSObject {
                 return responseString
             }
             else { // Error
-                print("Error status: \(statusCode), \(NSHTTPURLResponse.localizedStringForStatusCode(statusCode))")
+                print("Error status: \(statusCode), \(HTTPURLResponse.localizedString(forStatusCode: statusCode))")
             }
         }
         catch let error as NSError {
@@ -182,7 +182,7 @@ class LXAPIHelper : NSObject {
         return nil
     }
 
-    class func addMegnetTask(magnet: String) -> String {
+    class func addMegnetTask(_ magnet: String) -> String {
         var tsize = "", btname = "", findex = "", sindex = ""
 
         let encodedURLString = magnet.percentEncodedString
@@ -192,14 +192,14 @@ class LXAPIHelper : NSObject {
         let re = "queryUrl(\\(1,.*\\))\\s*$"
         let success = data?.stringByMatching(re)
         if success != nil {
-            let array = success!.componentsSeparatedByString("new Array")
+            let array = success!.components(separatedBy: "new Array")
             let dataGroup1 = array[0]
             let dataGroup2 = array[array.count - 1]
             let dataGroup3 = array[array.count - 4]
             let re1 = "['\"]?([^'\"]*)['\"]?"
-            let dcid = dataGroup1.componentsSeparatedByString(",")[1].stringByMatching(re1)!
-            tsize = dataGroup1.componentsSeparatedByString(",")[2].stringByMatching(re1)!
-            btname = dataGroup1.componentsSeparatedByString(",")[3].stringByMatching(re1)!
+            let dcid = dataGroup1.components(separatedBy: ",")[1].stringByMatching(re1)!
+            tsize = dataGroup1.components(separatedBy: ",")[2].stringByMatching(re1)!
+            btname = dataGroup1.components(separatedBy: ",")[3].stringByMatching(re1)!
             let re2 = "\\(([^\\)]*)\\)"
             var preString0 = dataGroup2.stringByMatching(re2)!
             let re3 = "'([^']*)'"
@@ -208,7 +208,7 @@ class LXAPIHelper : NSObject {
             for a in preArray0 {
                 preMArray.append(a[1])
             }
-            findex = preMArray.joinWithSeparator("_")
+            findex = preMArray.joined(separator: "_")
 
             preString0 = dataGroup3.stringByMatching(re2)!
             preArray0 = preString0.arrayOfCaptureComponentsMatchedByRegex(re3)
@@ -216,7 +216,7 @@ class LXAPIHelper : NSObject {
             for a in preArray0 {
                 preMArray1.append(a[1])
             }
-            sindex = preMArray1.joinWithSeparator("_")
+            sindex = preMArray1.joined(separator: "_")
 
             let commitConnection = LCHTTPConnection.sharedConnection
             commitConnection.set(PostValue: userID(), forKey: "uid")
@@ -226,7 +226,7 @@ class LXAPIHelper : NSObject {
             commitConnection.set(PostValue:findex, forKey:"findex")
             commitConnection.set(PostValue:sindex, forKey:"size")
             commitConnection.set(PostValue:"0", forKey:"from")
-            commitConnection.post("http://dynamic.cloud.vip.xunlei.com/interface/bt_task_commit")
+            _ = commitConnection.post("http://dynamic.cloud.vip.xunlei.com/interface/bt_task_commit")
             return dcid
         }
         else {
@@ -236,22 +236,22 @@ class LXAPIHelper : NSObject {
         }
     }
 
-    class func addOldMegnetTask(magnet: String) -> String {
+    class func addOldMegnetTask(_ magnet: String) -> String {
         let encodedMagnet = magnet.percentEncodedString
         let timeStamp = currentTimeString()
         let callURLString = "http://dynamic.cloud.vip.xunlei.com/interface/url_query?callback=queryUrl&u=\(encodedMagnet)&random=\(timeStamp)"
-        let url = NSURL(string: callURLString)
+        let url = URL(string: callURLString)
         let connection = LCHTTPConnection.sharedConnection
         guard let html = connection.get(url!.absoluteString) else { return "" }
         let pattern = "queryUrl(\\(1,.*\\))\\s*$"
         let successContent = html.stringByMatching(pattern)
         if successContent != nil {
-            let arrayContent = successContent!.componentsSeparatedByString("new Array")
+            let arrayContent = successContent!.components(separatedBy: "new Array")
             let dataGroup1 = arrayContent[0]
             let dataGroup2 = arrayContent[arrayContent.count - 1]
             let dataGroup3 = arrayContent[arrayContent.count - 4]
             let pattern1 = "['\"]?([^'\"]*)['\"]?"
-            let parts1 = dataGroup1.componentsSeparatedByString(",")
+            let parts1 = dataGroup1.components(separatedBy: ",")
             let dcid = parts1[1].stringByMatching(pattern1)
             let tsize = parts1[2].stringByMatching(pattern1)
             let btname = parts1[3].stringByMatching(pattern1)
@@ -263,7 +263,7 @@ class LXAPIHelper : NSObject {
             for part in parts2 {
                 indexes.append(part[1])
             }
-            let findex = indexes.joinWithSeparator("_")
+            let findex = indexes.joined(separator: "_")
 
             matchedString = dataGroup3.stringByMatching(pattern2)
             let parts3 = matchedString!.arrayOfCaptureComponentsMatchedByRegex(pattern3)
@@ -271,7 +271,7 @@ class LXAPIHelper : NSObject {
             for part in parts3 {
                 indexes.append(part[1])
             }
-            let sindex = indexes.joinWithSeparator("_")
+            let sindex = indexes.joined(separator: "_")
 
             let commitConnection = LCHTTPConnection.sharedConnection
             commitConnection.set(PostValue: userID(), forKey: "uid")
@@ -281,7 +281,7 @@ class LXAPIHelper : NSObject {
             commitConnection.set(PostValue:findex, forKey:"findex")
             commitConnection.set(PostValue:sindex, forKey:"size")
             commitConnection.set(PostValue:"0", forKey:"from")
-            commitConnection.post("http://dynamic.cloud.vip.xunlei.com/interface/bt_task_commit")
+            _ = commitConnection.post("http://dynamic.cloud.vip.xunlei.com/interface/bt_task_commit")
             return dcid!
         }
         else {
@@ -291,7 +291,7 @@ class LXAPIHelper : NSObject {
         }
     }
 
-    class func addNormalTask(urlString: String) -> String {
+    class func addNormalTask(_ urlString: String) -> String {
         guard let decodedURLString = try? URLConverter.decode(urlString) else { return "" }
         let encodedURLString = decodedURLString.percentEncodedString
         let timeStamp = currentTimeString()
@@ -300,16 +300,16 @@ class LXAPIHelper : NSObject {
         let html = connection.get(callURLString)
         let uid = userID()
         var taskType: String = ""
-        if urlString.lowercaseString.rangeOfString("http://") != nil || urlString.lowercaseString.rangeOfString("https://") != nil || urlString.lowercaseString.rangeOfString("ftp://") != nil {
+        if urlString.lowercased().range(of: "http://") != nil || urlString.lowercased().range(of: "https://") != nil || urlString.lowercased().range(of: "ftp://") != nil {
             taskType = "0"
         }
-        else if urlString.lowercaseString.rangeOfString("ed2k://") != nil {
+        else if urlString.lowercased().range(of: "ed2k://") != nil {
             taskType = "2"
         }
 
         let pattern = "queryCid\\((.+)\\)\\s*$"
         let success = html!.stringByMatching(pattern)
-        let data = success!.componentsSeparatedByString(",")
+        let data = success!.components(separatedBy: ",")
         var newData: [String] = []
         for i in data {
             let pattern1 = "\\s*['\"]?([^']*)['\"]?"
@@ -349,12 +349,12 @@ class LXAPIHelper : NSObject {
         }
 
         let newFilename = filename.percentEncodedString
-        let ts = NSDate().timeIntervalSince1970 * 1000
+        let ts = Date().timeIntervalSince1970 * 1000
         let timeString = String(format: "%f", arguments: [ts])
         let commitString1 = "http://dynamic.cloud.vip.xunlei.com/interface/task_check?callback=queryCid&url=\(encodedURLString)&interfrom=task&random=\(timeString)&tcache=\(timeStamp)"
         let commitString2 = "http://dynamic.cloud.vip.xunlei.com/interface/task_commit?callback=ret_task&uid=\(uid)&cid=\(dcid)&gcid=\(gcid)&size=\(size)&goldbean=\(goldbean)&silverbean=\(silverbean)&t=\(newFilename)&url=\(encodedURLString)&type=\(taskType)&o_page=history&o_taskid=0&class_id=0&database=undefined&interfrom=task&noCacheIE=\(timeStamp)"
-        LCHTTPConnection.sharedConnection.get(commitString1)
-        LCHTTPConnection.sharedConnection.get(commitString2)
+        _ = LCHTTPConnection.sharedConnection.get(commitString1)
+        _ = LCHTTPConnection.sharedConnection.get(commitString2)
         return dcid
     }
 }

@@ -9,8 +9,8 @@
 import UIKit
 
 extension UITabBarController {
-    override public func preferredStatusBarStyle() -> UIStatusBarStyle {
-        guard selectedViewController != nil else { return .Default }
-        return selectedViewController!.preferredStatusBarStyle()
+    override open var preferredStatusBarStyle : UIStatusBarStyle {
+        guard selectedViewController != nil else { return .default }
+        return selectedViewController!.preferredStatusBarStyle
     }
 }

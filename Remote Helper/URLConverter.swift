@@ -10,66 +10,66 @@ import Foundation
 
 @objc
 public enum URLConverterType: Int {
-    case Thunder
-    case QQ
-    case Flashget
-    case Unknown
+    case thunder
+    case qq
+    case flashget
+    case unknown
 }
 
 @objc
-public enum URLConverterConvertError: Int, ErrorType {
-    case InvalidURL
-    case UnknownScheme
+public enum URLConverterConvertError: Int, Error {
+    case invalidURL
+    case unknownScheme
 }
 
 @objc
-public class URLConverter : NSObject {
-    class func encode(urlString: String, type: URLConverterType) -> String {
+open class URLConverter : NSObject {
+    class func encode(_ urlString: String, type: URLConverterType) -> String {
         var template = "", scheme = ""
         switch type {
-        case .Thunder:
+        case .thunder:
             template = "AA\(urlString)ZZ"
             scheme = "thunder"
-        case .QQ:
+        case .qq:
             template = urlString
             scheme = "qqdl"
-        case .Flashget:
+        case .flashget:
             template = "[FLASHGET]\(urlString)[FLASHGET]"
             scheme = "Flashget"
-        case .Unknown: // Return original url string while type unknown
+        case .unknown: // Return original url string while type unknown
             return urlString
         }
-        return "\(scheme)://\(template.dataUsingEncoding(NSUTF8StringEncoding)?.base64EncodedString())"
+        return "\(scheme)://\(template.data(using: String.Encoding.utf8)?.base64EncodedString())"
     }
 
-    class func decode(urlString: String) throws -> String {
-        let components = urlString.componentsSeparatedByString("//")
-        guard components.count == 2 else { throw URLConverterConvertError.InvalidURL }
+    class func decode(_ urlString: String) throws -> String {
+        let components = urlString.components(separatedBy: "//")
+        guard components.count == 2 else { throw URLConverterConvertError.invalidURL }
 
-        var type:URLConverterType = .Unknown
-        if components[0].lowercaseString == "thunder:" {
-            type = .Thunder
+        var type:URLConverterType = .unknown
+        if components[0].lowercased() == "thunder:" {
+            type = .thunder
         }
-        else if components[0].lowercaseString == "qqdl:" {
-            type = .QQ
+        else if components[0].lowercased() == "qqdl:" {
+            type = .qq
         }
-        else if components[0].lowercaseString == "flashget:" {
-            type = .Flashget
+        else if components[0].lowercased() == "flashget:" {
+            type = .flashget
         }
 
-        guard let decodedString = components[1].decodedBase64String() else { throw URLConverterConvertError.InvalidURL }
+        guard let decodedString = components[1].decodedBase64String() else { throw URLConverterConvertError.invalidURL }
         var pattern = ""
         switch type {
-        case .Thunder:
+        case .thunder:
             pattern = "AA(.+?)ZZ"
-        case .QQ:
+        case .qq:
             return decodedString
-        case .Flashget:
+        case .flashget:
             pattern = "[FLASHGET](.+?)[FLASHGET]"
-        case .Unknown: // Return original url string while type unknown
-            throw URLConverterConvertError.UnknownScheme
+        case .unknown: // Return original url string while type unknown
+            throw URLConverterConvertError.unknownScheme
         }
-        guard let url = decodedString.stringByMatching(pattern) else { throw URLConverterConvertError.InvalidURL }
+        guard let url = decodedString.stringByMatching(pattern) else { throw URLConverterConvertError.invalidURL }
         return url
     }
 }

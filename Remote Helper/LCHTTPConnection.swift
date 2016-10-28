@@ -9,106 +9,106 @@
 import Foundation
 
 @objc
-public class LCHTTPConnection : NSObject {
-    private var postData : [[String: String]] = []
+open class LCHTTPConnection : NSObject {
+    fileprivate var postData : [[String: String]] = []
 
     // Singleton
-    public static let sharedConnection = LCHTTPConnection()
+    open static let sharedConnection = LCHTTPConnection()
 
-    public func get(urlString:String) -> String? {
+    open func get(_ urlString:String) -> String? {
         let urlRequest = NSMutableURLRequest()
-        urlRequest.URL = NSURL(string: urlString)
+        urlRequest.url = URL(string: urlString)
         urlRequest.addValue(DEFAULT_USER_AGENT , forHTTPHeaderField: "User-Agent")
         urlRequest.timeoutInterval = 15
         urlRequest.addValue(DEFAULT_REFERER, forHTTPHeaderField: "Referer")
         urlRequest.addValue("text/xml", forHTTPHeaderField: "Content-Type")
-        urlRequest.HTTPMethod = "GET"
-        urlRequest.cachePolicy = .ReloadIgnoringLocalCacheData
+        urlRequest.httpMethod = "GET"
+        urlRequest.cachePolicy = .reloadIgnoringLocalCacheData
 
         LXAPIHelper.refreshCookie(forRequest: urlRequest)
         return LXAPIHelper.send(syncRequest: urlRequest)
     }
 
-    public func post(urlString:String, withBody body: String) -> String? {
+    open func post(_ urlString:String, withBody body: String) -> String? {
         let urlRequest = NSMutableURLRequest()
-        urlRequest.URL = NSURL(string: urlString)
-        urlRequest.HTTPMethod = "POST"
+        urlRequest.url = URL(string: urlString)
+        urlRequest.httpMethod = "POST"
         urlRequest.addValue("text/xml", forHTTPHeaderField: "Content-Type") // is this necessary?
-        let boundary = NSProcessInfo.processInfo().globallyUniqueString
+        let boundary = ProcessInfo.processInfo.globallyUniqueString
         let boundaryString = "multipart/form-data; boundary=\(boundary)"
         urlRequest.addValue(boundaryString, forHTTPHeaderField: "Content-Type")
-        urlRequest.cachePolicy = .ReloadIgnoringLocalCacheData
+        urlRequest.cachePolicy = .reloadIgnoringLocalCacheData
 
         let boundarySeparator = "--\(boundary)\r\n"
         let postBody = NSMutableData()
-        postBody.appendData(boundarySeparator.dataUsingEncoding(NSUTF8StringEncoding)!)
+        postBody.append(boundarySeparator.data(using: String.Encoding.utf8)!)
         let endItemBoundary = "\r\n--\(boundary)\r\n"
 
         var i = 0
         for kv in postData {
             let value = kv["key"]!
             let str = String(format: "Content-Disposition: form-data; name=\"%@\"\r\n\r\n", arguments: [value])
-            postBody.appendData(str.dataUsingEncoding(NSUTF8StringEncoding)!)
+            postBody.append(str.data(using: String.Encoding.utf8)!)
             i += 1
             if i != postData.count {
-                postBody.appendData(endItemBoundary .dataUsingEncoding(NSUTF8StringEncoding)!)
+                postBody.append(endItemBoundary .data(using: String.Encoding.utf8)!)
             }
         }
-        urlRequest.HTTPBody = postBody
+        urlRequest.httpBody = postBody as Data
 
         LXAPIHelper.refreshCookie(forRequest: urlRequest)
         return LXAPIHelper.send(syncRequest: urlRequest)
     }
 
-    public func postBTFile(path:String) -> String? {
-        guard let torrentData = NSData(contentsOfFile: path) else { return nil }
-        let fileName = path.componentsSeparatedByString("/").last!
+    open func postBTFile(_ path:String) -> String? {
+        guard let torrentData = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return nil }
+        let fileName = path.components(separatedBy: "/").last!
         let urlRequest = NSMutableURLRequest()
-        urlRequest.URL = NSURL(string: "http://dynamic.cloud.vip.xunlei.com/interface/torrent_upload")
+        urlRequest.url = URL(string: "http://dynamic.cloud.vip.xunlei.com/interface/torrent_upload")
         urlRequest.addValue(DEFAULT_USER_AGENT , forHTTPHeaderField: "User-Agent")
         urlRequest.addValue(DEFAULT_REFERER, forHTTPHeaderField: "Referer")
-        urlRequest.HTTPMethod = "POST"
-        let boundary = NSProcessInfo.processInfo().globallyUniqueString
+        urlRequest.httpMethod = "POST"
+        let boundary = ProcessInfo.processInfo.globallyUniqueString
         let boundaryString = "multipart/form-data; boundary=\(boundary)"
         urlRequest.addValue(boundaryString, forHTTPHeaderField: "Content-Type")
-        urlRequest.cachePolicy = .ReloadIgnoringLocalCacheData
+        urlRequest.cachePolicy = .reloadIgnoringLocalCacheData
         // boundary sepetator
         let boundarySeparator = "--\(boundary)\r\n"
         // add post body
         let postBody = NSMutableData()
         // add post data
-        postBody.appendData(boundarySeparator.dataUsingEncoding(NSUTF8StringEncoding)!)
+        postBody.append(boundarySeparator.data(using: String.Encoding.utf8)!)
         let endItemBoundary = "\r\n--\(boundary)\r\n"
         let finalItemBoundary = "\r\n--\(boundary)--\r\n"
 
         // header
-        postBody.appendData(boundarySeparator.dataUsingEncoding(NSUTF8StringEncoding)!)
+        postBody.append(boundarySeparator.data(using: String.Encoding.utf8)!)
         let header = String(format:"Content-Disposition: form-data; name=\"filepath\";\r\nfilename=\"%@\"\r\nContent-Type: application/x-bittorrent\r\n\r\n", arguments: [fileName])
-        postBody.appendData(header.dataUsingEncoding(NSUTF8StringEncoding)!)
+        postBody.append(header.data(using: String.Encoding.utf8)!)
 
         // torrent data
-        postBody.appendData(torrentData)
-        postBody.appendData(endItemBoundary.dataUsingEncoding(NSUTF8StringEncoding)!)
+        postBody.append(torrentData)
+        postBody.append(endItemBoundary.data(using: String.Encoding.utf8)!)
         // timestamp
-        postBody.appendData("Content-Disposition: form-data; name=\"random\"\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-        postBody.appendData(LXAPIHelper.currentTimeString().dataUsingEncoding(NSUTF8StringEncoding)!)
-        postBody.appendData(endItemBoundary.dataUsingEncoding(NSUTF8StringEncoding)!)
+        postBody.append("Content-Disposition: form-data; name=\"random\"\r\n\r\n".data(using: String.Encoding.utf8)!)
+        postBody.append(LXAPIHelper.currentTimeString().data(using: String.Encoding.utf8)!)
+        postBody.append(endItemBoundary.data(using: String.Encoding.utf8)!)
 
         // tasksign
-        postBody.appendData("Content-Disposition: form-data; name=\"interfrom\"\r\n\r\ntask".dataUsingEncoding(NSUTF8StringEncoding)!)
-        postBody.appendData(finalItemBoundary.dataUsingEncoding(NSUTF8StringEncoding)!)
+        postBody.append("Content-Disposition: form-data; name=\"interfrom\"\r\n\r\ntask".data(using: String.Encoding.utf8)!)
+        postBody.append(finalItemBoundary.data(using: String.Encoding.utf8)!)
 
-        urlRequest.HTTPBody = postBody
+        urlRequest.httpBody = postBody as Data
         LXAPIHelper.refreshCookie(forRequest: urlRequest)
         return LXAPIHelper.send(syncRequest: urlRequest)
     }
 
-    public func post(urlString:String) -> String? {
+    open func post(_ urlString:String) -> String? {
         let urlRequest = NSMutableURLRequest()
-        urlRequest.URL = NSURL(string: urlString)
-        urlRequest.HTTPMethod = "POST"
+        urlRequest.url = URL(string: urlString)
+        urlRequest.httpMethod = "POST"
         urlRequest.addValue("application/x-www-form-urlencoded;charset=utf-8", forHTTPHeaderField:"Content-Type")
-        urlRequest.cachePolicy = .ReloadIgnoringLocalCacheData
+        urlRequest.cachePolicy = .reloadIgnoringLocalCacheData
 
         var postValueString = ""
         for kv in self.postData {
@@ -116,19 +116,19 @@ public class LCHTTPConnection : NSObject {
             let value = kv["value"]
             postValueString += "\(key!)=\(value!)&"
         }
-        urlRequest.HTTPBody = postValueString.dataUsingEncoding(NSUTF8StringEncoding)
+        urlRequest.httpBody = postValueString.data(using: String.Encoding.utf8)
 
         LXAPIHelper.refreshCookie(forRequest: urlRequest)
         return LXAPIHelper.send(syncRequest: urlRequest)
     }
 
     @objc(setPostValue:forKey:)
-    public func set(PostValue value:String, forKey key:String?) {
+    open func set(PostValue value:String, forKey key:String?) {
         if key == nil { return }
         var i = 0
         for val in postData {
             if val["key"] == key {
-                postData.removeAtIndex(i)
+                postData.remove(at: i)
             }
             i += 1
         }

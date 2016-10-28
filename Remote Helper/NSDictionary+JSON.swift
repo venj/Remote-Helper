@@ -13,12 +13,12 @@ public extension NSDictionary {
     var JSONString: String? {
         get {
             guard let data = self.JSONData else { return nil }
-            return String(data: data, encoding: NSUTF8StringEncoding)
+            return String(data: data, encoding: String.Encoding.utf8)
         }
     }
 
-    var JSONData: NSData? {
-        guard let data = try? NSJSONSerialization.dataWithJSONObject(self, options: []) else { return nil }
+    var JSONData: Data? {
+        guard let data = try? JSONSerialization.data(withJSONObject: self, options: []) else { return nil }
         return data
     }
 }

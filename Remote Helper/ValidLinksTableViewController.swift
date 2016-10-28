@@ -17,10 +17,10 @@ class ValidLinksTableViewController: UITableViewController {
         super.viewDidLoad()
 
         title = String(format: NSLocalizedString("Found %ld links", comment: "Found %ld links"), arguments: [self.validLinks.count])
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
 
         if self.validLinks.count > 1 {
-            let rightItem = UIBarButtonItem(title: NSLocalizedString("Copy All", comment:"Copy All"), style: .Plain, target: self, action: #selector(copyAll))
+            let rightItem = UIBarButtonItem(title: NSLocalizedString("Copy All", comment:"Copy All"), style: .plain, target: self, action: #selector(copyAll))
             self.navigationItem.rightBarButtonItem = rightItem
         }
 
@@ -30,68 +30,68 @@ class ValidLinksTableViewController: UITableViewController {
         }
     }
 
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
 
     //MARK: - TableView Delegates and Data Source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return validLinks.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as UITableViewCell
-        cell.textLabel?.text = parseName(self.validLinks[indexPath.row])
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as UITableViewCell
+        cell.textLabel?.text = parseName(self.validLinks[(indexPath as NSIndexPath).row])
         return cell;
     }
 
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) { }
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) { }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        let link = validLinks[indexPath.row]
-        let alertController = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: NSLocalizedString("Do you want to download this link?", comment: "Do you want to download this link?"), preferredStyle: .Alert)
-        let downloadAction = UIAlertAction(title: NSLocalizedString("Download", comment: "Download"), style: .Default) { [unowned self ] _ in
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let link = validLinks[(indexPath as NSIndexPath).row]
+        let alertController = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: NSLocalizedString("Do you want to download this link?", comment: "Do you want to download this link?"), preferredStyle: .alert)
+        let downloadAction = UIAlertAction(title: NSLocalizedString("Download", comment: "Download"), style: .default) { [unowned self ] _ in
             self.download(link)
         }
         alertController.addAction(downloadAction)
-        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .Cancel, handler:nil)
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler:nil)
         alertController.addAction(cancelAction)
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
 
-    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        let link = self.validLinks[indexPath.row]
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let link = self.validLinks[(indexPath as NSIndexPath).row]
         // Copy Link
-        let copyAction = UITableViewRowAction(style: .Normal, title: NSLocalizedString("Copy Link", comment: "Copy Link")) { [unowned self] (_, _) in
-            if self.tableView.editing { self.tableView.setEditing(false, animated: true) }
-            UIPasteboard.generalPasteboard().string = link
+        let copyAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("Copy Link", comment: "Copy Link")) { [unowned self] (_, _) in
+            if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
+            UIPasteboard.general.string = link
             Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
         }
-        copyAction.backgroundColor = UIColor.iOS8purpleColor()
+        copyAction.backgroundColor = UIColor.iOS8purple()
 
         // Download Link
-        let downloadAction = UITableViewRowAction(style: .Default, title: NSLocalizedString("Download", comment: "Download")) { [unowned self] (_, _) in
-            if self.tableView.editing { self.tableView.setEditing(false, animated: true) }
+        let downloadAction = UITableViewRowAction(style: .default, title: NSLocalizedString("Download", comment: "Download")) { [unowned self] (_, _) in
+            if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
             self.download(link)
         }
-        downloadAction.backgroundColor = UIColor.iOS8orangeColor()
+        downloadAction.backgroundColor = UIColor.iOS8orange()
 
         // Lixian
-        let lixianAction = UITableViewRowAction(style: .Default, title: NSLocalizedString("Lixian", comment: "Lixian")) { [unowned self] (_, _) in
-            if self.tableView.editing { self.tableView.setEditing(false, animated: true) }
+        let lixianAction = UITableViewRowAction(style: .default, title: NSLocalizedString("Lixian", comment: "Lixian")) { [unowned self] (_, _) in
+            if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
             let hud = Helper.defaultHelper.showHUD()
-            dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
-                let protocal = link.componentsSeparatedByString(":")[0]
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
+                let protocal = link.components(separatedBy: ":")[0]
                 let xunleiAccount = Helper.defaultHelper.xunleiUsernameAndPassword
                 if !AppDelegate.shared().xunleiUserLoggedIn {
                     if !LXAPIHelper.login(withUsername:xunleiAccount[0], password: xunleiAccount[1], encoded: false) {
-                        dispatch_async(dispatch_get_main_queue()) {
+                        DispatchQueue.main.async {
                             hud.hide()
                             Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Login Failed.", comment: "Login Failed."))
                             return
@@ -109,7 +109,7 @@ class ValidLinksTableViewController: UITableViewController {
                 else {
                     dcid = LXAPIHelper.addNormalTask(link)
                 }
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     hud.hide()
                     if dcid == "" {
                         Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Failed to add task.", comment: "Failed to add task."))
@@ -121,19 +121,19 @@ class ValidLinksTableViewController: UITableViewController {
             }
         }
 
-        lixianAction.backgroundColor = UIColor.iOS8greenColor()
+        lixianAction.backgroundColor = UIColor.iOS8green()
         return [copyAction, lixianAction, downloadAction]
     }
 
     //MARK: - Helper
 
     func copyAll() {
-        UIPasteboard.generalPasteboard().string = self.validLinks.joinWithSeparator("\n")
+        UIPasteboard.general.string = self.validLinks.joined(separator: "\n")
         Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
     }
 
-    func download(link:String) {
-        let protocal = link.componentsSeparatedByString(":")[0]
+    func download(_ link:String) {
+        let protocal = link.components(separatedBy: ":")[0]
         if protocal == "magnet" {
             let hud = Helper.defaultHelper.showHUD()
             Helper.defaultHelper.parseSessionAndAddTask(link, completionHandler: {
@@ -144,9 +144,9 @@ class ValidLinksTableViewController: UITableViewController {
             })
         }
         else {
-            guard let url = NSURL(string: link) else { return }
-            if UIApplication.sharedApplication().canOpenURL(url) {
-                UIApplication.sharedApplication().openURL(url)
+            guard let url = URL(string: link) else { return }
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.openURL(url)
             }
             else {
                 Helper.defaultHelper.showHudWithMessage(NSLocalizedString("No 'DS Download' found.", comment: "No 'DS Download' found."))
@@ -154,30 +154,31 @@ class ValidLinksTableViewController: UITableViewController {
         }
     }
 
-    private func parseName(link: String) -> String {
-        guard let decodedLink = link.stringByRemovingPercentEncoding else { return link }
-        let protocal = decodedLink.componentsSeparatedByString(":")[0].lowercaseString
+    fileprivate func parseName(_ link: String) -> String {
+
+        guard let decodedLink = link.removingPercentEncoding else { return link }
+        let protocal = decodedLink.components(separatedBy: ":")[0].lowercased()
         if protocal == "thunder" || protocal == "flashget" || protocal == "qqdl" {
             guard let decodedThunderLink = try? URLConverter.decode(link) else { return decodedLink }
-            guard let result = decodedThunderLink.stringByRemovingPercentEncoding else { return decodedThunderLink }
+            guard let result = decodedThunderLink.removingPercentEncoding else { return decodedThunderLink }
             return parseName(result)
         }
         else if protocal == "magnet" {
-            guard let queryString = decodedLink.componentsSeparatedByString("?").last else { return decodedLink }
-            let kvs = queryString.stringByReplacingOccurrencesOfString("&amp;", withString: "&").componentsSeparatedByString("&")
+            guard let queryString = decodedLink.components(separatedBy: "?").last else { return decodedLink }
+            let kvs = queryString.replacingOccurrences(of: "&amp;", with: "&").components(separatedBy: "&")
             var name = decodedLink
             for kv in kvs {
-                let kvPair = kv.componentsSeparatedByString("=")
-                if (kvPair[0].lowercaseString == "dn" || kvPair[0].lowercaseString == "btname") && kvPair[1] != "" {
-                    name = kvPair[1].stringByReplacingOccurrencesOfString("+", withString: " ")
+                let kvPair = kv.components(separatedBy: "=")
+                if (kvPair[0].lowercased() == "dn" || kvPair[0].lowercased() == "btname") && kvPair[1] != "" {
+                    name = kvPair[1].replacingOccurrences(of: "+", with: " ")
                     break
                 }
             }
             return name
         }
         else if protocal == "ed2k" {
-            let parts = decodedLink.componentsSeparatedByString("|")
-            let index: Int? = parts.indexOf("file")
+            let parts = decodedLink.components(separatedBy: "|")
+            let index: Int? = parts.index(of: "file")
             if index != nil && parts.count > index! + 2 {
                 return parts[index! + 1]
             }
@@ -186,7 +187,7 @@ class ValidLinksTableViewController: UITableViewController {
             }
         }
         else if protocal == "ftp" || protocal == "http" || protocal == "https" {
-            guard let result = decodedLink.componentsSeparatedByString("/").last else { return decodedLink }
+            guard let result = decodedLink.components(separatedBy: "/").last else { return decodedLink }
             return result
         }
         else {

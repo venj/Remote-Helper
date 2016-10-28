@@ -258,11 +258,11 @@ open class Helper : NSObject {
             let request = Alamofire.request(dbSearchPath)
             request.responseJSON(completionHandler: { [unowned self] response in
                 if response.result.isSuccess {
-                    guard let responseObject = response.result.value as? [String: AnyObject] else { return }
-                    let success = responseObject["success"] as? Int == 1 ? true : false
+                    guard let responseObject = response.result.value as? [String: Any] else { return }
+                    let success = ("\(responseObject["success"]!)" == "1")
                     if success {
                         let searchResultController = VPSearchResultController()
-                        guard let torrents = responseObject["results"] as? [[String: AnyObject]] else { return }
+                        guard let torrents = responseObject["results"] as? [[String: Any]] else { return }
                         searchResultController.torrents = torrents
                         searchResultController.keyword = keyword
                         if let navigationController = viewController as? UINavigationController {
@@ -300,7 +300,7 @@ open class Helper : NSObject {
         let request = Alamofire.request(self.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)
         request.authenticate(user: usernameAndPassword.0, password: usernameAndPassword.1).responseJSON { response in
             if response.result.isSuccess {
-                let responseObject = response.result.value as! [String: AnyObject]
+                let responseObject = response.result.value as! [String: Any]
                 let result = responseObject["result"] as! String
                 if result == "success" {
                     completionHandler?()
@@ -318,10 +318,10 @@ open class Helper : NSObject {
         let request = Alamofire.request(self.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)
         request.authenticate(user: usernameAndPassword.0, password: usernameAndPassword.1).responseJSON { [unowned self] response in
             if response.result.isSuccess {
-                let responseObject = response.result.value as! [String:AnyObject]
+                let responseObject = response.result.value as! [String:Any]
                 let result = responseObject["result"] as! String
                 if result == "success" {
-                    self.downloadPath = (responseObject["arguments"] as! [String: AnyObject])["download-dir"] as! String
+                    self.downloadPath = (responseObject["arguments"] as! [String: Any])["download-dir"] as! String
                     self.downloadTask(magnet, toDir: self.downloadPath, completionHandler: completionHandler, errorHandler: errorHandler)
                 }
                 else {
@@ -336,10 +336,10 @@ open class Helper : NSObject {
                     let request = Alamofire.request(self.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)
                     request.authenticate(user: self.usernameAndPassword.0, password: self.usernameAndPassword.1).responseJSON { [unowned self] response in
                         if response.result.isSuccess {
-                            let responseObject = response.result.value as! [String:AnyObject]
+                            let responseObject = response.result.value as! [String:Any]
                             let result = responseObject["result"] as! String
                             if result == "success" {
-                                self.downloadPath = (responseObject["arguments"] as! [String: AnyObject])["download-dir"] as! String
+                                self.downloadPath = (responseObject["arguments"] as! [String: Any])["download-dir"] as! String
                                 self.downloadTask(magnet, toDir: self.downloadPath, completionHandler: completionHandler, errorHandler: errorHandler)
                             }
                             else {

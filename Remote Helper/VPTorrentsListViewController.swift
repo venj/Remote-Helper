@@ -217,7 +217,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         let request = Alamofire.request(Helper.defaultHelper.hashTorrent(withName: base64FileName))
         request.responseJSON { response in
             if response.result.isSuccess {
-                guard let responseObject = response.result.value as? [String: AnyObject] else { return }
+                guard let responseObject = response.result.value as? [String: Any] else { return }
                 guard let hash = responseObject["hash"] as? String else { return }
                 let message = "magnet:?xt=urn:btih:\(hash.uppercased())"
                 UIPasteboard.general.string = message
@@ -270,7 +270,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         }
     }
 
-    func loadTorrentList(_ sender: AnyObject?) {
+    func loadTorrentList(_ sender: Any?) {
         if Helper.defaultHelper.showCellularHUD() { return }
         let hud = Helper.defaultHelper.showHUD()
         navigationItem.rightBarButtonItem?.isEnabled = false

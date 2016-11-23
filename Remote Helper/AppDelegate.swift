@@ -97,6 +97,9 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
         else if shortcutItem.type == "me.venj.Video-Player.torrentsearch" {
             Helper.defaultHelper.showTorrentSearchAlertInViewController(window?.rootViewController)
         }
+        else if shortcutItem.type == "me.venj.Video-Player.kittensearch" {
+            Helper.defaultHelper.showTorrentSearchAlertInViewController(window?.rootViewController, forKitten: true)
+        }
     }
 
     //MARK: - Use as singleton

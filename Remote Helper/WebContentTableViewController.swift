@@ -220,6 +220,10 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             self.torrentSearch()
         }
         sheet.addAction(searchAction)
+        let searchKittenAction = UIAlertAction(title: NSLocalizedString("Kitten Search", comment: "Kitten Search"), style: .default) { [unowned self] _ in
+            self.torrentSearch(atKitten: true)
+        }
+        sheet.addAction(searchKittenAction)
         let settingsAction = UIAlertAction(title: NSLocalizedString("Settings", comment: "Settings"), style: .default) { [unowned self] _ in
             self.showSettings()
         }
@@ -308,8 +312,8 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     }
 
     //MARK: - Helper
-    func torrentSearch() {
-        Helper.defaultHelper.showTorrentSearchAlertInViewController(navigationController!)
+    func torrentSearch(atKitten: Bool = false) {
+        Helper.defaultHelper.showTorrentSearchAlertInViewController(navigationController!, forKitten: atKitten)
     }
 
     func processHTML(_ html: String) {

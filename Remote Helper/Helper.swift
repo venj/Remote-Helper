@@ -52,18 +52,6 @@ open class Helper : NSObject {
         }
     }
 
-    var xunleiUsernameAndPassword:[String] {
-        let defaults = UserDefaults.standard
-        let username = defaults.object(forKey: XunleiUserNameKey) as? String
-        let password = defaults.object(forKey: XunleiPasswordKey) as? String
-        if username != nil && password != nil {
-            return [username!, password!]
-        }
-        else {
-            return ["username", "password"]
-        }
-    }
-
     var customUserAgent: String? {
         let defaults = UserDefaults.standard
         guard let ua = defaults.string(forKey: CustomRequestUserAgent) else { return nil }
@@ -145,6 +133,12 @@ open class Helper : NSObject {
 
     func transmissionRPCAddress() -> String {
         return self.transmissionServerAddress(withUserNameAndPassword: false).vc_stringByAppendingPathComponents(["transmission", "rpc"])
+    }
+
+    func kittenSearchPath(withKeyword keyword: String) -> String {
+        let kw = keyword.addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics)
+        let escapedKeyword = kw == nil ? "" : kw!
+        return "https://www.torrentkitty.tv/search/\(escapedKeyword)/"
     }
 
     func dbSearchPath(withKeyword keyword: String) -> String {
@@ -244,47 +238,84 @@ open class Helper : NSObject {
         AppDelegate.shared().window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
 
-    func showTorrentSearchAlertInViewController(_ viewController:UIViewController?) {
+    // Nasty method naming, just for minimum code change
+    func showTorrentSearchAlertInViewController(_ viewController:UIViewController?, forKitten: Bool = false) {
         guard let viewController = viewController else { return } // Just do nothing...
         if (self.showCellularHUD()) { return }
-        let alertController = UIAlertController(title: NSLocalizedString("Search", comment: "Search"), message: NSLocalizedString("Please enter video serial:", comment: "Please enter video serial:"), preferredStyle: .alert)
+        var title = NSLocalizedString("Search", comment: "Search")
+        var message = NSLocalizedString("Please enter video serial:", comment: "Please enter video serial:")
+        if forKitten {
+            title = NSLocalizedString("Search Torrent Kitten", comment: "Search Torrent Kitten")
+            message = NSLocalizedString("Please enter video serial (or anything):", comment: "Please enter video serial (or anything):")
+        }
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addTextField { (textField) in
             textField.keyboardType = .asciiCapable
         }
         let searchAction = UIAlertAction(title: NSLocalizedString("Search", comment: "Search"), style: .default) { _ in
             let keyword = alertController.textFields![0].text!
             let hud = self.showHUD()
-            let dbSearchPath = self.dbSearchPath(withKeyword: keyword)
-            let request = Alamofire.request(dbSearchPath)
-            request.responseJSON(completionHandler: { [unowned self] response in
-                if response.result.isSuccess {
-                    guard let responseObject = response.result.value as? [String: Any] else { return }
-                    let success = ("\(responseObject["success"]!)" == "1")
-                    if success {
+            if forKitten {
+                DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
+                    let url = URL(string: self.kittenSearchPath(withKeyword: keyword))!
+                    if let data = try? Data(contentsOf: url) {
+                        let torrents = KittenTorrent.parse(data: data)
                         let searchResultController = VPSearchResultController()
-                        guard let torrents = responseObject["results"] as? [[String: Any]] else { return }
                         searchResultController.torrents = torrents
                         searchResultController.keyword = keyword
-                        if let navigationController = viewController as? UINavigationController {
-                            navigationController.pushViewController(searchResultController, animated: true)
-                        }
-                        else {
-                            let searchResultNavigationController = UINavigationController(rootViewController: searchResultController)
-                            searchResultNavigationController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target:self, action: #selector(Helper.dismissMe(_:)))
-                            viewController.present(searchResultNavigationController, animated: true, completion: nil)
+                        DispatchQueue.main.async {
+                            if let navigationController = viewController as? UINavigationController {
+                                navigationController.pushViewController(searchResultController, animated: true)
+                            }
+                            else {
+                                let searchResultNavigationController = UINavigationController(rootViewController: searchResultController)
+                                searchResultNavigationController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target:self, action: #selector(Helper.dismissMe(_:)))
+                                viewController.present(searchResultNavigationController, animated: true, completion: nil)
+                            }
+                            hud.hide()
                         }
                     }
                     else {
-                        let errorMessage = responseObject["message"] as! String
-                        self.showHudWithMessage(NSLocalizedString("\(errorMessage)", comment: "\(errorMessage)"))
+                        DispatchQueue.main.async { [weak self] in
+                            hud.hide()
+                            self?.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+                        }
                     }
-                    hud.hide()
                 }
-                else {
-                    hud.hide()
-                    self.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
-                }
-            })
+            }
+            else {
+                let dbSearchPath = self.dbSearchPath(withKeyword: keyword)
+                let request = Alamofire.request(dbSearchPath)
+                request.responseJSON(completionHandler: { [unowned self] response in
+                    if response.result.isSuccess {
+                        guard let responseObject = response.result.value as? [String: Any] else { return }
+                        let success = ("\(responseObject["success"]!)" == "1")
+                        if success {
+                            let searchResultController = VPSearchResultController()
+                            guard let torrents = responseObject["results"] as? [[String: Any]] else { return }
+                            searchResultController.torrents = torrents
+                            searchResultController.keyword = keyword
+                            if let navigationController = viewController as? UINavigationController {
+                                navigationController.pushViewController(searchResultController, animated: true)
+                            }
+                            else {
+                                let searchResultNavigationController = UINavigationController(rootViewController: searchResultController)
+                                searchResultNavigationController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target:self, action: #selector(Helper.dismissMe(_:)))
+                                viewController.present(searchResultNavigationController, animated: true, completion: nil)
+                            }
+                        }
+                        else {
+                            let errorMessage = responseObject["message"] as! String
+                            self.showHudWithMessage(NSLocalizedString("\(errorMessage)", comment: "\(errorMessage)"))
+                        }
+                        hud.hide()
+                    }
+                    else {
+                        hud.hide()
+                        self.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+                    }
+                })
+            }
         }
         alertController.addAction(searchAction)
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)

@@ -22,6 +22,7 @@
 		250354D31BE9999E00E9F93A /* String+Range.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354D21BE9999E00E9F93A /* String+Range.swift */; };
 		250354D51BE9BEC900E9F93A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354D41BE9BEC900E9F93A /* AppDelegate.swift */; };
 		250354DE1BEA41F300E9F93A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354DD1BEA41F300E9F93A /* Constants.swift */; };
+		2529628A1DE5820400F625B6 /* KittenTorrent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252962891DE5820400F625B6 /* KittenTorrent.swift */; };
 		252DFA801753784400FF8199 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA7F1753784400FF8199 /* UIKit.framework */; };
 		252DFA821753784400FF8199 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA811753784400FF8199 /* Foundation.framework */; };
 		252DFA841753784400FF8199 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA831753784400FF8199 /* CoreGraphics.framework */; };
@@ -61,6 +62,7 @@
 		250354D21BE9999E00E9F93A /* String+Range.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Range.swift"; sourceTree = "<group>"; };
 		250354D41BE9BEC900E9F93A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		250354DD1BEA41F300E9F93A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		252962891DE5820400F625B6 /* KittenTorrent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KittenTorrent.swift; path = ../../../../Desktop/TestApp/TestApp/KittenTorrent.swift; sourceTree = "<group>"; };
 		252DFA7C1753784400FF8199 /* Remote Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Remote Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		252DFA7F1753784400FF8199 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		252DFA811753784400FF8199 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -153,6 +155,7 @@
 				250354D41BE9BEC900E9F93A /* AppDelegate.swift */,
 				2502ABDA1BE6F761004882FE /* Helper.swift */,
 				250354DD1BEA41F300E9F93A /* Constants.swift */,
+				252962891DE5820400F625B6 /* KittenTorrent.swift */,
 				254CBE4A1BE877440050A288 /* ValidLinksTableViewController.swift */,
 				250354D01BE9911700E9F93A /* WebContentTableViewController.swift */,
 				250354CE1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift */,
@@ -373,6 +376,7 @@
 				2502ABDB1BE6F761004882FE /* Helper.swift in Sources */,
 				2502ABE31BE70507004882FE /* FileAttributeHelper.swift in Sources */,
 				254CBE401BE8481F0050A288 /* URLConverter.swift in Sources */,
+				2529628A1DE5820400F625B6 /* KittenTorrent.swift in Sources */,
 				2502ABEC1BE748F1004882FE /* Int+FileSize.swift in Sources */,
 				254CBE4B1BE877440050A288 /* ValidLinksTableViewController.swift in Sources */,
 				254CBE421BE857520050A288 /* String+MD5.swift in Sources */,

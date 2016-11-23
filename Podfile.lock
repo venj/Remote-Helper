@@ -1,6 +1,7 @@
 PODS:
   - Alamofire (4.0.1)
   - DACircularProgress (2.3.1)
+  - Fuzi (1.0.0)
   - HexColors (2.2.1)
   - InAppSettingsKit (2.7.1)
   - iOS8Colors (0.1.2):
@@ -21,10 +22,11 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire (~> 4.0.0)
+  - Fuzi
   - InAppSettingsKit (~> 2.7)
   - iOS8Colors (~> 0.1.2)
   - MMAppSwitcher (from `https://github.com/venj/MMAppSwitcher.git`)
-  - MWPhotoBrowser (~> 2.1)
+  - MWPhotoBrowser (~> 2.1.1)
   - PasscodeLock (from `https://github.com/venj/SwiftPasscodeLock.git`)
   - PKHUD (from `https://github.com/venj/PKHUD.git`)
   - ReachabilitySwift (~> 3)
@@ -57,6 +59,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
+  Fuzi: e88177b7cfdf3aa2b828c096c73551232a7f5c72
   HexColors: abfd172e329dab59888614ccba6f216cec59289d
   InAppSettingsKit: 2b9fcdb82cdff2f99c51cae544e9f4df0df7afbf
   iOS8Colors: 1f6023790704b9119727bf14408182ca33faf31b
@@ -69,6 +72,6 @@ SPEC CHECKSUMS:
   SDWebImage: 35f9627a3e44b4f292a8a8ce6a531fa488239b91
   TOWebViewController: accd62ec0acc8d5c2e1e195c6f7ff7654c3c840c
 
-PODFILE CHECKSUM: a0d9ab9574f724658ad16e07dc18a8a2fba40e30
+PODFILE CHECKSUM: edcfce09cfc7cb9035745f0beb70d09ab1a26aeb
 
 COCOAPODS: 1.1.1

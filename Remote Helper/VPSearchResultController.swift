@@ -11,7 +11,8 @@ import TOWebViewController
 
 class VPSearchResultController: UITableViewController {
     let CellIdentifier = "FileListTableViewCell"
-    var torrents: [[String:Any]] = []
+    //var torrents: [[String:Any]] = []
+    var torrents: [Any] = []
     var keyword: String = ""
     
     override func viewDidLoad() {
@@ -70,13 +71,20 @@ class VPSearchResultController: UITableViewController {
 
         // Configure the cell...
         let torrent = torrents[(indexPath as NSIndexPath).row]
-        cell.textLabel?.text = torrent["name"] as? String
-        cell.accessoryType = .detailDisclosureButton;
+        if let torrent = torrent as? [String:Any] { // normal torrent
+            cell.textLabel?.text = torrent["name"] as? String
+            cell.accessoryType = .detailDisclosureButton
 
-        let size = convertSizeToString(torrent["size"])
-        let dateString = formattedDateString(torrent["upload_date"] as? Int)
-        let seeders = torrent["seeders"] as? Int
-        cell.detailTextLabel?.text = "\(size), \(seeders == nil ? 0 : seeders!)\(NSLocalizedString("seeders", comment:"seeders")), \(dateString)"
+            let size = convertSizeToString(torrent["size"])
+            let dateString = formattedDateString(torrent["upload_date"] as? Int)
+            let seeders = torrent["seeders"] as? Int
+            cell.detailTextLabel?.text = "\(size), \(seeders == nil ? 0 : seeders!)\(NSLocalizedString("seeders", comment:"seeders")), \(dateString)"
+        }
+        else if let torrent = torrent as? KittenTorrent { // kitten
+            cell.textLabel?.text = torrent.title
+            cell.accessoryType = .detailDisclosureButton
+            cell.detailTextLabel?.text = String(format: NSLocalizedString("Tr size: %@, Up date: %@", comment: "Tr size: %@, Up date: %@"), torrent.size, torrent.date)
+        }
 
         return cell
     }
@@ -89,7 +97,7 @@ class VPSearchResultController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let torrent = torrents[(indexPath as NSIndexPath).row]
-        let alertController = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: describe(torrent ), preferredStyle: .alert)
+        let alertController = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: describe(torrent), preferredStyle: .alert)
         let addTorrentAction = UIAlertAction(title: NSLocalizedString("Download", comment: "Download") , style: .default) { [unowned self] _ in
             self.addTorrentToTransmission(torrent)
         }
@@ -101,7 +109,7 @@ class VPSearchResultController: UITableViewController {
 
     //MARK: - Action
     func showWiki() {
-        let webViewController = TOWebViewController(urlString: "http://www.5avlib.com/cn/vl_searchbyid.php?keyword=\(keyword)")
+        let webViewController = TOWebViewController(urlString: "http://www.jav11b.com/cn/vl_searchbyid.php?keyword=\(keyword)")
         webViewController?.showUrlWhileLoading = false
         webViewController?.hidesBottomBarWhenPushed = true
         webViewController?.loadingBarTintColor = Helper.defaultHelper.mainThemeColor()
@@ -115,13 +123,22 @@ class VPSearchResultController: UITableViewController {
     }
 
     //MARK: - Helper
-    func describe(_ torrent: [String: Any]) -> String {
-        let name = torrent["name"] as! String
-        let size = convertSizeToString(torrent["size"])
-        let magnet = torrent["magnet"] as! String
-        let date = formattedDateString((torrent["upload_date"] as? Int))
-        let seeders = torrent["seeders"] as? Int
-        return "\(name), \n\(size), \n\(magnet), \n\(date), \n\(seeders == nil ? 0 : seeders!) " + NSLocalizedString("seeders", comment:"")
+    func describe(_ torrent: Any) -> String {
+        var description = NSLocalizedString("Invalid torrent", comment: "Invalid torrent")
+        if let torrent = torrent as? [String: Any] {
+            let name = torrent["name"] as? String ?? ""
+            let size = convertSizeToString(torrent["size"])
+            let magnet = torrent["magnet"] as? String ?? ""
+            let date = formattedDateString((torrent["upload_date"] as? Int))
+            let seeders = torrent["seeders"] as? Int
+            description = "\(name), \n\(size), \n\(magnet), \n\(date), \n\(seeders == nil ? 0 : seeders!) " + NSLocalizedString("seeders", comment:"")
+
+        }
+        else if let torrent = torrent as? KittenTorrent {
+            description = "\(torrent.title), \(torrent.size), \(torrent.date), \(torrent.magnet)"
+        }
+
+        return description
     }
 
     func formattedDateString(_ timeStamp:Int?) -> String {
@@ -139,9 +156,16 @@ class VPSearchResultController: UITableViewController {
         return number.int64Value.fileSizeString
     }
 
-    func addTorrentToTransmission(_ torrent: [String:Any]) {
+    func addTorrentToTransmission(_ torrent: Any) {
+        var magnet = ""
+        if let torrent = torrent as? [String:Any] {
+            magnet = torrent["magnet"] as? String ?? ""
+        }
+        else if let torrent = torrent as? KittenTorrent {
+            magnet = torrent.magnet
+        }
         _ = Helper.defaultHelper.showHUD()
-        Helper.defaultHelper.parseSessionAndAddTask(torrent["magnet"] as! String, completionHandler: {
+        Helper.defaultHelper.parseSessionAndAddTask(magnet, completionHandler: {
             Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
         }, errorHandler: {
             Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Transmission server error.", comment: "Transmission server error."))

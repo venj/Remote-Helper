@@ -47,7 +47,12 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         return item
     }()
     lazy var searchItem: UIBarButtonItem = {
-        let item = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(showSearch))
+        let item = UIBarButtonItem(title: "🔍", style: .plain, target: self, action: #selector(showSearch))
+
+        return item
+    }()
+    lazy var kittenItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(title: "🐱", style: .plain, target: self, action: #selector(showKitten))
         return item
     }()
     var currentSelectedIndexPath: IndexPath?
@@ -136,7 +141,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }
 
     func photoPreloadFinished(_ notification: Notification) {
-        print("Photo load fihished! \(notification.object)")
+        //print("Photo load fihished! \(notification.object)")
     }
 
     func showNoMorePhotosHUD(_ notification: Notification) {
@@ -192,7 +197,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     func photoBrowser(_ photoBrowser: MWPhotoBrowser!, didDisplayPhotoAt index: UInt) {
         currentPhotoIndex = Int(index)
-        photoBrowser.navigationItem.rightBarButtonItems  = [searchItem, hashItem]
+        photoBrowser.navigationItem.rightBarButtonItems  = [kittenItem, searchItem, hashItem]
     }
 
     func photoBrowser(_ photoBrowser: MWPhotoBrowser!, titleForPhotoAt index: UInt) -> String! {
@@ -209,6 +214,10 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     //MARK: - Action
     func showSearch() {
         Helper.defaultHelper.showTorrentSearchAlertInViewController(self.navigationController!)
+    }
+
+    func showKitten() {
+        Helper.defaultHelper.showTorrentSearchAlertInViewController(self.navigationController!, forKitten: true)
     }
 
     func hashTorrent() {

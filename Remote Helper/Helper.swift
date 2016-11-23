@@ -135,10 +135,11 @@ open class Helper : NSObject {
         return self.transmissionServerAddress(withUserNameAndPassword: false).vc_stringByAppendingPathComponents(["transmission", "rpc"])
     }
 
-    func kittenSearchPath(withKeyword keyword: String) -> String {
+    func kittenSearchPath(withKeyword keyword: String, page: Int = 1) -> String {
         let kw = keyword.addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics)
         let escapedKeyword = kw == nil ? "" : kw!
-        return "https://www.torrentkitty.tv/search/\(escapedKeyword)/"
+        let pageString = page == 1 ? "" : "\(page)"
+        return "https://www.torrentkitty.tv/search/\(escapedKeyword)/\(pageString)"
     }
 
     func dbSearchPath(withKeyword keyword: String) -> String {

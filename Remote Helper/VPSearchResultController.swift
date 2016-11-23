@@ -14,10 +14,33 @@ class VPSearchResultController: UITableViewController {
     //var torrents: [[String:Any]] = []
     var torrents: [Any] = []
     var keyword: String = ""
+    var isKitten: Bool {
+        return kittenTorrents != nil
+    }
+    var kittenTorrents: [KittenTorrent]? {
+        return torrents as? [KittenTorrent]
+    }
+    var normalTorrents: [[String:Any]]? {
+        return torrents as? [[String:Any]]
+    }
+
+    var currentPage: Int = 1
+
+    var spinner : UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .gray) {
+        didSet {
+            spinner.hidesWhenStopped = true
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = String(format: NSLocalizedString("%@: %@ (%lu)", comment: "%@: %@ (%lu)"), arguments: [NSLocalizedString("Search", comment:"Search"), keyword, torrents.count])
+
+        if isKitten {
+            guard let torrents = torrents as? [KittenTorrent] else { return }
+            guard let maxPage = torrents.first?.maxPage else { return }
+            title = String(format: "%@: %@ (%@)", NSLocalizedString("Search", comment:"Search"), keyword, "\(maxPage) " + NSLocalizedString("pages", comment:"pages"))
+        }
 
         if keyword.matches("^[A-Za-z]{2,6}-\\d{2,6}$", regularExpressionOptions: [.caseInsensitive], matchingOptions:[.anchored]) {
             navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "wiki"), style: .plain, target: self, action: #selector(showWiki))
@@ -105,6 +128,52 @@ class VPSearchResultController: UITableViewController {
         let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
         present(alertController, animated: true, completion: nil)
+    }
+
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if isKitten && indexPath.row == (torrents.count - 1) { // when showing last item
+            guard let maxPage = kittenTorrents?.first?.maxPage else { return }
+            if currentPage < maxPage {
+                loadNextPage()
+            }
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 44.0
+    }
+
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        if isKitten { // when showing last item
+            return spinner
+        }
+        return nil
+    }
+
+    func loadNextPage() {
+        let nextPage = currentPage + 1
+        spinner.startAnimating()
+        DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
+            let url = URL(string: Helper.defaultHelper.kittenSearchPath(withKeyword: self.keyword, page: nextPage))!
+            if let data = try? Data(contentsOf: url) {
+                let trs = KittenTorrent.parse(data: data)
+                DispatchQueue.main.async {
+                    self.spinner.stopAnimating()
+                    let torrentsCount = self.torrents.count
+                    self.torrents.append(contentsOf: (trs as [Any]))
+                    let indexPaths = (torrentsCount..<torrentsCount + trs.count).map { IndexPath(row: $0, section: 0) }
+                    self.tableView.insertRows(at: indexPaths, with: UITableViewRowAnimation.top)
+                    self.currentPage = nextPage
+                }
+            }
+            else {
+                DispatchQueue.main.async {
+                    //hud.hide()
+                    self.spinner.stopAnimating()
+                }
+            }
+
+        }
     }
 
     //MARK: - Action

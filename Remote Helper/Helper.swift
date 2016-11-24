@@ -251,7 +251,7 @@ open class Helper : NSObject {
         }
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addTextField { (textField) in
-            textField.keyboardType = .asciiCapable
+            textField.keyboardType = .default
         }
         let searchAction = UIAlertAction(title: NSLocalizedString("Search", comment: "Search"), style: .default) { _ in
             let keyword = alertController.textFields![0].text!

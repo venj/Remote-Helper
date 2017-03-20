@@ -8,6 +8,7 @@
 
 import UIKit
 import iOS8Colors
+import SafariServices
 
 class ValidLinksTableViewController: UITableViewController {
     let reuseIdentifier = "ValidLinksTableViewCellIdentifier"
@@ -68,7 +69,7 @@ class ValidLinksTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let link = self.validLinks[(indexPath as NSIndexPath).row]
         // Copy Link
-        let copyAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("Copy Link", comment: "Copy Link")) { [unowned self] (_, _) in
+        let copyAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("Copy", comment: "Copy")) { [unowned self] (_, _) in
             if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
             UIPasteboard.general.string = link
             Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
@@ -80,8 +81,15 @@ class ValidLinksTableViewController: UITableViewController {
             if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
             self.download(link)
         }
-        downloadAction.backgroundColor = UIColor.iOS8orange()
-        return [copyAction, downloadAction]
+
+        // Mi Download
+        let miAction = UITableViewRowAction(style: .default, title: NSLocalizedString("Mi", comment: "Mi")) { [unowned self] (_, _) in
+            if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
+            self.miDownload(link)
+        }
+
+        miAction.backgroundColor = UIColor.iOS8green()
+        return [miAction, downloadAction, copyAction]
     }
 
     //MARK: - Helper
@@ -111,6 +119,15 @@ class ValidLinksTableViewController: UITableViewController {
                 Helper.defaultHelper.showHudWithMessage(NSLocalizedString("No 'DS Download' found.", comment: "No 'DS Download' found."))
             }
         }
+    }
+
+    func miDownload(_ link:String) {
+        guard let base64 = link.base64String(), let miURL = URL(string:("https://d.miwifi.com/d2r/?url=" + base64)) else { return }
+        let sfVC = SFSafariViewController(url: miURL)
+        sfVC.title = NSLocalizedString("Mi Remote", comment: "Mi Remote")
+        sfVC.modalPresentationStyle = .formSheet
+        sfVC.modalTransitionStyle = .coverVertical
+        navigationController?.present(sfVC, animated: true, completion: nil)
     }
 
     fileprivate func parseName(_ link: String) -> String {

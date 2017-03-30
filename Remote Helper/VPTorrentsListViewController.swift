@@ -57,6 +57,17 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }()
     var currentSelectedIndexPath: IndexPath?
 
+    var viewedTitles: [String] {
+        get {
+            guard let titles = UserDefaults.standard.array(forKey: "ViewdTitles") as? [String] else { return [] }
+            return titles
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "ViewdTitles")
+            UserDefaults.standard.synchronize()
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -128,7 +139,14 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         }
         cell.accessoryType = .detailDisclosureButton
         let list = tableView == self.tableView ? self.datesList : self.filteredDatesList
-        cell.textLabel?.text = list?[(indexPath as NSIndexPath).row]
+        let title = list?[(indexPath as NSIndexPath).row] ?? ""
+        cell.textLabel?.text = title
+        if viewedTitles.contains(title) {
+            cell.textLabel?.textColor = UIColor.gray
+        }
+        else {
+            cell.textLabel?.textColor = UIColor.black
+        }
 
         return cell
     }
@@ -137,6 +155,21 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         tableView.deselectRow(at: indexPath, animated: true)
         currentSelectedIndexPath = indexPath
         if Helper.defaultHelper.showCellularHUD() { return }
+        if let cell = tableView.cellForRow(at: indexPath), let title = cell.textLabel?.text {
+            cell.textLabel?.textColor = UIColor.gray
+            if !viewedTitles.contains(title) {
+                viewedTitles.append(title)
+            }
+            // Clear up useless items
+            var filteredViewedTitles = viewedTitles
+            viewedTitles.forEach {
+                if !datesList.contains($0) {
+                    guard let i = filteredViewedTitles.index(of: $0) else { return }
+                    filteredViewedTitles.remove(at: i)
+                }
+            }
+            viewedTitles = filteredViewedTitles
+        }
         self.showPhotoBrowser(forTableView: tableView, atIndexPath: indexPath)
     }
 

@@ -21,7 +21,7 @@ PODS:
   - TOWebViewController (2.0.19)
 
 DEPENDENCIES:
-  - Alamofire (~> 4.0.0)
+  - Alamofire
   - Fuzi
   - InAppSettingsKit (~> 2.7)
   - iOS8Colors (~> 0.1.2)
@@ -29,7 +29,7 @@ DEPENDENCIES:
   - MWPhotoBrowser (~> 2.1.1)
   - PasscodeLock (from `https://github.com/venj/SwiftPasscodeLock.git`)
   - PKHUD (from `https://github.com/venj/PKHUD.git`)
-  - ReachabilitySwift (~> 3)
+  - ReachabilitySwift
   - TOWebViewController (from `https://github.com/venj/TOWebViewController.git`)
 
 EXTERNAL SOURCES:
@@ -47,10 +47,10 @@ CHECKOUT OPTIONS:
     :commit: 8907ce78f11307bef19e9752c6a207e153349344
     :git: https://github.com/venj/MMAppSwitcher.git
   PasscodeLock:
-    :commit: c6bd065c74578e257436119b9f5b84cceff478e6
+    :commit: cd559b9e825f7b434f3f37e890d3615eec05a3ed
     :git: https://github.com/venj/SwiftPasscodeLock.git
   PKHUD:
-    :commit: da9747c43b9c786cf6f4a8e3a023758df6e3b090
+    :commit: 62fa4aaa4d9fdef3bfb74c281bd085b9f563a4a2
     :git: https://github.com/venj/PKHUD.git
   TOWebViewController:
     :commit: 54bb3f9624ee97383307d43364665f2ef439bf3a
@@ -72,6 +72,6 @@ SPEC CHECKSUMS:
   SDWebImage: '098e97e6176540799c27e804c96653ee0833d13c'
   TOWebViewController: accd62ec0acc8d5c2e1e195c6f7ff7654c3c840c
 
-PODFILE CHECKSUM: edcfce09cfc7cb9035745f0beb70d09ab1a26aeb
+PODFILE CHECKSUM: 85c27e61dd5eb856b4f3e70a829044d54fe50906
 
 COCOAPODS: 1.2.0

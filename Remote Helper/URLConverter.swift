@@ -39,7 +39,7 @@ open class URLConverter : NSObject {
         case .unknown: // Return original url string while type unknown
             return urlString
         }
-        return "\(scheme)://\(template.data(using: String.Encoding.utf8)?.base64EncodedString())"
+        return "\(scheme)://" + (template.data(using: .utf8)?.base64EncodedString() ?? "")
     }
 
     class func decode(_ urlString: String) throws -> String {

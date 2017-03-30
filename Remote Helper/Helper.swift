@@ -87,7 +87,7 @@ open class Helper : NSObject {
         }
         else {
             if subPath!.substring(to: subPath!.characters.index(subPath!.startIndex, offsetBy: 1)) != "/" {
-                subPath = "/\(subPath)"
+                subPath = "/\(String(describing: subPath))"
             }
             let lastCharIndex = subPath!.characters.index(subPath!.endIndex, offsetBy: -1)
             if subPath?.substring(from: lastCharIndex) == "/" {
@@ -108,7 +108,7 @@ open class Helper : NSObject {
             p = "/"
         }
         else if (p?.substring(to: (p?.index((p?.startIndex)!, offsetBy: 1))!) != "/") {
-            p = "/\(p)"
+            p = "/" + p!
         }
         return "http\(self.SSL_ADD_S)://\(host!):\(port!)\(p!)"
     }

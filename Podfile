@@ -9,6 +9,7 @@ target "Remote Helper" do
   pod 'PasscodeLock', :git => 'https://github.com/venj/SwiftPasscodeLock.git'
   pod 'ReachabilitySwift'
   pod 'Fuzi'
+  pod 'Kanna'
 
   # Objective-C
   pod 'InAppSettingsKit', '~> 2.7'

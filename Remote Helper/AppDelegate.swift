@@ -37,14 +37,20 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
         fileListViewController.title = NSLocalizedString("Addresses", comment: "Addresses")
         fileListViewController.tabBarItem.image = UIImage(named: "tab_cloud")
         let fileListNavigationController = UINavigationController(rootViewController: fileListViewController)
+        // torrent list
         let torrentListViewController = VPTorrentsListViewController()
         torrentListViewController.title = NSLocalizedString("Torrents", comment: "Torrents")
         torrentListViewController.tabBarItem.image = UIImage(named: "tab_torrents")
         let torrentListNavigationController = UINavigationController(rootViewController: torrentListViewController)
+        // DYTT
+        let resourceSiteViewController = ResourceSiteCatagoriesViewController()
+        resourceSiteViewController.title = NSLocalizedString("DYTT", comment: "DYTT")
+        resourceSiteViewController.tabBarItem.image = UIImage(named: "tab_torrents")
+        let resourceSiteNavigationController = UINavigationController(rootViewController: resourceSiteViewController)
         // Tabbar
         tabbarController = UITabBarController()
         tabbarController.delegate = self
-        tabbarController.viewControllers = [fileListNavigationController, torrentListNavigationController]
+        tabbarController.viewControllers = [fileListNavigationController, torrentListNavigationController, resourceSiteNavigationController]
         tabbarController.tabBar.tintColor = Helper.defaultHelper.mainThemeColor()
         window?.rootViewController = tabbarController
         // Passcode Lock

@@ -6,6 +6,7 @@ PODS:
   - InAppSettingsKit (2.8.1)
   - iOS8Colors (0.1.2):
     - HexColors (~> 2.2.1)
+  - Kanna (2.2.0)
   - MBProgressHUD (0.9.2)
   - MMAppSwitcher (0.3.0)
   - MWPhotoBrowser (2.1.2):
@@ -25,6 +26,7 @@ DEPENDENCIES:
   - Fuzi
   - InAppSettingsKit (~> 2.7)
   - iOS8Colors (~> 0.1.2)
+  - Kanna
   - MMAppSwitcher (from `https://github.com/venj/MMAppSwitcher.git`)
   - MWPhotoBrowser (~> 2.1.1)
   - PasscodeLock (from `https://github.com/venj/SwiftPasscodeLock.git`)
@@ -63,6 +65,7 @@ SPEC CHECKSUMS:
   HexColors: abfd172e329dab59888614ccba6f216cec59289d
   InAppSettingsKit: 94d2fba3ccd700fc4e32c6d09fabcc0af2426744
   iOS8Colors: 1f6023790704b9119727bf14408182ca33faf31b
+  Kanna: b3b3368d673845f48c572c6746c2278deebe26b9
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
   MMAppSwitcher: 11d6f3c08fc70fe1f1386223f89d4f96f95e8061
   MWPhotoBrowser: 5836d7aa041dc05a13de380c246826578adc5ea5
@@ -72,6 +75,6 @@ SPEC CHECKSUMS:
   SDWebImage: '098e97e6176540799c27e804c96653ee0833d13c'
   TOWebViewController: accd62ec0acc8d5c2e1e195c6f7ff7654c3c840c
 
-PODFILE CHECKSUM: 85c27e61dd5eb856b4f3e70a829044d54fe50906
+PODFILE CHECKSUM: c42dde67346c31285a65b6139a08e625f6af85bf
 
 COCOAPODS: 1.2.0

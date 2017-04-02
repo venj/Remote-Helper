@@ -22,6 +22,12 @@
 		250354D31BE9999E00E9F93A /* String+Range.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354D21BE9999E00E9F93A /* String+Range.swift */; };
 		250354D51BE9BEC900E9F93A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354D41BE9BEC900E9F93A /* AppDelegate.swift */; };
 		250354DE1BEA41F300E9F93A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250354DD1BEA41F300E9F93A /* Constants.swift */; };
+		2506AA191E90DD190064EABB /* ResourceSiteCatagoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2506AA181E90DD190064EABB /* ResourceSiteCatagoriesViewController.swift */; };
+		2506AA1B1E90E2F90064EABB /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2506AA1A1E90E2F90064EABB /* Extensions.swift */; };
+		2506AA1D1E90E4070064EABB /* Bangumi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2506AA1C1E90E4070064EABB /* Bangumi.swift */; };
+		2506AA1F1E90EF010064EABB /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2506AA1E1E90EF010064EABB /* Page.swift */; };
+		2506AA211E90F4710064EABB /* ResourcePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2506AA201E90F4710064EABB /* ResourcePageViewController.swift */; };
+		2506AA231E90F5D40064EABB /* BangumiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2506AA221E90F5D40064EABB /* BangumiViewController.swift */; };
 		252DFA801753784400FF8199 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA7F1753784400FF8199 /* UIKit.framework */; };
 		252DFA821753784400FF8199 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA811753784400FF8199 /* Foundation.framework */; };
 		252DFA841753784400FF8199 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA831753784400FF8199 /* CoreGraphics.framework */; };
@@ -62,6 +68,12 @@
 		250354D21BE9999E00E9F93A /* String+Range.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Range.swift"; sourceTree = "<group>"; };
 		250354D41BE9BEC900E9F93A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		250354DD1BEA41F300E9F93A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		2506AA181E90DD190064EABB /* ResourceSiteCatagoriesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceSiteCatagoriesViewController.swift; sourceTree = "<group>"; };
+		2506AA1A1E90E2F90064EABB /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		2506AA1C1E90E4070064EABB /* Bangumi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bangumi.swift; sourceTree = "<group>"; };
+		2506AA1E1E90EF010064EABB /* Page.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
+		2506AA201E90F4710064EABB /* ResourcePageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourcePageViewController.swift; sourceTree = "<group>"; };
+		2506AA221E90F5D40064EABB /* BangumiViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BangumiViewController.swift; sourceTree = "<group>"; };
 		252DFA7C1753784400FF8199 /* Remote Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Remote Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		252DFA7F1753784400FF8199 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		252DFA811753784400FF8199 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -157,9 +169,15 @@
 				250354DD1BEA41F300E9F93A /* Constants.swift */,
 				254CBE4A1BE877440050A288 /* ValidLinksTableViewController.swift */,
 				254729F61DEBD28300787C20 /* KittenTorrent.swift */,
+				2506AA1C1E90E4070064EABB /* Bangumi.swift */,
+				2506AA1E1E90EF010064EABB /* Page.swift */,
 				250354D01BE9911700E9F93A /* WebContentTableViewController.swift */,
 				250354CE1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift */,
 				254CBE4C1BE890210050A288 /* VPSearchResultController.swift */,
+				2506AA181E90DD190064EABB /* ResourceSiteCatagoriesViewController.swift */,
+				2506AA201E90F4710064EABB /* ResourcePageViewController.swift */,
+				2506AA221E90F5D40064EABB /* BangumiViewController.swift */,
+				2506AA1A1E90E2F90064EABB /* Extensions.swift */,
 				255A7D291BEB902400E6012B /* PasscodeLockView.xib */,
 				256185501B6F8D1B0073ACD3 /* Launch Screen.xib */,
 				258CD00F1A3B28B400B3EB55 /* Images.xcassets */,
@@ -383,8 +401,14 @@
 				255A7D241BEB8DC700E6012B /* UserDefaultsPasscodeRepository.swift in Sources */,
 				255A7D301BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift in Sources */,
 				250354CF1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift in Sources */,
+				2506AA211E90F4710064EABB /* ResourcePageViewController.swift in Sources */,
+				2506AA1F1E90EF010064EABB /* Page.swift in Sources */,
+				2506AA1D1E90E4070064EABB /* Bangumi.swift in Sources */,
 				2502ABE11BE6FE78004882FE /* NSData+Base64.swift in Sources */,
+				2506AA191E90DD190064EABB /* ResourceSiteCatagoriesViewController.swift in Sources */,
 				25F94A621BE5E9FF009C9195 /* NSDictionary+JSON.swift in Sources */,
+				2506AA231E90F5D40064EABB /* BangumiViewController.swift in Sources */,
+				2506AA1B1E90E2F90064EABB /* Extensions.swift in Sources */,
 				2502ABEA1BE73AB7004882FE /* String+Path.swift in Sources */,
 				250354D11BE9911700E9F93A /* WebContentTableViewController.swift in Sources */,
 				255A7D251BEB8DC700E6012B /* PasscodeLockConfiguration.swift in Sources */,

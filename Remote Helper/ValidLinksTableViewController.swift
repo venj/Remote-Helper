@@ -8,7 +8,6 @@
 
 import UIKit
 import iOS8Colors
-import SafariServices
 
 class ValidLinksTableViewController: UITableViewController {
     let reuseIdentifier = "ValidLinksTableViewCellIdentifier"
@@ -85,7 +84,7 @@ class ValidLinksTableViewController: UITableViewController {
         // Mi Download
         let miAction = UITableViewRowAction(style: .default, title: NSLocalizedString("Mi", comment: "Mi")) { [unowned self] (_, _) in
             if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
-            self.miDownload(link)
+            Helper.defaultHelper.showMiDownload(for: link, inViewController: self)
         }
 
         miAction.backgroundColor = UIColor.iOS8green()
@@ -119,15 +118,6 @@ class ValidLinksTableViewController: UITableViewController {
                 Helper.defaultHelper.showHudWithMessage(NSLocalizedString("No 'DS Download' found.", comment: "No 'DS Download' found."))
             }
         }
-    }
-
-    func miDownload(_ link:String) {
-        guard let base64 = link.base64String(), let miURL = URL(string:("https://d.miwifi.com/d2r/?url=" + base64)) else { return }
-        let sfVC = SFSafariViewController(url: miURL)
-        sfVC.title = NSLocalizedString("Mi Remote", comment: "Mi Remote")
-        sfVC.modalPresentationStyle = .formSheet
-        sfVC.modalTransitionStyle = .coverVertical
-        navigationController?.present(sfVC, animated: true, completion: nil)
     }
 
     fileprivate func parseName(_ link: String) -> String {

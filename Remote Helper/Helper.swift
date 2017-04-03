@@ -10,6 +10,7 @@ import UIKit
 import Alamofire
 import PKHUD
 import ReachabilitySwift
+import SafariServices
 
 @objc
 open class Helper : NSObject {
@@ -391,6 +392,15 @@ open class Helper : NSObject {
                 }
             }
         }
+    }
+
+    func showMiDownload(for link:String, inViewController viewController: UIViewController) {
+        guard let base64 = link.base64String(), let miURL = URL(string:("https://d.miwifi.com/d2r/?url=" + base64)) else { return }
+        let sfVC = SFSafariViewController(url: miURL)
+        sfVC.title = NSLocalizedString("Mi Remote", comment: "Mi Remote")
+        sfVC.modalPresentationStyle = .formSheet
+        sfVC.modalTransitionStyle = .coverVertical
+        viewController.navigationController?.present(sfVC, animated: true, completion: nil)
     }
 }
 

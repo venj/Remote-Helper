@@ -45,7 +45,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
         // DYTT
         let resourceSiteViewController = ResourceSiteCatagoriesViewController()
         resourceSiteViewController.title = NSLocalizedString("DYTT", comment: "DYTT")
-        resourceSiteViewController.tabBarItem.image = UIImage(named: "tab_torrents")
+        resourceSiteViewController.tabBarItem.image = UIImage(named: "tab_dytt")
         let resourceSiteNavigationController = UINavigationController(rootViewController: resourceSiteViewController)
         // Tabbar
         tabbarController = UITabBarController()

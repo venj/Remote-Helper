@@ -20,19 +20,33 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
                                              ["name": "日韩电视", "link": "http://www.dygod.net/html/tv/rihantv/index.html"],
                                              ["name": "欧美电视", "link": "http://www.dygod.net/html/tv/oumeitv/index.html"],
                                              ["name": "最新综艺", "link": "http://www.dygod.net/html/zongyi2013/index.html"],
-                                             ["name": "旧版综艺", "link": "http://www.dygod.net/html/zongyijiemu2009/index.html"],
+                                             //["name": "旧版综艺", "link": "http://www.dygod.net/html/zongyijiemu2009/index.html"],
                                              ["name": "动漫资源", "link": "http://www.dygod.net/html/dongman/index.html"],
                                              ["name": "游戏下载", "link": "http://www.dygod.net/html/game/index.html"],
                                              ["name": "手机电影", "link": "http://www.dygod.net/html/3gp/3gpmovie/index.html"]]
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = siteName
+        navigationController?.title = siteName
+
+        // Theme
+        navigationController?.navigationBar.barTintColor = Helper.defaultHelper.mainThemeColor()
+        navigationController?.navigationBar.tintColor = UIColor.white
+        navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+
+        // Revert back to old UITableView behavior
+        if #available(iOS 9.0, *) {
+            tableView.cellLayoutMarginsFollowReadableWidth = false
+        }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
 
     // MARK: - Table view data source
@@ -66,19 +80,34 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
         if !link.contains("http://") {
             link = "http://www.dygod.net" + link
         }
-        process(link)
+        let title = catagory["name"] ?? "未分类"
+        process(title, link)
     }
 
-    func process(_ link: String) {
+    func process(_ title: String, _ link: String) {
+        let hud = Helper.defaultHelper.showHUD()
         let request = Alamofire.request(link)
         request.responseData { [weak self] response in
             guard let `self` = self else { return }
+            hud.hide()
             if response.result.isFailure { return } // Fail
             guard let data = response.result.value else { return }
             guard let page = Page.parse(data: data, isGBK: true) else { return }
-            let rpvc = ResourcePageViewController()
-            rpvc.bangumiLinks = page.bangumiLinks
-            self.navigationController?.pushViewController(rpvc, animated: true)
+
+            if page.bangumiLinks.count == 0 {
+                let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: "There's no program under this catagory, or catagory failed to load.", preferredStyle: .alert)
+                let action = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .default, handler: nil)
+                alert.addAction(action)
+                self.present(alert, animated: true, completion: nil)
+            }
+            else {
+                let rpvc = ResourcePageViewController()
+                //rpvc.bangumiLinks = page.bangumiLinks
+                rpvc.page = page
+                rpvc.hidesBottomBarWhenPushed = true
+                rpvc.title = title
+                self.navigationController?.pushViewController(rpvc, animated: true)
+            }
         }
     }
 }

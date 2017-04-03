@@ -17,7 +17,7 @@ struct Bangumi {
         guard let html = isGBK ? data.stringFromGB18030Data() : String(data: data, encoding: .utf8) else { return nil }
         do {
             let doc = try HTMLDocument(string: html)
-            let title = doc.css("div.title_all h1 font").first?.stringValue ?? NSLocalizedString("Unknown Title", comment: "Unknown Title")
+            let title = doc.css("div.title_all h1").first?.stringValue ?? NSLocalizedString("Unknown Title", comment: "Unknown Title")
             var links: [String] = []
             doc.css("div.co_content8 table td a").forEach({ (element) in
                 guard let link = element["href"] else { return }

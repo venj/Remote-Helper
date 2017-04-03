@@ -39,7 +39,7 @@ struct Page {
             doc.css("div.x a").forEach({ (element) in
                 if element.stringValue == "下一页" {
                     guard let link = element["href"] else { return }
-                    nextPageLink = link
+                    nextPageLink = "http://www.dygod.net" + link
                 }
             })
 

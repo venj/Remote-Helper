@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PKHUD
 
 class BangumiViewController: UITableViewController {
     let CellIdentifier = "BangumiTableCell"
@@ -71,10 +72,20 @@ class BangumiViewController: UITableViewController {
         }
         alert.addAction(copyAction)
         let downloadAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi"), style: .default) { (action) in
-            Helper.defaultHelper.showMiDownload(for: link, inViewController: self)
+            Helper.defaultHelper.miDownload(for: link)
         }
         alert.addAction(downloadAction)
         self.present(alert, animated: true, completion: nil)
     }
+}
 
+public extension PKHUD {
+    public func setMessage(_ message: String) {
+        if let v = contentView as? PKHUDTextView {
+            v.titleLabel.text = message
+        }
+        else {
+            contentView = PKHUDTextView(text: message)
+        }
+    }
 }

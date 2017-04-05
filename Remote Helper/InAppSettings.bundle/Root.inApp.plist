@@ -126,6 +126,48 @@
 		</dict>
 		<dict>
 			<key>Title</key>
+			<string>Mi Remote Settings</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+			<key>DefaultValue</key>
+			<string>username</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>Key</key>
+			<string>kMiAccountUsernameKey</string>
+			<key>KeyboardType</key>
+			<string>Alphabet</string>
+			<key>Title</key>
+			<string>Username</string>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+		</dict>
+		<dict>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+			<key>DefaultValue</key>
+			<string>password</string>
+			<key>IsSecure</key>
+			<true/>
+			<key>Key</key>
+			<string>kMiAccountPasswordKey</string>
+			<key>KeyboardType</key>
+			<string>Alphabet</string>
+			<key>Title</key>
+			<string>Password</string>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+		</dict>
+		<dict>
+			<key>Title</key>
 			<string>Request Settings</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>

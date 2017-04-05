@@ -402,6 +402,55 @@ open class Helper : NSObject {
         sfVC.modalTransitionStyle = .coverVertical
         viewController.navigationController?.present(sfVC, animated: true, completion: nil)
     }
+
+    func canStartMiDownload() -> Bool {
+        let defaults = UserDefaults.standard
+        if let _ = defaults.object(forKey: MiAccountUsernameKey) as? String,
+            let _ = defaults.object(forKey: MiAccountPasswordKey) as? String {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+
+    func miDownload(for link: String) {
+        let defaults = UserDefaults.standard
+        guard let username = defaults.object(forKey: MiAccountUsernameKey) as? String,
+            let password = defaults.object(forKey: MiAccountPasswordKey) as? String
+            else {
+                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Mi account not set.", comment: "Mi account not set."))
+                return
+            }
+        let hud = Helper.defaultHelper.showHUD()
+        MiDownloader(withUsername:username, password: password, link: link).loginAndFetchDeviceList(progress: { (progress) in
+            switch progress {
+            case .prepare:
+                hud.setMessage(NSLocalizedString("Preparing...", comment: "Preparing..."))
+            case .login:
+                hud.setMessage(NSLocalizedString("Loging in...", comment: "Loging in..."))
+            case .fetchDevice:
+                hud.setMessage(NSLocalizedString("Loading Device...", comment: "Loading Device..."))
+            case .download:
+                hud.setMessage(NSLocalizedString("Add download...", comment: "Add download..."))
+            }
+
+        }, success: { (success) in
+            switch success {
+            case .added:
+                hud.setMessage(NSLocalizedString("Added!", comment: "Added!"))
+            case .duplicate:
+                hud.setMessage(NSLocalizedString("Duplicated!", comment: "Duplicated!"))
+            case .other(let code):
+                hud.setMessage(NSLocalizedString("Added! Code: ", comment: "Added! Code: ") + "\(code)")
+            }
+            hud.hide(afterDelay: 1.0)
+        }, error: { (error) in
+            hud.hide()
+            let reason = error.localizedDescription
+            Helper.defaultHelper.showHudWithMessage(reason)
+        })
+    }
 }
 
 

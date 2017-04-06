@@ -17,7 +17,7 @@ class BangumiViewController: UITableViewController {
         super.viewDidLoad()
 
         // Theme
-        navigationController?.navigationBar.barTintColor = Helper.defaultHelper.mainThemeColor()
+        navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         navigationController?.navigationBar.tintColor = UIColor.white
         navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
 
@@ -68,11 +68,11 @@ class BangumiViewController: UITableViewController {
         let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: link, preferredStyle: .alert)
         let copyAction = UIAlertAction(title: NSLocalizedString("Copy", comment: "Copy"), style: .default) { (action) in
             UIPasteboard.general.string = link
-            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
+            Helper.shared.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
         }
         alert.addAction(copyAction)
         let downloadAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi"), style: .default) { (action) in
-            Helper.defaultHelper.miDownload(for: link)
+            Helper.shared.miDownload(for: link, fallbackIn: self)
         }
         alert.addAction(downloadAction)
         self.present(alert, animated: true, completion: nil)

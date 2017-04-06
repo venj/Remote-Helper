@@ -47,6 +47,7 @@
 		2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2581D48717544A4C00EF3867 /* InAppSettings.bundle */; };
 		258CD0101A3B28B400B3EB55 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 258CD00F1A3B28B400B3EB55 /* Images.xcassets */; };
 		25AFE0921E94E69600DFB501 /* MiDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25AFE0911E94E69600DFB501 /* MiDownloader.swift */; };
+		25AFE0951E96244500DFB501 /* DispatchQueueExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25AFE0941E96244500DFB501 /* DispatchQueueExtension.swift */; };
 		25B0AA7417537B2D00141B0E /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7317537B2D00141B0E /* MediaPlayer.framework */; };
 		25B0AA7A1753A66C00141B0E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA791753A66C00141B0E /* SystemConfiguration.framework */; };
 		25B0AA7C1753A67300141B0E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */; };
@@ -99,6 +100,7 @@
 		2581D48717544A4C00EF3867 /* InAppSettings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InAppSettings.bundle; sourceTree = "<group>"; };
 		258CD00F1A3B28B400B3EB55 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		25AFE0911E94E69600DFB501 /* MiDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiDownloader.swift; sourceTree = "<group>"; };
+		25AFE0941E96244500DFB501 /* DispatchQueueExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchQueueExtension.swift; sourceTree = "<group>"; };
 		25B0AA7317537B2D00141B0E /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		25B0AA791753A66C00141B0E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -166,21 +168,18 @@
 			isa = PBXGroup;
 			children = (
 				25310E40177ACB1600D4A212 /* Libraries */,
+				25AFE0931E96130400DFB501 /* DYTT */,
+				254729F61DEBD28300787C20 /* KittenTorrent.swift */,
+				25AFE0911E94E69600DFB501 /* MiDownloader.swift */,
 				250354D41BE9BEC900E9F93A /* AppDelegate.swift */,
 				2502ABDA1BE6F761004882FE /* Helper.swift */,
 				250354DD1BEA41F300E9F93A /* Constants.swift */,
 				254CBE4A1BE877440050A288 /* ValidLinksTableViewController.swift */,
-				254729F61DEBD28300787C20 /* KittenTorrent.swift */,
-				2506AA1C1E90E4070064EABB /* Bangumi.swift */,
-				2506AA1E1E90EF010064EABB /* Page.swift */,
-				25AFE0911E94E69600DFB501 /* MiDownloader.swift */,
 				250354D01BE9911700E9F93A /* WebContentTableViewController.swift */,
 				250354CE1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift */,
 				254CBE4C1BE890210050A288 /* VPSearchResultController.swift */,
-				2506AA181E90DD190064EABB /* ResourceSiteCatagoriesViewController.swift */,
-				2506AA201E90F4710064EABB /* ResourcePageViewController.swift */,
-				2506AA221E90F5D40064EABB /* BangumiViewController.swift */,
 				2506AA1A1E90E2F90064EABB /* Extensions.swift */,
+				25AFE0941E96244500DFB501 /* DispatchQueueExtension.swift */,
 				255A7D291BEB902400E6012B /* PasscodeLockView.xib */,
 				256185501B6F8D1B0073ACD3 /* Launch Screen.xib */,
 				258CD00F1A3B28B400B3EB55 /* Images.xcassets */,
@@ -239,6 +238,18 @@
 				25C8BF141BF243AB00CAC32E /* UITabBarController+StatusBarStyle.swift */,
 			);
 			name = Extensions;
+			sourceTree = "<group>";
+		};
+		25AFE0931E96130400DFB501 /* DYTT */ = {
+			isa = PBXGroup;
+			children = (
+				2506AA1C1E90E4070064EABB /* Bangumi.swift */,
+				2506AA1E1E90EF010064EABB /* Page.swift */,
+				2506AA181E90DD190064EABB /* ResourceSiteCatagoriesViewController.swift */,
+				2506AA201E90F4710064EABB /* ResourcePageViewController.swift */,
+				2506AA221E90F5D40064EABB /* BangumiViewController.swift */,
+			);
+			name = DYTT;
 			sourceTree = "<group>";
 		};
 		E88FE65FA8AB755A7B543534 /* Pods */ = {
@@ -395,6 +406,7 @@
 				250354DE1BEA41F300E9F93A /* Constants.swift in Sources */,
 				2502ABE51BE7156A004882FE /* NSString+Regex.swift in Sources */,
 				25AFE0921E94E69600DFB501 /* MiDownloader.swift in Sources */,
+				25AFE0951E96244500DFB501 /* DispatchQueueExtension.swift in Sources */,
 				2502ABDB1BE6F761004882FE /* Helper.swift in Sources */,
 				2502ABE31BE70507004882FE /* FileAttributeHelper.swift in Sources */,
 				254CBE401BE8481F0050A288 /* URLConverter.swift in Sources */,

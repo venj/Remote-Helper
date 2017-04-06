@@ -39,7 +39,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         }
 
         // Theme
-        navigationController?.navigationBar.barTintColor = Helper.defaultHelper.mainThemeColor()
+        navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         navigationController?.navigationBar.tintColor = UIColor.white
         navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
 
@@ -94,7 +94,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if Helper.defaultHelper.showCellularHUD() { return }
+        if Helper.shared.showCellularHUD() { return }
         let urlString = self.addresses[(indexPath as NSIndexPath).row]
         webViewController = TOWebViewController(urlString: urlString)
         webViewController.showUrlWhileLoading = false
@@ -102,9 +102,9 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         webViewController.urlRequest.cachePolicy = .returnCacheDataElseLoad
         webViewController.additionalBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(fetchHTMLAndParse))]
         // Theme
-        webViewController.loadingBarTintColor = Helper.defaultHelper.mainThemeColor()
+        webViewController.loadingBarTintColor = Helper.shared.mainThemeColor()
         if UIDevice.current.userInterfaceIdiom == .phone {
-            webViewController.buttonTintColor = Helper.defaultHelper.mainThemeColor()
+            webViewController.buttonTintColor = Helper.shared.mainThemeColor()
         }
         else {
             webViewController.buttonTintColor = UIColor.white
@@ -134,7 +134,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                 let passcodeVC = PasscodeLockViewController(state: .setPasscode, configuration: configuration)
                 passcodeVC.successCallback = { lock in
                     let status = NSLocalizedString("On", comment: "打开")
-                    Helper.defaultHelper.save(status, forKey: PasscodeLockStatus)
+                    Helper.shared.save(status, forKey: PasscodeLockStatus)
                 }
                 passcodeVC.dismissCompletionCallback = {
                     sender.tableView.reloadData()
@@ -148,7 +148,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                     passcodeVC.successCallback = { lock in
                         lock.repository.deletePasscode()
                         let status = NSLocalizedString("Off", comment: "关闭")
-                        Helper.defaultHelper.save(status, forKey: PasscodeLockStatus)
+                        Helper.shared.save(status, forKey: PasscodeLockStatus)
                     }
                     passcodeVC.dismissCompletionCallback = {
                         sender.tableView.reloadData()
@@ -162,17 +162,17 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             }
         }
         else if specifier.key() == ClearCacheNowKey {
-            let hud = Helper.defaultHelper.showHUD()
+            let hud = Helper.shared.showHUD()
             DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
                 SDImageCache.shared().clearDisk()
                 let defaults = UserDefaults.standard
-                let localFileSize = Helper.defaultHelper.fileSizeString(withInteger: Helper.defaultHelper.localFileSize())
+                let localFileSize = Helper.shared.fileSizeString(withInteger: Helper.shared.localFileSize())
                 defaults.set(localFileSize, forKey: LocalFileSize)
                 defaults.synchronize()
                 sender.synchronizeSettings()
                 DispatchQueue.main.async {
                     hud.hide()
-                    Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Cache Cleared!", comment: "Cache Cleared!"))
+                    Helper.shared.showHudWithMessage(NSLocalizedString("Cache Cleared!", comment: "Cache Cleared!"))
                     sender.tableView.reloadData()
                 }
             }
@@ -254,30 +254,30 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     func showSettings() {
         let defaults = UserDefaults.standard
         let cacheSizeInBytes = SDImageCache.shared().getSize()
-        let cacheSize = Helper.defaultHelper.fileSizeString(withInteger: Int(cacheSizeInBytes)) // Maybe problematic on 32-bit system
+        let cacheSize = Helper.shared.fileSizeString(withInteger: Int(cacheSizeInBytes)) // Maybe problematic on 32-bit system
         defaults.set(cacheSize, forKey: ImageCacheSizeKey)
         let passcodeRepo = UserDefaultsPasscodeRepository()
         let status = passcodeRepo.hasPasscode ? NSLocalizedString("On", comment: "打开") : NSLocalizedString("Off", comment: "关闭")
         defaults.set(status, forKey: PasscodeLockStatus)
-        let localFileSize = Helper.defaultHelper.fileSizeString(withInteger: Helper.defaultHelper.localFileSize())
+        let localFileSize = Helper.shared.fileSizeString(withInteger: Helper.shared.localFileSize())
         defaults.set(localFileSize, forKey: LocalFileSize)
-        let deviceFreeSpace = Helper.defaultHelper.fileSizeString(withInteger: Helper.defaultHelper.freeDiskSpace())
+        let deviceFreeSpace = Helper.shared.fileSizeString(withInteger: Helper.shared.freeDiskSpace())
         defaults.set(deviceFreeSpace, forKey: DeviceFreeSpace)
-        defaults.set(Helper.defaultHelper.appVersionString(), forKey: CurrentVersionKey)
+        defaults.set(Helper.shared.appVersionString(), forKey: CurrentVersionKey)
         defaults.synchronize()
 
         settingsViewController = IASKAppSettingsViewController(style: .grouped)
         settingsViewController.delegate = self
         settingsViewController.showCreditsFooter = false
         if #available(iOS 9.0, *) {
-            UIView.appearance(whenContainedInInstancesOf: [IASKAppSettingsViewController.self]).tintColor = Helper.defaultHelper.mainThemeColor()
-            UISwitch.appearance(whenContainedInInstancesOf: [IASKAppSettingsViewController.self]).onTintColor = Helper.defaultHelper.mainThemeColor()
+            UIView.appearance(whenContainedInInstancesOf: [IASKAppSettingsViewController.self]).tintColor = Helper.shared.mainThemeColor()
+            UISwitch.appearance(whenContainedInInstancesOf: [IASKAppSettingsViewController.self]).onTintColor = Helper.shared.mainThemeColor()
         } else {
             //TODO: How to handle deprecated iOS 8 themeing? 
         }
         let settingsNavigationController = UINavigationController(rootViewController: settingsViewController)
         // Theme
-        settingsNavigationController.navigationBar.barTintColor = Helper.defaultHelper.mainThemeColor()
+        settingsNavigationController.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         settingsNavigationController.navigationBar.tintColor = UIColor.white
         settingsNavigationController.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
         if UIDevice.current.userInterfaceIdiom == .pad {
@@ -289,21 +289,21 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     }
 
     func showTransmission() {
-        if Helper.defaultHelper.showCellularHUD() { return }
-        let link = Helper.defaultHelper.transmissionServerAddress()
+        if Helper.shared.showCellularHUD() { return }
+        let link = Helper.shared.transmissionServerAddress()
         let transmissionWebViewController = TOWebViewController(urlString: link)
         transmissionWebViewController?.urlRequest.cachePolicy = .reloadIgnoringLocalCacheData
         transmissionWebViewController?.title = "Transmission"
         transmissionWebViewController?.showUrlWhileLoading = false
-        transmissionWebViewController?.loadingBarTintColor = Helper.defaultHelper.mainThemeColor()
+        transmissionWebViewController?.loadingBarTintColor = Helper.shared.mainThemeColor()
         if UIDevice.current.userInterfaceIdiom == .phone {
-            transmissionWebViewController?.buttonTintColor = Helper.defaultHelper.mainThemeColor()
+            transmissionWebViewController?.buttonTintColor = Helper.shared.mainThemeColor()
         }
         else {
             transmissionWebViewController?.buttonTintColor = UIColor.white
         }
         let transmissionNavigationController = UINavigationController(rootViewController: transmissionWebViewController!)
-        transmissionNavigationController.navigationBar.barTintColor = Helper.defaultHelper.mainThemeColor()
+        transmissionNavigationController.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         transmissionNavigationController.navigationBar.tintColor = UIColor.white
         transmissionNavigationController.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
         DispatchQueue.main.async { [unowned self] in
@@ -313,7 +313,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     //MARK: - Helper
     func torrentSearch(atKitten: Bool = false) {
-        Helper.defaultHelper.showTorrentSearchAlertInViewController(navigationController!, forKitten: atKitten)
+        Helper.shared.showTorrentSearchAlertInViewController(navigationController!, forKitten: atKitten)
     }
 
     func processHTML(_ html: String) {
@@ -330,7 +330,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             })
         }
         if validAddresses.count <= 0 {
-            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("No downloadable link.", comment: "No downloadable link."))
+            Helper.shared.showHudWithMessage(NSLocalizedString("No downloadable link.", comment: "No downloadable link."))
         }
         else {
             let linksViewController = ValidLinksTableViewController()

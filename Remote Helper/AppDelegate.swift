@@ -51,7 +51,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
         tabbarController = UITabBarController()
         tabbarController.delegate = self
         tabbarController.viewControllers = [fileListNavigationController, torrentListNavigationController, resourceSiteNavigationController]
-        tabbarController.tabBar.tintColor = Helper.defaultHelper.mainThemeColor()
+        tabbarController.tabBar.tintColor = Helper.shared.mainThemeColor()
         window?.rootViewController = tabbarController
         // Passcode Lock
         passcodeLockPresenter.presentPasscodeLock()
@@ -101,10 +101,10 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
             self.tabbarController.selectedIndex = 1
         }
         else if shortcutItem.type == "me.venj.Video-Player.torrentsearch" {
-            Helper.defaultHelper.showTorrentSearchAlertInViewController(window?.rootViewController)
+            Helper.shared.showTorrentSearchAlertInViewController(window?.rootViewController)
         }
         else if shortcutItem.type == "me.venj.Video-Player.kittensearch" {
-            Helper.defaultHelper.showTorrentSearchAlertInViewController(window?.rootViewController, forKitten: true)
+            Helper.shared.showTorrentSearchAlertInViewController(window?.rootViewController, forKitten: true)
         }
     }
 

@@ -30,7 +30,7 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
         navigationController?.title = siteName
 
         // Theme
-        navigationController?.navigationBar.barTintColor = Helper.defaultHelper.mainThemeColor()
+        navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         navigationController?.navigationBar.tintColor = UIColor.white
         navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
 
@@ -85,7 +85,7 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
     }
 
     func process(_ title: String, _ link: String) {
-        let hud = Helper.defaultHelper.showHUD()
+        let hud = Helper.shared.showHUD()
         let request = Alamofire.request(link)
         request.responseData { [weak self] response in
             guard let `self` = self else { return }

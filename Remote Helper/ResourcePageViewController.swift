@@ -33,7 +33,7 @@ class ResourcePageViewController: UITableViewController {
         super.viewDidLoad()
 
         // Theme
-        navigationController?.navigationBar.barTintColor = Helper.defaultHelper.mainThemeColor()
+        navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         navigationController?.navigationBar.tintColor = UIColor.white
         navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
 
@@ -97,7 +97,7 @@ class ResourcePageViewController: UITableViewController {
     }
 
     func process(_ link: String) {
-        let hud = Helper.defaultHelper.showHUD()
+        let hud = Helper.shared.showHUD()
         let request = Alamofire.request(link)
         request.responseString { [weak self] response in
             hud.hide()

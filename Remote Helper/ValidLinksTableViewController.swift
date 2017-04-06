@@ -71,7 +71,7 @@ class ValidLinksTableViewController: UITableViewController {
         let copyAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("Copy", comment: "Copy")) { [unowned self] (_, _) in
             if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
             UIPasteboard.general.string = link
-            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
+            Helper.shared.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
         }
         copyAction.backgroundColor = UIColor.iOS8purple()
 
@@ -84,7 +84,7 @@ class ValidLinksTableViewController: UITableViewController {
         // Mi Download
         let miAction = UITableViewRowAction(style: .default, title: NSLocalizedString("Mi", comment: "Mi")) { [unowned self] (_, _) in
             if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
-            Helper.defaultHelper.miDownload(for: link)
+            Helper.shared.miDownload(for: link, fallbackIn: self)
         }
 
         miAction.backgroundColor = UIColor.iOS8green()
@@ -95,18 +95,18 @@ class ValidLinksTableViewController: UITableViewController {
 
     func copyAll() {
         UIPasteboard.general.string = self.validLinks.joined(separator: "\n")
-        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
+        Helper.shared.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
     }
 
     func download(_ link:String) {
         let protocal = link.components(separatedBy: ":")[0]
         if protocal == "magnet" {
-            let hud = Helper.defaultHelper.showHUD()
-            Helper.defaultHelper.parseSessionAndAddTask(link, completionHandler: {
+            let hud = Helper.shared.showHUD()
+            Helper.shared.parseSessionAndAddTask(link, completionHandler: {
                 hud.hide()
-                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
+                Helper.shared.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
             }, errorHandler: {
-                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Transmission server error.", comment: "Transmission server error."))
+                Helper.shared.showHudWithMessage(NSLocalizedString("Transmission server error.", comment: "Transmission server error."))
             })
         }
         else {
@@ -115,7 +115,7 @@ class ValidLinksTableViewController: UITableViewController {
                 UIApplication.shared.openURL(url)
             }
             else {
-                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("No 'DS Download' found.", comment: "No 'DS Download' found."))
+                Helper.shared.showHudWithMessage(NSLocalizedString("No 'DS Download' found.", comment: "No 'DS Download' found."))
             }
         }
     }

@@ -14,7 +14,7 @@ import SafariServices
 
 @objc
 open class Helper : NSObject {
-    open static let defaultHelper = Helper()
+    open static let shared = Helper()
 
     fileprivate var sessionHeader: String = ""
     fileprivate var downloadPath: String = ""
@@ -403,6 +403,15 @@ open class Helper : NSObject {
         viewController.navigationController?.present(sfVC, animated: true, completion: nil)
     }
 
+    func transmissionDownload(for link: String) {
+        parseSessionAndAddTask(link, completionHandler: { [weak self] in
+            guard let `self` = self else { return }
+            self.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
+        }, errorHandler: {
+            self.showHudWithMessage(NSLocalizedString("Transmission server error.", comment: "Transmission server error."))
+        })
+    }
+
     func canStartMiDownload() -> Bool {
         let defaults = UserDefaults.standard
         if let _ = defaults.object(forKey: MiAccountUsernameKey) as? String,
@@ -414,15 +423,15 @@ open class Helper : NSObject {
         }
     }
 
-    func miDownload(for link: String) {
+    func miDownload(for link: String, fallbackIn viewController: UIViewController) {
         let defaults = UserDefaults.standard
         guard let username = defaults.object(forKey: MiAccountUsernameKey) as? String,
             let password = defaults.object(forKey: MiAccountPasswordKey) as? String
             else {
-                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Mi account not set.", comment: "Mi account not set."))
+                showHudWithMessage(NSLocalizedString("Mi account not set.", comment: "Mi account not set."))
                 return
             }
-        let hud = Helper.defaultHelper.showHUD()
+        let hud = Helper.shared.showHUD()
         MiDownloader(withUsername:username, password: password, link: link).loginAndFetchDeviceList(progress: { (progress) in
             switch progress {
             case .prepare:
@@ -434,7 +443,6 @@ open class Helper : NSObject {
             case .download:
                 hud.setMessage(NSLocalizedString("Add download...", comment: "Add download..."))
             }
-
         }, success: { (success) in
             switch success {
             case .added:
@@ -447,8 +455,16 @@ open class Helper : NSObject {
             hud.hide(afterDelay: 1.0)
         }, error: { (error) in
             hud.hide()
-            let reason = error.localizedDescription
-            Helper.defaultHelper.showHudWithMessage(reason)
+            switch error {
+            case .capchaError(let link):
+                PKHUD.sharedHUD.hide()
+                DispatchQueue.main.after(0.5, execute: {
+                    self.showMiDownload(for: link, inViewController: viewController)
+                })
+            default:
+                let reason = error.localizedDescription
+                self.showHudWithMessage(reason)
+            }
         })
     }
 }

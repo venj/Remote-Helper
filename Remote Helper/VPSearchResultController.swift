@@ -47,10 +47,10 @@ class VPSearchResultController: UITableViewController {
         }
 
         // Theme
-        navigationController?.navigationBar.barTintColor = Helper.defaultHelper.mainThemeColor()
+        navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         navigationController?.navigationBar.tintColor = UIColor.white
         navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
-        tableView.tintColor = Helper.defaultHelper.mainThemeColor()
+        tableView.tintColor = Helper.shared.mainThemeColor()
 
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
@@ -114,17 +114,26 @@ class VPSearchResultController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         let torrent = torrents[(indexPath as NSIndexPath).row]
-        self.addTorrentToTransmission(torrent)
+        let link = getMagnet(for: torrent)
+        Helper.shared.transmissionDownload(for: link)
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let torrent = torrents[(indexPath as NSIndexPath).row]
+        let link = getMagnet(for: torrent)
         let alertController = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: describe(torrent), preferredStyle: .alert)
-        let addTorrentAction = UIAlertAction(title: NSLocalizedString("Download", comment: "Download") , style: .default) { [unowned self] _ in
-            self.addTorrentToTransmission(torrent)
+
+        let miAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi") , style: .default) { _ in
+            Helper.shared.miDownload(for: link, fallbackIn: self)
+        }
+        alertController.addAction(miAction)
+
+        let addTorrentAction = UIAlertAction(title: "Transmission" , style: .default) { _ in
+            Helper.shared.transmissionDownload(for: link)
         }
         alertController.addAction(addTorrentAction)
+
         let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
         present(alertController, animated: true, completion: nil)
@@ -154,7 +163,7 @@ class VPSearchResultController: UITableViewController {
         let nextPage = currentPage + 1
         spinner.startAnimating()
         DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
-            let url = URL(string: Helper.defaultHelper.kittenSearchPath(withKeyword: self.keyword, page: nextPage))!
+            let url = URL(string: Helper.shared.kittenSearchPath(withKeyword: self.keyword, page: nextPage))!
             if let data = try? Data(contentsOf: url) {
                 let trs = KittenTorrent.parse(data: data)
                 DispatchQueue.main.async {
@@ -172,7 +181,6 @@ class VPSearchResultController: UITableViewController {
                     self.spinner.stopAnimating()
                 }
             }
-
         }
     }
 
@@ -181,9 +189,9 @@ class VPSearchResultController: UITableViewController {
         let webViewController = TOWebViewController(urlString: "http://www.jav11b.com/cn/vl_searchbyid.php?keyword=\(keyword)")
         webViewController?.showUrlWhileLoading = false
         webViewController?.hidesBottomBarWhenPushed = true
-        webViewController?.loadingBarTintColor = Helper.defaultHelper.mainThemeColor()
+        webViewController?.loadingBarTintColor = Helper.shared.mainThemeColor()
         if UIDevice.current.userInterfaceIdiom == .phone {
-            webViewController?.buttonTintColor = Helper.defaultHelper.mainThemeColor()
+            webViewController?.buttonTintColor = Helper.shared.mainThemeColor()
         }
         else {
             webViewController?.buttonTintColor = UIColor.white
@@ -197,14 +205,13 @@ class VPSearchResultController: UITableViewController {
         if let torrent = torrent as? [String: Any] {
             let name = torrent["name"] as? String ?? ""
             let size = convertSizeToString(torrent["size"])
-            let magnet = torrent["magnet"] as? String ?? ""
+            let magnet = (torrent["magnet"] as? String ?? "").components(separatedBy: "&").first!
             let date = formattedDateString((torrent["upload_date"] as? Int))
             let seeders = torrent["seeders"] as? Int
             description = "\(name), \n\(size), \n\(magnet), \n\(date), \n\(seeders == nil ? 0 : seeders!) " + NSLocalizedString("seeders", comment:"")
-
         }
         else if let torrent = torrent as? KittenTorrent {
-            description = "\(torrent.title), \(torrent.size), \(torrent.date), \(torrent.magnet)"
+            description = "\(torrent.title), \(torrent.size), \(torrent.date), \(torrent.magnet.components(separatedBy: "&").first!)"
         }
 
         return description
@@ -225,19 +232,14 @@ class VPSearchResultController: UITableViewController {
         return number.int64Value.fileSizeString
     }
 
-    func addTorrentToTransmission(_ torrent: Any) {
-        var magnet = ""
+    func getMagnet(for torrent: Any) -> String {
+        var magnet: String = ""
         if let torrent = torrent as? [String:Any] {
             magnet = torrent["magnet"] as? String ?? ""
         }
         else if let torrent = torrent as? KittenTorrent {
             magnet = torrent.magnet
         }
-        _ = Helper.defaultHelper.showHUD()
-        Helper.defaultHelper.parseSessionAndAddTask(magnet, completionHandler: {
-            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
-        }, errorHandler: {
-            Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Transmission server error.", comment: "Transmission server error."))
-        })
+        return magnet
     }
 }

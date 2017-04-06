@@ -27,6 +27,7 @@ enum MiDownloaderError: Error {
     case loginError(String)
     case fetchDeviceError(String)
     case downloadError(String)
+    case capchaError(String)
 }
 
 class MiDownloader {
@@ -85,7 +86,10 @@ class MiDownloader {
                         guard let responseJSON = response.result.value else { return }
                         let json = responseJSON.replacingOccurrences(of: "&&&START&&&", with: "")
                         let dict = json.JSONObject() as! [String: Any]
-                        let location = dict["location"] as! String
+                        guard let location = dict["location"] as? String else {
+                            error?(.capchaError(self.link))
+                            return
+                        }
                         Alamofire.request(location).responseString { (response) in
                             progress?(.download)
                             if response.result.isSuccess {

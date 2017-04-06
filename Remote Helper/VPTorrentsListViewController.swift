@@ -27,7 +27,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             let defaults = UserDefaults.standard
             var path = "/"
             if let pt = defaults.object(forKey: ServerPathKey) as? String { path = pt }
-            let linkBase = Helper.defaultHelper.fileLink(withPath: path)
+            let linkBase = Helper.shared.fileLink(withPath: path)
             for photo in photos {
                 guard let url = URL(string: linkBase) else { break }
                 let fullURL = url.appendingPathComponent(photo)
@@ -86,10 +86,10 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         self.loadTorrentList(nil)
 
         // Theme
-        navigationController?.navigationBar.barTintColor = Helper.defaultHelper.mainThemeColor()
+        navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         navigationController?.navigationBar.tintColor = UIColor.white
         navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
-        tableView.tintColor = Helper.defaultHelper.mainThemeColor()
+        tableView.tintColor = Helper.shared.mainThemeColor()
 
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
@@ -154,7 +154,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         currentSelectedIndexPath = indexPath
-        if Helper.defaultHelper.showCellularHUD() { return }
+        if Helper.shared.showCellularHUD() { return }
         if let cell = tableView.cellForRow(at: indexPath), let title = cell.textLabel?.text {
             cell.textLabel?.textColor = UIColor.gray
             if !viewedTitles.contains(title) {
@@ -178,12 +178,12 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }
 
     func showNoMorePhotosHUD(_ notification: Notification) {
-        Helper.defaultHelper.showHudWithMessage(NSLocalizedString("No more photos.", comment: "No more photos."));
+        Helper.shared.showHudWithMessage(NSLocalizedString("No more photos.", comment: "No more photos."));
     }
 
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         currentSelectedIndexPath = indexPath
-        if Helper.defaultHelper.showCellularHUD() { return }
+        if Helper.shared.showCellularHUD() { return }
         let alertController = UIAlertController(title: NSLocalizedString("Initial Index", comment: "Initial Index"), message: NSLocalizedString("Please enter a number for photo index(from 1).", comment: "Please enter a number for photo index(from 1)."), preferredStyle: .alert)
         alertController.addTextField { (textField) in
             textField.placeholder = "1"
@@ -246,34 +246,45 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     //MARK: - Action
     func showSearch() {
-        Helper.defaultHelper.showTorrentSearchAlertInViewController(self.navigationController!)
+        Helper.shared.showTorrentSearchAlertInViewController(self.navigationController!)
     }
 
     func showKitten() {
-        Helper.defaultHelper.showTorrentSearchAlertInViewController(self.navigationController!, forKitten: true)
+        Helper.shared.showTorrentSearchAlertInViewController(self.navigationController!, forKitten: true)
     }
 
     func hashTorrent() {
         guard let base64FileName = photos[currentPhotoIndex].base64String() else { return }
-        let hud = Helper.defaultHelper.showHUD()
-        let request = Alamofire.request(Helper.defaultHelper.hashTorrent(withName: base64FileName))
+        let hud = Helper.shared.showHUD()
+        let request = Alamofire.request(Helper.shared.hashTorrent(withName: base64FileName))
         request.responseJSON { response in
             if response.result.isSuccess {
+                hud.hide()
                 guard let responseObject = response.result.value as? [String: Any] else { return }
                 guard let hash = responseObject["hash"] as? String else { return }
                 let message = "magnet:?xt=urn:btih:\(hash.uppercased())"
                 UIPasteboard.general.string = message
-                Helper.defaultHelper.parseSessionAndAddTask(message, completionHandler: {
-                    hud.hide()
-                    Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
-                }, errorHandler: {
-                    hud.hide()
-                    Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Transmission server error.", comment: "Transmission server error."))
+
+                let alert = UIAlertController(title: NSLocalizedString("Choose...", comment: "Choose..."), message: NSLocalizedString("Please choose a download method.", comment: "Please choose a download method."), preferredStyle: .actionSheet)
+                let miAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi"), style: .default, handler: { (action) in
+                    Helper.shared.miDownload(for: message, fallbackIn: self)
                 })
+                alert.addAction(miAction)
+
+                let transmissionAction = UIAlertAction(title: "Transmission", style: .default, handler: { (action) in
+                    Helper.shared.transmissionDownload(for: message)
+                })
+                alert.addAction(transmissionAction)
+
+                let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
+                alert.addAction(cancelAction)
+                DispatchQueue.main.async {
+                    self.navigationController?.topViewController?.present(alert, animated: true, completion: nil)
+                }
             }
             else {
                 hud.hide()
-                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+                Helper.shared.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
             }
         }
     }
@@ -282,11 +293,11 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     func showPhotoBrowser(forTableView tableView: UITableView, atIndexPath indexPath: IndexPath, initialPhotoIndex index: Int = 0) {
         let list = tableView == self.tableView ? self.datesList : self.filteredDatesList
         guard (indexPath as NSIndexPath).row < (list?.count)! else { return }
-        if Helper.defaultHelper.showCellularHUD() { return }
+        if Helper.shared.showCellularHUD() { return }
         searchController.searchBar.resignFirstResponder()
         guard let date = list?[(indexPath as NSIndexPath).row].addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) else { return }
-        let hud = Helper.defaultHelper.showHUD()
-        let request = Alamofire.request(Helper.defaultHelper.searchPath(withKeyword: date))
+        let hud = Helper.shared.showHUD()
+        let request = Alamofire.request(Helper.shared.searchPath(withKeyword: date))
         request.responseJSON { [unowned self] response in
             hud.hide()
             if response.result.isSuccess {
@@ -307,16 +318,16 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
                 self.navigationController?.pushViewController(photoBrowser!, animated: true)
             }
             else {
-                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+                Helper.shared.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
             }
         }
     }
 
     func loadTorrentList(_ sender: Any?) {
-        if Helper.defaultHelper.showCellularHUD() { return }
-        let hud = Helper.defaultHelper.showHUD()
+        if Helper.shared.showCellularHUD() { return }
+        let hud = Helper.shared.showHUD()
         navigationItem.rightBarButtonItem?.isEnabled = false
-        let request = Alamofire.request(Helper.defaultHelper.torrentsListPath())
+        let request = Alamofire.request(Helper.shared.torrentsListPath())
         request.responseJSON { [unowned self] response in
             if response.result.isSuccess {
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
@@ -326,7 +337,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             else {
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
                 print(response.result.error?.localizedDescription ?? "")
-                Helper.defaultHelper.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+                Helper.shared.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
             }
             hud.hide()
         }

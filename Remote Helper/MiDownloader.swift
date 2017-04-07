@@ -2,7 +2,7 @@
 //  MiDownloader.swift
 //  Remote Helper
 //
-//  Created by 朱文杰 on 2017/4/5.
+//  Created by Venj Chu on 2017/4/5.
 //  Copyright © 2017年 Home. All rights reserved.
 //
 

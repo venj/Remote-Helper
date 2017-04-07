@@ -2,7 +2,7 @@
 //  iconv_wrapper.c
 //  Convert
 //
-//  Created by 朱文杰 on 2017/4/7.
+//  Created by Venj Chu on 2017/4/7.
 //  Copyright © 2017年 ZHU WEN JIE. All rights reserved.
 //
 

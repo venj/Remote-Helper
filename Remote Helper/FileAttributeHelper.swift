@@ -2,7 +2,7 @@
 //  FileAttributeHelper.swift
 //  Video Player
 //
-//  Created by 朱文杰 on 15/11/2.
+//  Created by Venj Chu on 15/11/2.
 //  Copyright © 2015年 Home. All rights reserved.
 //
 

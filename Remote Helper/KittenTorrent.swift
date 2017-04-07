@@ -2,7 +2,7 @@
 //  KittenTorrent.swift
 //  TestApp
 //
-//  Created by 朱文杰 on 16/11/23.
+//  Created by Venj Chu on 16/11/23.
 //  Copyright © 2016年 VPNCloud. All rights reserved.
 //
 

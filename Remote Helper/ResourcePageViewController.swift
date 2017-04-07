@@ -79,7 +79,7 @@ class ResourcePageViewController: UITableViewController {
         let bangumi = bangumiLinks[index]
         var link = bangumi["link"]!
         if !link.contains("http://") {
-            link = "http://www.dygod.net" + link
+            link = BaseLink + link
         }
         process(link)
     }

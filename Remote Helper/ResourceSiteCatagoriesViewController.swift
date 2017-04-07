@@ -13,6 +13,7 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
     let CellIdentifier = "ResourceSiteCatagoriesTableCell"
 
     var siteName: String = "电影天堂"
+    /*
     var catagoryLinks: [[String: String]] = [["name": "国内电影", "link": "http://www.dygod.net/html/gndy/china/index.html"],
                                              ["name": "欧美电影", "link": "http://www.dygod.net/html/gndy/oumei/index.html"],
                                              ["name": "日韩电影", "link": "http://www.dygod.net/html/gndy/rihan/index.html"],
@@ -24,6 +25,20 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
                                              ["name": "动漫资源", "link": "http://www.dygod.net/html/dongman/index.html"],
                                              ["name": "游戏下载", "link": "http://www.dygod.net/html/game/index.html"],
                                              ["name": "手机电影", "link": "http://www.dygod.net/html/3gp/3gpmovie/index.html"]]
+ */
+
+    var catagoryLinks: [[String: String]] = [["name": "最新电影", "link": "http://www.ygdy8.net/html/gndy/dyzz/index.html"],
+                                             ["name": "国内电影", "link": "http://www.ygdy8.net/html/gndy/china/index.html"],
+                                             ["name": "欧美电影", "link": "http://www.ygdy8.net/html/gndy/oumei/index.html"],
+                                             ["name": "日韩电影", "link": "http://www.ygdy8.net/html/gndy/rihan/index.html"],
+                                             ["name": "华语电视", "link": "http://www.ygdy8.net/html/tv/hytv/index.html"],
+                                             ["name": "日韩电视", "link": "http://www.ygdy8.net/html/tv/rihantv/index.html"],
+                                             ["name": "欧美电视", "link": "http://www.ygdy8.net/html/tv/oumeitv/index.html"],
+                                             ["name": "最新综艺", "link": "http://www.ygdy8.net/html/zongyi2013/index.html"],
+                                             ["name": "旧版综艺", "link": "http://www.ygdy8.net/html/2009zongyi/index.html"],
+                                             ["name": "动漫资源", "link": "http://www.ygdy8.net/html/dongman/index.html"],
+                                             ["name": "游戏下载", "link": "http://www.ygdy8.net/html/game/index.html"],
+                                             ["name": "高分经典", "link": "http://www.ygdy8.net/html/gndy/jddy/20160320/50510.html"]]
 
     override func viewDidLoad() {
         super.viewDidLoad()

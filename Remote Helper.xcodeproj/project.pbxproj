@@ -44,6 +44,9 @@
 		255A7D301BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255A7D2F1BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift */; };
 		2561854E1B6F8D1B0073ACD3 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 256185501B6F8D1B0073ACD3 /* Launch Screen.xib */; };
 		256EA4BF177D5F830081309B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 256EA4BD177D5F830081309B /* Localizable.strings */; };
+		2575F5711E97B2B7004B4D1E /* NSData+iconv.m in Sources */ = {isa = PBXBuildFile; fileRef = 2575F56E1E97B2B7004B4D1E /* NSData+iconv.m */; };
+		2575F5721E97B2B7004B4D1E /* iconv_wrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = 2575F5701E97B2B7004B4D1E /* iconv_wrapper.c */; };
+		2575F5751E97B359004B4D1E /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2575F5741E97B359004B4D1E /* libiconv.tbd */; };
 		2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2581D48717544A4C00EF3867 /* InAppSettings.bundle */; };
 		258CD0101A3B28B400B3EB55 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 258CD00F1A3B28B400B3EB55 /* Images.xcassets */; };
 		25AFE0921E94E69600DFB501 /* MiDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25AFE0911E94E69600DFB501 /* MiDownloader.swift */; };
@@ -97,6 +100,11 @@
 		256EA4BC177D5ED30081309B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		256EA4BE177D5F830081309B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		256EA4C0177D5F8E0081309B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		2575F56D1E97B2B7004B4D1E /* NSData+iconv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+iconv.h"; sourceTree = "<group>"; };
+		2575F56E1E97B2B7004B4D1E /* NSData+iconv.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+iconv.m"; sourceTree = "<group>"; };
+		2575F56F1E97B2B7004B4D1E /* iconv_wrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iconv_wrapper.h; sourceTree = "<group>"; };
+		2575F5701E97B2B7004B4D1E /* iconv_wrapper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = iconv_wrapper.c; sourceTree = "<group>"; };
+		2575F5741E97B359004B4D1E /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		2581D48717544A4C00EF3867 /* InAppSettings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InAppSettings.bundle; sourceTree = "<group>"; };
 		258CD00F1A3B28B400B3EB55 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		25AFE0911E94E69600DFB501 /* MiDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiDownloader.swift; sourceTree = "<group>"; };
@@ -118,6 +126,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2575F5751E97B359004B4D1E /* libiconv.tbd in Frameworks */,
 				25B0AA7C1753A67300141B0E /* MobileCoreServices.framework in Frameworks */,
 				25B0AA7A1753A66C00141B0E /* SystemConfiguration.framework in Frameworks */,
 				25B0AA7417537B2D00141B0E /* MediaPlayer.framework in Frameworks */,
@@ -152,6 +161,7 @@
 		252DFA7E1753784400FF8199 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2575F5741E97B359004B4D1E /* libiconv.tbd */,
 				25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */,
 				25B0AA791753A66C00141B0E /* SystemConfiguration.framework */,
 				25B0AA7317537B2D00141B0E /* MediaPlayer.framework */,
@@ -168,6 +178,7 @@
 			isa = PBXGroup;
 			children = (
 				25310E40177ACB1600D4A212 /* Libraries */,
+				2575F5731E97B2C1004B4D1E /* low level */,
 				25AFE0931E96130400DFB501 /* DYTT */,
 				254729F61DEBD28300787C20 /* KittenTorrent.swift */,
 				25AFE0911E94E69600DFB501 /* MiDownloader.swift */,
@@ -240,11 +251,22 @@
 			name = Extensions;
 			sourceTree = "<group>";
 		};
+		2575F5731E97B2C1004B4D1E /* low level */ = {
+			isa = PBXGroup;
+			children = (
+				2575F56D1E97B2B7004B4D1E /* NSData+iconv.h */,
+				2575F56E1E97B2B7004B4D1E /* NSData+iconv.m */,
+				2575F56F1E97B2B7004B4D1E /* iconv_wrapper.h */,
+				2575F5701E97B2B7004B4D1E /* iconv_wrapper.c */,
+			);
+			name = "low level";
+			sourceTree = "<group>";
+		};
 		25AFE0931E96130400DFB501 /* DYTT */ = {
 			isa = PBXGroup;
 			children = (
-				2506AA1C1E90E4070064EABB /* Bangumi.swift */,
 				2506AA1E1E90EF010064EABB /* Page.swift */,
+				2506AA1C1E90E4070064EABB /* Bangumi.swift */,
 				2506AA181E90DD190064EABB /* ResourceSiteCatagoriesViewController.swift */,
 				2506AA201E90F4710064EABB /* ResourcePageViewController.swift */,
 				2506AA221E90F5D40064EABB /* BangumiViewController.swift */,
@@ -416,6 +438,7 @@
 				254CBE421BE857520050A288 /* String+MD5.swift in Sources */,
 				255A7D241BEB8DC700E6012B /* UserDefaultsPasscodeRepository.swift in Sources */,
 				255A7D301BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift in Sources */,
+				2575F5721E97B2B7004B4D1E /* iconv_wrapper.c in Sources */,
 				250354CF1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift in Sources */,
 				2506AA211E90F4710064EABB /* ResourcePageViewController.swift in Sources */,
 				2506AA1F1E90EF010064EABB /* Page.swift in Sources */,
@@ -427,6 +450,7 @@
 				2506AA1B1E90E2F90064EABB /* Extensions.swift in Sources */,
 				2502ABEA1BE73AB7004882FE /* String+Path.swift in Sources */,
 				250354D11BE9911700E9F93A /* WebContentTableViewController.swift in Sources */,
+				2575F5711E97B2B7004B4D1E /* NSData+iconv.m in Sources */,
 				255A7D251BEB8DC700E6012B /* PasscodeLockConfiguration.swift in Sources */,
 				2502ABDF1BE6FBEC004882FE /* String+Base64.swift in Sources */,
 			);

@@ -10,6 +10,9 @@ import Foundation
 import Fuzi
 import Darwin.POSIX.iconv
 
+//let BaseLink = "http://www.dygod.net"
+let BaseLink = "http://www.ygdy8.net"
+
 struct Page {
     var bangumiLinks: [[String: String]]
     var nextPageLink: String?
@@ -20,7 +23,7 @@ struct Page {
     }
 
     static func parse(data: Data, isGBK: Bool = false) -> Page? {
-        guard let html = isGBK ? data.stringFromGB18030Data() : String(data: data, encoding: .utf8) else { return nil }
+        guard let html = isGBK ? (data as NSData).convertToUTF8String(fromEncoding: "GBK", allowLoosy: true) : String(data: data, encoding: .utf8) else { return nil }
         var bangumiLinks: [[String: String]] = []
         var nextPageLink: String? = nil
         do {
@@ -39,7 +42,7 @@ struct Page {
             doc.css("div.x a").forEach({ (element) in
                 if element.stringValue == "下一页" {
                     guard let link = element["href"] else { return }
-                    nextPageLink = "http://www.dygod.net" + link
+                    nextPageLink = BaseLink + link
                 }
             })
 

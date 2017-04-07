@@ -3,3 +3,4 @@
 //
 
 #import <CommonCrypto/CommonDigest.h>
+#import "NSData+iconv.h"

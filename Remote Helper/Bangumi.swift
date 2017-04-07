@@ -14,7 +14,7 @@ struct Bangumi {
     var links: [String]
 
     static func parse(data: Data, isGBK: Bool = false) -> Bangumi? {
-        guard let html = isGBK ? data.stringFromGB18030Data() : String(data: data, encoding: .utf8) else { return nil }
+        guard let html = isGBK ? (data as NSData).convertToUTF8String(fromEncoding: "GBK", allowLoosy: true) : String(data: data, encoding: .utf8) else { return nil }
         do {
             let doc = try HTMLDocument(string: html)
             let title = doc.css("div.title_all h1").first?.stringValue ?? NSLocalizedString("Unknown Title", comment: "Unknown Title")

@@ -107,7 +107,7 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
             hud.hide()
             if response.result.isFailure { return } // Fail
             guard let data = response.result.value else { return }
-            guard let page = Page.parse(data: data, isGBK: true) else { return }
+            guard let page = Page.parse(data: data, pageLink: link, isGBK: true) else { return }
 
             if page.bangumiLinks.count == 0 {
                 let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: "There's no program under this catagory, or catagory failed to load.", preferredStyle: .alert)

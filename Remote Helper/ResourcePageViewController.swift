@@ -79,7 +79,13 @@ class ResourcePageViewController: UITableViewController {
         let bangumi = bangumiLinks[index]
         var link = bangumi["link"]!
         if !link.contains("http://") {
-            link = BaseLink + link
+            let url = URL(string:page!.pageLink)!
+            if link.characters.first != "/".characters.first {
+                link = url.deletingLastPathComponent().appendingPathComponent(link).absoluteString
+            }
+            else {
+                link = url.scheme! + "://" + url.host! + "/" + link
+            }
         }
         process(link)
     }
@@ -128,7 +134,7 @@ class ResourcePageViewController: UITableViewController {
             self.spinner.stopAnimating()
             if response.result.isFailure { return } // Fail
             guard let data = response.result.value else { return }
-            guard let page = Page.parse(data: data, isGBK: true) else { return }
+            guard let page = Page.parse(data: data, pageLink: nextPageLink, isGBK: true) else { return }
             self.page = page
         }
     }

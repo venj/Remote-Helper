@@ -10,10 +10,8 @@ import Foundation
 import Fuzi
 import Darwin.POSIX.iconv
 
-//let BaseLink = "http://www.dygod.net"
-let BaseLink = "http://www.ygdy8.net"
-
 struct Page {
+    var pageLink: String
     var bangumiLinks: [[String: String]]
     var nextPageLink: String?
     var isLastPage: Bool {
@@ -22,7 +20,7 @@ struct Page {
         }
     }
 
-    static func parse(data: Data, isGBK: Bool = false) -> Page? {
+    static func parse(data: Data, pageLink: String, isGBK: Bool = false) -> Page? {
         guard let html = isGBK ? (data as NSData).convertToUTF8String(fromEncoding: "GBK", allowLoosy: true) : String(data: data, encoding: .utf8) else { return nil }
         var bangumiLinks: [[String: String]] = []
         var nextPageLink: String? = nil
@@ -42,7 +40,14 @@ struct Page {
             doc.css("div.x a").forEach({ (element) in
                 if element.stringValue == "下一页" {
                     guard let link = element["href"] else { return }
-                    nextPageLink = BaseLink + link
+                    let url = URL(string: pageLink)!
+                    if link.characters.first != "/".characters.first {
+                        nextPageLink = url.deletingLastPathComponent().appendingPathComponent(link).absoluteString
+                    }
+                    else {
+                        nextPageLink = url.scheme! + "://" + url.host! + "/" + link
+                    }
+
                 }
             })
 
@@ -50,7 +55,7 @@ struct Page {
             print(error.localizedDescription)
         }
 
-        let page = Page(bangumiLinks: bangumiLinks, nextPageLink: nextPageLink)
+        let page = Page(pageLink: pageLink, bangumiLinks: bangumiLinks, nextPageLink: nextPageLink)
         return page
     }
 }

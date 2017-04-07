@@ -64,17 +64,25 @@ class BangumiViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         let index = indexPath.row
         guard let link = bangumi?.links[index] else { return }
+        UIPasteboard.general.string = link
 
         let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: link, preferredStyle: .alert)
-        let copyAction = UIAlertAction(title: NSLocalizedString("Copy", comment: "Copy"), style: .default) { (action) in
-            UIPasteboard.general.string = link
-            Helper.shared.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
-        }
-        alert.addAction(copyAction)
-        let downloadAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi"), style: .default) { (action) in
+
+        let miAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi"), style: .default) { (action) in
             Helper.shared.miDownload(for: link, fallbackIn: self)
         }
-        alert.addAction(downloadAction)
+        alert.addAction(miAction)
+
+        if link.matches("^magnet:") {
+            let transmissionAction = UIAlertAction(title: "Transmission", style: .default) { (action) in
+                Helper.shared.transmissionDownload(for: link)
+            }
+            alert.addAction(transmissionAction)
+        }
+
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel)
+        alert.addAction(cancelAction)
+
         self.present(alert, animated: true, completion: nil)
     }
 }

@@ -62,6 +62,7 @@ class ValidLinksTableViewController: UITableViewController {
         alertController.addAction(downloadAction)
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler:nil)
         alertController.addAction(cancelAction)
+        alertController.view.tintColor = Helper.shared.mainThemeColor()
         present(alertController, animated: true, completion: nil)
     }
 

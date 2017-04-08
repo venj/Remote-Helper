@@ -115,6 +115,7 @@ class ResourcePageViewController: UITableViewController {
                 let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: NSLocalizedString("This program is online only, now available for download.", comment: "This program is online only, now available for download."), preferredStyle: .alert)
                 let action = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .default, handler: nil)
                 alert.addAction(action)
+                alert.view.tintColor = Helper.shared.mainThemeColor()
                 self.present(alert, animated: true, completion: nil)
             }
             else {

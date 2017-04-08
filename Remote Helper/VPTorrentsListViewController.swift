@@ -198,6 +198,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         alertController.addAction(okAction)
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
+        alertController.view.tintColor = Helper.shared.mainThemeColor()
         present(alertController, animated: true, completion: nil)
     }
 
@@ -278,6 +279,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
                 let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
                 alert.addAction(cancelAction)
+                alert.view.tintColor = Helper.shared.mainThemeColor()
                 DispatchQueue.main.async {
                     self.navigationController?.topViewController?.present(alert, animated: true, completion: nil)
                 }

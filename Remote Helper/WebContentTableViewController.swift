@@ -158,6 +158,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                 alert.addAction(confirmAction)
                 let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "取消"), style: .cancel, handler: nil)
                 alert.addAction(cancelAction)
+                alert.view.tintColor = Helper.shared.mainThemeColor()
                 sender.present(alert, animated: true, completion: nil)
             }
         }
@@ -207,6 +208,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         alertController.addAction(saveAction)
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
+        alertController.view.tintColor = Helper.shared.mainThemeColor()
         present(alertController, animated: true, completion: nil)
     }
 
@@ -231,6 +233,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
         sheet.addAction(cancelAction)
         sheet.popoverPresentationController?.delegate = self
+        sheet.view.tintColor = Helper.shared.mainThemeColor()
         present(sheet, animated: true) {
             sheet.popoverPresentationController?.passthroughViews = nil
         }

@@ -8,8 +8,9 @@
 
 import UIKit
 import PKHUD
+import MWPhotoBrowser
 
-class BangumiViewController: UITableViewController {
+class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate {
     let CellIdentifier = "BangumiTableCell"
     var bangumi: Bangumi? = nil
 
@@ -26,7 +27,25 @@ class BangumiViewController: UITableViewController {
             tableView.cellLayoutMarginsFollowReadableWidth = false
         }
 
-        title = bangumi?.title
+        navigationController?.toolbar.tintColor = Helper.shared.mainThemeColor()
+
+        title = bangumi?.title ?? ""
+
+        let imagesButton = UIBarButtonItem(title: NSLocalizedString("Images", comment: "Images"), style: .plain, target: self, action: #selector(showImages))
+        let spaceItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let infoButton = UIBarButtonItem(title: NSLocalizedString("Infomation", comment: "Infomation"), style: .plain, target: self, action: #selector(showInfo))
+
+        toolbarItems = [imagesButton, spaceItem, infoButton]
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.isToolbarHidden = true
+        super.viewWillDisappear(animated)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.isToolbarHidden = false
     }
 
     override func didReceiveMemoryWarning() {
@@ -83,7 +102,49 @@ class BangumiViewController: UITableViewController {
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel)
         alert.addAction(cancelAction)
 
+        alert.view.tintColor = Helper.shared.mainThemeColor()
+
         self.present(alert, animated: true, completion: nil)
+    }
+
+
+    // MARK: - Actions
+    func showImages(_ sender: Any?) {
+        let photoBrowser = MWPhotoBrowser(delegate: self)
+        photoBrowser?.displayActionButton = false
+        photoBrowser?.displayNavArrows = true
+        photoBrowser?.zoomPhotosToFill = false
+        self.navigationController?.pushViewController(photoBrowser!, animated: true)
+    }
+
+    func showInfo(_ sender: Any?) {
+        if let info = bangumi?.info {
+            let alert = UIAlertController(title: NSLocalizedString("Infomation", comment: "Infomation"), message: info, preferredStyle: .actionSheet)
+            let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .cancel, handler: nil)
+            alert.addAction(cancelAction)
+            alert.view.tintColor = Helper.shared.mainThemeColor()
+            present(alert, animated: true, completion: nil)
+        }
+        else {
+            let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: NSLocalizedString("There's no infomation available.", comment: "There's no infomation available."), preferredStyle: .alert)
+            let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .cancel, handler: nil)
+            alert.addAction(cancelAction)
+            alert.view.tintColor = Helper.shared.mainThemeColor()
+            present(alert, animated: true, completion: nil)
+        }
+    }
+
+    // MARK: - MWPhotoBrowserDelegate
+
+    func numberOfPhotos(in photoBrowser: MWPhotoBrowser!) -> UInt {
+        return UInt(bangumi?.images.count ?? 0)
+    }
+
+    func photoBrowser(_ photoBrowser: MWPhotoBrowser!, photoAt index: UInt) -> MWPhotoProtocol! {
+        guard let imageLink = bangumi?.images[Int(index)] else { return nil }
+        guard let url = URL(string: imageLink) else { return nil }
+        let mwPhoto = MWPhoto(url: url)
+        return mwPhoto
     }
 }
 

@@ -113,6 +113,7 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
                 let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: "There's no program under this catagory, or catagory failed to load.", preferredStyle: .alert)
                 let action = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .default, handler: nil)
                 alert.addAction(action)
+                alert.view.tintColor = Helper.shared.mainThemeColor()
                 self.present(alert, animated: true, completion: nil)
             }
             else {

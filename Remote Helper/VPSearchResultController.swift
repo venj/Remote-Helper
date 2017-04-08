@@ -132,10 +132,12 @@ class VPSearchResultController: UITableViewController {
         let addTorrentAction = UIAlertAction(title: "Transmission" , style: .default) { _ in
             Helper.shared.transmissionDownload(for: link)
         }
+
         alertController.addAction(addTorrentAction)
 
         let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
+        alertController.view.tintColor = Helper.shared.mainThemeColor()
         present(alertController, animated: true, completion: nil)
     }
 

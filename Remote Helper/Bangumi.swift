@@ -12,6 +12,8 @@ import Fuzi
 struct Bangumi {
     var title: String
     var links: [String]
+    var images: [String]
+    var info: String
 
     static func parse(data: Data, isGBK: Bool = false) -> Bangumi? {
         guard let html = isGBK ? (data as NSData).convertToUTF8String(fromEncoding: "GBK", allowLoosy: true) : String(data: data, encoding: .utf8) else { return nil }
@@ -24,7 +26,19 @@ struct Bangumi {
                 links.append(link)
             })
 
-            let bangumi = Bangumi(title: title, links: links)
+            var images: [String] = []
+            doc.css("div.co_content8 div#Zoom p img").forEach { element in
+                guard let src = element["src"] else { return }
+                images.append(src)
+            }
+
+            var info = ""
+            doc.css("div.co_content8 div#Zoom p").forEach { element in
+                let rawXML = element.rawXML.replacingOccurrences(of: "<br>", with: "\n").replacingOccurrences(of: "\r", with: "")
+                info += rawXML.replacingOccurrences(of: "<[^>]+?>", with: "", options: String.CompareOptions.regularExpression, range: rawXML.range(of: rawXML))
+            }
+
+            let bangumi = Bangumi(title: title, links: links, images: images, info: info)
             return bangumi
         } catch let error {
             print(error.localizedDescription)

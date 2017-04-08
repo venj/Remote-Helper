@@ -12,7 +12,7 @@ import TOWebViewController
 import MWPhotoBrowser
 import Alamofire
 
-class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegate, UISearchDisplayDelegate, UISearchBarDelegate {
+class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegate, UISearchDisplayDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate {
     let CellIdentifier = "VPTorrentsListViewCell"
     let localizedStatusStrings: [String: String] = ["completed" : NSLocalizedString("completed", comment: "completed"),
         "waiting" : NSLocalizedString("waiting", comment:"waiting"),
@@ -279,9 +279,13 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
                 let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
                 alert.addAction(cancelAction)
+
+                alert.popoverPresentationController?.delegate = self
                 alert.view.tintColor = Helper.shared.mainThemeColor()
                 DispatchQueue.main.async {
-                    self.navigationController?.topViewController?.present(alert, animated: true, completion: nil)
+                    self.navigationController?.topViewController?.present(alert, animated: true) {
+                        alert.popoverPresentationController?.passthroughViews = nil
+                    }
                 }
             }
             else {
@@ -289,6 +293,12 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
                 Helper.shared.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
             }
         }
+    }
+
+    // MARK: - UIPopoverPresentationControllerDelegate
+
+    func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
+        popoverPresentationController.barButtonItem =  navigationController?.topViewController?.navigationItem.rightBarButtonItems?.last
     }
 
     //MARK: - Helper

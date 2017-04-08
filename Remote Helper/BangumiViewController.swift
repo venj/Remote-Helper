@@ -10,7 +10,7 @@ import UIKit
 import PKHUD
 import MWPhotoBrowser
 
-class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate {
+class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPopoverPresentationControllerDelegate {
     let CellIdentifier = "BangumiTableCell"
     var bangumi: Bangumi? = nil
 
@@ -122,8 +122,11 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate {
             let alert = UIAlertController(title: NSLocalizedString("Infomation", comment: "Infomation"), message: info, preferredStyle: .actionSheet)
             let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .cancel, handler: nil)
             alert.addAction(cancelAction)
+            alert.popoverPresentationController?.delegate = self
             alert.view.tintColor = Helper.shared.mainThemeColor()
-            present(alert, animated: true, completion: nil)
+            present(alert, animated: true) {
+                alert.popoverPresentationController?.passthroughViews = nil
+            }
         }
         else {
             let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: NSLocalizedString("There's no infomation available.", comment: "There's no infomation available."), preferredStyle: .alert)
@@ -132,6 +135,12 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate {
             alert.view.tintColor = Helper.shared.mainThemeColor()
             present(alert, animated: true, completion: nil)
         }
+    }
+
+    // MARK: - UIPopoverPresentationControllerDelegate
+
+    func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
+        popoverPresentationController.barButtonItem = navigationController?.toolbar.items?.last
     }
 
     // MARK: - MWPhotoBrowserDelegate

@@ -229,7 +229,7 @@ open class Helper : NSObject {
         hud.hide(afterDelay: delay)
     }
 
-    func showHUD() -> PKHUD {
+    @discardableResult func showHUD() -> PKHUD {
         let hud = PKHUD.sharedHUD
         hud.contentView = PKHUDProgressView()
         hud.show()
@@ -406,6 +406,7 @@ open class Helper : NSObject {
     }
 
     func transmissionDownload(for link: String) {
+        self.showHUD()
         parseSessionAndAddTask(link, completionHandler: { [weak self] in
             guard let `self` = self else { return }
             self.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))

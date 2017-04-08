@@ -28,6 +28,8 @@ class ResourcePageViewController: UITableViewController {
             spinner.hidesWhenStopped = true
         }
     }
+
+    private var isLoading: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,6 +96,10 @@ class ResourcePageViewController: UITableViewController {
         return page?.isLastPage == true ? nil : spinner
     }
 
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return page?.isLastPage == true ? 0.0 : 44.0
+    }
+
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == (bangumiLinks.count - 1) { // when showing last item
             if page?.isLastPage == false {
@@ -127,11 +133,14 @@ class ResourcePageViewController: UITableViewController {
     }
 
     func loadNextPage() {
+        if isLoading { return }
         guard let nextPageLink = page?.nextPageLink else { return }
         spinner.startAnimating()
+        isLoading = true
         let request = Alamofire.request(nextPageLink)
         request.responseData { [weak self] response in
             guard let `self` = self else { return }
+            self.isLoading = false
             self.spinner.stopAnimating()
             if response.result.isFailure { return } // Fail
             guard let data = response.result.value else { return }

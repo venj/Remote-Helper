@@ -85,7 +85,7 @@ class ValidLinksTableViewController: UITableViewController {
         // Mi Download
         let miAction = UITableViewRowAction(style: .default, title: NSLocalizedString("Mi", comment: "Mi")) { [unowned self] (_, _) in
             if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
-            Helper.shared.miDownload(for: link, fallbackIn: self)
+            Helper.shared.miDownloadForLink(link, fallbackIn: self)
         }
 
         miAction.backgroundColor = UIColor.iOS8green()

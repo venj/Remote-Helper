@@ -31,19 +31,19 @@ enum MiDownloaderError: Error {
 }
 
 class MiDownloader {
-    var link: String
+    var links: [String]
     var username: String
     var password: String
 
-    fileprivate var base64Link: String {
+    fileprivate var linksQuery: String {
         get {
-            return link.base64String() ?? ""
+            return links.map { "url=" + ($0.base64String() ?? "") }.joined(separator: "&")
         }
     }
 
     fileprivate var downloadLink: String {
         get {
-            return "http://d.miwifi.com/d2r/?url=" + base64Link
+            return "http://d.miwifi.com/d2r/?" + linksQuery
         }
     }
 
@@ -56,10 +56,10 @@ class MiDownloader {
     fileprivate let authLink = "https://account.xiaomi.com/pass/serviceLoginAuth2"
     fileprivate let confirmDownloadLink = "https://d.miwifi.com/d2r/download2RouterApi"
 
-    init(withUsername username:String, password: String, link: String) {
+    init(withUsername username:String, password: String, links: [String]) {
         self.username = username
         self.password = password
-        self.link = link
+        self.links = links
     }
 
     func loginAndFetchDeviceList(progress: ((MiDownloaderProgress) -> Void)? = nil, success:((MiDownloaderSuccess) -> Void)? = nil, error:((MiDownloaderError) -> Void)? = nil ) {
@@ -87,7 +87,7 @@ class MiDownloader {
                         let json = responseJSON.replacingOccurrences(of: "&&&START&&&", with: "")
                         let dict = json.JSONObject() as! [String: Any]
                         guard let location = dict["location"] as? String else {
-                            error?(.capchaError(self.link))
+                            error?(.capchaError(self.downloadLink))
                             return
                         }
                         Alamofire.request(location).responseString { (response) in
@@ -100,14 +100,13 @@ class MiDownloader {
                                 let xiaoqiang_d2r_ph = html.stringByMatching("\"xiaoqiang_d2r_ph\"\\s?:\\s?\"([^\"]+)\"") ?? ""
                                 let src = html.stringByMatching("\"src\"\\s?:\\s?\"([^\"])\"") ?? ""
 
-                                let params: [String: Any] = ["userId": userId,
+                                let params: [String: String] = ["userId": userId,
                                                              "xiaoqiang_d2r_ph": xiaoqiang_d2r_ph,
                                                              "serviceToken": serviceToken,
                                                              "src": src,
-                                                             "deviceId": deviceId,
-                                                             "url": self.base64Link]
-
-                                Alamofire.request(self.confirmDownloadLink, method: .post, parameters: params).responseString { response in
+                                                             "deviceId": deviceId]
+                                let body = params.map { k,v in k + "=" + v.percentEncodedString }.joined(separator: "&") + "&" + self.linksQuery
+                                Alamofire.request(self.confirmDownloadLink, method: .post, parameters: [:], encoding: body).responseString { response in
                                     if response.result.isSuccess {
                                         guard let text = response.result.value else { return }
                                         let result = text.JSONObject() as! [String: Any]
@@ -150,5 +149,12 @@ class MiDownloader {
             }
         }
     }
+}
 
+extension String: ParameterEncoding {
+    public func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
+        var request = try urlRequest.asURLRequest()
+        request.httpBody = data(using: .utf8, allowLossyConversion: false)
+        return request
+    }
 }

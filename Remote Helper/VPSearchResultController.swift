@@ -125,7 +125,7 @@ class VPSearchResultController: UITableViewController {
         let alertController = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: describe(torrent), preferredStyle: .alert)
 
         let miAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi") , style: .default) { _ in
-            Helper.shared.miDownload(for: link, fallbackIn: self)
+            Helper.shared.miDownloadForLink(link, fallbackIn: self)
         }
         alertController.addAction(miAction)
 

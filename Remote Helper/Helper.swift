@@ -396,8 +396,8 @@ open class Helper : NSObject {
         }
     }
 
-    func showMiDownload(for link:String, inViewController viewController: UIViewController) {
-        guard let base64 = link.base64String(), let miURL = URL(string:("https://d.miwifi.com/d2r/?url=" + base64)) else { return }
+    func showMiDownload(for link: String, inViewController viewController: UIViewController) {
+        guard let miURL = URL(string:(link)) else { return }
         let sfVC = SFSafariViewController(url: miURL)
         sfVC.title = NSLocalizedString("Mi Remote", comment: "Mi Remote")
         sfVC.modalPresentationStyle = .formSheet
@@ -426,7 +426,11 @@ open class Helper : NSObject {
         }
     }
 
-    func miDownload(for link: String, fallbackIn viewController: UIViewController) {
+    func miDownloadForLink(_ link: String, fallbackIn viewController: UIViewController) {
+        miDownloadForLinks([link], fallbackIn: viewController)
+    }
+
+    func miDownloadForLinks(_ links: [String], fallbackIn viewController: UIViewController) {
         let defaults = UserDefaults.standard
         guard let username = defaults.object(forKey: MiAccountUsernameKey) as? String,
             let password = defaults.object(forKey: MiAccountPasswordKey) as? String
@@ -435,7 +439,7 @@ open class Helper : NSObject {
                 return
             }
         let hud = Helper.shared.showHUD()
-        MiDownloader(withUsername:username, password: password, link: link).loginAndFetchDeviceList(progress: { (progress) in
+        MiDownloader(withUsername:username, password: password, links: links).loginAndFetchDeviceList(progress: { (progress) in
             switch progress {
             case .prepare:
                 hud.setMessage(NSLocalizedString("Preparing...", comment: "Preparing..."))

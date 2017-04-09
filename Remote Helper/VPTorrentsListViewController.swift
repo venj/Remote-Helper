@@ -268,7 +268,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
                 let alert = UIAlertController(title: NSLocalizedString("Choose...", comment: "Choose..."), message: NSLocalizedString("Please choose a download method.", comment: "Please choose a download method."), preferredStyle: .actionSheet)
                 let miAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi"), style: .default, handler: { (action) in
-                    Helper.shared.miDownload(for: message, fallbackIn: self)
+                    Helper.shared.miDownloadForLink(message, fallbackIn: self)
                 })
                 alert.addAction(miAction)
 

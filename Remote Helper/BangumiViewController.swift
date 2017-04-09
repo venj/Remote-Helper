@@ -14,6 +14,10 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
     let CellIdentifier = "BangumiTableCell"
     var bangumi: Bangumi? = nil
 
+    var editButton: UIBarButtonItem?
+    var infoButton: UIBarButtonItem?
+    var imagesButton: UIBarButtonItem?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -21,31 +25,34 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
         navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         navigationController?.navigationBar.tintColor = UIColor.white
         navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+        navigationController?.toolbar.tintColor = Helper.shared.mainThemeColor()
 
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
             tableView.cellLayoutMarginsFollowReadableWidth = false
         }
 
-        navigationController?.toolbar.tintColor = Helper.shared.mainThemeColor()
-
         title = bangumi?.title ?? ""
 
-        let imagesButton = UIBarButtonItem(title: NSLocalizedString("Images", comment: "Images"), style: .plain, target: self, action: #selector(showImages))
-        let spaceItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let infoButton = UIBarButtonItem(title: NSLocalizedString("Infomation", comment: "Infomation"), style: .plain, target: self, action: #selector(showInfo))
+        // Toolbar Button Items
+        let selectAllButton = UIBarButtonItem(title: NSLocalizedString("Select All", comment: "Select All"), style: .plain, target: self, action: #selector(selectAllCells(_:)))
+        let deSelectAllButton = UIBarButtonItem(title: NSLocalizedString("Deselect All", comment: "Deselect All"), style: .plain, target: self, action: #selector(deSelectAllCells(_:)))
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let miButton = UIBarButtonItem(title: NSLocalizedString("Mi", comment: "Mi"), style: .plain, target: self, action: #selector(miDownloadAll(_:)))
+        toolbarItems = [selectAllButton, deSelectAllButton, spaceButton, miButton]
 
-        toolbarItems = [imagesButton, spaceItem, infoButton]
-    }
+        // Allow edit
+        tableView.allowsSelection = true
+        tableView.allowsMultipleSelectionDuringEditing = true
 
-    override func viewWillDisappear(_ animated: Bool) {
-        navigationController?.isToolbarHidden = true
-        super.viewWillDisappear(animated)
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.isToolbarHidden = false
+        // Navigation Items
+        let editButtonItem = UIBarButtonItem(title: NSLocalizedString("Select", comment: "Select"), style: .plain, target: self, action: #selector(showEdit(_:)))
+        editButton = editButtonItem
+        let imagesButtonItem = UIBarButtonItem(title: NSLocalizedString("Images", comment: "Images"), style: .plain, target: self, action: #selector(showImages))
+        imagesButton = imagesButtonItem
+        let infoButtonItem = UIBarButtonItem(title: NSLocalizedString("Infomation", comment: "Infomation"), style: .plain, target: self, action: #selector(showInfo))
+        infoButton = infoButtonItem
+        navigationItem.rightBarButtonItems = [editButtonItem, imagesButtonItem, infoButtonItem]
     }
 
     override func didReceiveMemoryWarning() {
@@ -55,6 +62,60 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
 
     override var preferredStatusBarStyle : UIStatusBarStyle {
         return .lightContent
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.setToolbarHidden(true, animated: true)
+        super.viewWillDisappear(animated)
+    }
+
+    // MARK: - BarButtonItem Actions
+
+    func selectAllCells(_ sender: Any?) {
+        guard let count = bangumi?.links.count, count != 0 else { return }
+        if tableView.isEditing {
+            for i in 0 ..< count {
+                let indexPath = IndexPath(row: i, section: 0)
+                tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+            }
+        }
+    }
+
+    func deSelectAllCells(_ sender: Any?) {
+        guard let count = bangumi?.links.count, count != 0 else { return }
+        if tableView.isEditing {
+            for i in 0 ..< count {
+                let indexPath = IndexPath(row: i, section: 0)
+                tableView.deselectRow(at: indexPath, animated: false)
+            }
+        }
+    }
+
+    func miDownloadAll(_ sender: Any?) {
+        guard let links = bangumi?.links, links.count > 0 else { return }
+        guard let linksToDownload = tableView.indexPathsForSelectedRows?.map({ links[$0.row] }) else { return }
+        Helper.shared.miDownloadForLinks(linksToDownload, fallbackIn: self)
+    }
+
+    func showEdit(_ sender: UIBarButtonItem?) {
+        if !tableView.isEditing {
+            tableView.setEditing(true, animated: true)
+            editButton?.title = NSLocalizedString("Done", comment: "Done")
+            infoButton?.isEnabled = false
+            imagesButton?.isEnabled = false
+            navigationController?.setToolbarHidden(false, animated: true)
+        }
+        else {
+            exitEdit()
+        }
+    }
+
+    func exitEdit() {
+        navigationController?.setToolbarHidden(true, animated: true)
+        tableView.setEditing(false, animated: true)
+        editButton?.title = NSLocalizedString("Select", comment: "Select")
+        infoButton?.isEnabled = true
+        imagesButton?.isEnabled = true
     }
 
     // MARK: - Table view data source
@@ -79,7 +140,12 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
         return cell
     }
 
+    // MARK: - Tableview delegate
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Editing
+        if tableView.isEditing { return }
+        // Not editing
         tableView.deselectRow(at: indexPath, animated: true)
         let index = indexPath.row
         guard let link = bangumi?.links[index] else { return }
@@ -88,7 +154,7 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
         let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: link, preferredStyle: .alert)
 
         let miAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi"), style: .default) { (action) in
-            Helper.shared.miDownload(for: link, fallbackIn: self)
+            Helper.shared.miDownloadForLink(link, fallbackIn: self)
         }
         alert.addAction(miAction)
 
@@ -107,6 +173,14 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
         self.present(alert, animated: true, completion: nil)
     }
 
+
+    // MARK: - Select table view
+
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) { }
 
     // MARK: - Actions
     func showImages(_ sender: Any?) {
@@ -140,7 +214,7 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
     // MARK: - UIPopoverPresentationControllerDelegate
 
     func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
-        popoverPresentationController.barButtonItem = navigationController?.toolbar.items?.last
+        popoverPresentationController.barButtonItem = infoButton
     }
 
     // MARK: - MWPhotoBrowserDelegate

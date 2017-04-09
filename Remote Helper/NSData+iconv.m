@@ -24,7 +24,6 @@
     outString = convert_encoding(conv_desc, inString);
     finalize(conv_desc);
     if (outString != NULL) {
-        //printf("Final iconv output: %s\n", outString);
         NSString *result = [[NSString alloc] initWithCString:outString encoding:NSUTF8StringEncoding];
         free(outString);
         return result;

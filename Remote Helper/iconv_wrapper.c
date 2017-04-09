@@ -79,7 +79,7 @@ char *convert_encoding(iconv_t conv_desc, char *gbk) {
     iconv_value = iconv(conv_desc, &gbk, &len, &utf8, &utf8len);
     /* Handle failures. */
     if (iconv_value == (size_t) -1) {
-        fprintf(stderr, "iconv failed: in string '%s', length %zu, out string '%s', length %zu\n", gbk, len, utf8start, utf8len);
+        //fprintf(stderr, "iconv failed: in string '%s', length %zu, out string '%s', length %zu\n", gbk, len, utf8start, utf8len);
         switch (errno) {
             /* See "man 3 iconv" for an explanation. */
             case EILSEQ:
@@ -87,6 +87,8 @@ char *convert_encoding(iconv_t conv_desc, char *gbk) {
                 break;
             case EINVAL:
                 fprintf(stderr, "Incomplete multibyte sequence.\n");
+                // Allow this error return result.
+                return utf8start;
                 break;
             case E2BIG:
                 fprintf(stderr, "No more room.\n");

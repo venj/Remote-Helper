@@ -17,7 +17,7 @@ class ResourcePageViewController: UITableViewController {
             let bangumiLinksCount = bangumiLinks.count
             bangumiLinks.append(contentsOf: page.bangumiLinks)
             let indexPaths = (bangumiLinksCount..<bangumiLinksCount + page.bangumiLinks.count).map { IndexPath(row: $0, section: 0) }
-            self.tableView.insertRows(at: indexPaths, with: UITableViewRowAnimation.top)
+            tableView.insertRows(at: indexPaths, with: UITableViewRowAnimation.top)
         }
     }
 

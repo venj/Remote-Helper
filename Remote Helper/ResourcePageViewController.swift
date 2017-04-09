@@ -115,9 +115,12 @@ class ResourcePageViewController: UITableViewController {
             hud.hide()
             guard let `self` = self else { return }
             guard let data = response.data else { return }
-            let bangumi = Bangumi.parse(data: data, isGBK: true)
+            guard let bangumi = Bangumi.parse(data: data, isGBK: true) else {
+                Helper.shared.showHudWithMessage(NSLocalizedString("Parse failed, please try again.", comment: "Parse failed, please try again."))
+                return
+            }
             // Show bangumi
-            if bangumi?.links.count == 0 {
+            if bangumi.links.count == 0 {
                 let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: NSLocalizedString("This program is online only, now available for download.", comment: "This program is online only, now available for download."), preferredStyle: .alert)
                 let action = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .default, handler: nil)
                 alert.addAction(action)

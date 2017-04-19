@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "shortcut_torrentsearch.png",
+      "filename" : "shortcut_dytt.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "shortcut_torrentsearch@2x.png",
+      "filename" : "shortcut_dytt@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "shortcut_torrentsearch@3x.png",
+      "filename" : "shortcut_dytt@3x.png",
       "scale" : "3x"
     }
   ],

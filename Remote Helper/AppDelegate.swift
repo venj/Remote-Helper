@@ -100,8 +100,8 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
         else if shortcutItem.type == "me.venj.Video-Player.opentorrents" {
             self.tabbarController.selectedIndex = 1
         }
-        else if shortcutItem.type == "me.venj.Video-Player.torrentsearch" {
-            Helper.shared.showTorrentSearchAlertInViewController(window?.rootViewController)
+        else if shortcutItem.type == "me.venj.Video-Player.opendytt" {
+            self.tabbarController.selectedIndex = 2
         }
         else if shortcutItem.type == "me.venj.Video-Player.kittensearch" {
             Helper.shared.showTorrentSearchAlertInViewController(window?.rootViewController, forKitten: true)

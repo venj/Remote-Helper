@@ -66,11 +66,11 @@
 		</dict>
 		<dict>
 			<key>UIApplicationShortcutItemIconFile</key>
-			<string>shortcut_torrentsearch</string>
+			<string>shortcut_dytt</string>
 			<key>UIApplicationShortcutItemTitle</key>
-			<string>Search</string>
+			<string>DYTT</string>
 			<key>UIApplicationShortcutItemType</key>
-			<string>me.venj.Video-Player.torrentsearch</string>
+			<string>me.venj.Video-Player.opendytt</string>
 		</dict>
 		<dict>
 			<key>UIApplicationShortcutItemIconFile</key>

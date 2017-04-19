@@ -262,6 +262,10 @@ open class Helper : NSObject {
                     let url = URL(string: self.kittenSearchPath(withKeyword: keyword))!
                     if let data = try? Data(contentsOf: url) {
                         let torrents = KittenTorrent.parse(data: data)
+                        if torrents.count == 0 {
+                            self.showHudWithMessage(NSLocalizedString("No torrent found", comment: "No torrent found"), hideAfterDelay: 1.0)
+                            return
+                        }
                         let searchResultController = VPSearchResultController()
                         searchResultController.torrents = torrents
                         searchResultController.keyword = keyword

@@ -273,9 +273,12 @@ open class Helper : NSObject {
                             if let navigationController = viewController as? UINavigationController {
                                 navigationController.pushViewController(searchResultController, animated: true)
                             }
+                            else if let tabbarController = (UIApplication.shared.delegate as! AppDelegate).window?.rootViewController as? UITabBarController, let navigationController = tabbarController.selectedViewController as? UINavigationController {
+                                navigationController.pushViewController(searchResultController, animated: true)
+                            }
                             else {
                                 let searchResultNavigationController = UINavigationController(rootViewController: searchResultController)
-                                searchResultNavigationController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target:self, action: #selector(Helper.dismissMe(_:)))
+                                searchResultController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target:self, action: #selector(Helper.dismissMe(_:)))
                                 viewController.present(searchResultNavigationController, animated: true, completion: nil)
                             }
                             hud.hide()
@@ -283,8 +286,7 @@ open class Helper : NSObject {
                     }
                     else {
                         DispatchQueue.main.async { [weak self] in
-                            hud.hide()
-                            self?.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+                            self?.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."), hideAfterDelay: 1.0)
                         }
                     }
                 }
@@ -304,21 +306,23 @@ open class Helper : NSObject {
                             if let navigationController = viewController as? UINavigationController {
                                 navigationController.pushViewController(searchResultController, animated: true)
                             }
+                            else if let tabbarController = (UIApplication.shared.delegate as! AppDelegate).window?.rootViewController as? UITabBarController, let navigationController = tabbarController.selectedViewController as? UINavigationController {
+                                navigationController.pushViewController(searchResultController, animated: true)
+                            }
                             else {
                                 let searchResultNavigationController = UINavigationController(rootViewController: searchResultController)
-                                searchResultNavigationController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target:self, action: #selector(Helper.dismissMe(_:)))
+                                searchResultController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target:self, action: #selector(Helper.dismissMe(_:)))
                                 viewController.present(searchResultNavigationController, animated: true, completion: nil)
                             }
+                            hud.hide()
                         }
                         else {
                             let errorMessage = responseObject["message"] as! String
-                            self.showHudWithMessage(NSLocalizedString("\(errorMessage)", comment: "\(errorMessage)"))
+                            self.showHudWithMessage(NSLocalizedString("\(errorMessage)", comment: "\(errorMessage)"), hideAfterDelay: 1.0)
                         }
-                        hud.hide()
                     }
                     else {
-                        hud.hide()
-                        self.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+                        self.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."), hideAfterDelay: 1.0)
                     }
                 })
             }

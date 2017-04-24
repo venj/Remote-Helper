@@ -263,7 +263,9 @@ open class Helper : NSObject {
                     if let data = try? Data(contentsOf: url) {
                         let torrents = KittenTorrent.parse(data: data)
                         if torrents.count == 0 {
-                            self.showHudWithMessage(NSLocalizedString("No torrent found", comment: "No torrent found"), hideAfterDelay: 1.0)
+                            DispatchQueue.main.async {
+                                self.showHudWithMessage(NSLocalizedString("No torrent found", comment: "No torrent found"))
+                            }
                             return
                         }
                         let searchResultController = VPSearchResultController()
@@ -286,7 +288,7 @@ open class Helper : NSObject {
                     }
                     else {
                         DispatchQueue.main.async { [weak self] in
-                            self?.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."), hideAfterDelay: 1.0)
+                            self?.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
                         }
                     }
                 }
@@ -318,11 +320,15 @@ open class Helper : NSObject {
                         }
                         else {
                             let errorMessage = responseObject["message"] as! String
-                            self.showHudWithMessage(NSLocalizedString("\(errorMessage)", comment: "\(errorMessage)"), hideAfterDelay: 1.0)
+                            DispatchQueue.main.async {
+                                self.showHudWithMessage(NSLocalizedString("\(errorMessage)", comment: "\(errorMessage)"))
+                            }
                         }
                     }
                     else {
-                        self.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."), hideAfterDelay: 1.0)
+                        DispatchQueue.main.async {
+                            self.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+                        }
                     }
                 })
             }

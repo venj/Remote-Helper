@@ -3,14 +3,11 @@
 //  TestApp
 //
 //  Created by Venj Chu on 16/11/23.
-//  Copyright © 2016年 VPNCloud. All rights reserved.
+//  Copyright © 2016. All rights reserved.
 //
 
 import Foundation
 import Fuzi
-
-// AD black list.
-let filterList = ["正品香烟"]
 
 struct KittenTorrent {
     var title: String
@@ -37,7 +34,7 @@ struct KittenTorrent {
             for row in doc.css("#archiveResult tr") {
                 guard let title = row.css("td.name") .first?.stringValue else { continue }
                 // Filter based on ad black list.
-                if filterList.filter({ title.contains($0) }).count > 0 { continue }
+                if Helper.shared.kittenBlackList.filter({ title.contains($0) }).count > 0 { continue }
                 // Filter out no result
                 if title.contains("No result - ") { continue }
                 let size = row.css("td.size") .first?.stringValue ??  ""

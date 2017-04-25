@@ -3,7 +3,7 @@
 //  Remote Helper
 //
 //  Created by Venj Chu on 2017/4/2.
-//  Copyright © 2017年 Home. All rights reserved.
+//  Copyright © 2017 Home. All rights reserved.
 //
 
 import Foundation

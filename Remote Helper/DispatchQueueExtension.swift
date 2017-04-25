@@ -1,9 +1,9 @@
 //
 //  DispatchQueueExtension.swift
-//  VPNCloud
+//  Remote Helper
 //
 //  Created by Zhu Wen Jie on 17/1/12.
-//  Copyright © 2017 VPNCloud. All rights reserved.
+//  Copyright © 2017 Remote Helper. All rights reserved.
 //
 
 import Foundation

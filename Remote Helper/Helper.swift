@@ -3,7 +3,7 @@
 //  Video Player
 //
 //  Created by Venj Chu on 15/11/2.
-//  Copyright © 2015年 Home. All rights reserved.
+//  Copyright © 2015 Home. All rights reserved.
 //
 
 import UIKit
@@ -70,6 +70,9 @@ open class Helper : NSObject {
             return defaults.bool(forKey: RequestUseCellularNetwork)
         }
     }
+
+    // AD black list.
+    var kittenBlackList: [String] = ["正品香烟", "中铧", "稥湮", "威信", "试抽"]
 
     //MARK: - Link Helpers
     func torrentsListPath() -> String {

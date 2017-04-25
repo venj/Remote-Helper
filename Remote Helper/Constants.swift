@@ -3,7 +3,7 @@
 //  Video Player
 //
 //  Created by Venj Chu on 15/11/4.
-//  Copyright © 2015年 Home. All rights reserved.
+//  Copyright © 2015 Home. All rights reserved.
 //
 
 let REQUEST_TIME_OUT = 10.0

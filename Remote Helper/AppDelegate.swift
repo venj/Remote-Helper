@@ -145,12 +145,4 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
             return (disposition, credential)
         }
     }
-
-    func updateKittenBlackList() {
-        DispatchQueue.global(qos: .background).after(5.0) {
-            guard let content = try? String(contentsOf: URL(string: "http" + "s://ww" + "w.ve" + "nj.m" + "e/kit" + "ten_bla" + "ckli" + "st.txt")!) else { return }
-            let blackList = content.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).components(separatedBy: ",").map { $0.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
-            Helper.shared.kittenBlackList = blackList
-        }
-    }
 }

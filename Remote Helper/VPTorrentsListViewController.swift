@@ -19,7 +19,19 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         "downloading" : NSLocalizedString("downloading", comment:"downloading"),
         "failed or unknown" : NSLocalizedString("failed or unknown", comment: "failed or unknown")]
 
-    var datesList: [String]!
+    var datesDict: [String: [Any]] = [:]
+    var dateList: [String] {
+        get {
+            if datesDict.count == 0 { return [] }
+            return datesDict["items"] as! [String]
+        }
+    }
+    var countList: [Int] {
+        get {
+            if datesDict.count == 0 { return [] }
+            return datesDict["count"] as! [Int]
+        }
+    }
     var mwPhotos: [MWPhoto]   = []
     var photos: [String] = [] {
         didSet {
@@ -39,7 +51,8 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }
 
     var currentPhotoIndex: Int = 0
-    var filteredDatesList: [String]!
+    var filtereddateList: [String]!
+    var filteredCountList: [Int]!
     var searchController: UISearchDisplayController!
     var cloudItem: UIBarButtonItem!
     lazy var hashItem: UIBarButtonItem = {
@@ -116,7 +129,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        let list = tableView == self.tableView ? self.datesList : self.filteredDatesList
+        let list = tableView == self.tableView ? self.dateList : self.filtereddateList
         if (list != nil) {
             return 1
         }
@@ -125,10 +138,10 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (tableView == self.tableView) {
-            return self.datesList.count
+            return self.dateList.count
         }
         else {
-            return self.filteredDatesList.count
+            return self.filtereddateList.count
         }
     }
 
@@ -138,9 +151,11 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             cell = UITableViewCell(style: .subtitle, reuseIdentifier: CellIdentifier)
         }
         cell.accessoryType = .detailDisclosureButton
-        let list = tableView == self.tableView ? self.datesList : self.filteredDatesList
+        let list = tableView == self.tableView ? self.dateList : self.filtereddateList
+        let countList = tableView == self.tableView ? self.countList : self.filteredCountList
         let title = list?[(indexPath as NSIndexPath).row] ?? ""
-        cell.textLabel?.text = title
+        let count = countList?[(indexPath as NSIndexPath).row] ?? 0
+        cell.textLabel?.text = "\(title) (\(count))"
         if viewedTitles.contains(title) {
             cell.textLabel?.textColor = UIColor.gray
         }
@@ -163,7 +178,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             // Clear up useless items
             var filteredViewedTitles = viewedTitles
             viewedTitles.forEach {
-                if !datesList.contains($0) {
+                if !dateList.contains($0) {
                     guard let i = filteredViewedTitles.index(of: $0) else { return }
                     filteredViewedTitles.remove(at: i)
                 }
@@ -205,11 +220,13 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     //MARK: - SearchDisplayController Delegate
     func searchDisplayController(_ controller: UISearchDisplayController, shouldReloadTableForSearch searchString: String?) -> Bool {
         guard let unwrappedSearchString = searchString else { return false }
-        filteredDatesList = datesList
-        for dateString in datesList {
+        filtereddateList = dateList
+        filteredCountList = countList
+        for dateString in dateList {
             if dateString.range(of: unwrappedSearchString) == nil {
-                guard let index = filteredDatesList.index(of: dateString) else { continue }
-                filteredDatesList.remove(at: index)
+                guard let index = filtereddateList.index(of: dateString) else { continue }
+                filtereddateList.remove(at: index)
+                filteredCountList.remove(at: index)
             }
         }
         searchDisplayController?.searchResultsTableView.reloadData()
@@ -303,7 +320,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     //MARK: - Helper
     func showPhotoBrowser(forTableView tableView: UITableView, atIndexPath indexPath: IndexPath, initialPhotoIndex index: Int = 0) {
-        let list = tableView == self.tableView ? self.datesList : self.filteredDatesList
+        let list = tableView == self.tableView ? self.dateList : self.filtereddateList
         guard (indexPath as NSIndexPath).row < (list?.count)! else { return }
         if Helper.shared.showCellularHUD() { return }
         searchController.searchBar.resignFirstResponder()
@@ -343,7 +360,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         request.responseJSON { [unowned self] response in
             if response.result.isSuccess {
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
-                self.datesList = response.result.value as! [String]
+                self.datesDict = response.result.value as! [String: [Any]]
                 self.tableView.reloadData()
             }
             else {

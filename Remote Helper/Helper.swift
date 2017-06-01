@@ -76,7 +76,7 @@ open class Helper : NSObject {
 
     //MARK: - Link Helpers
     func torrentsListPath() -> String {
-        return "http\(self.SSL_ADD_S)://\(self.baseLink())/torrents";
+        return "http\(self.SSL_ADD_S)://\(self.baseLink())/torrents?stats=true";
     }
 
     func baseLink() -> String {

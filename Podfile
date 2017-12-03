@@ -5,7 +5,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 target "Remote Helper" do
   # Swift
   pod 'Alamofire'
-  pod 'PKHUD', :git => 'https://github.com/venj/PKHUD.git'
+  pod 'PKHUD'
   pod 'PasscodeLock', :git => 'https://github.com/venj/SwiftPasscodeLock.git'
   pod 'ReachabilitySwift'
   pod 'Fuzi'

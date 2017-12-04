@@ -27,7 +27,7 @@ DEPENDENCIES:
   - iOS8Colors (~> 0.1.2)
   - MMAppSwitcher (from `https://github.com/venj/MMAppSwitcher.git`)
   - MWPhotoBrowser
-  - PasscodeLock (from `https://github.com/venj/SwiftPasscodeLock.git`)
+  - PasscodeLock (from `https://github.com/venj/SwiftPasscodeLock.git`, branch `master`)
   - PKHUD
   - ReachabilitySwift
   - TOWebViewController (from `https://github.com/venj/TOWebViewController.git`)
@@ -36,6 +36,7 @@ EXTERNAL SOURCES:
   MMAppSwitcher:
     :git: https://github.com/venj/MMAppSwitcher.git
   PasscodeLock:
+    :branch: master
     :git: https://github.com/venj/SwiftPasscodeLock.git
   TOWebViewController:
     :git: https://github.com/venj/TOWebViewController.git
@@ -45,7 +46,7 @@ CHECKOUT OPTIONS:
     :commit: 8907ce78f11307bef19e9752c6a207e153349344
     :git: https://github.com/venj/MMAppSwitcher.git
   PasscodeLock:
-    :commit: cd559b9e825f7b434f3f37e890d3615eec05a3ed
+    :commit: 415ad9e7f2e37a6ac1b8f1c12a06b7e185a97be6
     :git: https://github.com/venj/SwiftPasscodeLock.git
   TOWebViewController:
     :commit: 54bb3f9624ee97383307d43364665f2ef439bf3a
@@ -67,6 +68,6 @@ SPEC CHECKSUMS:
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
   TOWebViewController: accd62ec0acc8d5c2e1e195c6f7ff7654c3c840c
 
-PODFILE CHECKSUM: e14e8cd742853db71469b6fbbadc328f4e85eadb
+PODFILE CHECKSUM: 50116959b3c0f64206ebfc495e2539fbb3bbdf79
 
 COCOAPODS: 1.3.1

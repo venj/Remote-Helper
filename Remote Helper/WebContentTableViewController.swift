@@ -38,6 +38,10 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             self.showSettings()
         }
 
+        if #available(iOS 11.0, *) {
+            tableView.dropDelegate = self
+        }
+
         // Theme
         navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         navigationController?.navigationBar.tintColor = UIColor.white
@@ -353,3 +357,35 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         }
     }
 }
+
+@available(iOS 11.0, *)
+extension WebContentTableViewController : UITableViewDropDelegate {
+    func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+        let destinationIndexPath: IndexPath
+
+        if let indexPath = coordinator.destinationIndexPath {
+            destinationIndexPath = indexPath
+        }
+        else {
+            let section = tableView.numberOfSections - 1
+            let row = tableView.numberOfRows(inSection: section)
+            destinationIndexPath = IndexPath(row: row, section: section)
+        }
+
+        coordinator.session.loadObjects(ofClass: NSString.self) { [weak self] (items) in
+            guard let `self` = self, let items = items as? [String] else { return }
+            let indexPathes = (0..<items.count).map { IndexPath(row: destinationIndexPath.row + $0, section: destinationIndexPath.section) }
+            self.addresses.append(contentsOf: items.filter { str in
+                if let _ = URL(string: str) {
+                    return true
+                }
+                else {
+                    return false
+                }
+            })
+            self.tableView.insertRows(at: indexPathes, with: .bottom)
+        }
+    }
+}
+
+

@@ -375,14 +375,14 @@ extension WebContentTableViewController : UITableViewDropDelegate {
         coordinator.session.loadObjects(ofClass: NSString.self) { [weak self] (items) in
             guard let `self` = self, let items = items as? [String] else { return }
             let indexPathes = (0..<items.count).map { IndexPath(row: destinationIndexPath.row + $0, section: destinationIndexPath.section) }
-            self.addresses.append(contentsOf: items.filter { str in
+            self.addresses.insert(contentsOf: items.filter { str in
                 if let _ = URL(string: str) {
                     return true
                 }
                 else {
                     return false
                 }
-            })
+            }, at: destinationIndexPath.row)
             self.tableView.insertRows(at: indexPathes, with: .bottom)
         }
     }

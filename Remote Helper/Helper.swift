@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 import PKHUD
-import ReachabilitySwift
+import Reachability
 import SafariServices
 
 @objc
@@ -201,7 +201,7 @@ open class Helper : NSObject {
     
     func showCellularHUD() -> Bool {
         guard let reachability = self.reachability else { return false }
-        if !self.userCellularNetwork && !reachability.isReachableViaWiFi {
+        if !self.userCellularNetwork && reachability.connection != .wifi {
             DispatchQueue.main.async(execute: { () -> Void in
                 self.showHudWithMessage(NSLocalizedString("Cellular data is turned off.", comment: "Cellular data is turned off."))
             })

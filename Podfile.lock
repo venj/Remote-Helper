@@ -1,7 +1,7 @@
 PODS:
-  - Alamofire (4.0.1)
+  - Alamofire (4.6.0)
   - DACircularProgress (2.3.1)
-  - Fuzi (1.0.1)
+  - Fuzi (2.0.1)
   - HexColors (2.2.1)
   - InAppSettingsKit (2.8.1)
   - iOS8Colors (0.1.2):
@@ -14,7 +14,7 @@ PODS:
     - SDWebImage (!= 3.7.2, ~> 3.7)
   - PasscodeLock (1.0.2)
   - PKHUD (5.0.0)
-  - ReachabilitySwift (3)
+  - ReachabilitySwift (4.1.0)
   - SDWebImage (3.8.2):
     - SDWebImage/Core (= 3.8.2)
   - SDWebImage/Core (3.8.2)
@@ -53,9 +53,9 @@ CHECKOUT OPTIONS:
     :git: https://github.com/venj/TOWebViewController.git
 
 SPEC CHECKSUMS:
-  Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
+  Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
-  Fuzi: 851403654bac55675aaeed815d0c8a1d3e3d3e8b
+  Fuzi: f64983dea705491d3aedd32351247a09523e7efd
   HexColors: abfd172e329dab59888614ccba6f216cec59289d
   InAppSettingsKit: 94d2fba3ccd700fc4e32c6d09fabcc0af2426744
   iOS8Colors: 1f6023790704b9119727bf14408182ca33faf31b
@@ -64,7 +64,7 @@ SPEC CHECKSUMS:
   MWPhotoBrowser: 5836d7aa041dc05a13de380c246826578adc5ea5
   PasscodeLock: b2856c4f60ebb83fc11ea4acc2bc184b8bea4990
   PKHUD: 3c001512c6e002091184197a8de7a20420786e3b
-  ReachabilitySwift: f5b9bb30a0777fac8f09ce8b067e32faeb29bb64
+  ReachabilitySwift: 6849231cd4e06559f3b9ef4a97a0a0f96d41e09f
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
   TOWebViewController: accd62ec0acc8d5c2e1e195c6f7ff7654c3c840c
 

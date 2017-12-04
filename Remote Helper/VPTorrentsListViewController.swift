@@ -125,6 +125,18 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     override var preferredStatusBarStyle : UIStatusBarStyle {
         return .lightContent
     }
+
+    func cleanupUselessViewedTitles() {
+        // Clear up useless items
+        var filteredViewedTitles = viewedTitles
+        viewedTitles.forEach { title in
+            if dateList.filter({ title.contains($0) }).count == 0 {
+                guard let i = filteredViewedTitles.index(of: title) else { return }
+                filteredViewedTitles.remove(at: i)
+            }
+        }
+        viewedTitles = filteredViewedTitles
+    }
     
     // MARK: - Table view data source
 
@@ -156,7 +168,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         let title = list?[(indexPath as NSIndexPath).row] ?? ""
         let count = countList?[(indexPath as NSIndexPath).row] ?? 0
         cell.textLabel?.text = "\(title) (\(count))"
-        if viewedTitles.contains(title) {
+        if viewedTitles.filter({ $0.contains(title) }).count == 1 {
             cell.textLabel?.textColor = UIColor.gray
         }
         else {
@@ -175,15 +187,6 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             if !viewedTitles.contains(title) {
                 viewedTitles.append(title)
             }
-            // Clear up useless items
-            var filteredViewedTitles = viewedTitles
-            viewedTitles.forEach {
-                if !dateList.contains($0) {
-                    guard let i = filteredViewedTitles.index(of: $0) else { return }
-                    filteredViewedTitles.remove(at: i)
-                }
-            }
-            viewedTitles = filteredViewedTitles
         }
         self.showPhotoBrowser(forTableView: tableView, atIndexPath: indexPath)
     }
@@ -361,6 +364,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             if response.result.isSuccess {
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
                 self.datesDict = response.result.value as! [String: [Any]]
+                self.cleanupUselessViewedTitles()
                 self.tableView.reloadData()
             }
             else {

@@ -27,16 +27,19 @@ struct Bangumi {
             })
 
             var images: [String] = []
-            doc.css("div.co_content8 div#Zoom p img").forEach { element in
+            doc.css("div.co_content8 #Zoom img").forEach { element in
                 guard let src = element["src"] else { return }
                 images.append(src)
             }
 
-            var info = ""
-            doc.css("div.co_content8 div#Zoom p").forEach { element in
-                let rawXML = element.rawXML.replacingOccurrences(of: "<br>", with: "\n").replacingOccurrences(of: "\r", with: "")
-                info += rawXML.replacingOccurrences(of: "<[^>]+?>", with: "", options: String.CompareOptions.regularExpression, range: rawXML.range(of: rawXML))
-            }
+            let info = doc.css("div.co_content8 #Zoom")
+                .map{$0.rawXML}
+                .joined()
+                .replacingOccurrences(of: "<br>", with: "\n")
+                .replacingOccurrences(of: "\r", with: "")
+                .replacingOccurrences(of: " +", with: "", options: .regularExpression)
+                .replacingOccurrences(of: "<[^>]+?>", with: "", options: .regularExpression)
+                .replacingOccurrences(of: "\\n{3,}", with: "\n\n", options: .regularExpression)
 
             let bangumi = Bangumi(title: title, links: links, images: images, info: info)
             return bangumi

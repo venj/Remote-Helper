@@ -30,7 +30,7 @@ struct Page {
             doc.css("div.co_content8 table td a.ulink").forEach({ (element) in
                 var bangumiLink: [String: String] = [:]
                 guard let link = element["href"] else { return }
-                if link.contains("index.html") || String(link.characters.last!) == "/" { return }
+                if link.contains("index.html") || link.last == "/" { return }
                 let title = element.stringValue
                 bangumiLink["title"] = title
                 bangumiLink["link"] = link
@@ -41,7 +41,7 @@ struct Page {
                 if element.stringValue == "下一页" {
                     guard let link = element["href"] else { return }
                     let url = URL(string: pageLink)!
-                    if link.characters.first != "/".characters.first {
+                    if link.first != "/" {
                         nextPageLink = url.deletingLastPathComponent().appendingPathComponent(link).absoluteString
                     }
                     else {

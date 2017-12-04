@@ -12,7 +12,7 @@ import Foundation
 public extension String {
     func matches(_ pattern: String, regularExpressionOptions:NSRegularExpression.Options = [.caseInsensitive], matchingOptions:NSRegularExpression.MatchingOptions = []) -> Bool {
         guard let regex = try? NSRegularExpression(pattern: pattern, options: regularExpressionOptions) else { return false }
-        let nsRange = NSRange(location: 0, length: self.characters.count)
+        let nsRange = NSRange(location: 0, length: self.count)
         if regex.numberOfMatches(in: self, options: matchingOptions, range:nsRange) > 0 {
             return true
         }
@@ -24,13 +24,15 @@ public extension String {
     func arrayOfCaptureComponentsMatchedByRegex(_ pattern: String) -> [[String]] {
         var result: [[String]] = []
         guard let regex = try? NSRegularExpression(pattern: pattern, options:[.caseInsensitive]) else { return result }
-        let nsRange = NSRange(location: 0, length: self.characters.count)
+        let nsRange = NSRange(location: 0, length: self.count)
         let matches = regex.matches(in: self, options: [], range: nsRange)
         for match in matches {
             var subResult: [String] = []
             for i in 0 ..< match.numberOfRanges {
-                let nsRange = match.rangeAt(i)
-                subResult.append(self.substring(with: self.range(from: nsRange)))
+                let nsRange = match.range(at: i)
+                if let range = Range(nsRange, in: self) {
+                    subResult.append(String(self[range]))
+                }
             }
             if !subResult.isEmpty { result.append(subResult) }
         }

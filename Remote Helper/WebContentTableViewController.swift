@@ -41,7 +41,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         // Theme
         navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
 
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
@@ -188,12 +188,12 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     }
 
     //MARK: - Action
-    func fetchHTMLAndParse() {
+    @objc func fetchHTMLAndParse() {
         guard let html = webViewController.webView.stringByEvaluatingJavaScript(from: "document.body.innerHTML") else { return }
         processHTML(html)
     }
 
-    func addAddress() {
+    @objc func addAddress() {
         let alertController = UIAlertController(title: NSLocalizedString("Add address", comment: "Add address"), message: NSLocalizedString("Please input an address:", comment: "Please input an address:"), preferredStyle: .alert)
         alertController.addTextField { (textField) in
             textField.keyboardType = .URL
@@ -215,7 +215,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         present(alertController, animated: true, completion: nil)
     }
 
-    func showActionSheet() {
+    @objc func showActionSheet() {
         let sheet = UIAlertController(title: NSLocalizedString("Please select your operation", comment: "Please select your operation"), message: nil, preferredStyle: .actionSheet)
         let transmissionAction = UIAlertAction(title: NSLocalizedString("Transmission", comment: "Transmission"), style: .default) { [unowned self] _ in
             self.showTransmission()
@@ -285,7 +285,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         // Theme
         settingsNavigationController.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         settingsNavigationController.navigationBar.tintColor = UIColor.white
-        settingsNavigationController.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+        settingsNavigationController.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
         if UIDevice.current.userInterfaceIdiom == .pad {
             settingsNavigationController.modalPresentationStyle = .formSheet
         }
@@ -311,7 +311,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         let transmissionNavigationController = UINavigationController(rootViewController: transmissionWebViewController!)
         transmissionNavigationController.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         transmissionNavigationController.navigationBar.tintColor = UIColor.white
-        transmissionNavigationController.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+        transmissionNavigationController.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
         DispatchQueue.main.async { [unowned self] in
             self.present(transmissionNavigationController, animated:true, completion: nil)
         }
@@ -327,10 +327,9 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         let patterns = ["magnet:\\?[^\"'<]+", "ed2k://[^\"'&<]+", "thunder://[^\"'&<]+", "ftp://[^\"'&<]+", "qqdl://[^\"'&<]+", "Flashget://[^\"'&<]+"]
         for pattern in patterns {
             guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) else { continue }
-            regex.enumerateMatches(in: html, options: [], range: NSRange(location: 0, length: html.characters.count), using: { (result, _, _) -> Void in
-                if let nsRange = result?.range {
-                    let range = html.range(from: nsRange)
-                    let link = html.substring(with: range)
+            regex.enumerateMatches(in: html, options: [], range: NSRange(location: 0, length: html.count), using: { (result, _, _) -> Void in
+                if let nsRange = result?.range, let range = Range(nsRange, in: html) {
+                    let link = String(html[range])
                     validAddresses.insert(link)
                 }
             })

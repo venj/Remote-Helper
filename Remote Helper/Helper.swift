@@ -81,40 +81,25 @@ open class Helper : NSObject {
 
     func baseLink() -> String {
         let defaults = UserDefaults.standard
-        var host = defaults.string(forKey: ServerHostKey)
-        if host == nil { host = "192.168.1.1" }
-        var port = defaults.string(forKey: ServerPortKey)
-        if port == nil { port = "80" }
-        var subPath = defaults.string(forKey: ServerPathKey)
-        if subPath == nil || subPath == "/" {
-            subPath = ""
+        let host = defaults.string(forKey: ServerHostKey) ?? "192.168.1.1"
+        let port = defaults.string(forKey: ServerPortKey) ?? "80"
+        var subPath = defaults.string(forKey: ServerPathKey) ?? ""
+
+        if subPath.last != "/" {
+            subPath = "/\(String(describing: subPath))"
         }
         else {
-            if subPath!.substring(to: subPath!.characters.index(subPath!.startIndex, offsetBy: 1)) != "/" {
-                subPath = "/\(String(describing: subPath))"
-            }
-            let lastCharIndex = subPath!.characters.index(subPath!.endIndex, offsetBy: -1)
-            if subPath?.substring(from: lastCharIndex) == "/" {
-                subPath = subPath!.substring(to: lastCharIndex)
-            }
+            subPath.removeLast()
         }
-        return "\(host!):\(port!)\(subPath!)"
+        return "\(host):\(port)\(subPath)"
     }
 
-    func fileLink(withPath path:String!) -> String {
+    func fileLink(withPath path:String = "") -> String {
         let defaults = UserDefaults.standard
-        var host = defaults.string(forKey: ServerHostKey)
-        if host == nil { host = "192.168.1.1" }
-        var port = defaults.string(forKey: ServerPortKey)
-        if port == nil { port = "80" }
-        var p = path
-        if p == "" {
-            p = "/"
-        }
-        else if (p?.substring(to: (p?.index((p?.startIndex)!, offsetBy: 1))!) != "/") {
-            p = "/" + p!
-        }
-        return "http\(self.SSL_ADD_S)://\(host!):\(port!)\(p!)"
+        let host = defaults.string(forKey: ServerHostKey) ?? "192.168.1.1"
+        let port = defaults.string(forKey: ServerPortKey) ?? "80"
+        let p = (path.first != "/") ? "/\(path)" : path
+        return "http\(self.SSL_ADD_S)://\(host):\(port)\(p)"
     }
 
     func transmissionServerAddress(withUserNameAndPassword withUnP:Bool = true) -> String {
@@ -127,7 +112,7 @@ open class Helper : NSObject {
             address = "127.0.0.1:9091"
         }
         let userpass = self.usernameAndPassword
-        if userpass.0.characters.count > 0 && userpass.1.characters.count > 0 && withUnP {
+        if userpass.0.count > 0 && userpass.1.count > 0 && withUnP {
             return "http://\(userpass.0):\(userpass.1)@\(address)"
         }
         else {
@@ -239,7 +224,7 @@ open class Helper : NSObject {
         return hud
     }
 
-    func dismissMe(_ sender: UIBarButtonItem) {
+    @objc func dismissMe(_ sender: UIBarButtonItem) {
         AppDelegate.shared().window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
 

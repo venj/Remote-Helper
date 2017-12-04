@@ -37,7 +37,7 @@ class ResourcePageViewController: UITableViewController {
         // Theme
         navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
 
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
@@ -82,7 +82,7 @@ class ResourcePageViewController: UITableViewController {
         var link = bangumi["link"]!
         if !link.contains("http://") {
             let url = URL(string:page!.pageLink)!
-            if link.characters.first != "/".characters.first {
+            if link.first != "/" {
                 link = url.deletingLastPathComponent().appendingPathComponent(link).absoluteString
             }
             else {

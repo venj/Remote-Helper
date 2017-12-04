@@ -94,7 +94,7 @@ class ValidLinksTableViewController: UITableViewController {
 
     //MARK: - Helper
 
-    func copyAll() {
+    @objc func copyAll() {
         UIPasteboard.general.string = self.validLinks.joined(separator: "\n")
         Helper.shared.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
     }

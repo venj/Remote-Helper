@@ -49,7 +49,7 @@ class VPSearchResultController: UITableViewController {
         // Theme
         navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
         tableView.tintColor = Helper.shared.mainThemeColor()
 
         // Revert back to old UITableView behavior
@@ -187,7 +187,7 @@ class VPSearchResultController: UITableViewController {
     }
 
     //MARK: - Action
-    func showWiki() {
+    @objc func showWiki() {
         let webViewController = TOWebViewController(urlString: "http://www.jav11b.com/cn/vl_searchbyid.php?keyword=\(keyword)")
         webViewController?.showUrlWhileLoading = false
         webViewController?.hidesBottomBarWhenPushed = true

@@ -26,7 +26,7 @@ DEPENDENCIES:
   - InAppSettingsKit (~> 2.7)
   - iOS8Colors (~> 0.1.2)
   - MMAppSwitcher (from `https://github.com/venj/MMAppSwitcher.git`)
-  - MWPhotoBrowser (~> 2.1.1)
+  - MWPhotoBrowser
   - PasscodeLock (from `https://github.com/venj/SwiftPasscodeLock.git`)
   - PKHUD
   - ReachabilitySwift
@@ -67,6 +67,6 @@ SPEC CHECKSUMS:
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
   TOWebViewController: accd62ec0acc8d5c2e1e195c6f7ff7654c3c840c
 
-PODFILE CHECKSUM: 97815921e60ebbb009d9fd26ae8c2592ada4207c
+PODFILE CHECKSUM: e14e8cd742853db71469b6fbbadc328f4e85eadb
 
 COCOAPODS: 1.3.1

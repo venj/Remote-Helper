@@ -24,7 +24,7 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
         // Theme
         navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
         navigationController?.toolbar.tintColor = Helper.shared.mainThemeColor()
 
         // Revert back to old UITableView behavior
@@ -71,7 +71,7 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
 
     // MARK: - BarButtonItem Actions
 
-    func selectAllCells(_ sender: Any?) {
+    @objc func selectAllCells(_ sender: Any?) {
         guard let count = bangumi?.links.count, count != 0 else { return }
         if tableView.isEditing {
             for i in 0 ..< count {
@@ -81,7 +81,7 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
         }
     }
 
-    func deSelectAllCells(_ sender: Any?) {
+    @objc func deSelectAllCells(_ sender: Any?) {
         guard let count = bangumi?.links.count, count != 0 else { return }
         if tableView.isEditing {
             for i in 0 ..< count {
@@ -91,13 +91,13 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
         }
     }
 
-    func miDownloadAll(_ sender: Any?) {
+    @objc func miDownloadAll(_ sender: Any?) {
         guard let links = bangumi?.links, links.count > 0 else { return }
         guard let linksToDownload = tableView.indexPathsForSelectedRows?.map({ links[$0.row] }) else { return }
         Helper.shared.miDownloadForLinks(linksToDownload, fallbackIn: self)
     }
 
-    func showEdit(_ sender: UIBarButtonItem?) {
+    @objc func showEdit(_ sender: UIBarButtonItem?) {
         if !tableView.isEditing {
             tableView.setEditing(true, animated: true)
             editButton?.title = NSLocalizedString("Done", comment: "Done")
@@ -183,7 +183,7 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) { }
 
     // MARK: - Actions
-    func showImages(_ sender: Any?) {
+    @objc func showImages(_ sender: Any?) {
         let photoBrowser = MWPhotoBrowser(delegate: self)
         photoBrowser?.displayActionButton = false
         photoBrowser?.displayNavArrows = true
@@ -191,7 +191,7 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
         self.navigationController?.pushViewController(photoBrowser!, animated: true)
     }
 
-    func showInfo(_ sender: Any?) {
+    @objc func showInfo(_ sender: Any?) {
         if let info = bangumi?.info {
             let alert = UIAlertController(title: NSLocalizedString("Infomation", comment: "Infomation"), message: info, preferredStyle: .actionSheet)
             let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .cancel, handler: nil)

@@ -101,7 +101,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         // Theme
         navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
         tableView.tintColor = Helper.shared.mainThemeColor()
 
         // Revert back to old UITableView behavior
@@ -188,11 +188,11 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         self.showPhotoBrowser(forTableView: tableView, atIndexPath: indexPath)
     }
 
-    func photoPreloadFinished(_ notification: Notification) {
+    @objc func photoPreloadFinished(_ notification: Notification) {
         //print("Photo load fihished! \(notification.object)")
     }
 
-    func showNoMorePhotosHUD(_ notification: Notification) {
+    @objc func showNoMorePhotosHUD(_ notification: Notification) {
         Helper.shared.showHudWithMessage(NSLocalizedString("No more photos.", comment: "No more photos."));
     }
 
@@ -263,15 +263,15 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }
 
     //MARK: - Action
-    func showSearch() {
+    @objc func showSearch() {
         Helper.shared.showTorrentSearchAlertInViewController(self.navigationController!)
     }
 
-    func showKitten() {
+    @objc func showKitten() {
         Helper.shared.showTorrentSearchAlertInViewController(self.navigationController!, forKitten: true)
     }
 
-    func hashTorrent() {
+    @objc func hashTorrent() {
         guard let base64FileName = photos[currentPhotoIndex].base64String() else { return }
         let hud = Helper.shared.showHUD()
         let request = Alamofire.request(Helper.shared.hashTorrent(withName: base64FileName))
@@ -352,7 +352,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         }
     }
 
-    func loadTorrentList(_ sender: Any?) {
+    @objc func loadTorrentList(_ sender: Any?) {
         if Helper.shared.showCellularHUD() { return }
         let hud = Helper.shared.showHUD()
         navigationItem.rightBarButtonItem?.isEnabled = false

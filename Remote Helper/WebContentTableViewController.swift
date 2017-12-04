@@ -40,6 +40,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
         if #available(iOS 11.0, *) {
             tableView.dropDelegate = self
+            tableView.dragDelegate = self
         }
 
         // Theme
@@ -356,21 +357,16 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             Helper.shared.kittenBlackList = blackList
         }
     }
+
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        addresses.insert(addresses.remove(at: sourceIndexPath.row), at: destinationIndexPath.row)
+    }
 }
 
 @available(iOS 11.0, *)
 extension WebContentTableViewController : UITableViewDropDelegate {
     func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
-        let destinationIndexPath: IndexPath
-
-        if let indexPath = coordinator.destinationIndexPath {
-            destinationIndexPath = indexPath
-        }
-        else {
-            let section = tableView.numberOfSections - 1
-            let row = tableView.numberOfRows(inSection: section)
-            destinationIndexPath = IndexPath(row: row, section: section)
-        }
+        let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(row: 0, section: 0)
 
         coordinator.session.loadObjects(ofClass: NSString.self) { [weak self] (items) in
             guard let `self` = self, let items = items as? [String] else { return }
@@ -383,9 +379,35 @@ extension WebContentTableViewController : UITableViewDropDelegate {
                     return false
                 }
             }, at: destinationIndexPath.row)
+
             self.tableView.insertRows(at: indexPathes, with: .bottom)
+        }
+    }
+
+    func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+        if session.localDragSession != nil {
+            return UITableViewDropProposal(operation: .move, intent: .automatic)
+        }
+        else {
+            return UITableViewDropProposal(operation: .copy, intent: .automatic)
         }
     }
 }
 
+@available(iOS 11.0, *)
+extension WebContentTableViewController : UITableViewDragDelegate {
+    func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        let urlString = addresses[indexPath.row]
+        let itemProvider = NSItemProvider(object: urlString as NSString)
+        let dragItem = UIDragItem(itemProvider: itemProvider)
+        return [dragItem]
+    }
+
+    func tableView(_ tableView: UITableView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
+        let urlString = addresses[indexPath.row]
+        let itemProvider = NSItemProvider(object: urlString as NSString)
+        let dragItem = UIDragItem(itemProvider: itemProvider)
+        return [dragItem]
+    }
+}
 

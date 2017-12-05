@@ -11,6 +11,7 @@ import Alamofire
 import PKHUD
 import Reachability
 import SafariServices
+import TOWebViewController
 
 @objc
 open class Helper : NSObject {
@@ -404,11 +405,20 @@ open class Helper : NSObject {
 
     func showMiDownload(for link: String, inViewController viewController: UIViewController) {
         guard let miURL = URL(string:(link)) else { return }
-        let sfVC = SFSafariViewController(url: miURL)
-        sfVC.title = NSLocalizedString("Mi Remote", comment: "Mi Remote")
-        sfVC.modalPresentationStyle = .formSheet
-        sfVC.modalTransitionStyle = .coverVertical
-        viewController.navigationController?.present(sfVC, animated: true, completion: nil)
+        if #available(iOS 9.0, *) {
+            let sfVC = SFSafariViewController(url: miURL)
+            sfVC.title = NSLocalizedString("Mi Remote", comment: "Mi Remote")
+            sfVC.modalPresentationStyle = .formSheet
+            sfVC.modalTransitionStyle = .coverVertical
+            viewController.navigationController?.present(sfVC, animated: true, completion: nil)
+        } else {
+            // Fallback on earlier versions
+            let webView = TOWebViewController(url: miURL)!
+            webView.title = NSLocalizedString("Mi Remote", comment: "Mi Remote")
+            webView.modalPresentationStyle = .formSheet
+            webView.modalTransitionStyle = .coverVertical
+            viewController.navigationController?.present(webView, animated: true, completion: nil)
+        }
     }
 
     func transmissionDownload(for link: String) {

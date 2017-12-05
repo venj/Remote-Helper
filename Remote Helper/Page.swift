@@ -26,7 +26,8 @@ struct Page {
         var nextPageLink: String? = nil
         do {
             // get bangumi links
-            let doc = try HTMLDocument(string: html, encoding: .utf8)
+            let replaced = html.replacingOccurrences(of: "charset=gb2312", with: "charset=utf-8")
+            let doc = try HTMLDocument(string: replaced, encoding: .utf8)
             doc.css("div.co_content8 table td a.ulink").forEach({ (element) in
                 var bangumiLink: [String: String] = [:]
                 guard let link = element["href"] else { return }

@@ -373,8 +373,8 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 @available(iOS 11.0, *)
 extension WebContentTableViewController : UITableViewDropDelegate {
     func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+        if coordinator.session.localDragSession != nil { return } // Skip drop-in to prevent copy existing value.
         let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(row: 0, section: 0)
-
         coordinator.session.loadObjects(ofClass: NSString.self) { [weak self] (items) in
             guard let `self` = self, let items = items as? [String] else { return }
             let indexPathes = (0..<items.count).map { IndexPath(row: destinationIndexPath.row + $0, section: destinationIndexPath.section) }

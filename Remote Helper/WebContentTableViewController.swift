@@ -205,7 +205,8 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             textField.clearButtonMode = .whileEditing
             textField.text = "http://"
         }
-        let saveAction = UIAlertAction(title: NSLocalizedString("Save", comment:"Save"), style: .default) { [unowned self] _ in
+        let saveAction = UIAlertAction(title: NSLocalizedString("Save", comment:"Save"), style: .default) { [weak self] _ in
+            guard let `self` = self else { return }
             let address = alertController.textFields![0].text!
             guard let _ = URL(string: address) else { return }
             self.addresses.append(address)
@@ -222,19 +223,23 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     @objc func showActionSheet() {
         let sheet = UIAlertController(title: NSLocalizedString("Please select your operation", comment: "Please select your operation"), message: nil, preferredStyle: .actionSheet)
-        let transmissionAction = UIAlertAction(title: NSLocalizedString("Transmission", comment: "Transmission"), style: .default) { [unowned self] _ in
+        let transmissionAction = UIAlertAction(title: NSLocalizedString("Transmission", comment: "Transmission"), style: .default) { [weak self] _ in
+            guard let `self` = self else { return }
             self.showTransmission()
         }
         sheet.addAction(transmissionAction)
-        let searchAction = UIAlertAction(title: NSLocalizedString("Torrent Search", comment: "Torrent Search"), style: .default) { [unowned self] _ in
+        let searchAction = UIAlertAction(title: NSLocalizedString("Torrent Search", comment: "Torrent Search"), style: .default) { [weak self] _ in
+            guard let `self` = self else { return }
             self.torrentSearch()
         }
         sheet.addAction(searchAction)
-        let searchKittenAction = UIAlertAction(title: NSLocalizedString("Kitten Search", comment: "Kitten Search"), style: .default) { [unowned self] _ in
+        let searchKittenAction = UIAlertAction(title: NSLocalizedString("Kitten Search", comment: "Kitten Search"), style: .default) { [weak self] _ in
+            guard let `self` = self else { return }
             self.torrentSearch(atKitten: true)
         }
         sheet.addAction(searchKittenAction)
-        let settingsAction = UIAlertAction(title: NSLocalizedString("Settings", comment: "Settings"), style: .default) { [unowned self] _ in
+        let settingsAction = UIAlertAction(title: NSLocalizedString("Settings", comment: "Settings"), style: .default) { [weak self] _ in
+            guard let `self` = self else { return }
             self.showSettings()
         }
         sheet.addAction(settingsAction)
@@ -294,7 +299,8 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         if UIDevice.current.userInterfaceIdiom == .pad {
             settingsNavigationController.modalPresentationStyle = .formSheet
         }
-        DispatchQueue.main.async { [unowned self] in
+        DispatchQueue.main.async { [weak self] in
+            guard let `self` = self else { return }
             self.present(settingsNavigationController, animated: true, completion: nil)
         }
     }
@@ -317,7 +323,8 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         transmissionNavigationController.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         transmissionNavigationController.navigationBar.tintColor = UIColor.white
         transmissionNavigationController.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
-        DispatchQueue.main.async { [unowned self] in
+        DispatchQueue.main.async { [weak self] in
+            guard let `self` = self else { return }
             self.present(transmissionNavigationController, animated:true, completion: nil)
         }
     }

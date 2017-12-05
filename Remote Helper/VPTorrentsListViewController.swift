@@ -207,7 +207,8 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             textField.placeholder = "1"
             textField.keyboardType = .numberPad
         }
-        let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK") , style: .default) { [unowned self] _ in
+        let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK") , style: .default) { [weak self] _ in
+            guard let `self` = self else { return }
             var index = 1
             if let i = Int((alertController.textFields?[0].text)!) { index = i }
             if index < 1 { index = 1 }
@@ -330,7 +331,8 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         guard let date = list?[(indexPath as NSIndexPath).row].addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) else { return }
         let hud = Helper.shared.showHUD()
         let request = Alamofire.request(Helper.shared.searchPath(withKeyword: date))
-        request.responseJSON { [unowned self] response in
+        request.responseJSON { [weak self] response in
+            guard let `self` = self else { return }
             hud.hide()
             if response.result.isSuccess {
                 guard let photos = response.result.value as? [String] else { return }
@@ -360,7 +362,8 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         let hud = Helper.shared.showHUD()
         navigationItem.rightBarButtonItem?.isEnabled = false
         let request = Alamofire.request(Helper.shared.torrentsListPath())
-        request.responseJSON { [unowned self] response in
+        request.responseJSON { [weak self] response in
+            guard let `self` = self else { return }
             if response.result.isSuccess {
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
                 self.datesDict = response.result.value as! [String: [Any]]

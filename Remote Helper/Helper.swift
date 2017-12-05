@@ -246,7 +246,8 @@ open class Helper : NSObject {
             let keyword = alertController.textFields![0].text!
             let hud = self.showHUD()
             if forKitten {
-                DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
+                DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                    guard let `self` = self else { return }
                     let url = URL(string: self.kittenSearchPath(withKeyword: keyword))!
                     if let data = try? Data(contentsOf: url) {
                         let torrents = KittenTorrent.parse(data: data)
@@ -284,7 +285,8 @@ open class Helper : NSObject {
             else {
                 let dbSearchPath = self.dbSearchPath(withKeyword: keyword)
                 let request = Alamofire.request(dbSearchPath)
-                request.responseJSON(completionHandler: { [unowned self] response in
+                request.responseJSON(completionHandler: { [weak self] response in
+                    guard let `self` = self else { return }
                     if response.result.isSuccess {
                         guard let responseObject = response.result.value as? [String: Any] else { return }
                         let success = ("\(responseObject["success"]!)" == "1")
@@ -352,7 +354,8 @@ open class Helper : NSObject {
         let params = ["method" : "session-get"]
         let HTTPHeaders = ["X-Transmission-Session-Id" : sessionHeader]
         let request = Alamofire.request(self.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)
-        request.authenticate(user: usernameAndPassword.0, password: usernameAndPassword.1).responseJSON { [unowned self] response in
+        request.authenticate(user: usernameAndPassword.0, password: usernameAndPassword.1).responseJSON { [weak self] response in
+            guard let `self` = self else { return }
             if response.result.isSuccess {
                 let responseObject = response.result.value as! [String:Any]
                 let result = responseObject["result"] as! String
@@ -370,7 +373,8 @@ open class Helper : NSObject {
                     let params = ["method" : "session-get"]
                     let HTTPHeaders = ["X-Transmission-Session-Id" : self.sessionHeader]
                     let request = Alamofire.request(self.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)
-                    request.authenticate(user: self.usernameAndPassword.0, password: self.usernameAndPassword.1).responseJSON { [unowned self] response in
+                    request.authenticate(user: self.usernameAndPassword.0, password: self.usernameAndPassword.1).responseJSON { [weak self] response in
+                        guard let `self` = self else { return }
                         if response.result.isSuccess {
                             let responseObject = response.result.value as! [String:Any]
                             let result = responseObject["result"] as! String

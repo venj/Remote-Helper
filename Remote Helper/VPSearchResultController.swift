@@ -164,7 +164,8 @@ class VPSearchResultController: UITableViewController {
     func loadNextPage() {
         let nextPage = currentPage + 1
         spinner.startAnimating()
-        DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let `self` = self else { return }
             let url = URL(string: Helper.shared.kittenSearchPath(withKeyword: self.keyword, page: nextPage))!
             if let data = try? Data(contentsOf: url) {
                 let trs = KittenTorrent.parse(data: data)

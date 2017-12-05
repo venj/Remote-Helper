@@ -15,6 +15,5 @@ target "Remote Helper" do
   pod 'InAppSettingsKit', '~> 2.7'
   pod 'MWPhotoBrowser'
   pod 'TOWebViewController', :git => 'https://github.com/venj/TOWebViewController.git'
-  pod 'MMAppSwitcher', :git => 'https://github.com/venj/MMAppSwitcher.git'
   pod 'iOS8Colors', '~> 0.1.2'
 end

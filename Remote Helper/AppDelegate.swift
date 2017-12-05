@@ -7,14 +7,13 @@
 //
 
 import UIKit
-import MMAppSwitcher
 import SDWebImage
 import MBProgressHUD
 import PasscodeLock
 import Alamofire
 
 @UIApplicationMain
-class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource, UITabBarControllerDelegate {
+class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelegate {
     var window: UIWindow?
     var fileListViewController: WebContentTableViewController!
     var tabbarController: UITabBarController!
@@ -28,8 +27,6 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        // App Swicher
-        MMAppSwitcher.sharedInstance().setDataSource(self)
         // Configure Alamofire Request Manager
         configureAlamofireManager()
         // FileList
@@ -61,16 +58,11 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
+        // Passcode Lock
+        passcodeLockPresenter.presentPasscodeLock()
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
-        passcodeLockPresenter.presentPasscodeLock()
-
-        let repository = UserDefaultsPasscodeRepository()
-        if !repository.hasPasscode {
-            MMAppSwitcher.sharedInstance().setNeedsUpdate()
-        }
-
         if UserDefaults.standard.bool(forKey: ClearCacheOnExitKey) == true {
             let app = UIApplication.shared
             var identifier: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
@@ -111,13 +103,6 @@ class AppDelegate : UIResponder, UIApplicationDelegate, MMAppSwitcherDataSource,
     //MARK: - Use as singleton
     class func shared() -> AppDelegate {
         return UIApplication.shared.delegate as! AppDelegate
-    }
-
-    //MARK: - MMAppSwitch
-    func viewForCard() -> UIView! {
-        let view = UIView()
-        view.backgroundColor = UIColor.white
-        return view
     }
 
     //MARK: - Alamofire Manager

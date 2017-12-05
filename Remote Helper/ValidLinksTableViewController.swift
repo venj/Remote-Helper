@@ -56,8 +56,16 @@ class ValidLinksTableViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         let link = validLinks[(indexPath as NSIndexPath).row]
         let alertController = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: NSLocalizedString("Do you want to download this link?", comment: "Do you want to download this link?"), preferredStyle: .alert)
-        let downloadAction = UIAlertAction(title: NSLocalizedString("Download", comment: "Download"), style: .default) { [unowned self ] _ in
-            self.download(link)
+        let isMagnet = link.hasPrefix("magnet")
+        let title = isMagnet ? "Transmission" : NSLocalizedString("Download", comment: "Download")
+        let downloadAction = UIAlertAction(title: title, style: .default) { [weak self ] _ in
+            guard let `self` = self else { return }
+            if isMagnet {
+                Helper.shared.transmissionDownload(for: link)
+            }
+            else {
+                self.download(link)
+            }
         }
         alertController.addAction(downloadAction)
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler:nil)
@@ -69,7 +77,8 @@ class ValidLinksTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let link = self.validLinks[(indexPath as NSIndexPath).row]
         // Copy Link
-        let copyAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("Copy", comment: "Copy")) { [unowned self] (_, _) in
+        let copyAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("Copy", comment: "Copy")) { [weak self] (_, _) in
+            guard let `self` = self else { return }
             if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
             UIPasteboard.general.string = link
             Helper.shared.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
@@ -77,13 +86,22 @@ class ValidLinksTableViewController: UITableViewController {
         copyAction.backgroundColor = UIColor.iOS8purple()
 
         // Download Link
-        let downloadAction = UITableViewRowAction(style: .default, title: NSLocalizedString("Download", comment: "Download")) { [unowned self] (_, _) in
+        let isMagnet = link.hasPrefix("magnet")
+        let title = isMagnet ? "Transmission" : NSLocalizedString("Download", comment: "Download")
+        let downloadAction = UITableViewRowAction(style: .default, title: title) { [weak self] (_, _) in
+            guard let `self` = self else { return }
             if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
-            self.download(link)
+            if isMagnet {
+                Helper.shared.transmissionDownload(for: link)
+            }
+            else {
+                self.download(link)
+            }
         }
 
         // Mi Download
-        let miAction = UITableViewRowAction(style: .default, title: NSLocalizedString("Mi", comment: "Mi")) { [unowned self] (_, _) in
+        let miAction = UITableViewRowAction(style: .default, title: NSLocalizedString("Mi", comment: "Mi")) { [weak self] (_, _) in
+            guard let `self` = self else { return }
             if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
             Helper.shared.miDownloadForLink(link, fallbackIn: self)
         }

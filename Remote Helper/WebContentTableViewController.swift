@@ -12,6 +12,7 @@ import PasscodeLock
 import TOWebViewController
 import MWPhotoBrowser
 import InAppSettingsKit
+import CoreData
 
 class WebContentTableViewController: UITableViewController, IASKSettingsDelegate, UIPopoverPresentationControllerDelegate {
     fileprivate let CellIdentifier = "WebContentTableViewCell"
@@ -19,9 +20,13 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     var webViewController:TOWebViewController!
     var settingsViewController: IASKAppSettingsViewController!
     var mwPhotos: [MWPhoto]!
-    var addresses: [String] = [] {
+    var addresses: [ResourceSite] = [] {
         didSet {
-            saveAddresses()
+            addresses.enumerated().forEach({ (args) in
+                let (index, site) = args
+                site.displayOrder = Int64(index)
+            })
+            AppDelegate.shared.saveContext()
         }
     }
 
@@ -31,6 +36,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: CellIdentifier)
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addAddress))
         readAddresses()
+        migrateOldStorageIfNecessary()
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: NSLocalizedString("More", comment: "More"), style: .plain, target: self, action: #selector(showActionSheet))
 
         let defaults = UserDefaults.standard
@@ -70,7 +76,31 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         super.viewWillAppear(animated)
         navigationController?.setToolbarHidden(true, animated: true)
     }
-    
+
+    func migrateOldStorageIfNecessary() {
+        let defaults = UserDefaults.standard
+        let key = "VPAddresses"
+        guard let links = defaults.array(forKey: key) as? [String] else { return }
+        links.forEach {
+            guard let _ = URL(string: $0) else { return }
+            let site = NSEntityDescription.insertNewObject(forEntityName: "ResourceSite", into: AppDelegate.shared.managedObjectContext) as! ResourceSite
+            site.link = $0
+            self.addresses.append(site)
+        }
+        defaults.removeObject(forKey: key)
+        defaults.synchronize()
+    }
+
+    func readAddresses() {
+        let context = AppDelegate.shared.managedObjectContext
+        let fetchRequest = NSFetchRequest<ResourceSite>(entityName: "ResourceSite")
+        let displayOrderDescriptor = NSSortDescriptor(key: "displayOrder", ascending: true)
+        fetchRequest.sortDescriptors = [displayOrderDescriptor]
+        if let addresses = try? context.fetch(fetchRequest) as [ResourceSite] {
+            self.addresses = addresses
+        }
+    }
+
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -84,14 +114,13 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier, for: indexPath)
         let address = self.addresses[(indexPath as NSIndexPath).row]
-        cell.textLabel?.text = address
+        cell.textLabel?.text = address.link
         return cell
     }
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             addresses.remove(at: (indexPath as NSIndexPath).row)
-            saveAddresses()
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
@@ -103,7 +132,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if Helper.shared.showCellularHUD() { return }
-        let urlString = self.addresses[(indexPath as NSIndexPath).row]
+        let urlString = self.addresses[(indexPath as NSIndexPath).row].link
         webViewController = TOWebViewController(urlString: urlString)
         webViewController.showUrlWhileLoading = false
         webViewController.hidesBottomBarWhenPushed = true
@@ -118,6 +147,10 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             webViewController.buttonTintColor = UIColor.white
         }
         navigationController?.pushViewController(webViewController, animated: true)
+    }
+
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        addresses.insert(addresses.remove(at: sourceIndexPath.row), at: destinationIndexPath.row)
     }
 
     //MARK: - UIPopoverPresentationControllerDelegate
@@ -209,8 +242,9 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             guard let `self` = self else { return }
             let address = alertController.textFields![0].text!
             guard let _ = URL(string: address) else { return }
-            self.addresses.append(address)
-            self.saveAddresses()
+            let site = NSEntityDescription.insertNewObject(forEntityName: "ResourceSite", into: AppDelegate.shared.managedObjectContext) as! ResourceSite
+            site.link = address
+            self.addresses.append(site)
             let indexPath = IndexPath(row: self.addresses.count - 1, section: 0)
             self.tableView.insertRows(at: [indexPath], with: .automatic)
         }
@@ -250,21 +284,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         present(sheet, animated: true) {
             sheet.popoverPresentationController?.passthroughViews = nil
         }
-    }
-    
-    func saveAddresses() {
-        let defaults = UserDefaults.standard
-        defaults.set(addresses, forKey: "VPAddresses")
-        defaults.synchronize()
-    }
-
-    func readAddresses() {
-        let defaults = UserDefaults.standard
-        guard let addrs = defaults.object(forKey: "VPAddresses") as? [String] else {
-            addresses = []
-            return
-        }
-        self.addresses = addrs
     }
 
     func showSettings() {
@@ -365,27 +384,32 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         }
     }
 
-    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        addresses.insert(addresses.remove(at: sourceIndexPath.row), at: destinationIndexPath.row)
-    }
 }
 
 @available(iOS 11.0, *)
 extension WebContentTableViewController : UITableViewDropDelegate {
     func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
         if coordinator.session.localDragSession != nil { return } // Skip drop-in to prevent copy existing value.
-        let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(row: 0, section: 0)
+        let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(row: addresses.count, section: 0)
         coordinator.session.loadObjects(ofClass: NSString.self) { [weak self] (items) in
             guard let `self` = self, let items = items as? [String] else { return }
             let indexPathes = (0..<items.count).map { IndexPath(row: destinationIndexPath.row + $0, section: destinationIndexPath.section) }
-            self.addresses.insert(contentsOf: items.filter { str in
+
+            items.filter { str in
                 if let _ = URL(string: str) {
                     return true
                 }
                 else {
                     return false
                 }
-            }, at: destinationIndexPath.row)
+            }
+            .enumerated()
+            .forEach({ (args) in
+                let (index, link) = args
+                let site = NSEntityDescription.insertNewObject(forEntityName: "ResourceSite", into: AppDelegate.shared.managedObjectContext) as! ResourceSite
+                site.link = link
+                self.addresses.insert(site, at: destinationIndexPath.row + index)
+            })
 
             self.tableView.insertRows(at: indexPathes, with: .bottom)
         }
@@ -404,14 +428,14 @@ extension WebContentTableViewController : UITableViewDropDelegate {
 @available(iOS 11.0, *)
 extension WebContentTableViewController : UITableViewDragDelegate {
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-        let urlString = addresses[indexPath.row]
+        guard let urlString = addresses[indexPath.row].link else { return [] }
         let itemProvider = NSItemProvider(object: urlString as NSString)
         let dragItem = UIDragItem(itemProvider: itemProvider)
         return [dragItem]
     }
 
     func tableView(_ tableView: UITableView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
-        let urlString = addresses[indexPath.row]
+        guard let urlString = addresses[indexPath.row].link else { return [] }
         let itemProvider = NSItemProvider(object: urlString as NSString)
         let dragItem = UIDragItem(itemProvider: itemProvider)
         return [dragItem]

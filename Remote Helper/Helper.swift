@@ -226,7 +226,7 @@ open class Helper : NSObject {
     }
 
     @objc func dismissMe(_ sender: UIBarButtonItem) {
-        AppDelegate.shared().window?.rootViewController?.dismiss(animated: true, completion: nil)
+        AppDelegate.shared.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
 
     // Nasty method naming, just for minimum code change
@@ -392,7 +392,7 @@ open class Helper : NSObject {
                             let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
                             alertController.addAction(cancelAction)
                             alertController.view.tintColor = Helper.shared.mainThemeColor()
-                            AppDelegate.shared().window?.rootViewController?.present(alertController, animated: true, completion: nil)
+                            AppDelegate.shared.window?.rootViewController?.present(alertController, animated: true, completion: nil)
                         }
                     }
                 }

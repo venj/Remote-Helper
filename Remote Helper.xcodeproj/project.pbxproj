@@ -46,6 +46,7 @@
 		2575F5711E97B2B7004B4D1E /* NSData+iconv.m in Sources */ = {isa = PBXBuildFile; fileRef = 2575F56E1E97B2B7004B4D1E /* NSData+iconv.m */; };
 		2575F5721E97B2B7004B4D1E /* iconv_wrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = 2575F5701E97B2B7004B4D1E /* iconv_wrapper.c */; };
 		2575F5751E97B359004B4D1E /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2575F5741E97B359004B4D1E /* libiconv.tbd */; };
+		25782C081FD7C77300BD2E6C /* Remote-Helper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 25782C061FD7C77200BD2E6C /* Remote-Helper.xcdatamodeld */; };
 		2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2581D48717544A4C00EF3867 /* InAppSettings.bundle */; };
 		258CD0101A3B28B400B3EB55 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 258CD00F1A3B28B400B3EB55 /* Images.xcassets */; };
 		25AFE0921E94E69600DFB501 /* MiDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25AFE0911E94E69600DFB501 /* MiDownloader.swift */; };
@@ -104,6 +105,7 @@
 		2575F56F1E97B2B7004B4D1E /* iconv_wrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iconv_wrapper.h; sourceTree = "<group>"; };
 		2575F5701E97B2B7004B4D1E /* iconv_wrapper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = iconv_wrapper.c; sourceTree = "<group>"; };
 		2575F5741E97B359004B4D1E /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		25782C071FD7C77300BD2E6C /* Remote-Helper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Remote-Helper.xcdatamodel"; sourceTree = "<group>"; };
 		2581D48717544A4C00EF3867 /* InAppSettings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InAppSettings.bundle; sourceTree = "<group>"; };
 		258CD00F1A3B28B400B3EB55 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		25AFE0911E94E69600DFB501 /* MiDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiDownloader.swift; sourceTree = "<group>"; };
@@ -202,6 +204,7 @@
 		252DFA861753784400FF8199 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				25782C061FD7C77200BD2E6C /* Remote-Helper.xcdatamodeld */,
 				255A7D2D1BEB904E00E6012B /* PasscodeLock.strings */,
 				25F94A601BE5E9FE009C9195 /* Remote Helper-Bridging-Header.h */,
 				252DFA871753784400FF8199 /* Remote Helper-Info.plist */,
@@ -484,6 +487,7 @@
 				2575F5711E97B2B7004B4D1E /* NSData+iconv.m in Sources */,
 				255A7D251BEB8DC700E6012B /* PasscodeLockConfiguration.swift in Sources */,
 				2502ABDF1BE6FBEC004882FE /* String+Base64.swift in Sources */,
+				25782C081FD7C77300BD2E6C /* Remote-Helper.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -689,6 +693,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		25782C061FD7C77200BD2E6C /* Remote-Helper.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				25782C071FD7C77300BD2E6C /* Remote-Helper.xcdatamodel */,
+			);
+			currentVersion = 25782C071FD7C77300BD2E6C /* Remote-Helper.xcdatamodel */;
+			path = "Remote-Helper.xcdatamodeld";
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 252DFA741753784400FF8199 /* Project object */;
 }

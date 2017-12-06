@@ -12,7 +12,7 @@ import TOWebViewController
 import MWPhotoBrowser
 import Alamofire
 
-class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegate, UISearchDisplayDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate {
+class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegate, UIPopoverPresentationControllerDelegate {
     let CellIdentifier = "VPTorrentsListViewCell"
     let localizedStatusStrings: [String: String] = ["completed" : NSLocalizedString("completed", comment: "completed"),
         "waiting" : NSLocalizedString("waiting", comment:"waiting"),
@@ -51,9 +51,9 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }
 
     var currentPhotoIndex: Int = 0
-    var filtereddateList: [String]!
-    var filteredCountList: [Int]!
-    var searchController: UISearchDisplayController!
+    var filtereddateList: [String] = []
+    var filteredCountList: [Int] = []
+    lazy var searchController: UISearchController = UISearchController(searchResultsController: nil)
     var cloudItem: UIBarButtonItem!
     lazy var hashItem: UIBarButtonItem = {
         let item = UIBarButtonItem(image: UIImage(named:"magnet"), style: .plain, target: self, action: #selector(hashTorrent))
@@ -83,19 +83,18 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         title = NSLocalizedString("Torrents", comment: "Torrents")
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(loadTorrentList(_:)))
-        let searchBar = UISearchBar(frame: CGRect(x: 0.0, y: 0.0, width: 0.0, height: 44.0))
+        
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.definesPresentationContext = true
+        let searchBar = searchController.searchBar
+        searchBar.tintColor = UIColor.white
+        searchBar.barTintColor = Helper.shared.mainThemeColor()
         searchBar.keyboardType = .numbersAndPunctuation
-        searchBar.delegate = self
-        searchBar.autoresizingMask = .flexibleWidth
-
-        searchController = UISearchDisplayController(searchBar: searchBar, contentsController: self)
-        searchController.delegate = self
-        searchController.searchResultsDataSource = self
-        searchController.searchResultsDelegate = self
         tableView.tableHeaderView = searchBar
+
         self.loadTorrentList(nil)
 
         // Theme
@@ -141,32 +140,25 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        let list = tableView == self.tableView ? self.dateList : self.filtereddateList
-        if (list != nil) {
-            return 1
-        }
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (tableView == self.tableView) {
-            return self.dateList.count
+        if !searchController.isActive {
+            return dateList.count
         }
         else {
-            return self.filtereddateList.count
+            return filtereddateList.count
         }
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: CellIdentifier)
-        if cell == nil {
-            cell = UITableViewCell(style: .subtitle, reuseIdentifier: CellIdentifier)
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier) ?? UITableViewCell(style: .subtitle, reuseIdentifier: CellIdentifier)
         cell.accessoryType = .detailDisclosureButton
-        let list = tableView == self.tableView ? self.dateList : self.filtereddateList
-        let countList = tableView == self.tableView ? self.countList : self.filteredCountList
-        let title = list?[(indexPath as NSIndexPath).row] ?? ""
-        let count = countList?[(indexPath as NSIndexPath).row] ?? 0
+        let list = !searchController.isActive ? dateList : filtereddateList
+        let cList = !searchController.isActive  ? countList : filteredCountList
+        let title = list[indexPath.row]
+        let count = cList[indexPath.row]
         cell.textLabel?.text = "\(title) (\(count))"
         if viewedTitles.filter({ $0.contains(title) }).count == 1 {
             cell.textLabel?.textColor = UIColor.gray
@@ -188,7 +180,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
                 viewedTitles.append(title)
             }
         }
-        self.showPhotoBrowser(forTableView: tableView, atIndexPath: indexPath)
+        self.showPhotoBrowser(forIndexPath: indexPath)
     }
 
     @objc func photoPreloadFinished(_ notification: Notification) {
@@ -212,29 +204,13 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             var index = 1
             if let i = Int((alertController.textFields?[0].text)!) { index = i }
             if index < 1 { index = 1 }
-            self.showPhotoBrowser(forTableView: tableView, atIndexPath: indexPath, initialPhotoIndex: index - 1)
+            self.showPhotoBrowser(forIndexPath: indexPath, initialPhotoIndex: index - 1)
         }
         alertController.addAction(okAction)
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
         alertController.view.tintColor = Helper.shared.mainThemeColor()
         present(alertController, animated: true, completion: nil)
-    }
-
-    //MARK: - SearchDisplayController Delegate
-    func searchDisplayController(_ controller: UISearchDisplayController, shouldReloadTableForSearch searchString: String?) -> Bool {
-        guard let unwrappedSearchString = searchString else { return false }
-        filtereddateList = dateList
-        filteredCountList = countList
-        for dateString in dateList {
-            if dateString.range(of: unwrappedSearchString) == nil {
-                guard let index = filtereddateList.index(of: dateString) else { continue }
-                filtereddateList.remove(at: index)
-                filteredCountList.remove(at: index)
-            }
-        }
-        searchDisplayController?.searchResultsTableView.reloadData()
-        return true
     }
 
     //MARK: - MWPhotoBrowser delegate
@@ -323,12 +299,12 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }
 
     //MARK: - Helper
-    func showPhotoBrowser(forTableView tableView: UITableView, atIndexPath indexPath: IndexPath, initialPhotoIndex index: Int = 0) {
-        let list = tableView == self.tableView ? self.dateList : self.filtereddateList
-        guard (indexPath as NSIndexPath).row < (list?.count)! else { return }
+    func showPhotoBrowser(forIndexPath indexPath: IndexPath, initialPhotoIndex index: Int = 0) {
+        let list = !searchController.isActive ? dateList : filtereddateList
+        guard (indexPath as NSIndexPath).row < (list.count) else { return }
+        searchController.isActive = false
         if Helper.shared.showCellularHUD() { return }
-        searchController.searchBar.resignFirstResponder()
-        guard let date = list?[(indexPath as NSIndexPath).row].addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) else { return }
+        guard let date = list[(indexPath as NSIndexPath).row].addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) else { return }
         let hud = Helper.shared.showHUD()
         let request = Alamofire.request(Helper.shared.searchPath(withKeyword: date))
         request.responseJSON { [weak self] response in
@@ -379,3 +355,22 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         }
     }
 }
+
+extension VPTorrentsListViewController : UISearchResultsUpdating {
+
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let searchString = searchController.searchBar.text else { return }
+        filtereddateList = dateList
+        filteredCountList = countList
+        for dateString in dateList {
+            if dateString.range(of: searchString) == nil {
+                guard let index = filtereddateList.index(of: dateString) else { continue }
+                filtereddateList.remove(at: index)
+                filteredCountList.remove(at: index)
+            }
+        }
+        self.tableView.reloadData()
+    }
+    
+}
+

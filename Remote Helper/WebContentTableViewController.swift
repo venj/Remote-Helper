@@ -113,14 +113,16 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier, for: indexPath)
-        let address = self.addresses[(indexPath as NSIndexPath).row]
+        let address = self.addresses[indexPath.row]
         cell.textLabel?.text = address.link
         return cell
     }
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            addresses.remove(at: (indexPath as NSIndexPath).row)
+            let site = addresses[indexPath.row]
+            AppDelegate.shared.managedObjectContext.delete(site)
+            addresses.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
@@ -132,7 +134,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if Helper.shared.showCellularHUD() { return }
-        let urlString = self.addresses[(indexPath as NSIndexPath).row].link
+        let urlString = self.addresses[indexPath.row].link
         webViewController = TOWebViewController(urlString: urlString)
         webViewController.showUrlWhileLoading = false
         webViewController.hidesBottomBarWhenPushed = true

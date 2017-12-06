@@ -46,7 +46,7 @@ class ValidLinksTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as UITableViewCell
-        cell.textLabel?.text = parseName(self.validLinks[(indexPath as NSIndexPath).row])
+        cell.textLabel?.text = parseName(self.validLinks[indexPath.row])
         return cell;
     }
 
@@ -54,7 +54,7 @@ class ValidLinksTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let link = validLinks[(indexPath as NSIndexPath).row]
+        let link = validLinks[indexPath.row]
         let alertController = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: NSLocalizedString("Do you want to download this link?", comment: "Do you want to download this link?"), preferredStyle: .alert)
         let isMagnet = link.hasPrefix("magnet")
         let title = isMagnet ? "Transmission" : NSLocalizedString("Download", comment: "Download")
@@ -75,7 +75,7 @@ class ValidLinksTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let link = self.validLinks[(indexPath as NSIndexPath).row]
+        let link = self.validLinks[indexPath.row]
         // Copy Link
         let copyAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("Copy", comment: "Copy")) { [weak self] (_, _) in
             guard let `self` = self else { return }

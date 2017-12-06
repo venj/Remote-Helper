@@ -85,14 +85,15 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         super.viewDidLoad()
         title = NSLocalizedString("Torrents", comment: "Torrents")
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(loadTorrentList(_:)))
-        
+
+        self.definesPresentationContext = true
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
-        searchController.definesPresentationContext = true
         let searchBar = searchController.searchBar
         searchBar.tintColor = UIColor.white
         searchBar.barTintColor = Helper.shared.mainThemeColor()
         searchBar.keyboardType = .numbersAndPunctuation
+        searchBar.sizeToFit()
         tableView.tableHeaderView = searchBar
 
         self.loadTorrentList(nil)
@@ -301,10 +302,10 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     //MARK: - Helper
     func showPhotoBrowser(forIndexPath indexPath: IndexPath, initialPhotoIndex index: Int = 0) {
         let list = !searchController.isActive ? dateList : filtereddateList
-        guard (indexPath as NSIndexPath).row < (list.count) else { return }
+        guard indexPath.row < (list.count) else { return }
         searchController.isActive = false
         if Helper.shared.showCellularHUD() { return }
-        guard let date = list[(indexPath as NSIndexPath).row].addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) else { return }
+        guard let date = list[indexPath.row].addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) else { return }
         let hud = Helper.shared.showHUD()
         let request = Alamofire.request(Helper.shared.searchPath(withKeyword: date))
         request.responseJSON { [weak self] response in

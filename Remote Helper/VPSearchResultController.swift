@@ -93,7 +93,7 @@ class VPSearchResultController: UITableViewController {
         }
 
         // Configure the cell...
-        let torrent = torrents[(indexPath as NSIndexPath).row]
+        let torrent = torrents[indexPath.row]
         if let torrent = torrent as? [String:Any] { // normal torrent
             cell.textLabel?.text = torrent["name"] as? String
             cell.accessoryType = .detailDisclosureButton
@@ -113,14 +113,14 @@ class VPSearchResultController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        let torrent = torrents[(indexPath as NSIndexPath).row]
+        let torrent = torrents[indexPath.row]
         let link = getMagnet(for: torrent)
         Helper.shared.transmissionDownload(for: link)
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let torrent = torrents[(indexPath as NSIndexPath).row]
+        let torrent = torrents[indexPath.row]
         let link = getMagnet(for: torrent)
         let alertController = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: describe(torrent), preferredStyle: .alert)
 

@@ -1,7 +1,3 @@
 /* Localized versions of Info.plist keys */
 
 "CFBundleDisplayName" = "远程助手";
-"Addresses" = "网址";
-"Torrents" = "种子";
-"DYTT" = "电影天堂";
-"Kitten" = "种子喵搜索";

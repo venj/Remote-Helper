@@ -57,6 +57,10 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
         window?.rootViewController = tabbarController
         // Passcode Lock
         passcodeLockPresenter.presentPasscodeLock()
+        // Quick actions
+        if #available(iOS 9.0, *) {
+            createActionMenus()
+        }
         // Window
         self.window?.makeKeyAndVisible()
         return true
@@ -90,17 +94,31 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
     }
 
     @available(iOS 9.0, *)
+    func createActionMenus() {
+        if window?.rootViewController?.traitCollection.forceTouchCapability == .available {
+            let bundleIdentifier = Bundle.main.bundleIdentifier!
+            let addressItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).openaddresses", localizedTitle: "Addresses", localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_addresses"), userInfo: nil)
+            let torrentItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).opentorrents", localizedTitle: "Torrents", localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_torrents"), userInfo: nil)
+            let dyttItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).opendytt", localizedTitle: "DYTT", localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_dytt"), userInfo: nil)
+            let kittenItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).kittensearch", localizedTitle: "Kitten"
+                , localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_kittensearch"), userInfo: nil)
+            UIApplication.shared.shortcutItems = [addressItem, torrentItem, dyttItem, kittenItem]
+        }
+    }
+
+    @available(iOS 9.0, *)
     func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
-        if shortcutItem.type == "me.venj.Video-Player.openaddresses" {
+        let bundleIdentifier = Bundle.main.bundleIdentifier!
+        if shortcutItem.type == "\(bundleIdentifier).openaddresses" {
             self.tabbarController.selectedIndex = 0
         }
-        else if shortcutItem.type == "me.venj.Video-Player.opentorrents" {
+        else if shortcutItem.type == "\(bundleIdentifier).opentorrents" {
             self.tabbarController.selectedIndex = 1
         }
-        else if shortcutItem.type == "me.venj.Video-Player.opendytt" {
+        else if shortcutItem.type == "\(bundleIdentifier).opendytt" {
             self.tabbarController.selectedIndex = 2
         }
-        else if shortcutItem.type == "me.venj.Video-Player.kittensearch" {
+        else if shortcutItem.type == "\(bundleIdentifier).kittensearch" {
             Helper.shared.showTorrentSearchAlertInViewController(window?.rootViewController, forKitten: true)
         }
     }

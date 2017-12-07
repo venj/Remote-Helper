@@ -46,41 +46,6 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>UIApplicationShortcutItems</key>
-	<array>
-		<dict>
-			<key>UIApplicationShortcutItemIconFile</key>
-			<string>shortcut_addresses</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>Addresses</string>
-			<key>UIApplicationShortcutItemType</key>
-			<string>me.venj.Video-Player.openaddresses</string>
-		</dict>
-		<dict>
-			<key>UIApplicationShortcutItemIconFile</key>
-			<string>shortcut_torrents</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>Torrents</string>
-			<key>UIApplicationShortcutItemType</key>
-			<string>me.venj.Video-Player.opentorrents</string>
-		</dict>
-		<dict>
-			<key>UIApplicationShortcutItemIconFile</key>
-			<string>shortcut_dytt</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>DYTT</string>
-			<key>UIApplicationShortcutItemType</key>
-			<string>me.venj.Video-Player.opendytt</string>
-		</dict>
-		<dict>
-			<key>UIApplicationShortcutItemIconFile</key>
-			<string>shortcut_kittensearch</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>Kitten</string>
-			<key>UIApplicationShortcutItemType</key>
-			<string>me.venj.Video-Player.kittensearch</string>
-		</dict>
-	</array>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

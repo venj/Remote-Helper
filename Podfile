@@ -13,7 +13,7 @@ target "Remote Helper" do
 
   # Objective-C
   pod 'InAppSettingsKit', '~> 2.7'
-  pod 'MWPhotoBrowser'
+  pod 'MWPhotoBrowser', :git => 'https://github.com/venj/MWPhotoBrowser.git', :branch => 'master'
   pod 'TOWebViewController', :git => 'https://github.com/venj/TOWebViewController.git'
   pod 'iOS8Colors', '~> 0.1.2'
 end

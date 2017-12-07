@@ -48,7 +48,7 @@ CHECKOUT OPTIONS:
     :commit: 883ac2175e782c319d73085d6fd488726d2f405a
     :git: https://github.com/venj/SwiftPasscodeLock.git
   TOWebViewController:
-    :commit: 54bb3f9624ee97383307d43364665f2ef439bf3a
+    :commit: bb605dab9b18d4417c2a349d44bacd7ef3565340
     :git: https://github.com/venj/TOWebViewController.git
 
 SPEC CHECKSUMS:

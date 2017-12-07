@@ -59,6 +59,11 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             tableView.cellLayoutMarginsFollowReadableWidth = false
         }
 
+        // Peek
+        if #available(iOS 9.0, *), traitCollection.forceTouchCapability == .available {
+            registerForPreviewing(with: self, sourceView: tableView)
+        }
+
         // Update Kittent Black list.
         updateKittenBlackList()
     }
@@ -134,20 +139,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if Helper.shared.showCellularHUD() { return }
-        let urlString = self.addresses[indexPath.row].link
-        webViewController = TOWebViewController(urlString: urlString)
-        webViewController.showUrlWhileLoading = false
-        webViewController.hidesBottomBarWhenPushed = true
-        webViewController.urlRequest.cachePolicy = .returnCacheDataElseLoad
-        webViewController.additionalBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(fetchHTMLAndParse))]
-        // Theme
-        webViewController.loadingBarTintColor = Helper.shared.mainThemeColor()
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            webViewController.buttonTintColor = Helper.shared.mainThemeColor()
-        }
-        else {
-            webViewController.buttonTintColor = UIColor.white
-        }
+        webViewController = createWebViewController(forIndexPath: indexPath)
         navigationController?.pushViewController(webViewController, animated: true)
     }
 
@@ -386,6 +378,24 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         }
     }
 
+    func createWebViewController(forIndexPath indexPath: IndexPath) -> TOWebViewController? {
+        let urlString = addresses[indexPath.row].link
+        let webViewController = TOWebViewController(urlString: urlString)
+        webViewController?.showUrlWhileLoading = false
+        webViewController?.hidesBottomBarWhenPushed = true
+        webViewController?.urlRequest.cachePolicy = .returnCacheDataElseLoad
+        webViewController?.additionalBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(fetchHTMLAndParse))]
+        // Theme
+        webViewController?.loadingBarTintColor = Helper.shared.mainThemeColor()
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            webViewController?.buttonTintColor = Helper.shared.mainThemeColor()
+        }
+        else {
+            webViewController?.buttonTintColor = UIColor.white
+        }
+        return webViewController
+    }
+
 }
 
 @available(iOS 11.0, *)
@@ -444,3 +454,20 @@ extension WebContentTableViewController : UITableViewDragDelegate {
     }
 }
 
+@available(iOS 9.0, *)
+extension WebContentTableViewController : UIViewControllerPreviewingDelegate {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let indexPath = tableView.indexPathForRow(at: location),
+            let cell = tableView.cellForRow(at: indexPath) else { return nil }
+        guard let webViewController = createWebViewController(forIndexPath: indexPath) else { return nil }
+        webViewController.isPeeking = true
+        previewingContext.sourceRect = cell.frame
+        return webViewController
+    }
+
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        navigationController?.pushViewController(viewControllerToCommit, animated: true)
+        (viewControllerToCommit as? TOWebViewController)?.isPeeking = false
+    }
+
+}

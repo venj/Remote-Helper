@@ -466,8 +466,7 @@ extension WebContentTableViewController : UIViewControllerPreviewingDelegate {
     }
 
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
-        navigationController?.pushViewController(viewControllerToCommit, animated: true)
+        navigationController?.pushViewController(viewControllerToCommit, animated: false)
         (viewControllerToCommit as? TOWebViewController)?.isPeeking = false
     }
-
 }

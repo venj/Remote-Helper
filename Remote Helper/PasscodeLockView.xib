@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -30,7 +30,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1wK-Ol-7mm">
-                    <rect key="frame" x="169" y="185.5" width="37" height="23"/>
+                    <rect key="frame" x="169" y="152.5" width="37" height="23"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="23" id="pXx-gK-t4u"/>
                     </constraints>
@@ -49,7 +49,7 @@
                     </variation>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HbT-GO-CPk">
-                    <rect key="frame" x="148" y="212.5" width="79" height="18"/>
+                    <rect key="frame" x="148" y="179.5" width="79" height="18"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="18" id="5ES-wI-yvt"/>
                     </constraints>
@@ -68,9 +68,9 @@
                     </variation>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HcN-lo-9Jb" userLabel="Placeholders">
-                    <rect key="frame" x="140.5" y="246.5" width="94" height="16"/>
+                    <rect key="frame" x="140.5" y="213.5" width="94" height="16"/>
                     <subviews>
-                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="w14-Kb-Jnf" userLabel="Placeholder 1" customClass="PasscodeSignPlaceholderView" customModule="PasscodeLock">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w14-Kb-Jnf" userLabel="Placeholder 1" customClass="PasscodeSignPlaceholderView" customModule="PasscodeLock">
                             <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>
                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <color key="tintColor" red="0.80049198865890503" green="0.39310717582702637" blue="0.55723905563354492" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -83,7 +83,7 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </view>
-                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OSf-H5-f20" userLabel="Placeholder 2" customClass="PasscodeSignPlaceholderView" customModule="PasscodeLock">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OSf-H5-f20" userLabel="Placeholder 2" customClass="PasscodeSignPlaceholderView" customModule="PasscodeLock">
                             <rect key="frame" x="26" y="0.0" width="16" height="16"/>
                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <color key="tintColor" red="0.80049198865890503" green="0.39310717582702637" blue="0.55723905563354492" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -96,7 +96,7 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </view>
-                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Tg-dE-gH4" userLabel="Placeholder 3" customClass="PasscodeSignPlaceholderView" customModule="PasscodeLock">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Tg-dE-gH4" userLabel="Placeholder 3" customClass="PasscodeSignPlaceholderView" customModule="PasscodeLock">
                             <rect key="frame" x="52" y="0.0" width="16" height="16"/>
                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <color key="tintColor" red="0.80049198865890503" green="0.39310717582702637" blue="0.55723905563354492" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -109,7 +109,7 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </view>
-                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fhs-1e-Ysl" userLabel="Placeholder 4" customClass="PasscodeSignPlaceholderView" customModule="PasscodeLock">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fhs-1e-Ysl" userLabel="Placeholder 4" customClass="PasscodeSignPlaceholderView" customModule="PasscodeLock">
                             <rect key="frame" x="78" y="0.0" width="16" height="16"/>
                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <color key="tintColor" red="0.80049198865890503" green="0.39310717582702637" blue="0.55723905563354492" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -162,7 +162,7 @@
                     </variation>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cuq-ue-Jyj" customClass="PasscodeSignButton" customModule="PasscodeLock">
-                    <rect key="frame" x="132.5" y="286.5" width="30" height="38"/>
+                    <rect key="frame" x="87.5" y="253.5" width="60" height="60"/>
                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="21"/>
                     <state key="normal" title="1">
                         <color key="titleColor" red="0.85506367683410645" green="0.39783206582069397" blue="0.20176184177398682" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -187,7 +187,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CGh-ph-49t" customClass="PasscodeSignButton" customModule="PasscodeLock">
-                    <rect key="frame" x="172.5" y="286.5" width="30" height="38"/>
+                    <rect key="frame" x="157.5" y="253.5" width="60" height="60"/>
                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="21"/>
                     <state key="normal" title="2">
                         <color key="titleColor" red="0.85506367683410645" green="0.39783206582069397" blue="0.20176184177398682" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -212,7 +212,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pLy-90-g1a" customClass="PasscodeSignButton" customModule="PasscodeLock">
-                    <rect key="frame" x="212.5" y="286.5" width="30" height="38"/>
+                    <rect key="frame" x="227.5" y="253.5" width="60" height="60"/>
                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="21"/>
                     <state key="normal" title="3">
                         <color key="titleColor" red="0.85506367683410645" green="0.39783206582069397" blue="0.20176184177398682" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -237,7 +237,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RR4-5o-pli" customClass="PasscodeSignButton" customModule="PasscodeLock">
-                    <rect key="frame" x="132.5" y="334.5" width="30" height="38"/>
+                    <rect key="frame" x="87.5" y="323.5" width="60" height="60"/>
                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="21"/>
                     <state key="normal" title="4">
                         <color key="titleColor" red="0.85506367683410645" green="0.39783206582069397" blue="0.20176184177398682" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -262,7 +262,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C9Z-3u-ohd" customClass="PasscodeSignButton" customModule="PasscodeLock">
-                    <rect key="frame" x="172.5" y="334.5" width="30" height="38"/>
+                    <rect key="frame" x="157.5" y="323.5" width="60" height="60"/>
                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="21"/>
                     <state key="normal" title="5">
                         <color key="titleColor" red="0.85506367683410645" green="0.39783206582069397" blue="0.20176184177398682" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -287,7 +287,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WDx-aD-wJK" customClass="PasscodeSignButton" customModule="PasscodeLock">
-                    <rect key="frame" x="212.5" y="334.5" width="30" height="38"/>
+                    <rect key="frame" x="227.5" y="323.5" width="60" height="60"/>
                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="21"/>
                     <state key="normal" title="6">
                         <color key="titleColor" red="0.85506367683410645" green="0.39783206582069397" blue="0.20176184177398682" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -312,7 +312,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RA8-jd-dag" customClass="PasscodeSignButton" customModule="PasscodeLock">
-                    <rect key="frame" x="132.5" y="382.5" width="30" height="38"/>
+                    <rect key="frame" x="87.5" y="393.5" width="60" height="60"/>
                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="21"/>
                     <state key="normal" title="7">
                         <color key="titleColor" red="0.85506367683410645" green="0.39783206582069397" blue="0.20176184177398682" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -337,7 +337,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PbJ-Y8-MMf" customClass="PasscodeSignButton" customModule="PasscodeLock">
-                    <rect key="frame" x="172.5" y="382.5" width="30" height="38"/>
+                    <rect key="frame" x="157.5" y="393.5" width="60" height="60"/>
                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="21"/>
                     <state key="normal" title="8">
                         <color key="titleColor" red="0.85506367683410645" green="0.39783206582069397" blue="0.20176184177398682" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -362,7 +362,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EUD-XB-0CR" customClass="PasscodeSignButton" customModule="PasscodeLock">
-                    <rect key="frame" x="212.5" y="382.5" width="30" height="38"/>
+                    <rect key="frame" x="227.5" y="393.5" width="60" height="60"/>
                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="21"/>
                     <state key="normal" title="9">
                         <color key="titleColor" red="0.85506367683410645" green="0.39783206582069397" blue="0.20176184177398682" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -387,7 +387,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0CR-0R-0Nr" customClass="PasscodeSignButton" customModule="PasscodeLock">
-                    <rect key="frame" x="172.5" y="430.5" width="30" height="38"/>
+                    <rect key="frame" x="157.5" y="463.5" width="60" height="60"/>
                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="21"/>
                     <state key="normal" title="0">
                         <color key="titleColor" red="0.85506367683410645" green="0.39783206582069397" blue="0.20176184177398682" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -412,7 +412,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="etg-x7-Mx1">
-                    <rect key="frame" x="119.5" y="436.5" width="56" height="26"/>
+                    <rect key="frame" x="89.5" y="480.5" width="56" height="26"/>
                     <inset key="contentEdgeInsets" minX="4" minY="4" maxX="4" maxY="4"/>
                     <state key="normal" title="Cancel">
                         <color key="titleColor" red="0.85506367683410645" green="0.39783206582069397" blue="0.20176184177398682" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -432,7 +432,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H78-kl-y6L">
-                    <rect key="frame" x="201.5" y="436.5" width="53" height="26"/>
+                    <rect key="frame" x="231.5" y="480.5" width="53" height="26"/>
                     <inset key="contentEdgeInsets" minX="4" minY="4" maxX="4" maxY="4"/>
                     <state key="normal" title="Delete">
                         <color key="titleColor" red="0.85506367683410645" green="0.39783206582069397" blue="0.20176184177398682" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -523,37 +523,37 @@
             </constraints>
             <variation key="default">
                 <mask key="constraints">
-                    <exclude reference="pGP-ud-HDy"/>
+                    <exclude reference="9sb-xU-HbN"/>
                     <exclude reference="L13-EJ-sVs"/>
                     <exclude reference="aEu-pq-zn3"/>
-                    <exclude reference="9sb-xU-HbN"/>
                     <exclude reference="l4O-de-yrI"/>
                     <exclude reference="rWK-T2-PKI"/>
                     <exclude reference="s40-lf-3hn"/>
+                    <exclude reference="pGP-ud-HDy"/>
                     <exclude reference="Ibw-FI-adi"/>
                     <exclude reference="fvB-sb-87q"/>
-                    <exclude reference="1xg-dQ-QCp"/>
-                    <exclude reference="5Hg-CH-gza"/>
-                    <exclude reference="g6W-Io-vyH"/>
-                    <exclude reference="sw4-oW-rGU"/>
                     <exclude reference="BtD-tR-fuQ"/>
                     <exclude reference="c43-tL-Fic"/>
                     <exclude reference="gTM-Sz-nLh"/>
                     <exclude reference="t2n-hP-I5o"/>
-                    <exclude reference="3Qq-gQ-B0r"/>
-                    <exclude reference="QIl-0U-p8V"/>
+                    <exclude reference="1xg-dQ-QCp"/>
+                    <exclude reference="5Hg-CH-gza"/>
+                    <exclude reference="g6W-Io-vyH"/>
+                    <exclude reference="sw4-oW-rGU"/>
                     <exclude reference="feB-ke-eyV"/>
                     <exclude reference="kdQ-s6-PQr"/>
+                    <exclude reference="3Qq-gQ-B0r"/>
+                    <exclude reference="QIl-0U-p8V"/>
                     <exclude reference="50h-xk-d2c"/>
                     <exclude reference="9GS-xC-tMT"/>
                     <exclude reference="Sde-nw-WU7"/>
                     <exclude reference="u4l-8m-NPd"/>
-                    <exclude reference="kzg-tm-5Zq"/>
-                    <exclude reference="rfH-68-5Mi"/>
-                    <exclude reference="wxJ-fE-jem"/>
                     <exclude reference="8yl-6a-hV9"/>
                     <exclude reference="NP6-Q5-kru"/>
                     <exclude reference="Obm-d0-67e"/>
+                    <exclude reference="kzg-tm-5Zq"/>
+                    <exclude reference="rfH-68-5Mi"/>
+                    <exclude reference="wxJ-fE-jem"/>
                     <exclude reference="6xs-wh-TqS"/>
                     <exclude reference="nxZ-gX-X2z"/>
                     <exclude reference="qZd-LC-AtP"/>
@@ -564,23 +564,29 @@
             </variation>
             <variation key="heightClass=compact">
                 <mask key="constraints">
-                    <exclude reference="1pk-a8-KUM"/>
-                    <exclude reference="6wf-5d-CCI"/>
-                    <include reference="pGP-ud-HDy"/>
+                    <include reference="9sb-xU-HbN"/>
+                    <exclude reference="F4T-j8-jQJ"/>
                     <include reference="L13-EJ-sVs"/>
                     <exclude reference="OLY-LF-tHd"/>
                     <exclude reference="aEu-pq-zn3"/>
-                    <include reference="9sb-xU-HbN"/>
-                    <exclude reference="F4T-j8-jQJ"/>
                     <exclude reference="Qsk-IW-9CJ"/>
                     <exclude reference="Wqo-IM-yCU"/>
                     <include reference="l4O-de-yrI"/>
                     <include reference="rWK-T2-PKI"/>
                     <include reference="s40-lf-3hn"/>
+                    <exclude reference="1pk-a8-KUM"/>
+                    <exclude reference="6wf-5d-CCI"/>
+                    <include reference="pGP-ud-HDy"/>
                     <exclude reference="3Jc-aw-8VW"/>
                     <include reference="Ibw-FI-adi"/>
                     <exclude reference="diZ-Kj-1hU"/>
                     <include reference="fvB-sb-87q"/>
+                    <exclude reference="6jk-5n-EC0"/>
+                    <include reference="BtD-tR-fuQ"/>
+                    <exclude reference="XXL-dB-dNT"/>
+                    <include reference="c43-tL-Fic"/>
+                    <include reference="gTM-Sz-nLh"/>
+                    <include reference="t2n-hP-I5o"/>
                     <include reference="1xg-dQ-QCp"/>
                     <include reference="5Hg-CH-gza"/>
                     <exclude reference="EsN-cG-KcQ"/>
@@ -589,36 +595,30 @@
                     <include reference="g6W-Io-vyH"/>
                     <exclude reference="luj-6S-dgY"/>
                     <include reference="sw4-oW-rGU"/>
-                    <exclude reference="6jk-5n-EC0"/>
-                    <include reference="BtD-tR-fuQ"/>
-                    <exclude reference="XXL-dB-dNT"/>
-                    <include reference="c43-tL-Fic"/>
-                    <include reference="gTM-Sz-nLh"/>
-                    <include reference="t2n-hP-I5o"/>
-                    <include reference="3Qq-gQ-B0r"/>
-                    <include reference="QIl-0U-p8V"/>
-                    <exclude reference="inw-ZS-osP"/>
-                    <exclude reference="mfW-ld-bDO"/>
                     <exclude reference="MLY-Mh-BhE"/>
                     <exclude reference="a7m-oE-Ygy"/>
                     <include reference="feB-ke-eyV"/>
                     <include reference="kdQ-s6-PQr"/>
+                    <include reference="3Qq-gQ-B0r"/>
+                    <include reference="QIl-0U-p8V"/>
+                    <exclude reference="inw-ZS-osP"/>
+                    <exclude reference="mfW-ld-bDO"/>
                     <include reference="50h-xk-d2c"/>
                     <include reference="9GS-xC-tMT"/>
                     <exclude reference="R1h-wb-tm1"/>
                     <include reference="Sde-nw-WU7"/>
                     <exclude reference="Vo4-YP-n8O"/>
                     <include reference="u4l-8m-NPd"/>
-                    <include reference="kzg-tm-5Zq"/>
-                    <include reference="rfH-68-5Mi"/>
-                    <exclude reference="uxL-V3-wEY"/>
-                    <exclude reference="v5R-tE-Ub7"/>
-                    <include reference="wxJ-fE-jem"/>
                     <include reference="8yl-6a-hV9"/>
                     <include reference="NP6-Q5-kru"/>
                     <include reference="Obm-d0-67e"/>
                     <exclude reference="Q3h-lx-rxt"/>
                     <exclude reference="bc8-gr-atX"/>
+                    <include reference="kzg-tm-5Zq"/>
+                    <include reference="rfH-68-5Mi"/>
+                    <exclude reference="uxL-V3-wEY"/>
+                    <exclude reference="v5R-tE-Ub7"/>
+                    <include reference="wxJ-fE-jem"/>
                     <exclude reference="16E-tM-5HY"/>
                     <include reference="6xs-wh-TqS"/>
                     <exclude reference="Sah-YV-A2O"/>

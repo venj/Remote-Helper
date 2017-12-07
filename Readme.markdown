@@ -13,16 +13,34 @@
 	``` bash
 	git clone https://github.com/venj/Remote-Helper.git
 	cd Remote-Helper
-	gem install cocoapods --pre # For CocoaPods 1.0 beta
+	gem install cocoapods
 	pod install
-	patch -p1 -i MWPhotoBrowser.patch # 打补丁
 	```
 
-2. 用Xcode 7.x打开Remote-Helper.xcworkspace
+2. 用Xcode 9.x打开`Remote Helper.xcworkspace`
 3. 编译安装
 
 新功能介绍
 ---------
+
+**3.8**
+
+一大波新特征...
+
+- 网页链接列表支持 Peek
+- 网址链接列表现已使用Core Data存储
+- 网址链接列表支持iOS 11的拖放链接（iPad）
+- 种子喵搜索
+- 种子列表支持存储已读状态
+- 种子列表显示图片数量（需要最新版服务端支持）
+- 加入电影天堂板块
+- 移除迅雷离线支持
+- 增加小米远程支持
+- 适配了新的iOS API
+- 再次支持 iOS 8+
+- 源码使用 Swift 4 编写
+
+(中间忽略大量更新日志...)
 
 **2.0 (???)**
 

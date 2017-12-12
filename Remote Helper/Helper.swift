@@ -258,10 +258,10 @@ open class Helper : NSObject {
                             }
                             return
                         }
-                        let searchResultController = VPSearchResultController()
-                        searchResultController.torrents = torrents
-                        searchResultController.keyword = keyword
                         DispatchQueue.main.async {
+                            let searchResultController = VPSearchResultController()
+                            searchResultController.torrents = torrents
+                            searchResultController.keyword = keyword
                             if let navigationController = viewController as? UINavigationController {
                                 navigationController.pushViewController(searchResultController, animated: true)
                             }

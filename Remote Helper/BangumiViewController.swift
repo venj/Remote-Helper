@@ -182,6 +182,10 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) { }
 
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .none
+    }
+
     // MARK: - Actions
     @objc func showImages(_ sender: Any?) {
         let photoBrowser = MWPhotoBrowser(delegate: self)

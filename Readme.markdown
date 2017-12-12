@@ -1,12 +1,14 @@
-远程下载助手
-===========
+# 远程下载助手
 
 一个简单的远程下载客户端，请配合[服务器端](https://github.com/venj/movie_server)一起使用。
 
-![截图](screenshots/1.png) 
+**从 v3.8 开始，客户端可以脱离服务端使用。如果没有服务端，客户端将缺少种子功能。**
 
-编译安装
--------
+![截图](screenshots/1.png)  ![截图](screenshots/2.png) 
+
+![截图](screenshots/3.png)  ![截图](screenshots/4.png) 
+
+## 编译安装
 
 1. 执行如下命令：
 
@@ -20,8 +22,60 @@
 2. 用Xcode 9.x打开`Remote Helper.xcworkspace`
 3. 编译安装
 
-新功能介绍
----------
+## 使用说明
+
+1. 你需要准备在电脑，服务器或者 NAS 上安装一个 Transmission，并打开远程访问。
+2. 如果你有小米路由器，并开启了远程下载的话，你需要一个可用的小米账号（这不是废话吗）。
+3. （可选）你需要在服务器上部署一个[服务器端](https://github.com/venj/movie_server)，并配置好爬种服务。
+4. （可选）如果你有群晖 NAS，你可以在手机上安装 DS Download 客户端。
+
+### 关于设置：
+
+如果作为独立客户端使用，你只需要配置蓝色框中的这些选项。
+
+![截图](screenshots/settings_example.png) 
+
+### 主要设置项说明
+
+#### Server Settings
+
+选项 | 作用
+--- | ---
+Host<sup>1</sup> | 服务端地址
+Port | 服务端端口
+Path | 服务端请求路径
+
+#### Transmission Settings
+
+选项 | 作用
+--- | ---
+Host<sup>2</sup> | 服务端地址(需要包括端口号，如果是特殊端口的话)
+Username | Transmission远程访问用户名
+Password | Transmission远程访问密码
+
+#### Mi Remote Settings
+
+选项 | 作用
+--- | ---
+Username | 小米账号用户名
+Password | 小米账号密码
+
+#### Request Settings
+
+选项 | 作用
+--- | ---
+Custom UA | 服务端的自定义User-Agent
+Use SSL | 服务端地址是否配置了 HTTPS
+Allow Use Cellular Network | 允许手机网络下使用
+
+备注
+
+1. 如果不配合服务端使用，服务器设置部分的 Host 保持默认（或设置为4个字符以下的任意内容）。
+2. Transmission 设置部分的地址必须包含端口，别问我为什么没有把端口单独作为选项列出来😓。
+
+其他配置项不重要，就不一一说明了。
+
+## 新功能介绍
 
 **3.8**
 
@@ -210,17 +264,7 @@
     + 如果应用程序位于后台（并没有被杀死的时候）再次打开程序可能会出现之前浏览的画面大约0.?秒
     + 密码锁以全屏Modal的方式在iPad上显示，用来避免程序主界面无法被完全覆盖
 
-更多截图
--------
-
-![截图](screenshots/2.png) 
-
-![截图](screenshots/3.png) 
-
-![截图](screenshots/4.png) 
-
-版权许可
--------
+## 版权许可
 
 [The MIT License (MIT)](http://opensource.org/licenses/MIT)
 Copyright (c) 2013 venj

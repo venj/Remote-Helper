@@ -229,7 +229,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     func photoBrowser(_ photoBrowser: MWPhotoBrowser!, didDisplayPhotoAt index: UInt) {
         currentPhotoIndex = Int(index)
-        photoBrowser.navigationItem.rightBarButtonItems  = [kittenItem, searchItem, hashItem]
+        photoBrowser.navigationItem.rightBarButtonItems  = Configuration.shared.hasTorrentServer ? [kittenItem, searchItem, hashItem] : [kittenItem, hashItem]
     }
 
     func photoBrowser(_ photoBrowser: MWPhotoBrowser!, titleForPhotoAt index: UInt) -> String! {

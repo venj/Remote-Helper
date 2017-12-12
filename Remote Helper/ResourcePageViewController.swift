@@ -108,6 +108,10 @@ class ResourcePageViewController: UITableViewController {
         }
     }
 
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .none
+    }
+
     func process(_ link: String) {
         let hud = Helper.shared.showHUD()
         let request = Alamofire.request(link)

@@ -34,26 +34,11 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
         self.window = UIWindow(frame: UIScreen.main.bounds)
         // Configure Alamofire Request Manager
         configureAlamofireManager()
-        // FileList
-        fileListViewController = WebContentTableViewController()
-        fileListViewController.title = NSLocalizedString("Addresses", comment: "Addresses")
-        fileListViewController.tabBarItem.image = UIImage(named: "tab_cloud")
-        let fileListNavigationController = UINavigationController(rootViewController: fileListViewController)
-        // torrent list
-        let torrentListViewController = VPTorrentsListViewController()
-        torrentListViewController.title = NSLocalizedString("Torrents", comment: "Torrents")
-        torrentListViewController.tabBarItem.image = UIImage(named: "tab_torrents")
-        let torrentListNavigationController = UINavigationController(rootViewController: torrentListViewController)
-        // DYTT
-        let resourceSiteViewController = ResourceSiteCatagoriesViewController()
-        resourceSiteViewController.title = NSLocalizedString("DYTT", comment: "DYTT")
-        resourceSiteViewController.tabBarItem.image = UIImage(named: "tab_dytt")
-        let resourceSiteNavigationController = UINavigationController(rootViewController: resourceSiteViewController)
         // Tabbar
         tabbarController = UITabBarController()
         tabbarController.delegate = self
-        tabbarController.viewControllers = [fileListNavigationController, torrentListNavigationController, resourceSiteNavigationController]
         tabbarController.tabBar.tintColor = Helper.shared.mainThemeColor()
+        configureTabbarController()
         window?.rootViewController = tabbarController
         // Passcode Lock
         passcodeLockPresenter.presentPasscodeLock()
@@ -64,6 +49,31 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
         // Window
         self.window?.makeKeyAndVisible()
         return true
+    }
+
+    func configureTabbarController() {
+        // FileList
+        fileListViewController = WebContentTableViewController()
+        fileListViewController.title = NSLocalizedString("Addresses", comment: "Addresses")
+        fileListViewController.tabBarItem.image = UIImage(named: "tab_cloud")
+        let fileListNavigationController = UINavigationController(rootViewController: fileListViewController)
+        // DYTT
+        let resourceSiteViewController = ResourceSiteCatagoriesViewController()
+        resourceSiteViewController.title = NSLocalizedString("DYTT", comment: "DYTT")
+        resourceSiteViewController.tabBarItem.image = UIImage(named: "tab_dytt")
+        let resourceSiteNavigationController = UINavigationController(rootViewController: resourceSiteViewController)
+
+        // torrent list
+        if Configuration.shared.hasTorrentServer {
+            let torrentListViewController = VPTorrentsListViewController()
+            torrentListViewController.title = NSLocalizedString("Torrents", comment: "Torrents")
+            torrentListViewController.tabBarItem.image = UIImage(named: "tab_torrents")
+            let torrentListNavigationController = UINavigationController(rootViewController: torrentListViewController)
+            tabbarController.viewControllers = [fileListNavigationController, torrentListNavigationController, resourceSiteNavigationController]
+        }
+        else {
+            tabbarController.viewControllers = [fileListNavigationController, resourceSiteNavigationController]
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -98,11 +108,16 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
         if window?.rootViewController?.traitCollection.forceTouchCapability == .available {
             let bundleIdentifier = Bundle.main.bundleIdentifier!
             let addressItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).openaddresses", localizedTitle: "Addresses", localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_addresses"), userInfo: nil)
-            let torrentItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).opentorrents", localizedTitle: "Torrents", localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_torrents"), userInfo: nil)
             let dyttItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).opendytt", localizedTitle: "DYTT", localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_dytt"), userInfo: nil)
             let kittenItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).kittensearch", localizedTitle: "Kitten"
                 , localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_kittensearch"), userInfo: nil)
-            UIApplication.shared.shortcutItems = [addressItem, torrentItem, dyttItem, kittenItem]
+            if Configuration.shared.hasTorrentServer {
+                let torrentItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).opentorrents", localizedTitle: "Torrents", localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_torrents"), userInfo: nil)
+                UIApplication.shared.shortcutItems = [addressItem, torrentItem, dyttItem, kittenItem]
+            }
+            else {
+                UIApplication.shared.shortcutItems = [addressItem, dyttItem, kittenItem]
+            }
         }
     }
 

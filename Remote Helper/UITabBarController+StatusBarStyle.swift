@@ -10,7 +10,7 @@ import UIKit
 
 extension UITabBarController {
     override open var preferredStatusBarStyle : UIStatusBarStyle {
-        guard selectedViewController != nil else { return .default }
-        return selectedViewController!.preferredStatusBarStyle
+        guard let selectedViewController = selectedViewController else { return .default }
+        return selectedViewController.preferredStatusBarStyle
     }
 }

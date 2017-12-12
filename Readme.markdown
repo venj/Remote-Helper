@@ -4,9 +4,15 @@
 
 **从 v3.8 开始，客户端可以脱离服务端使用。如果没有服务端，客户端将缺少种子功能。**
 
-![截图](screenshots/1.png)  ![截图](screenshots/2.png) 
+先看看效果（不依赖服务端的功能）：
 
-![截图](screenshots/3.png)  ![截图](screenshots/4.png) 
+![动画](screenshots/preview.gif)
+
+其他截图：
+
+![截图](screenshots/1.png)  ![截图](screenshots/2.png)
+
+![截图](screenshots/3.png)  ![截图](screenshots/4.png)
 
 ## 编译安装
 

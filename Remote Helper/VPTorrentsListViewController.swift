@@ -234,13 +234,9 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     func photoBrowser(_ photoBrowser: MWPhotoBrowser!, titleForPhotoAt index: UInt) -> String! {
         guard let indexPath = currentSelectedIndexPath else { return nil }
-        let cellTitle = tableView.cellForRow(at: indexPath)?.textLabel?.text
-        if cellTitle == nil {
-            return nil
-        }
-        else {
-            return "\(cellTitle!) (\(currentPhotoIndex + 1)/\(photos.count))"
-        }
+        let list = !searchController.isActive ? dateList : filtereddateList
+        let title = list[indexPath.row]
+        return "\(title) (\(currentPhotoIndex + 1)/\(photos.count))"
     }
 
     //MARK: - Action

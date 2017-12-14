@@ -42,7 +42,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   MWPhotoBrowser:
-    :commit: 2e2a98e585b49b10b6bc8cf2ebdbd7da5126c9fc
+    :commit: 28b6d34c5b01d1274976debdb041ebb697203889
     :git: https://github.com/venj/MWPhotoBrowser.git
   PasscodeLock:
     :commit: 883ac2175e782c319d73085d6fd488726d2f405a

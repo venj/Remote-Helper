@@ -28,3 +28,6 @@
 
 /* Touch ID Reason */
 "PasscodeLockTouchIDReason" = "继续操作需要验证您的指纹信息";
+
+/* Touch ID Fallback Button */
+"PasscodeLockTouchIDButton" = "输入密码";

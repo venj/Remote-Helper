@@ -432,7 +432,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H78-kl-y6L">
-                    <rect key="frame" x="231.5" y="480.5" width="53" height="26"/>
+                    <rect key="frame" x="231" y="480.5" width="53" height="26"/>
                     <inset key="contentEdgeInsets" minX="4" minY="4" maxX="4" maxY="4"/>
                     <state key="normal" title="Delete">
                         <color key="titleColor" red="0.85506367683410645" green="0.39783206582069397" blue="0.20176184177398682" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -532,12 +532,12 @@
                     <exclude reference="pGP-ud-HDy"/>
                     <exclude reference="Ibw-FI-adi"/>
                     <exclude reference="fvB-sb-87q"/>
+                    <exclude reference="1xg-dQ-QCp"/>
+                    <exclude reference="5Hg-CH-gza"/>
                     <exclude reference="BtD-tR-fuQ"/>
                     <exclude reference="c43-tL-Fic"/>
                     <exclude reference="gTM-Sz-nLh"/>
                     <exclude reference="t2n-hP-I5o"/>
-                    <exclude reference="1xg-dQ-QCp"/>
-                    <exclude reference="5Hg-CH-gza"/>
                     <exclude reference="g6W-Io-vyH"/>
                     <exclude reference="sw4-oW-rGU"/>
                     <exclude reference="feB-ke-eyV"/>
@@ -581,16 +581,16 @@
                     <include reference="Ibw-FI-adi"/>
                     <exclude reference="diZ-Kj-1hU"/>
                     <include reference="fvB-sb-87q"/>
+                    <include reference="1xg-dQ-QCp"/>
+                    <include reference="5Hg-CH-gza"/>
+                    <exclude reference="EsN-cG-KcQ"/>
+                    <exclude reference="ymC-lk-DI6"/>
                     <exclude reference="6jk-5n-EC0"/>
                     <include reference="BtD-tR-fuQ"/>
                     <exclude reference="XXL-dB-dNT"/>
                     <include reference="c43-tL-Fic"/>
                     <include reference="gTM-Sz-nLh"/>
                     <include reference="t2n-hP-I5o"/>
-                    <include reference="1xg-dQ-QCp"/>
-                    <include reference="5Hg-CH-gza"/>
-                    <exclude reference="EsN-cG-KcQ"/>
-                    <exclude reference="ymC-lk-DI6"/>
                     <exclude reference="4dI-MF-FB1"/>
                     <include reference="g6W-Io-vyH"/>
                     <exclude reference="luj-6S-dgY"/>

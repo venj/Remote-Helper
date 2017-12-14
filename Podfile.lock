@@ -45,7 +45,7 @@ CHECKOUT OPTIONS:
     :commit: 28b6d34c5b01d1274976debdb041ebb697203889
     :git: https://github.com/venj/MWPhotoBrowser.git
   PasscodeLock:
-    :commit: 883ac2175e782c319d73085d6fd488726d2f405a
+    :commit: 8444efd8317753baa99dde25b5f3748f1b2238e7
     :git: https://github.com/venj/SwiftPasscodeLock.git
   TOWebViewController:
     :commit: bb605dab9b18d4417c2a349d44bacd7ef3565340

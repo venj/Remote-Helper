@@ -77,11 +77,12 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
-        // Passcode Lock
-        passcodeLockPresenter.presentPasscodeLock()
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
+        // Passcode Lock
+        passcodeLockPresenter.presentPasscodeLock()
+
         if UserDefaults.standard.bool(forKey: ClearCacheOnExitKey) == true {
             let app = UIApplication.shared
             var identifier: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid

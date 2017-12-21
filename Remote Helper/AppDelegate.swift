@@ -62,11 +62,10 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
         let cloudDefaults = NSUbiquitousKeyValueStore.default
         guard let remoteViewedTitles = cloudDefaults.object(forKey: key) as? [String] else { return }
         if let localViewedTitles = defaults.value(forKey: key) as? [String] {
-            let set = Set<String>(localViewedTitles + remoteViewedTitles)
-            let updatedViewedTitles = [String](set)
-            defaults.set(updatedViewedTitles, forKey: key)
-            if updatedViewedTitles.count != remoteViewedTitles.count {
-                cloudDefaults.set(updatedViewedTitles, forKey: key)
+            let updatedViewdTitles = [String](Set<String>(localViewedTitles + remoteViewedTitles))
+            defaults.set(updatedViewdTitles, forKey: key)
+            if updatedViewdTitles.count != remoteViewedTitles.count {
+                cloudDefaults.set(updatedViewdTitles, forKey: key)
                 cloudDefaults.synchronize()
             }
         }

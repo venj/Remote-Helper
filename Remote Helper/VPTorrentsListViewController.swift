@@ -32,6 +32,15 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             return datesDict["count"] as! [Int]
         }
     }
+
+    var titles: [String] {
+        return dateList.enumerated().map { "\($1) (\(countList[$0]))"}
+    }
+
+    var filteredTitles: [String] {
+        return filteredDateList.enumerated().map { "\($1) (\(filteredCountList[$0]))"}
+    }
+
     var mwPhotos: [MWPhoto]   = []
     var photos: [String] = [] {
         didSet {
@@ -51,7 +60,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }
 
     var currentPhotoIndex: Int = 0
-    var filtereddateList: [String] = []
+    var filteredDateList: [String] = []
     var filteredCountList: [Int] = []
     lazy var searchController: UISearchController = UISearchController(searchResultsController: nil)
     var cloudItem: UIBarButtonItem!
@@ -61,7 +70,6 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }()
     lazy var searchItem: UIBarButtonItem = {
         let item = UIBarButtonItem(title: "🔍", style: .plain, target: self, action: #selector(showSearch))
-
         return item
     }()
     lazy var kittenItem: UIBarButtonItem = {
@@ -70,15 +78,15 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }()
     var currentSelectedIndexPath: IndexPath?
 
-    var viewedTitles: [String] {
+    var viewedTitles: Set<String> {
         get {
-            guard let titles = UserDefaults.standard.array(forKey: ViewedTitlesKey) as? [String] else { return [] }
-            return titles
+            let titlesArray = UserDefaults.standard.object(forKey: ViewedTitlesKey) as? [String]  ?? []
+            return Set<String>(titlesArray)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: ViewedTitlesKey)
+            UserDefaults.standard.set([String](newValue), forKey: ViewedTitlesKey)
             UserDefaults.standard.synchronize()
-            NSUbiquitousKeyValueStore.default.set(newValue, forKey: ViewedTitlesKey)
+            NSUbiquitousKeyValueStore.default.set([String](newValue), forKey: ViewedTitlesKey)
             NSUbiquitousKeyValueStore.default.synchronize()
         }
     }
@@ -130,15 +138,9 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }
 
     func cleanupUselessViewedTitles() {
-        // Clear up useless items
-        var filteredViewedTitles = viewedTitles
         viewedTitles.forEach { title in
-            if dateList.filter({ title.contains($0) }).count == 0 {
-                guard let i = filteredViewedTitles.index(of: title) else { return }
-                filteredViewedTitles.remove(at: i)
-            }
+            if !titles.contains(title) { viewedTitles.remove(title) }
         }
-        viewedTitles = filteredViewedTitles
     }
     
     // MARK: - Table view data source
@@ -149,22 +151,20 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if !searchController.isActive {
-            return dateList.count
+            return titles.count
         }
         else {
-            return filtereddateList.count
+            return filteredTitles.count
         }
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier) ?? UITableViewCell(style: .subtitle, reuseIdentifier: CellIdentifier)
         cell.accessoryType = .detailDisclosureButton
-        let list = !searchController.isActive ? dateList : filtereddateList
-        let cList = !searchController.isActive  ? countList : filteredCountList
-        let title = list[indexPath.row]
-        let count = cList[indexPath.row]
-        cell.textLabel?.text = "\(title) (\(count))"
-        if viewedTitles.filter({ $0.contains(title) }).count == 1 {
+        let currentTitles = !searchController.isActive ? titles : filteredTitles
+        let title = currentTitles[indexPath.row]
+        cell.textLabel?.text = title
+        if viewedTitles.contains(title) {
             cell.textLabel?.textColor = UIColor.gray
         }
         else {
@@ -180,9 +180,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         if Helper.shared.showCellularHUD() { return }
         if let cell = tableView.cellForRow(at: indexPath), let title = cell.textLabel?.text {
             cell.textLabel?.textColor = UIColor.gray
-            if !viewedTitles.contains(title) {
-                viewedTitles.append(title)
-            }
+            viewedTitles.insert(title)
         }
         self.showPhotoBrowser(forIndexPath: indexPath)
     }
@@ -237,7 +235,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     func photoBrowser(_ photoBrowser: MWPhotoBrowser!, titleForPhotoAt index: UInt) -> String! {
         guard let indexPath = currentSelectedIndexPath else { return nil }
-        let list = !searchController.isActive ? dateList : filtereddateList
+        let list = !searchController.isActive ? dateList : filteredDateList
         let title = list[indexPath.row]
         return "\(title) (\(currentPhotoIndex + 1)/\(photos.count))"
     }
@@ -300,7 +298,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     //MARK: - Helper
     func showPhotoBrowser(forIndexPath indexPath: IndexPath, initialPhotoIndex index: Int = 0) {
-        let list = !searchController.isActive ? dateList : filtereddateList
+        let list = !searchController.isActive ? dateList : filteredDateList
         guard indexPath.row < (list.count) else { return }
         searchController.isActive = false
         if Helper.shared.showCellularHUD() { return }
@@ -365,12 +363,12 @@ extension VPTorrentsListViewController : UISearchResultsUpdating {
 
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchString = searchController.searchBar.text else { return }
-        filtereddateList = dateList
+        filteredDateList = dateList
         filteredCountList = countList
         for dateString in dateList {
             if dateString.range(of: searchString) == nil {
-                guard let index = filtereddateList.index(of: dateString) else { continue }
-                filtereddateList.remove(at: index)
+                guard let index = filteredDateList.index(of: dateString) else { continue }
+                filteredDateList.remove(at: index)
                 filteredCountList.remove(at: index)
             }
         }

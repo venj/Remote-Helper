@@ -57,19 +57,24 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
 
     @objc
     func storeDidChange(_ notification: NSNotification) {
-        let key = "ViewdTitles"
+        let key = ViewedTitlesKey
         let defaults = UserDefaults.standard
         let cloudDefaults = NSUbiquitousKeyValueStore.default
         guard let remoteViewedTitles = cloudDefaults.object(forKey: key) as? [String] else { return }
         if let localViewedTitles = defaults.value(forKey: key) as? [String] {
             let set = Set<String>(localViewedTitles + remoteViewedTitles)
-            defaults.set([String](set), forKey: key)
+            let updatedViewedTitles = [String](set)
+            defaults.set(updatedViewedTitles, forKey: key)
+            if updatedViewedTitles.count != remoteViewedTitles.count {
+                cloudDefaults.set(updatedViewedTitles, forKey: key)
+                cloudDefaults.synchronize()
+            }
         }
         else {
             defaults.set(remoteViewedTitles, forKey: key)
         }
         defaults.synchronize()
-        print("Notification received: \(notification.userInfo ?? [:])")
+        NotificationCenter.default.post(name: NSNotification.Name.viewedTitlesDidChangeNotification, object: nil)
     }
 
     func configureTabbarController() {

@@ -72,13 +72,13 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     var viewedTitles: [String] {
         get {
-            guard let titles = UserDefaults.standard.array(forKey: "ViewdTitles") as? [String] else { return [] }
+            guard let titles = UserDefaults.standard.array(forKey: ViewedTitlesKey) as? [String] else { return [] }
             return titles
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: "ViewdTitles")
+            UserDefaults.standard.set(newValue, forKey: ViewedTitlesKey)
             UserDefaults.standard.synchronize()
-            NSUbiquitousKeyValueStore.default.set(newValue, forKey: "ViewdTitles")
+            NSUbiquitousKeyValueStore.default.set(newValue, forKey: ViewedTitlesKey)
             NSUbiquitousKeyValueStore.default.synchronize()
         }
     }
@@ -113,6 +113,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
         NotificationCenter.default.addObserver(self, selector: #selector(photoPreloadFinished(_:)), name: NSNotification.Name(rawValue: MWPHOTO_LOADING_DID_END_NOTIFICATION), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(showNoMorePhotosHUD(_:)), name: NSNotification.Name(rawValue: MWPHOTO_NO_MORE_PHOTOS_NOTIFICATION), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(viewedTitlesDidChange(_:)), name: NSNotification.Name.viewedTitlesDidChangeNotification, object: nil)
     }
 
     deinit {
@@ -352,6 +353,11 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             }
             hud.hide()
         }
+    }
+
+    @objc
+    func viewedTitlesDidChange(_ notification: NSNotification) {
+        tableView.reloadData()
     }
 }
 

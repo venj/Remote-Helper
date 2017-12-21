@@ -28,3 +28,8 @@ let DeviceFreeSpace = "kDeviceFreeSpace"
 let RequestUseSSL = "kRequestUseSSL"
 let RequestUseCellularNetwork = "kRequestUseCellularNetwork"
 let CustomRequestUserAgent = "kCustomRequestUserAgent"
+let ViewedTitlesKey = "kViewedTitles"
+
+extension Notification.Name {
+    static let viewedTitlesDidChangeNotification = Notification.Name(rawValue: "viewedTitlesDidChangeNotification")
+}

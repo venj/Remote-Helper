@@ -78,6 +78,8 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         set {
             UserDefaults.standard.set(newValue, forKey: "ViewdTitles")
             UserDefaults.standard.synchronize()
+            NSUbiquitousKeyValueStore.default.set(newValue, forKey: "ViewdTitles")
+            NSUbiquitousKeyValueStore.default.synchronize()
         }
     }
 

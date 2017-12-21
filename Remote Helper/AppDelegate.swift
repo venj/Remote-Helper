@@ -12,6 +12,7 @@ import MBProgressHUD
 import PasscodeLock
 import Alamofire
 import CoreData
+import CloudKit
 
 @UIApplicationMain
 class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelegate {
@@ -46,9 +47,29 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
         if #available(iOS 9.0, *) {
             createActionMenus()
         }
+        // iCloud Key-Value Setup
+        NotificationCenter.default.addObserver(self, selector: #selector(storeDidChange(_:)), name: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: NSUbiquitousKeyValueStore.default)
+        NSUbiquitousKeyValueStore.default.synchronize()
         // Window
         self.window?.makeKeyAndVisible()
         return true
+    }
+
+    @objc
+    func storeDidChange(_ notification: NSNotification) {
+        let key = "ViewdTitles"
+        let defaults = UserDefaults.standard
+        let cloudDefaults = NSUbiquitousKeyValueStore.default
+        guard let remoteViewedTitles = cloudDefaults.object(forKey: key) as? [String] else { return }
+        if let localViewedTitles = defaults.value(forKey: key) as? [String] {
+            let set = Set<String>(localViewedTitles + remoteViewedTitles)
+            defaults.set([String](set), forKey: key)
+        }
+        else {
+            defaults.set(remoteViewedTitles, forKey: key)
+        }
+        defaults.synchronize()
+        print("Notification received: \(notification.userInfo ?? [:])")
     }
 
     func configureTabbarController() {

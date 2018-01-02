@@ -211,17 +211,17 @@ open class Helper : NSObject {
         return false
     }
 
-    func showHudWithMessage(_ message: String, hideAfterDelay delay: Double = 1.0) {
+    func showHudWithMessage(_ message: String, onView view: UIView? = nil, hideAfterDelay delay: Double = 1.0) {
         let hud = PKHUD.sharedHUD
         hud.contentView = PKHUDTextView(text: message)
-        hud.show()
+        hud.show(onView: view ?? AppDelegate.shared.window)
         hud.hide(afterDelay: delay)
     }
 
-    @discardableResult func showHUD() -> PKHUD {
+    @discardableResult func showHUD(onView view: UIView? = nil) -> PKHUD {
         let hud = PKHUD.sharedHUD
         hud.contentView = PKHUDProgressView()
-        hud.show()
+        hud.show(onView: view ?? AppDelegate.shared.window)
         return hud
     }
 

@@ -17,7 +17,7 @@ import CoreData
 class WebContentTableViewController: UITableViewController, IASKSettingsDelegate, UIPopoverPresentationControllerDelegate {
     fileprivate let CellIdentifier = "WebContentTableViewCell"
 
-    var webViewController:TOWebViewController!
+    var webViewController:WebViewController!
     var settingsViewController: IASKAppSettingsViewController!
     var mwPhotos: [MWPhoto]!
     var addresses: [ResourceSite] = [] {
@@ -381,9 +381,9 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         }
     }
 
-    func createWebViewController(forIndexPath indexPath: IndexPath) -> TOWebViewController? {
+    func createWebViewController(forIndexPath indexPath: IndexPath) -> WebViewController? {
         let urlString = addresses[indexPath.row].link
-        let webViewController = TOWebViewController(urlString: urlString)
+        let webViewController = WebViewController(urlString: urlString)
         webViewController?.showUrlWhileLoading = false
         webViewController?.hidesBottomBarWhenPushed = true
         webViewController?.urlRequest.cachePolicy = .returnCacheDataElseLoad

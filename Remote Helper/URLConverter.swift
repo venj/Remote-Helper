@@ -65,7 +65,7 @@ open class URLConverter : NSObject {
         case .qq:
             return decodedString
         case .flashget:
-            pattern = "[FLASHGET](.+?)[FLASHGET]"
+            pattern = "\\[FLASHGET\\](.+?)\\[FLASHGET\\]"
         case .unknown: // Return original url string while type unknown
             throw URLConverterConvertError.unknownScheme
         }

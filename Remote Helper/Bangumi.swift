@@ -11,9 +11,23 @@ import Fuzi
 
 struct Bangumi {
     var title: String
-    var links: [String]
+    var links: [Link]
     var images: [String]
     var info: String
+
+    init(title: String, links: [Link], images: [String], info: String) {
+        self.title = title
+        self.links = links
+        self.images = images
+        self.info = info
+    }
+
+    init(title: String, links: [Link]) {
+        self.title = title
+        self.links = links
+        self.images = []
+        self.info = ""
+    }
 
     static func parse(data: Data, isGBK: Bool = false) -> Bangumi? {
         guard let html = isGBK ? (data as NSData).convertToUTF8String(fromEncoding: "GBK", allowLoosy: true) : String(data: data, encoding: .utf8) else { return nil }
@@ -21,10 +35,10 @@ struct Bangumi {
             let replaced = html.replacingOccurrences(of: "charset=gb2312", with: "charset=utf-8")
             let doc = try HTMLDocument(string: replaced)
             let title = doc.css("div.title_all h1").first?.stringValue ?? NSLocalizedString("Unknown Title", comment: "Unknown Title")
-            var links: [String] = []
+            var links: [Link] = []
             doc.css("div.co_content8 table td a").forEach({ (element) in
                 guard let link = element["href"] else { return }
-                links.append(link)
+                links.append(Link(link))
             })
 
             var images: [String] = []

@@ -351,14 +351,14 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     }
 
     func processHTML(_ html: String) {
-        var validAddresses: Set<String> = []
+        var validAddresses: Set<Link> = []
         let patterns = ["magnet:\\?[^\"'<]+", "ed2k://[^\"'&<]+", "thunder://[^\"'&<]+", "ftp://[^\"'&<]+", "qqdl://[^\"'&<]+", "Flashget://[^\"'&<]+"]
         for pattern in patterns {
             guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) else { continue }
             regex.enumerateMatches(in: html, options: [], range: NSRange(location: 0, length: html.count), using: { (result, _, _) -> Void in
                 if let nsRange = result?.range, let range = Range(nsRange, in: html) {
                     let link = String(html[range])
-                    validAddresses.insert(link)
+                    validAddresses.insert(Link(link))
                 }
             })
         }
@@ -366,8 +366,9 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             Helper.shared.showHudWithMessage(NSLocalizedString("No downloadable link.", comment: "No downloadable link."))
         }
         else {
-            let linksViewController = ValidLinksTableViewController()
-            linksViewController.validLinks = [String](validAddresses)
+            let linksViewController = BangumiViewController()
+            let bangumi = Bangumi(title: String(format: NSLocalizedString("Found %ld links", comment: "Found %ld links"), validAddresses.count), links: [Link](validAddresses))
+            linksViewController.bangumi = bangumi
             navigationController?.pushViewController(linksViewController, animated: true)
         }
     }

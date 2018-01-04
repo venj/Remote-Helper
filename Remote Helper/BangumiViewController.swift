@@ -9,6 +9,7 @@
 import UIKit
 import PKHUD
 import MWPhotoBrowser
+import iOS8Colors
 
 class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPopoverPresentationControllerDelegate {
     let CellIdentifier = "BangumiTableCell"
@@ -17,6 +18,10 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
     var editButton: UIBarButtonItem?
     var infoButton: UIBarButtonItem?
     var imagesButton: UIBarButtonItem?
+
+    var shouldAddInfomationButtons: Bool {
+        return bangumi?.images.count != 0 || bangumi?.info.count != 0
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,11 +53,16 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
         // Navigation Items
         let editButtonItem = UIBarButtonItem(title: NSLocalizedString("Select", comment: "Select"), style: .plain, target: self, action: #selector(showEdit(_:)))
         editButton = editButtonItem
-        let imagesButtonItem = UIBarButtonItem(title: NSLocalizedString("Images", comment: "Images"), style: .plain, target: self, action: #selector(showImages))
-        imagesButton = imagesButtonItem
-        let infoButtonItem = UIBarButtonItem(title: NSLocalizedString("Infomation", comment: "Infomation"), style: .plain, target: self, action: #selector(showInfo))
-        infoButton = infoButtonItem
-        navigationItem.rightBarButtonItems = [editButtonItem, imagesButtonItem, infoButtonItem]
+        if shouldAddInfomationButtons {
+            let imagesButtonItem = UIBarButtonItem(title: NSLocalizedString("Images", comment: "Images"), style: .plain, target: self, action: #selector(showImages))
+            imagesButton = imagesButtonItem
+            let infoButtonItem = UIBarButtonItem(title: NSLocalizedString("Infomation", comment: "Infomation"), style: .plain, target: self, action: #selector(showInfo))
+            infoButton = infoButtonItem
+            navigationItem.rightBarButtonItems = [editButtonItem, imagesButtonItem, infoButtonItem]
+        }
+        else {
+            navigationItem.rightBarButtonItem = editButtonItem
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -93,7 +103,7 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
 
     @objc func miDownloadAll(_ sender: Any?) {
         guard let links = bangumi?.links, links.count > 0 else { return }
-        guard let linksToDownload = tableView.indexPathsForSelectedRows?.map({ links[$0.row] }) else { return }
+        guard let linksToDownload = tableView.indexPathsForSelectedRows?.map({ links[$0.row].target }) else { return }
         Helper.shared.miDownloadForLinks(linksToDownload, fallbackIn: self)
     }
 
@@ -136,7 +146,8 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
 
         let index = indexPath.row
         let link = bangumi?.links[index]
-        cell.textLabel?.text = link?.vc_lastPathComponent() // TODO: Make it human-readable.
+        cell.textLabel?.text = link?.name
+        cell.detailTextLabel?.text = link?.target
         return cell
     }
 
@@ -149,18 +160,18 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
         tableView.deselectRow(at: indexPath, animated: true)
         let index = indexPath.row
         guard let link = bangumi?.links[index] else { return }
-        UIPasteboard.general.string = link
+        UIPasteboard.general.string = link.target
 
-        let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: link, preferredStyle: .alert)
+        let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: link.name, preferredStyle: .alert)
 
         let miAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi"), style: .default) { (action) in
-            Helper.shared.miDownloadForLink(link, fallbackIn: self)
+            Helper.shared.miDownloadForLink(link.target, fallbackIn: self)
         }
         alert.addAction(miAction)
 
-        if link.matches("^magnet:") {
+        if link.isMagnet {
             let transmissionAction = UIAlertAction(title: "Transmission", style: .default) { (action) in
-                Helper.shared.transmissionDownload(for: link)
+                Helper.shared.transmissionDownload(for: link.target)
             }
             alert.addAction(transmissionAction)
         }
@@ -182,8 +193,40 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) { }
 
-    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
-        return .none
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        guard let link = bangumi?.links[indexPath.row] else { return nil }
+        // Copy Link
+        let copyAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("Copy", comment: "Copy")) { [weak self] (_, _) in
+            guard let `self` = self else { return }
+            if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
+            UIPasteboard.general.string = link.target
+            Helper.shared.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
+        }
+        copyAction.backgroundColor = UIColor.iOS8purple()
+
+        // Mi Download
+        let miAction = UITableViewRowAction(style: .default, title: NSLocalizedString("Mi", comment: "Mi")) { [weak self] (_, _) in
+            guard let `self` = self else { return }
+            if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
+            Helper.shared.miDownloadForLink(link.target, fallbackIn: self)
+        }
+
+        miAction.backgroundColor = UIColor.iOS8green()
+
+        // Download Link
+        if link.isMagnet {
+            let downloadAction = UITableViewRowAction(style: .default, title: "Transmission") { [weak self] (_, _) in
+                guard let `self` = self else { return }
+                if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
+                Helper.shared.transmissionDownload(for: link.target)
+            }
+            downloadAction.backgroundColor = UIColor.iOS8red()
+            
+            return [miAction, downloadAction, copyAction]
+        }
+        else {
+            return [miAction, copyAction]
+        }
     }
 
     // MARK: - Actions

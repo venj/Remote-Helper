@@ -35,7 +35,6 @@
 		254729F71DEBD28300787C20 /* KittenTorrent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254729F61DEBD28300787C20 /* KittenTorrent.swift */; };
 		254CBE401BE8481F0050A288 /* URLConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE3F1BE8481F0050A288 /* URLConverter.swift */; };
 		254CBE421BE857520050A288 /* String+MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE411BE857520050A288 /* String+MD5.swift */; };
-		254CBE4B1BE877440050A288 /* ValidLinksTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE4A1BE877440050A288 /* ValidLinksTableViewController.swift */; };
 		254CBE4D1BE890210050A288 /* VPSearchResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE4C1BE890210050A288 /* VPSearchResultController.swift */; };
 		255A7D241BEB8DC700E6012B /* UserDefaultsPasscodeRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255A7D221BEB8DC700E6012B /* UserDefaultsPasscodeRepository.swift */; };
 		255A7D251BEB8DC700E6012B /* PasscodeLockConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255A7D231BEB8DC700E6012B /* PasscodeLockConfiguration.swift */; };
@@ -50,6 +49,7 @@
 		25782C081FD7C77300BD2E6C /* Remote-Helper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 25782C061FD7C77200BD2E6C /* Remote-Helper.xcdatamodeld */; };
 		2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2581D48717544A4C00EF3867 /* InAppSettings.bundle */; };
 		258CD0101A3B28B400B3EB55 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 258CD00F1A3B28B400B3EB55 /* Images.xcassets */; };
+		25953BC11FFE1C3F00D8AE53 /* Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25953BC01FFE1C3F00D8AE53 /* Link.swift */; };
 		25AFE0921E94E69600DFB501 /* MiDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25AFE0911E94E69600DFB501 /* MiDownloader.swift */; };
 		25AFE0951E96244500DFB501 /* DispatchQueueExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25AFE0941E96244500DFB501 /* DispatchQueueExtension.swift */; };
 		25B0AA7417537B2D00141B0E /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7317537B2D00141B0E /* MediaPlayer.framework */; };
@@ -90,7 +90,6 @@
 		254729F61DEBD28300787C20 /* KittenTorrent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KittenTorrent.swift; sourceTree = "<group>"; };
 		254CBE3F1BE8481F0050A288 /* URLConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLConverter.swift; sourceTree = "<group>"; };
 		254CBE411BE857520050A288 /* String+MD5.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+MD5.swift"; sourceTree = "<group>"; };
-		254CBE4A1BE877440050A288 /* ValidLinksTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValidLinksTableViewController.swift; sourceTree = "<group>"; };
 		254CBE4C1BE890210050A288 /* VPSearchResultController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VPSearchResultController.swift; sourceTree = "<group>"; };
 		255A7D221BEB8DC700E6012B /* UserDefaultsPasscodeRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsPasscodeRepository.swift; sourceTree = "<group>"; };
 		255A7D231BEB8DC700E6012B /* PasscodeLockConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasscodeLockConfiguration.swift; sourceTree = "<group>"; };
@@ -111,6 +110,7 @@
 		25782C071FD7C77300BD2E6C /* Remote-Helper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Remote-Helper.xcdatamodel"; sourceTree = "<group>"; };
 		2581D48717544A4C00EF3867 /* InAppSettings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InAppSettings.bundle; sourceTree = "<group>"; };
 		258CD00F1A3B28B400B3EB55 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		25953BC01FFE1C3F00D8AE53 /* Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Link.swift; sourceTree = "<group>"; };
 		25AFE0911E94E69600DFB501 /* MiDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiDownloader.swift; sourceTree = "<group>"; };
 		25AFE0941E96244500DFB501 /* DispatchQueueExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchQueueExtension.swift; sourceTree = "<group>"; };
 		25B0AA7317537B2D00141B0E /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
@@ -267,6 +267,7 @@
 			children = (
 				2506AA1E1E90EF010064EABB /* Page.swift */,
 				2506AA1C1E90E4070064EABB /* Bangumi.swift */,
+				25953BC01FFE1C3F00D8AE53 /* Link.swift */,
 				2506AA181E90DD190064EABB /* ResourceSiteCatagoriesViewController.swift */,
 				2506AA201E90F4710064EABB /* ResourcePageViewController.swift */,
 				2506AA221E90F5D40064EABB /* BangumiViewController.swift */,
@@ -278,7 +279,6 @@
 			isa = PBXGroup;
 			children = (
 				252C9C191FFBB73E00B24729 /* WebViewController.swift */,
-				254CBE4A1BE877440050A288 /* ValidLinksTableViewController.swift */,
 				250354D01BE9911700E9F93A /* WebContentTableViewController.swift */,
 				250354CE1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift */,
 				254CBE4C1BE890210050A288 /* VPSearchResultController.swift */,
@@ -493,7 +493,6 @@
 				254CBE401BE8481F0050A288 /* URLConverter.swift in Sources */,
 				254729F71DEBD28300787C20 /* KittenTorrent.swift in Sources */,
 				2502ABEC1BE748F1004882FE /* Int+FileSize.swift in Sources */,
-				254CBE4B1BE877440050A288 /* ValidLinksTableViewController.swift in Sources */,
 				254CBE421BE857520050A288 /* String+MD5.swift in Sources */,
 				25C478D11FDFA61400AA8958 /* Configuration.swift in Sources */,
 				255A7D241BEB8DC700E6012B /* UserDefaultsPasscodeRepository.swift in Sources */,
@@ -501,6 +500,7 @@
 				252C9C1A1FFBB73E00B24729 /* WebViewController.swift in Sources */,
 				2575F5721E97B2B7004B4D1E /* iconv_wrapper.c in Sources */,
 				250354CF1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift in Sources */,
+				25953BC11FFE1C3F00D8AE53 /* Link.swift in Sources */,
 				2506AA211E90F4710064EABB /* ResourcePageViewController.swift in Sources */,
 				2506AA1F1E90EF010064EABB /* Page.swift in Sources */,
 				2506AA1D1E90E4070064EABB /* Bangumi.swift in Sources */,

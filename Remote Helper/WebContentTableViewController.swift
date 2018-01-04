@@ -13,6 +13,7 @@ import TOWebViewController
 import MWPhotoBrowser
 import InAppSettingsKit
 import CoreData
+import Fuzi
 
 class WebContentTableViewController: UITableViewController, IASKSettingsDelegate, UIPopoverPresentationControllerDelegate {
     fileprivate let CellIdentifier = "WebContentTableViewCell"
@@ -351,25 +352,39 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     }
 
     func processHTML(_ html: String) {
-        var validAddresses: Set<Link> = []
-        let patterns = ["magnet:\\?[^\"'<]+", "ed2k://[^\"'&<]+", "thunder://[^\"'&<]+", "ftp://[^\"'&<]+", "qqdl://[^\"'&<]+", "Flashget://[^\"'&<]+"]
-        for pattern in patterns {
-            guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) else { continue }
-            regex.enumerateMatches(in: html, options: [], range: NSRange(location: 0, length: html.count), using: { (result, _, _) -> Void in
-                if let nsRange = result?.range, let range = Range(nsRange, in: html) {
-                    let link = String(html[range])
-                    validAddresses.insert(Link(link))
+        var validAddresses: [Link] = []
+        do {
+            let doc = try HTMLDocument(string: html)
+            let links: [Link] = doc.css("a").flatMap { e in
+                guard let href = e.attr("href") else { return nil }
+                let loweredLink = href.lowercased()
+                if loweredLink.hasPrefix("magnet:?")
+                    || loweredLink.hasPrefix("ed2k://")
+                    || loweredLink.hasPrefix("thunder://")
+                    || loweredLink.hasPrefix("ftp://")
+                    || loweredLink.hasPrefix("ftps://")
+                    || loweredLink.hasPrefix("qqdl://")
+                    || loweredLink.hasPrefix("flashget://") {
+                    return Link(href)
                 }
-            })
-        }
-        if validAddresses.count <= 0 {
-            Helper.shared.showHudWithMessage(NSLocalizedString("No downloadable link.", comment: "No downloadable link."))
-        }
-        else {
-            let linksViewController = BangumiViewController()
-            let bangumi = Bangumi(title: String(format: NSLocalizedString("Found %ld links", comment: "Found %ld links"), validAddresses.count), links: [Link](validAddresses))
-            linksViewController.bangumi = bangumi
-            navigationController?.pushViewController(linksViewController, animated: true)
+                else {
+                    return nil
+                }
+            }
+
+            validAddresses = links
+
+            if validAddresses.count == 0 {
+                Helper.shared.showHudWithMessage(NSLocalizedString("No downloadable link.", comment: "No downloadable link."))
+            }
+            else {
+                let linksViewController = BangumiViewController()
+                let bangumi = Bangumi(title: String(format: NSLocalizedString("Found %ld links", comment: "Found %ld links"), validAddresses.count), links: validAddresses)
+                linksViewController.bangumi = bangumi
+                navigationController?.pushViewController(linksViewController, animated: true)
+            }
+        } catch let error as NSError {
+            print("HTML Parse Error: \(error), \(error.userInfo)")
         }
     }
 

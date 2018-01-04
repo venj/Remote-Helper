@@ -13,21 +13,28 @@ struct Link {
     var target: String
 
     init(_ target: String) {
-        if (target.lowercased().hasPrefix("qqdl://")
-            || target.lowercased().hasPrefix("thunder://")
-            || target.lowercased().hasPrefix("flashget://"))
-            && target.decodedLink?.hasPrefix("magnet:") == true {
-            self.target = target.decodedLink!
-        }
-        else {
-            self.target = target
-        }
-        name = target.humanReadableFileName()
+        let t = Link.processLink(target)
+        self.name = t.humanReadableFileName()
+        self.target = t
     }
 
     init(name: String, target: String) {
-        self.name = name
-        self.target = target
+        let t = Link.processLink(target)
+        self.name = name.isEmpty ? t.humanReadableFileName() : name
+        self.target = t
+    }
+
+    private static func processLink(_ link: String) -> String {
+        let loLink = link.lowercased()
+        if (loLink.hasPrefix("qqdl://")
+            || loLink.lowercased().hasPrefix("thunder://")
+            || loLink.lowercased().hasPrefix("flashget://"))
+            && loLink.decodedLink?.hasPrefix("magnet:") == true {
+            return link.decodedLink!
+        }
+        else {
+            return link
+        }
     }
 }
 
@@ -43,6 +50,6 @@ extension Link : Hashable {
 
 extension Link {
     var isMagnet: Bool {
-        return target.hasPrefix("magnet:")
+        return target.hasPrefix("magnet:?")
     }
 }

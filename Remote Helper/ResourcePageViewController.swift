@@ -73,22 +73,37 @@ class ResourcePageViewController: UITableViewController {
         let index = indexPath.row
         let bangumi = bangumiLinks[index]
         cell.textLabel?.text = bangumi["title"]
+        let link = fullLink(withHref: bangumi["link"]!)
+        if Configuration.shared.viewedResources.contains(link.md5) {
+            cell.textLabel?.textColor = .gray
+        }
+        else {
+            cell.textLabel?.textColor = .black
+        }
         return cell
     }
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let index = indexPath.row
-        let bangumi = bangumiLinks[index]
-        var link = bangumi["link"]!
-        if !link.contains("http://") {
+    func fullLink(withHref href: String) -> String {
+        var link = href
+        if !href.contains("http://") {
             let url = URL(string:page!.pageLink)!
-            if link.first != "/" {
+            if href.first != "/" {
                 link = url.deletingLastPathComponent().appendingPathComponent(link).absoluteString
             }
             else {
                 link = url.scheme! + "://" + url.host! + "/" + link
             }
         }
+        return link
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let index = indexPath.row
+        let bangumi = bangumiLinks[index]
+        let link = fullLink(withHref: bangumi["link"]!)
+        Configuration.shared.viewedResources.append(link.md5)
+        let cell = tableView.cellForRow(at: indexPath)
+        cell?.textLabel?.textColor = .gray
         process(link)
     }
 

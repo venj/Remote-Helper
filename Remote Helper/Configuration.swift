@@ -9,8 +9,15 @@
 import Foundation
 
 open class Configuration {
+
+    let ViewedResources = "ViewedResourcesKey"
+
     open static let shared = Configuration()
-    fileprivate let defaults = UserDefaults.standard
+    private let defaults = UserDefaults.standard
+    private init() {
+        defaults.register(defaults: [ViewedResources: []])
+        defaults.synchronize()
+    }
 
     open var hasTorrentServer: Bool {
         get {
@@ -19,6 +26,16 @@ open class Configuration {
                 return true
             }
             return false
+        }
+    }
+
+    open var viewedResources: [String] {
+        get {
+            return defaults.array(forKey: ViewedResources) as? [String] ?? []
+        }
+        set {
+            defaults.set(newValue, forKey: ViewedResources)
+            defaults.synchronize()
         }
     }
 }

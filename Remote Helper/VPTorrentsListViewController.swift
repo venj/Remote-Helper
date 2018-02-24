@@ -68,10 +68,6 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         let item = UIBarButtonItem(image: UIImage(named:"magnet"), style: .plain, target: self, action: #selector(hashTorrent))
         return item
     }()
-    lazy var searchItem: UIBarButtonItem = {
-        let item = UIBarButtonItem(title: "🔍", style: .plain, target: self, action: #selector(showSearch))
-        return item
-    }()
     lazy var kittenItem: UIBarButtonItem = {
         let item = UIBarButtonItem(title: "🐱", style: .plain, target: self, action: #selector(showKitten))
         return item
@@ -131,6 +127,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+        SDWebImageManager.shared().imageCache?.clearMemory()
     }
 
     override var preferredStatusBarStyle : UIStatusBarStyle {
@@ -230,7 +227,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     func photoBrowser(_ photoBrowser: MWPhotoBrowser!, didDisplayPhotoAt index: UInt) {
         currentPhotoIndex = Int(index)
-        photoBrowser.navigationItem.rightBarButtonItems  = Configuration.shared.hasTorrentServer ? [kittenItem, searchItem, hashItem] : [kittenItem, hashItem]
+        photoBrowser.navigationItem.rightBarButtonItems  = [kittenItem, hashItem]
     }
 
     func photoBrowser(_ photoBrowser: MWPhotoBrowser!, titleForPhotoAt index: UInt) -> String! {
@@ -241,12 +238,8 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }
 
     //MARK: - Action
-    @objc func showSearch() {
-        Helper.shared.showTorrentSearchAlertInViewController(self.navigationController!)
-    }
-
     @objc func showKitten() {
-        Helper.shared.showTorrentSearchAlertInViewController(self.navigationController!, forKitten: true)
+        Helper.shared.showTorrentSearchAlertInViewController(self.navigationController!)
     }
 
     @objc func hashTorrent() {

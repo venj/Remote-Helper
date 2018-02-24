@@ -11,9 +11,14 @@ import TOWebViewController
 
 class VPSearchResultController: UITableViewController {
     let CellIdentifier = "FileListTableViewCell"
+
     //var torrents: [[String:Any]] = []
     var torrents: [Any] = []
-    var keyword: String = ""
+    var keyword: String = "" {
+        didSet {
+            self.title = String(format: NSLocalizedString("%@: %@ (%lu)", comment: "%@: %@ (%lu)"), arguments: [NSLocalizedString("Search", comment:"Search"), keyword, torrents.count])
+        }
+    }
     var isKitten: Bool {
         return kittenTorrents != nil
     }
@@ -23,6 +28,16 @@ class VPSearchResultController: UITableViewController {
     var normalTorrents: [[String:Any]]? {
         return torrents as? [[String:Any]]
     }
+
+    lazy var kittenItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(title: "🐱", style: .plain, target: self, action: #selector(showKitten))
+        return item
+    }()
+
+    lazy var wikiItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(image: UIImage(named: "wiki"), style: .plain, target: self, action: #selector(showWiki))
+        return item
+    }()
 
     var currentPage: Int = 1
 
@@ -43,7 +58,10 @@ class VPSearchResultController: UITableViewController {
         }
 
         if keyword.matches("^[A-Za-z]{2,6}-\\d{2,6}$", regularExpressionOptions: [.caseInsensitive], matchingOptions:[.anchored]) {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "wiki"), style: .plain, target: self, action: #selector(showWiki))
+            navigationItem.rightBarButtonItems = [wikiItem, kittenItem]
+        }
+        else {
+            navigationItem.rightBarButtonItems = [kittenItem]
         }
 
         // Theme
@@ -200,6 +218,10 @@ class VPSearchResultController: UITableViewController {
             webViewController?.buttonTintColor = UIColor.white
         }
         navigationController?.pushViewController(webViewController!, animated: true)
+    }
+
+    @objc func showKitten() {
+        Helper.shared.showTorrentSearchAlertInViewController(self.navigationController!)
     }
 
     //MARK: - Helper

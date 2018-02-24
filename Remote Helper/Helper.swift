@@ -230,98 +230,60 @@ open class Helper : NSObject {
     }
 
     // Nasty method naming, just for minimum code change
-    func showTorrentSearchAlertInViewController(_ viewController:UIViewController?, forKitten: Bool = false) {
+    func showTorrentSearchAlertInViewController(_ viewController:UIViewController?) {
         guard let viewController = viewController else { return } // Just do nothing...
         if (self.showCellularHUD()) { return }
-        var title = NSLocalizedString("Search", comment: "Search")
-        var message = NSLocalizedString("Please enter video serial:", comment: "Please enter video serial:")
-        if forKitten {
-            title = NSLocalizedString("Search Torrent Kitten", comment: "Search Torrent Kitten")
-            message = NSLocalizedString("Please enter video serial (or anything):", comment: "Please enter video serial (or anything):")
-        }
+        let title = NSLocalizedString("Search Torrent Kitten", comment: "Search Torrent Kitten")
+        let message = NSLocalizedString("Please enter video serial (or anything):", comment: "Please enter video serial (or anything):")
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addTextField { (textField) in
             textField.keyboardType = .default
+            textField.becomeFirstResponder()
         }
         let searchAction = UIAlertAction(title: NSLocalizedString("Search", comment: "Search"), style: .default) { _ in
             let keyword = alertController.textFields![0].text!
             let hud = self.showHUD()
-            if forKitten {
-                DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-                    guard let `self` = self else { return }
-                    let url = URL(string: self.kittenSearchPath(withKeyword: keyword))!
-                    if let data = try? Data(contentsOf: url) {
-                        let torrents = KittenTorrent.parse(data: data)
-                        if torrents.count == 0 {
-                            DispatchQueue.main.async {
-                                self.showHudWithMessage(NSLocalizedString("No torrent found", comment: "No torrent found"))
-                            }
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                guard let `self` = self else { return }
+                let url = URL(string: self.kittenSearchPath(withKeyword: keyword))!
+                if let data = try? Data(contentsOf: url) {
+                    let torrents = KittenTorrent.parse(data: data)
+                    if torrents.count == 0 {
+                        DispatchQueue.main.async {
+                            self.showHudWithMessage(NSLocalizedString("No torrent found", comment: "No torrent found"))
+                        }
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        if let tabControl =  UIApplication.shared.keyWindow?.rootViewController as? UITabBarController, let navControl = tabControl.selectedViewController as? UINavigationController, let searchControl = navControl.topViewController as? VPSearchResultController {
+                            searchControl.torrents = torrents
+                            searchControl.keyword = keyword
+                            searchControl.tableView.reloadData()
+                            hud.hide()
                             return
                         }
-                        DispatchQueue.main.async {
-                            let searchResultController = VPSearchResultController()
-                            searchResultController.torrents = torrents
-                            searchResultController.keyword = keyword
-                            if let navigationController = viewController as? UINavigationController {
-                                navigationController.pushViewController(searchResultController, animated: true)
-                            }
-                            else if let tabbarController = (UIApplication.shared.delegate as! AppDelegate).window?.rootViewController as? UITabBarController, let navigationController = tabbarController.selectedViewController as? UINavigationController {
-                                navigationController.pushViewController(searchResultController, animated: true)
-                            }
-                            else {
-                                let searchResultNavigationController = UINavigationController(rootViewController: searchResultController)
-                                searchResultController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target:self, action: #selector(Helper.dismissMe(_:)))
-                                viewController.present(searchResultNavigationController, animated: true, completion: nil)
-                            }
-                            hud.hide()
+                        let searchResultController = VPSearchResultController()
+                        searchResultController.torrents = torrents
+                        searchResultController.keyword = keyword
+                        if let navigationController = viewController as? UINavigationController {
+                            navigationController.pushViewController(searchResultController, animated: true)
                         }
-                    }
-                    else {
-                        DispatchQueue.main.async { [weak self] in
-                            self?.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
-                        }
-                    }
-                }
-            }
-            else {
-                let dbSearchPath = self.dbSearchPath(withKeyword: keyword)
-                let request = Alamofire.request(dbSearchPath)
-                request.responseJSON(completionHandler: { [weak self] response in
-                    guard let `self` = self else { return }
-                    if response.result.isSuccess {
-                        guard let responseObject = response.result.value as? [String: Any] else { return }
-                        let success = ("\(responseObject["success"]!)" == "1")
-                        if success {
-                            let searchResultController = VPSearchResultController()
-                            guard let torrents = responseObject["results"] as? [[String: Any]] else { return }
-                            searchResultController.torrents = torrents
-                            searchResultController.keyword = keyword
-                            if let navigationController = viewController as? UINavigationController {
-                                navigationController.pushViewController(searchResultController, animated: true)
-                            }
-                            else if let tabbarController = (UIApplication.shared.delegate as! AppDelegate).window?.rootViewController as? UITabBarController, let navigationController = tabbarController.selectedViewController as? UINavigationController {
-                                navigationController.pushViewController(searchResultController, animated: true)
-                            }
-                            else {
-                                let searchResultNavigationController = UINavigationController(rootViewController: searchResultController)
-                                searchResultController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target:self, action: #selector(Helper.dismissMe(_:)))
-                                viewController.present(searchResultNavigationController, animated: true, completion: nil)
-                            }
-                            hud.hide()
+                        else if let tabbarController = (UIApplication.shared.delegate as! AppDelegate).window?.rootViewController as? UITabBarController, let navigationController = tabbarController.selectedViewController as? UINavigationController {
+                            navigationController.pushViewController(searchResultController, animated: true)
                         }
                         else {
-                            let errorMessage = responseObject["message"] as! String
-                            DispatchQueue.main.async {
-                                self.showHudWithMessage(NSLocalizedString("\(errorMessage)", comment: "\(errorMessage)"))
-                            }
+                            let searchResultNavigationController = UINavigationController(rootViewController: searchResultController)
+                            searchResultController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target:self, action: #selector(Helper.dismissMe(_:)))
+                            viewController.present(searchResultNavigationController, animated: true, completion: nil)
                         }
+                        hud.hide()
                     }
-                    else {
-                        DispatchQueue.main.async {
-                            self.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
-                        }
+                }
+                else {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
                     }
-                })
+                }
             }
         }
         alertController.addAction(searchAction)

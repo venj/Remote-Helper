@@ -160,7 +160,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
             self.tabbarController.selectedIndex = 2
         }
         else if shortcutItem.type == "\(bundleIdentifier).kittensearch" {
-            Helper.shared.showTorrentSearchAlertInViewController(window?.rootViewController, forKitten: true)
+            Helper.shared.showTorrentSearchAlertInViewController(window?.rootViewController)
         }
     }
 

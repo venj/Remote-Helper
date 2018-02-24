@@ -258,16 +258,9 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             self.showTransmission()
         }
         sheet.addAction(transmissionAction)
-        if Configuration.shared.hasTorrentServer {
-            let searchAction = UIAlertAction(title: NSLocalizedString("Torrent Search", comment: "Torrent Search"), style: .default) { [weak self] _ in
-                guard let `self` = self else { return }
-                self.torrentSearch()
-            }
-            sheet.addAction(searchAction)
-        }
         let searchKittenAction = UIAlertAction(title: NSLocalizedString("Kitten Search", comment: "Kitten Search"), style: .default) { [weak self] _ in
             guard let `self` = self else { return }
-            self.torrentSearch(atKitten: true)
+            self.torrentSearch()
         }
         sheet.addAction(searchKittenAction)
         let settingsAction = UIAlertAction(title: NSLocalizedString("Settings", comment: "Settings"), style: .default) { [weak self] _ in
@@ -347,8 +340,8 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     }
 
     //MARK: - Helper
-    func torrentSearch(atKitten: Bool = false) {
-        Helper.shared.showTorrentSearchAlertInViewController(navigationController!, forKitten: atKitten)
+    func torrentSearch() {
+        Helper.shared.showTorrentSearchAlertInViewController(navigationController!)
     }
 
     func processHTML(_ html: String) {

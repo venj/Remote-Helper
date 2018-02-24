@@ -97,6 +97,7 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
         }
         let title = catagory["name"] ?? "未分类"
         process(title, link)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 
     func process(_ title: String, _ link: String) {

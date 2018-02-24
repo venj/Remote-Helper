@@ -105,6 +105,7 @@ class ResourcePageViewController: UITableViewController {
         let cell = tableView.cellForRow(at: indexPath)
         cell?.textLabel?.textColor = .gray
         process(link)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

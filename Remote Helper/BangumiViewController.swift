@@ -178,10 +178,10 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
 
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel)
         alert.addAction(cancelAction)
-
         alert.view.tintColor = Helper.shared.mainThemeColor()
-
-        self.present(alert, animated: true, completion: nil)
+        
+        present(alert, animated: true, completion: nil)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 
 

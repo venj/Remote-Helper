@@ -348,7 +348,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         var validAddresses: [Link] = []
         do {
             let doc = try HTMLDocument(string: html)
-            let links: [Link] = doc.css("a").flatMap { e in
+            let links: [Link] = doc.css("a").compactMap { e in
                 guard let href = e.attr("href") else { return nil }
                 let loweredLink = href.lowercased()
                 if loweredLink.hasPrefix("magnet:?")

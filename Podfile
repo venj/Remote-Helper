@@ -8,7 +8,7 @@ target "Remote Helper" do
   pod 'PKHUD'
   pod 'PasscodeLock', :git => 'https://github.com/venj/SwiftPasscodeLock.git', :branch => 'master'
   pod 'ReachabilitySwift'
-  pod 'Fuzi'
+  pod 'Fuzi', :git => 'https://github.com/imvenj/Fuzi.git', :branch => 'master'
   #pod 'Kanna'
 
   # Objective-C

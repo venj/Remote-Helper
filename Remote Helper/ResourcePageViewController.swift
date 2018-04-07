@@ -91,7 +91,7 @@ class ResourcePageViewController: UITableViewController {
                 link = url.deletingLastPathComponent().appendingPathComponent(link).absoluteString
             }
             else {
-                link = url.scheme! + "://" + url.host! + "/" + link
+                link = url.scheme! + "://" + url.host! + (link.hasPrefix("/") ? "" : "/") + link
             }
         }
         return link

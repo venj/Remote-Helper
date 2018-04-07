@@ -25,7 +25,7 @@ extension String {
             hash += String(format:"%02x", arguments:[result[i]])
         }
         //result.deinitialize()
-        result.deallocate(capacity: digestLen)
+        result.deallocate()
 
         return hash
     }

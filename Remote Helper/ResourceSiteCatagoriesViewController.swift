@@ -31,6 +31,7 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
                                              ["name": "国内电影", "link": "http://www.dytt8.net/html/gndy/china/index.html"],
                                              ["name": "欧美电影", "link": "http://www.dytt8.net/html/gndy/oumei/index.html"],
                                              ["name": "日韩电影", "link": "http://www.dytt8.net/html/gndy/rihan/index.html"],
+                                             ["name": "综合电影", "link": "http://www.dytt8.net/html/gndy/jddy/index.html"],
                                              ["name": "华语电视", "link": "http://www.dytt8.net/html/tv/hytv/index.html"],
                                              ["name": "日韩电视", "link": "http://www.dytt8.net/html/tv/rihantv/index.html"],
                                              ["name": "欧美电视", "link": "http://www.dytt8.net/html/tv/oumeitv/index.html"],
@@ -106,8 +107,12 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
         request.responseData { [weak self] response in
             guard let `self` = self else { return }
             hud.hide()
+            if !response.result.isSuccess {
+                Helper.shared.showHudWithMessage(NSLocalizedString("Network Error", comment: "Network Error"))
+                return
+            }
             if response.result.isFailure { return } // Fail
-            guard let data = response.result.value else { return }
+            guard let data = response.result.value, data.count > 0 else { return }
             guard let page = Page.parse(data: data, pageLink: link, isGBK: true) else { return }
 
             if page.bangumiLinks.count == 0 {

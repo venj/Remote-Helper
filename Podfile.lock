@@ -1,7 +1,7 @@
 PODS:
-  - Alamofire (4.7.0)
+  - Alamofire (4.7.2)
   - DACircularProgress (2.3.1)
-  - Fuzi (2.0.1)
+  - Fuzi (2.0.2)
   - HexColors (2.2.1)
   - InAppSettingsKit (2.9)
   - iOS8Colors (0.1.2):
@@ -21,7 +21,7 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
-  - Fuzi (from `https://github.com/imvenj/Fuzi.git`, branch `master`)
+  - Fuzi
   - InAppSettingsKit (~> 2.7)
   - iOS8Colors (~> 0.1.2)
   - MWPhotoBrowser (from `https://github.com/venj/MWPhotoBrowser.git`, branch `master`)
@@ -30,10 +30,20 @@ DEPENDENCIES:
   - ReachabilitySwift
   - TOWebViewController (from `https://github.com/venj/TOWebViewController.git`)
 
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - Alamofire
+    - DACircularProgress
+    - Fuzi
+    - HexColors
+    - InAppSettingsKit
+    - iOS8Colors
+    - MBProgressHUD
+    - PKHUD
+    - ReachabilitySwift
+    - SDWebImage
+
 EXTERNAL SOURCES:
-  Fuzi:
-    :branch: master
-    :git: https://github.com/imvenj/Fuzi.git
   MWPhotoBrowser:
     :branch: master
     :git: https://github.com/venj/MWPhotoBrowser.git
@@ -44,9 +54,6 @@ EXTERNAL SOURCES:
     :git: https://github.com/venj/TOWebViewController.git
 
 CHECKOUT OPTIONS:
-  Fuzi:
-    :commit: 4dd936a98169b9aa4970bb71e6d6dcf12524cc0d
-    :git: https://github.com/imvenj/Fuzi.git
   MWPhotoBrowser:
     :commit: 28b6d34c5b01d1274976debdb041ebb697203889
     :git: https://github.com/venj/MWPhotoBrowser.git
@@ -58,9 +65,9 @@ CHECKOUT OPTIONS:
     :git: https://github.com/venj/TOWebViewController.git
 
 SPEC CHECKSUMS:
-  Alamofire: 907e0a98eb68cdb7f9d1f541a563d6ac5dc77b25
+  Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
-  Fuzi: 93b909341b591cc2bafad591ae1b1e98279f478b
+  Fuzi: a890c1b79058033e1dcc7e14f9a62e0936e728ef
   HexColors: abfd172e329dab59888614ccba6f216cec59289d
   InAppSettingsKit: fc3dea21846535b76b8289b119dbfdbe2505b2b2
   iOS8Colors: 1f6023790704b9119727bf14408182ca33faf31b
@@ -72,6 +79,6 @@ SPEC CHECKSUMS:
   SDWebImage: de4d90b5bff3571eae7bd16202b1f43135409fa5
   TOWebViewController: accd62ec0acc8d5c2e1e195c6f7ff7654c3c840c
 
-PODFILE CHECKSUM: 8d5b383c6e3eec53a644d917247c3f0ae3ef032c
+PODFILE CHECKSUM: 49ce7d1862abe76b553d5aef87003635507a589a
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.0

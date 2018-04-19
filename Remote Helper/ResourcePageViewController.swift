@@ -131,10 +131,14 @@ class ResourcePageViewController: UITableViewController {
     func process(_ link: String) {
         let hud = Helper.shared.showHUD()
         let request = Alamofire.request(link)
-        request.responseString { [weak self] response in
+        request.responseData { [weak self] response in
             hud.hide()
+            if !response.result.isSuccess {
+                Helper.shared.showHudWithMessage(NSLocalizedString("Network Error", comment: "Network Error"))
+                return
+            }
             guard let `self` = self else { return }
-            guard let data = response.data else { return }
+            guard let data = response.result.value, data.count > 0 else { return }
             guard let bangumi = Bangumi.parse(data: data, isGBK: true) else {
                 Helper.shared.showHudWithMessage(NSLocalizedString("Parse failed, please try again.", comment: "Parse failed, please try again."))
                 return

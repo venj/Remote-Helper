@@ -207,7 +207,7 @@ open class Configuration {
 
     func transmissionServerAddress(withUserNameAndPassword withUnP: Bool = true) -> String {
         if transmissionUsername.count > 0 && transmissionPassword.count > 0 && withUnP {
-            return "http://\(transmissionUsername):\(transmissionUsername)@\(transmissionAddress)"
+            return "http://\(transmissionUsername):\(transmissionPassword)@\(transmissionAddress)"
         }
         else {
             return "http://\(transmissionAddress)"

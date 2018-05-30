@@ -200,7 +200,7 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
             guard let `self` = self else { return }
             if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
             UIPasteboard.general.string = link.target
-            Helper.shared.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
+            PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
         }
         copyAction.backgroundColor = UIColor.iOS8purple()
 

@@ -11,6 +11,7 @@ import SDWebImage
 import TOWebViewController
 import MWPhotoBrowser
 import Alamofire
+import PKHUD
 
 class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegate, UIPopoverPresentationControllerDelegate {
     let CellIdentifier = "VPTorrentsListViewCell"
@@ -41,23 +42,17 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         return filteredDateList.enumerated().map { "\($1) (\(filteredCountList[$0]))"}
     }
 
-    var mwPhotos: [MWPhoto]   = []
-    var photos: [String] = [] {
-        didSet {
-            mwPhotos = []
-            let defaults = UserDefaults.standard
-            var path = "/"
-            if let pt = defaults.object(forKey: ServerPathKey) as? String { path = pt }
-            let linkBase = Helper.shared.fileLink(withPath: path)
-            for photo in photos {
-                guard let url = URL(string: linkBase) else { break }
-                let fullURL = url.appendingPathComponent(photo)
-                let p = MWPhoto(url: fullURL)
-                p?.caption = photo.components(separatedBy: "/").last
-                mwPhotos.append(p!)
-            }
+    var mwPhotos: [MWPhoto] {
+        return photos.compactMap { photo in
+            guard let url = URL(string: Configuration.shared.baseLink) else { return nil }
+            let fullURL = url.appendingPathComponent(photo)
+            guard let p = MWPhoto(url: fullURL) else { return nil }
+            p.caption = fullURL.lastPathComponent
+            return p
         }
     }
+
+    var photos: [String] = []
 
     var currentPhotoIndex: Int = 0
     var filteredDateList: [String] = []
@@ -187,7 +182,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }
 
     @objc func showNoMorePhotosHUD(_ notification: Notification) {
-        Helper.shared.showHudWithMessage(NSLocalizedString("No more photos.", comment: "No more photos."));
+        PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("No more photos.", comment: "No more photos."));
     }
 
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
@@ -244,8 +239,8 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     @objc func hashTorrent() {
         guard let base64FileName = photos[currentPhotoIndex].base64String() else { return }
-        let hud = Helper.shared.showHUD()
-        let request = Alamofire.request(Helper.shared.hashTorrent(withName: base64FileName))
+        let hud = PKHUD.sharedHUD.showHUD()
+        let request = Alamofire.request(Configuration.shared.hashTorrent(withName: base64FileName))
         request.responseJSON { response in
             if response.result.isSuccess {
                 hud.hide()
@@ -278,7 +273,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             }
             else {
                 hud.hide()
-                Helper.shared.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+                PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
             }
         }
     }
@@ -296,8 +291,8 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         searchController.isActive = false
         if Helper.shared.showCellularHUD() { return }
         guard let date = list[indexPath.row].addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) else { return }
-        let hud = Helper.shared.showHUD()
-        let request = Alamofire.request(Helper.shared.searchPath(withKeyword: date))
+        let hud = PKHUD.sharedHUD.showHUD()
+        let request = Alamofire.request(Configuration.shared.searchPath(withKeyword: date))
         request.responseJSON { [weak self] response in
             guard let `self` = self else { return }
             hud.hide()
@@ -319,16 +314,16 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
                 self.navigationController?.pushViewController(photoBrowser!, animated: true)
             }
             else {
-                Helper.shared.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+                PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
             }
         }
     }
 
     @objc func loadTorrentList(_ sender: Any?) {
         if Helper.shared.showCellularHUD() { return }
-        let hud = Helper.shared.showHUD()
+        let hud = PKHUD.sharedHUD.showHUD()
         navigationItem.rightBarButtonItem?.isEnabled = false
-        let request = Alamofire.request(Helper.shared.torrentsListPath())
+        let request = Alamofire.request(Configuration.shared.torrentsListPath)
         request.responseJSON { [weak self] response in
             guard let `self` = self else { return }
             if response.result.isSuccess {
@@ -340,7 +335,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             else {
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
                 print(response.result.error?.localizedDescription ?? "")
-                Helper.shared.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+                PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
             }
             hud.hide()
         }

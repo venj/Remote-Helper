@@ -25,129 +25,14 @@ open class Helper : NSObject {
         return reach!
     }()
 
-    //MARK: - Properties
-    var useSSL:Bool {
-        let defaults = UserDefaults.standard
-        if defaults.object(forKey: RequestUseSSL) == nil {
-            defaults.set(true, forKey: RequestUseSSL)
-            defaults.synchronize()
-            return true
-        }
-        else {
-            return defaults.bool(forKey: RequestUseSSL)
-        }
-    }
-
-    var SSL_ADD_S:String {
-        return self.useSSL ? "s" : ""
-    }
-
-    var usernameAndPassword:(String, String) {
-        let defaults = UserDefaults.standard
-        let username = defaults.object(forKey: TransmissionUserNameKey) as? String
-        let password = defaults.object(forKey: TransmissionPasswordKey) as? String
-        if username != nil && password != nil {
-            return (username!, password!)
-        }
-        else {
-            return ("username", "password")
-        }
-    }
-
-    var customUserAgent: String? {
-        let defaults = UserDefaults.standard
-        guard let ua = defaults.string(forKey: CustomRequestUserAgent) else { return nil }
-        return ua
-    }
-
-    var userCellularNetwork: Bool {
-        let defaults = UserDefaults.standard
-        if defaults.object(forKey: RequestUseCellularNetwork) == nil {
-            defaults.set(true, forKey: RequestUseCellularNetwork)
-            defaults.synchronize()
-            return true
-        }
-        else {
-            return defaults.bool(forKey: RequestUseCellularNetwork)
-        }
-    }
-
     // AD black list.
     var kittenBlackList: [String] = ["正品香烟", "中铧", "稥湮", "威信", "试抽"]
-
-    //MARK: - Link Helpers
-    func torrentsListPath() -> String {
-        return "http\(self.SSL_ADD_S)://\(self.baseLink())/torrents?stats=true";
-    }
-
-    func baseLink() -> String {
-        let defaults = UserDefaults.standard
-        let host = defaults.string(forKey: ServerHostKey) ?? "192.168.1.1"
-        let port = defaults.string(forKey: ServerPortKey) ?? "80"
-        var subPath = defaults.string(forKey: ServerPathKey) ?? ""
-
-        if subPath.last != "/" {
-            subPath = "/\(String(describing: subPath))"
-        }
-        else {
-            subPath.removeLast()
-        }
-        return "\(host):\(port)\(subPath)"
-    }
-
-    func fileLink(withPath path:String = "") -> String {
-        let defaults = UserDefaults.standard
-        let host = defaults.string(forKey: ServerHostKey) ?? "192.168.1.1"
-        let port = defaults.string(forKey: ServerPortKey) ?? "80"
-        let p = (path.first != "/") ? "/\(path)" : path
-        return "http\(self.SSL_ADD_S)://\(host):\(port)\(p)"
-    }
-
-    func transmissionServerAddress(withUserNameAndPassword withUnP:Bool = true) -> String {
-        let defaults = UserDefaults.standard
-        var address: String
-        if let addr = defaults.string(forKey: TransmissionAddressKey) {
-            address = addr
-        }
-        else {
-            address = "127.0.0.1:9091"
-        }
-        let userpass = self.usernameAndPassword
-        if userpass.0.count > 0 && userpass.1.count > 0 && withUnP {
-            return "http://\(userpass.0):\(userpass.1)@\(address)"
-        }
-        else {
-            return "http://\(address)"
-        }
-    }
-
-    func transmissionRPCAddress() -> String {
-        return self.transmissionServerAddress(withUserNameAndPassword: false).vc_stringByAppendingPathComponents(["transmission", "rpc"])
-    }
 
     func kittenSearchPath(withKeyword keyword: String, page: Int = 1) -> String {
         let kw = keyword.addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics)
         let escapedKeyword = kw == nil ? "" : kw!
         let pageString = page == 1 ? "" : "\(page)"
         return "https://www.torrentkitty.tv/search/\(escapedKeyword)/\(pageString)"
-    }
-
-    func dbSearchPath(withKeyword keyword: String) -> String {
-        let kw = keyword.addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics)
-        let escapedKeyword = kw == nil ? "" : kw!
-        return "http\(self.SSL_ADD_S)://\(self.baseLink())/db_search?keyword=\(escapedKeyword)"
-    }
-
-    func searchPath(withKeyword keyword: String) -> String {
-        return "http\(self.SSL_ADD_S)://\(self.baseLink())/search/\(keyword)"
-    }
-    
-    func addTorrent(withName name: String, async: Bool) -> String {
-        return "http\(self.SSL_ADD_S)://\(self.baseLink())/lx/\(name)/\(async ? 1 : 0)"
-    }
-
-    func hashTorrent(withName name: String) -> String{
-        return "http\(self.SSL_ADD_S)://\(self.baseLink())/hash/\(name)"
     }
 
     //MARK: - Local Files and ImageCache Helpers
@@ -183,12 +68,6 @@ open class Helper : NSObject {
 
     //MARK: - UserDefaults Helpers
 
-    func save(_ value: Any, forKey key:String) {
-        let defaults = UserDefaults.standard
-        defaults.set(value, forKey: key)
-        defaults.synchronize()
-    }
-
     func appVersionString() -> String {
         let versionString = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
         let buildString = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1"
@@ -202,27 +81,13 @@ open class Helper : NSObject {
     
     func showCellularHUD() -> Bool {
         guard let reachability = self.reachability else { return false }
-        if !self.userCellularNetwork && reachability.connection != .wifi {
+        if !Configuration.shared.userCellularNetwork && reachability.connection != .wifi {
             DispatchQueue.main.async(execute: { () -> Void in
-                self.showHudWithMessage(NSLocalizedString("Cellular data is turned off.", comment: "Cellular data is turned off."))
+                PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Cellular data is turned off.", comment: "Cellular data is turned off."))
             })
             return true
         }
         return false
-    }
-
-    func showHudWithMessage(_ message: String, onView view: UIView? = nil, hideAfterDelay delay: Double = 1.0) {
-        let hud = PKHUD.sharedHUD
-        hud.contentView = PKHUDTextView(text: message)
-        hud.show(onView: view ?? AppDelegate.shared.window)
-        hud.hide(afterDelay: delay)
-    }
-
-    @discardableResult func showHUD(onView view: UIView? = nil) -> PKHUD {
-        let hud = PKHUD.sharedHUD
-        hud.contentView = PKHUDProgressView()
-        hud.show(onView: view ?? AppDelegate.shared.window)
-        return hud
     }
 
     @objc func dismissMe(_ sender: UIBarButtonItem) {
@@ -242,7 +107,7 @@ open class Helper : NSObject {
         }
         let searchAction = UIAlertAction(title: NSLocalizedString("Search", comment: "Search"), style: .default) { _ in
             let keyword = alertController.textFields![0].text!
-            let hud = self.showHUD()
+            let hud = PKHUD.sharedHUD.showHUD()
             DispatchQueue.global(qos: .userInitiated).async { [weak self] in
                 guard let `self` = self else { return }
                 let url = URL(string: self.kittenSearchPath(withKeyword: keyword))!
@@ -250,7 +115,7 @@ open class Helper : NSObject {
                     let torrents = KittenTorrent.parse(data: data)
                     if torrents.count == 0 {
                         DispatchQueue.main.async {
-                            self.showHudWithMessage(NSLocalizedString("No torrent found", comment: "No torrent found"))
+                            PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("No torrent found", comment: "No torrent found"))
                         }
                         return
                     }
@@ -280,8 +145,8 @@ open class Helper : NSObject {
                     }
                 }
                 else {
-                    DispatchQueue.main.async { [weak self] in
-                        self?.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+                    DispatchQueue.main.async {
+                        PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
                     }
                 }
             }
@@ -298,8 +163,8 @@ open class Helper : NSObject {
         let params = ["method" : "torrent-add", "arguments": ["paused" : false, "download-dir" : dir, "filename" : magnet]] as [String : Any]
         let HTTPHeaders = ["X-Transmission-Session-Id" : sessionHeader]
         //, parameters: params, encoding: .JSON, headers: HTTPHeaders
-        let request = Alamofire.request(self.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)
-        request.authenticate(user: usernameAndPassword.0, password: usernameAndPassword.1).responseJSON { response in
+        let request = Alamofire.request(Configuration.shared.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)
+        request.authenticate(user: Configuration.shared.transmissionUsername, password: Configuration.shared.transmissionPassword).responseJSON { response in
             if response.result.isSuccess {
                 let responseObject = response.result.value as! [String: Any]
                 let result = responseObject["result"] as! String
@@ -316,8 +181,8 @@ open class Helper : NSObject {
     func parseSessionAndAddTask(_ magnet:String, completionHandler:(() -> Void)? = nil, errorHandler:(() -> Void)? = nil) {
         let params = ["method" : "session-get"]
         let HTTPHeaders = ["X-Transmission-Session-Id" : sessionHeader]
-        let request = Alamofire.request(self.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)
-        request.authenticate(user: usernameAndPassword.0, password: usernameAndPassword.1).responseJSON { [weak self] response in
+        let request = Alamofire.request(Configuration.shared.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)
+        request.authenticate(user: Configuration.shared.transmissionUsername, password: Configuration.shared.transmissionPassword).responseJSON { [weak self] response in
             guard let `self` = self else { return }
             if response.result.isSuccess {
                 let responseObject = response.result.value as! [String:Any]
@@ -335,8 +200,8 @@ open class Helper : NSObject {
                     self.sessionHeader = response.response!.allHeaderFields["X-Transmission-Session-Id"] as! String
                     let params = ["method" : "session-get"]
                     let HTTPHeaders = ["X-Transmission-Session-Id" : self.sessionHeader]
-                    let request = Alamofire.request(self.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)
-                    request.authenticate(user: self.usernameAndPassword.0, password: self.usernameAndPassword.1).responseJSON { [weak self] response in
+                    let request = Alamofire.request(Configuration.shared.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)
+                    request.authenticate(user: Configuration.shared.transmissionUsername, password: Configuration.shared.transmissionPassword).responseJSON { [weak self] response in
                         guard let `self` = self else { return }
                         if response.result.isSuccess {
                             let responseObject = response.result.value as! [String:Any]
@@ -384,24 +249,16 @@ open class Helper : NSObject {
     }
 
     func transmissionDownload(for link: String) {
-        self.showHUD()
-        parseSessionAndAddTask(link, completionHandler: { [weak self] in
-            guard let `self` = self else { return }
-            self.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
+        PKHUD.sharedHUD.showHUD()
+        parseSessionAndAddTask(link, completionHandler: {
+            PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
         }, errorHandler: {
-            self.showHudWithMessage(NSLocalizedString("Transmission server error.", comment: "Transmission server error."))
+            PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Transmission server error.", comment: "Transmission server error."))
         })
     }
 
-    func canStartMiDownload() -> Bool {
-        let defaults = UserDefaults.standard
-        if let _ = defaults.object(forKey: MiAccountUsernameKey) as? String,
-            let _ = defaults.object(forKey: MiAccountPasswordKey) as? String {
-            return true
-        }
-        else {
-            return false
-        }
+    var canStartMiDownload: Bool {
+        return !(Configuration.shared.miAccountUsername.isEmpty || Configuration.shared.miAccountPassword.isEmpty)
     }
 
     func miDownloadForLink(_ link: String, fallbackIn viewController: UIViewController) {
@@ -409,15 +266,12 @@ open class Helper : NSObject {
     }
 
     func miDownloadForLinks(_ links: [String], fallbackIn viewController: UIViewController) {
-        let defaults = UserDefaults.standard
-        guard let username = defaults.object(forKey: MiAccountUsernameKey) as? String,
-            let password = defaults.object(forKey: MiAccountPasswordKey) as? String
-            else {
-                showHudWithMessage(NSLocalizedString("Mi account not set.", comment: "Mi account not set."))
-                return
-            }
-        let hud = Helper.shared.showHUD()
-        MiDownloader(withUsername:username, password: password, links: links).loginAndFetchDeviceList(progress: { (progress) in
+        guard canStartMiDownload else {
+            PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Mi account not set.", comment: "Mi account not set."))
+            return
+        }
+        let hud = PKHUD.sharedHUD.showHUD()
+        MiDownloader(withUsername:Configuration.shared.miAccountUsername, password: Configuration.shared.miAccountPassword, links: links).loginAndFetchDeviceList(progress: { (progress) in
             switch progress {
             case .prepare:
                 hud.setMessage(NSLocalizedString("Preparing...", comment: "Preparing..."))
@@ -448,7 +302,7 @@ open class Helper : NSObject {
                 })
             default:
                 let reason = error.localizedDescription
-                self.showHudWithMessage(reason)
+                PKHUD.sharedHUD.showHudWithMessage(reason)
             }
         })
     }

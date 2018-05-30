@@ -29,6 +29,7 @@ let RequestUseSSL = "kRequestUseSSL"
 let RequestUseCellularNetwork = "kRequestUseCellularNetwork"
 let CustomRequestUserAgent = "kCustomRequestUserAgent"
 let ViewedTitlesKey = "kViewedTitles"
+let ViewedResources = "ViewedResourcesKey"
 
 extension Notification.Name {
     static let viewedTitlesDidChangeNotification = Notification.Name(rawValue: "viewedTitlesDidChangeNotification")

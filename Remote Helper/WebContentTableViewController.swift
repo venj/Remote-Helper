@@ -14,6 +14,7 @@ import MWPhotoBrowser
 import InAppSettingsKit
 import CoreData
 import Fuzi
+import PKHUD
 
 class WebContentTableViewController: UITableViewController, IASKSettingsDelegate, UIPopoverPresentationControllerDelegate {
     fileprivate let CellIdentifier = "WebContentTableViewCell"
@@ -171,7 +172,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                 let passcodeVC = PasscodeLockViewController(state: .setPasscode, configuration: configuration)
                 passcodeVC.successCallback = { lock in
                     let status = NSLocalizedString("On", comment: "打开")
-                    Helper.shared.save(status, forKey: PasscodeLockStatus)
+                    Configuration.shared.save(status, forKey: PasscodeLockStatus)
                 }
                 passcodeVC.dismissCompletionCallback = {
                     sender.tableView.reloadData()
@@ -185,7 +186,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                     passcodeVC.successCallback = { lock in
                         lock.repository.deletePasscode()
                         let status = NSLocalizedString("Off", comment: "关闭")
-                        Helper.shared.save(status, forKey: PasscodeLockStatus)
+                        Configuration.shared.save(status, forKey: PasscodeLockStatus)
                     }
                     passcodeVC.dismissCompletionCallback = {
                         sender.tableView.reloadData()
@@ -200,7 +201,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             }
         }
         else if specifier.key() == ClearCacheNowKey {
-            let hud = Helper.shared.showHUD()
+            let hud = PKHUD.sharedHUD.showHUD()
             DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
                 SDImageCache.shared().clearDisk()
                 let defaults = UserDefaults.standard
@@ -210,7 +211,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                 sender.synchronizeSettings()
                 DispatchQueue.main.async {
                     hud.hide()
-                    Helper.shared.showHudWithMessage(NSLocalizedString("Cache Cleared!", comment: "Cache Cleared!"))
+                    PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Cache Cleared!", comment: "Cache Cleared!"))
                     sender.tableView.reloadData()
                 }
             }
@@ -317,7 +318,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     func showTransmission() {
         if Helper.shared.showCellularHUD() { return }
-        let link = Helper.shared.transmissionServerAddress()
+        let link = Configuration.shared.transmissionServerAddress()
         let transmissionWebViewController = TOWebViewController(urlString: link)
         transmissionWebViewController?.urlRequest.cachePolicy = .reloadIgnoringLocalCacheData
         transmissionWebViewController?.title = "Transmission"
@@ -368,7 +369,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             validAddresses = links
 
             if validAddresses.count == 0 {
-                Helper.shared.showHudWithMessage(NSLocalizedString("No downloadable link.", comment: "No downloadable link."))
+                PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("No downloadable link.", comment: "No downloadable link."))
             }
             else {
                 let linksViewController = BangumiViewController()

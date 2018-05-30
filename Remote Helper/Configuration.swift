@@ -32,7 +32,7 @@ open class Configuration {
     open var hasTorrentServer: Bool {
         get {
             // Treat any string less than 5 chars as invalid address.
-            if let server = defaults.object(forKey: ServerHostKey) as? String, server.count >= 5 {
+            if serverPath.count >= 5 {
                 return true
             }
             return false

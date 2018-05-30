@@ -1,7 +1,7 @@
 PODS:
   - Alamofire (4.7.2)
   - DACircularProgress (2.3.1)
-  - Fuzi (2.0.2)
+  - Fuzi (2.1.0)
   - HexColors (2.2.1)
   - InAppSettingsKit (2.9)
   - iOS8Colors (0.1.2):
@@ -31,7 +31,7 @@ DEPENDENCIES:
   - TOWebViewController (from `https://github.com/venj/TOWebViewController.git`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/cocoapods/specs.git:
     - Alamofire
     - DACircularProgress
     - Fuzi
@@ -67,7 +67,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
-  Fuzi: a890c1b79058033e1dcc7e14f9a62e0936e728ef
+  Fuzi: 8c57344debff6d3a0c76a9e0f549152defdaaa48
   HexColors: abfd172e329dab59888614ccba6f216cec59289d
   InAppSettingsKit: fc3dea21846535b76b8289b119dbfdbe2505b2b2
   iOS8Colors: 1f6023790704b9119727bf14408182ca33faf31b
@@ -81,4 +81,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 49ce7d1862abe76b553d5aef87003635507a589a
 
-COCOAPODS: 1.5.0
+COCOAPODS: 1.5.3

@@ -19,7 +19,16 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
     var window: UIWindow?
     var fileListViewController: WebContentTableViewController!
     var tabbarController: UITabBarController!
-    var xunleiUserLoggedIn: Bool = false
+
+    let bundleIdentifier = Bundle.main.bundleIdentifier!
+    @available(iOS 9.0, *)
+    lazy var addressItem: UIApplicationShortcutItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).openaddresses", localizedTitle: "Addresses", localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_addresses"), userInfo: nil)
+    @available(iOS 9.0, *)
+    lazy var dyttItem: UIApplicationShortcutItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).opendytt", localizedTitle: "DYTT", localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_dytt"), userInfo: nil)
+    @available(iOS 9.0, *)
+    lazy var kittenItem: UIApplicationShortcutItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).kittensearch", localizedTitle: "Kitten" , localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_kittensearch"), userInfo: nil)
+    @available(iOS 9.0, *)
+    lazy var torrentItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).opentorrents", localizedTitle: "Torrents", localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_torrents"), userInfo: nil)
 
     class var shared: AppDelegate {
         return UIApplication.shared.delegate as! AppDelegate
@@ -102,6 +111,10 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
+        // Quick actions
+        if #available(iOS 9.0, *) {
+            createActionMenus()
+        }
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
@@ -126,19 +139,12 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
-        
     }
 
     @available(iOS 9.0, *)
     func createActionMenus() {
         if window?.rootViewController?.traitCollection.forceTouchCapability == .available {
-            let bundleIdentifier = Bundle.main.bundleIdentifier!
-            let addressItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).openaddresses", localizedTitle: "Addresses", localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_addresses"), userInfo: nil)
-            let dyttItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).opendytt", localizedTitle: "DYTT", localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_dytt"), userInfo: nil)
-            let kittenItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).kittensearch", localizedTitle: "Kitten"
-                , localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_kittensearch"), userInfo: nil)
             if Configuration.shared.hasTorrentServer {
-                let torrentItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).opentorrents", localizedTitle: "Torrents", localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_torrents"), userInfo: nil)
                 UIApplication.shared.shortcutItems = [addressItem, torrentItem, dyttItem, kittenItem]
             }
             else {
@@ -151,13 +157,13 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
     func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
         let bundleIdentifier = Bundle.main.bundleIdentifier!
         if shortcutItem.type == "\(bundleIdentifier).openaddresses" {
-            self.tabbarController.selectedIndex = 0
+            tabbarController.selectedIndex = 0
         }
         else if shortcutItem.type == "\(bundleIdentifier).opentorrents" {
-            self.tabbarController.selectedIndex = 1
+            tabbarController.selectedIndex = 1
         }
         else if shortcutItem.type == "\(bundleIdentifier).opendytt" {
-            self.tabbarController.selectedIndex = 2
+            tabbarController.selectedIndex = 2
         }
         else if shortcutItem.type == "\(bundleIdentifier).kittensearch" {
             Helper.shared.showTorrentSearchAlertInViewController(window?.rootViewController)
@@ -180,7 +186,6 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
                     disposition = .cancelAuthenticationChallenge
                 } else {
                     credential = manager.session.configuration.urlCredentialStorage?.defaultCredential(for: challenge.protectionSpace)
-
                     if credential != nil {
                         disposition = .useCredential
                     }

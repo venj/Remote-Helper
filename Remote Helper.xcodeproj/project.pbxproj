@@ -659,7 +659,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.Video-Player";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0769baa6-4d77-4958-937f-04a6d42e3846";
+				PROVISIONING_PROFILE = "c649645a-2275-429b-831d-84429caabd7e";
 				PROVISIONING_PROFILE_SPECIFIER = "Remote Helper Development";
 				SWIFT_OBJC_BRIDGING_HEADER = "Remote Helper/Remote Helper-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";

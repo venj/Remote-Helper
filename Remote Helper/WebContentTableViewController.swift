@@ -475,6 +475,7 @@ extension WebContentTableViewController : UIViewControllerPreviewingDelegate {
         guard let webViewController = createWebViewController(forIndexPath: indexPath) else { return nil }
         webViewController.isPeeking = true
         previewingContext.sourceRect = cell.frame
+        self.webViewController = webViewController
         return webViewController
     }
 

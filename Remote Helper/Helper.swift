@@ -105,49 +105,80 @@ open class Helper : NSObject {
             textField.keyboardType = .default
             textField.becomeFirstResponder()
         }
-        let searchAction = UIAlertAction(title: NSLocalizedString("Search", comment: "Search"), style: .default) { _ in
+        let searchAction = UIAlertAction(title: NSLocalizedString("Search", comment: "Search"), style: .default) { [weak self] _ in
+            guard let `self` = self else { return }
             let keyword = alertController.textFields![0].text!
-            let hud = PKHUD.sharedHUD.showHUD()
-            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            let hud = PKHUD.sharedHUD
+            // Not show hud if intelligent torrent download is enabled
+            if !Configuration.shared.isIntelligentTorrentDownloadEnabled { hud.showHUD() }
+
+            let url = URL(string: self.kittenSearchPath(withKeyword: keyword))!
+            let request = Alamofire.request(url)
+            request.responseData { [weak self] response in
                 guard let `self` = self else { return }
-                let url = URL(string: self.kittenSearchPath(withKeyword: keyword))!
-                if let data = try? Data(contentsOf: url) {
-                    let torrents = KittenTorrent.parse(data: data)
-                    if torrents.count == 0 {
-                        DispatchQueue.main.async {
-                            PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("No torrent found", comment: "No torrent found"))
-                        }
-                        return
-                    }
-                    DispatchQueue.main.async {
-                        if let tabControl =  UIApplication.shared.keyWindow?.rootViewController as? UITabBarController, let navControl = tabControl.selectedViewController as? UINavigationController, let searchControl = navControl.topViewController as? VPSearchResultController {
-                            searchControl.torrents = torrents
-                            searchControl.keyword = keyword
-                            searchControl.tableView.reloadData()
-                            hud.hide()
-                            return
-                        }
-                        let searchResultController = VPSearchResultController()
-                        searchResultController.torrents = torrents
-                        searchResultController.keyword = keyword
-                        if let navigationController = viewController as? UINavigationController {
-                            navigationController.pushViewController(searchResultController, animated: true)
-                        }
-                        else if let tabbarController = (UIApplication.shared.delegate as! AppDelegate).window?.rootViewController as? UITabBarController, let navigationController = tabbarController.selectedViewController as? UINavigationController {
-                            navigationController.pushViewController(searchResultController, animated: true)
-                        }
-                        else {
-                            let searchResultNavigationController = UINavigationController(rootViewController: searchResultController)
-                            searchResultController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target:self, action: #selector(Helper.dismissMe(_:)))
-                            viewController.present(searchResultNavigationController, animated: true, completion: nil)
-                        }
-                        hud.hide()
-                    }
-                }
-                else {
+                guard response.result.isSuccess, let data = response.result.value else {
                     DispatchQueue.main.async {
                         PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
                     }
+                    return
+                }
+
+                let torrents = KittenTorrent.parse(data: data)
+                if torrents.count == 0 {
+                    DispatchQueue.main.async {
+                        PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("No torrent found", comment: "No torrent found"))
+                    }
+                    return
+                }
+
+                // Intelligent add torrents
+                if Configuration.shared.isIntelligentTorrentDownloadEnabled {
+                    let selectedTorrents = torrents.filter { torrent in
+                        if torrent.date.timeIntervalSinceNow > 3153600 { // torrent older than 1 year
+                            return false
+                        }
+                        if torrent.title.lowercased().contains("mp4")  {
+                            return true
+                        }
+                        if torrent.title.matches("\\w+-?\\d+[Rr]") {
+                            return true
+                        }
+                        return false
+                    }.sorted { // Sort by date.
+                        $0.date > $1.date
+                    }
+
+                    // Download it!
+                    if selectedTorrents.count > 0 {
+                        self.transmissionDownload(for: selectedTorrents[0].magnet) // Always download latest torrent.
+                        return
+                    }
+                }
+
+                // Show results
+                DispatchQueue.main.async {
+                    if let tabControl =  UIApplication.shared.keyWindow?.rootViewController as? UITabBarController, let navControl = tabControl.selectedViewController as? UINavigationController, let searchControl = navControl.topViewController as? VPSearchResultController {
+                        searchControl.torrents = torrents
+                        searchControl.keyword = keyword
+                        searchControl.tableView.reloadData()
+                        hud.hide()
+                        return
+                    }
+                    let searchResultController = VPSearchResultController()
+                    searchResultController.torrents = torrents
+                    searchResultController.keyword = keyword
+                    if let navigationController = viewController as? UINavigationController {
+                        navigationController.pushViewController(searchResultController, animated: true)
+                    }
+                    else if let tabbarController = (UIApplication.shared.delegate as! AppDelegate).window?.rootViewController as? UITabBarController, let navigationController = tabbarController.selectedViewController as? UINavigationController {
+                        navigationController.pushViewController(searchResultController, animated: true)
+                    }
+                    else {
+                        let searchResultNavigationController = UINavigationController(rootViewController: searchResultController)
+                        searchResultController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target:self, action: #selector(Helper.dismissMe(_:)))
+                        viewController.present(searchResultNavigationController, animated: true, completion: nil)
+                    }
+                    hud.hide()
                 }
             }
         }
@@ -249,7 +280,7 @@ open class Helper : NSObject {
     }
 
     func transmissionDownload(for link: String) {
-        PKHUD.sharedHUD.showHUD()
+        if !Configuration.shared.isIntelligentTorrentDownloadEnabled { PKHUD.sharedHUD.showHUD() }
         parseSessionAndAddTask(link, completionHandler: {
             PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
         }, errorHandler: {

@@ -12,9 +12,19 @@ import Fuzi
 struct KittenTorrent {
     var title: String
     var magnet: String
-    var date: String
+    var dateString: String
     var size: String
     var maxPage: Int = 1
+    var date: Date {
+        let c = dateString.components(separatedBy: "-")
+        let defaultDate = Date().addingTimeInterval(-157680000) // Default to 5 years ago if string is not parsable.
+        if c.count < 3 { return defaultDate }
+        var dc = DateComponents()
+        dc.year = Int(c[0]) ?? 2013
+        dc.month = Int(c[1]) ?? 1
+        dc.day = Int(c[2]) ?? 1
+        return dc.date ?? defaultDate
+    }
 
     static func parse(data: Data) -> [KittenTorrent] {
         var results : [KittenTorrent] = []
@@ -40,7 +50,7 @@ struct KittenTorrent {
                 let size = row.css("td.size") .first?.stringValue ??  ""
                 let date = row.css("td.date") .first?.stringValue ??  ""
                 let magnet = row.css("td.action a").filter{ $0.attr("rel") == "magnet" }.first?.attr("href") ?? ""
-                let torrent = KittenTorrent(title: title, magnet: magnet, date: date, size: size, maxPage: page)
+                let torrent = KittenTorrent(title: title, magnet: magnet, dateString: date, size: size, maxPage: page)
                 results.append(torrent)
             }
         } catch let error {

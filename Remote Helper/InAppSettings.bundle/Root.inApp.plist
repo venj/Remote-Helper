@@ -125,6 +125,16 @@
 			<string>PSTextFieldSpecifier</string>
 		</dict>
 		<dict>
+			<key>DefaultValue</key>
+			<false/>
+			<key>Key</key>
+			<string>kIntelligentTorrentDownload</string>
+			<key>Title</key>
+			<string>Intelligent Torrent Download</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+		</dict>
+		<dict>
 			<key>Title</key>
 			<string>Mi Remote Settings</string>
 			<key>Type</key>

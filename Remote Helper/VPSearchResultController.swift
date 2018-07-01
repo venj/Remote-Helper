@@ -124,7 +124,7 @@ class VPSearchResultController: UITableViewController {
         else if let torrent = torrent as? KittenTorrent { // kitten
             cell.textLabel?.text = torrent.title
             cell.accessoryType = .detailDisclosureButton
-            cell.detailTextLabel?.text = String(format: NSLocalizedString("Tr size: %@, Up date: %@", comment: "Tr size: %@, Up date: %@"), torrent.size, torrent.date)
+            cell.detailTextLabel?.text = String(format: NSLocalizedString("Tr size: %@, Up date: %@", comment: "Tr size: %@, Up date: %@"), torrent.size, torrent.dateString)
         }
 
         return cell
@@ -236,7 +236,7 @@ class VPSearchResultController: UITableViewController {
             description = "\(name), \n\(size), \n\(magnet), \n\(date), \n\(seeders == nil ? 0 : seeders!) " + NSLocalizedString("seeders", comment:"")
         }
         else if let torrent = torrent as? KittenTorrent {
-            description = "\(torrent.title), \(torrent.size), \(torrent.date), \(torrent.magnet.components(separatedBy: "&").first!)"
+            description = "\(torrent.title), \(torrent.size), \(torrent.dateString), \(torrent.magnet.components(separatedBy: "&").first!)"
         }
 
         return description

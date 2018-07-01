@@ -23,6 +23,7 @@ open class Configuration {
                                  RequestUseCellularNetwork: true,
                                  MiAccountUsernameKey: "",
                                  MiAccountPasswordKey: "",
+                                 IntelligentTorrentDownload: false,
                                  ]
     private init() {
         defaults.register(defaults: defaultValues)
@@ -129,6 +130,16 @@ open class Configuration {
         }
         set {
             defaults.set(newValue, forKey: RequestUseCellularNetwork)
+            defaults.synchronize()
+        }
+    }
+
+    open var isIntelligentTorrentDownloadEnabled: Bool {
+        get {
+            return defaults.bool(forKey: IntelligentTorrentDownload)
+        }
+        set {
+            defaults.set(newValue, forKey: IntelligentTorrentDownload)
             defaults.synchronize()
         }
     }

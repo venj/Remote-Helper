@@ -32,6 +32,8 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         }
     }
 
+    var previewingIndexPath: IndexPath?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = NSLocalizedString("Addresses", comment: "Addresses")
@@ -127,10 +129,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            let site = addresses[indexPath.row]
-            AppDelegate.shared.managedObjectContext.delete(site)
-            addresses.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
+            deleteCell(at: indexPath)
         }
     }
 
@@ -341,6 +340,13 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     }
 
     //MARK: - Helper
+    func deleteCell(at indexPath: IndexPath) {
+        let site = addresses[indexPath.row]
+        AppDelegate.shared.managedObjectContext.delete(site)
+        addresses.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .fade)
+    }
+
     func torrentSearch() {
         Helper.shared.showTorrentSearchAlertInViewController(navigationController!)
     }
@@ -409,6 +415,11 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         return webViewController
     }
 
+    func deletePreviewingCell() {
+        if let previewingIndexPath = previewingIndexPath {
+            deleteCell(at: previewingIndexPath)
+        }
+    }
 }
 
 @available(iOS 11.0, *)
@@ -475,6 +486,7 @@ extension WebContentTableViewController : UIViewControllerPreviewingDelegate {
         guard let webViewController = createWebViewController(forIndexPath: indexPath) else { return nil }
         webViewController.isPeeking = true
         previewingContext.sourceRect = cell.frame
+        previewingIndexPath = indexPath
         self.webViewController = webViewController
         return webViewController
     }

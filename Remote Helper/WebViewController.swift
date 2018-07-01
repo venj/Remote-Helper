@@ -38,3 +38,17 @@ class WebViewController: TOWebViewController {
         }
     }
 }
+
+extension WebViewController {
+    @available(iOS 9.0, *)
+    override open var previewActionItems: [UIPreviewActionItem] {
+        get {
+            let deleteItem = UIPreviewAction(title: NSLocalizedString("Delete", comment: "Delete"), style: .destructive, handler: { (action, vc)  in
+                if let webContentViewController = AppDelegate.shared.fileListViewController {
+                    webContentViewController.deletePreviewingCell()
+                }
+            })
+            return [deleteItem]
+        }
+    }
+}

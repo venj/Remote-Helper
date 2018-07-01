@@ -68,6 +68,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         return item
     }()
     var currentSelectedIndexPath: IndexPath?
+    var previewingIndexPath: IndexPath?
 
     var viewedTitles: Set<String> {
         get {
@@ -108,6 +109,11 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
             tableView.cellLayoutMarginsFollowReadableWidth = false
+        }
+
+        // Peek
+        if #available(iOS 9.0, *), traitCollection.forceTouchCapability == .available {
+            registerForPreviewing(with: self, sourceView: tableView)
         }
 
         NotificationCenter.default.addObserver(self, selector: #selector(photoPreloadFinished(_:)), name: NSNotification.Name(rawValue: MWPHOTO_LOADING_DID_END_NOTIFICATION), object: nil)
@@ -302,16 +308,16 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
                 self.mwPhotos.forEach {
                     $0.loadUnderlyingImageAndNotify();
                 }
-                let photoBrowser = MWPhotoBrowser(delegate: self)
-                photoBrowser?.displayActionButton = false
-                photoBrowser?.displayNavArrows = true
-                photoBrowser?.zoomPhotosToFill = false
                 var sIndex = index
                 if index > photos.count - 1 {
                     sIndex = photos.count - 1
                 }
-                photoBrowser?.setCurrentPhotoIndex(UInt(sIndex))
-                self.navigationController?.pushViewController(photoBrowser!, animated: true)
+                let pb = MWPhotoBrowser(delegate: self)!
+                pb.displayActionButton = false
+                pb.displayNavArrows = true
+                pb.zoomPhotosToFill = false
+                pb.setCurrentPhotoIndex(UInt(sIndex))
+                self.navigationController?.pushViewController(pb, animated: true)
             }
             else {
                 PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
@@ -363,5 +369,54 @@ extension VPTorrentsListViewController : UISearchResultsUpdating {
         self.tableView.reloadData()
     }
     
+}
+
+@available(iOS 9.0, *)
+extension VPTorrentsListViewController : UIViewControllerPreviewingDelegate {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let indexPath = tableView.indexPathForRow(at: location) ,
+            let cell = tableView.cellForRow(at: indexPath) else { return nil }
+        previewingIndexPath = indexPath
+        if let title = cell.textLabel?.text {
+            cell.textLabel?.textColor = UIColor.gray
+            viewedTitles.insert(title)
+        }
+        currentSelectedIndexPath = indexPath
+        let list = !searchController.isActive ? dateList : filteredDateList
+        guard let date = list[indexPath.row].addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) else { return nil }
+        let pb = MWPhotoBrowser(delegate: self)!
+        pb.displayActionButton = false
+        pb.displayNavArrows = true
+        pb.zoomPhotosToFill = false
+
+        let request = Alamofire.request(Configuration.shared.searchPath(withKeyword: date))
+        request.responseJSON { [weak self] response in
+            guard let `self` = self else { return }
+            if response.result.isSuccess {
+                guard let photos = response.result.value as? [String] else { return }
+                self.photos = photos
+                self.mwPhotos.forEach {
+                    $0.loadUnderlyingImageAndNotify();
+                }
+                pb.reloadData()
+            }
+        }
+
+        previewingContext.sourceRect = cell.frame
+        return pb
+    }
+
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        navigationController?.pushViewController(viewControllerToCommit, animated: false)
+
+        if let indexPath = previewingIndexPath,
+            let cell = tableView.cellForRow(at: indexPath),
+            let title = cell.textLabel?.text {
+            cell.textLabel?.textColor = UIColor.gray
+            viewedTitles.insert(title)
+        }
+
+        (viewControllerToCommit as? MWPhotoBrowser)?.reloadData()
+    }
 }
 

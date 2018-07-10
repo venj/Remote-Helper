@@ -30,6 +30,7 @@ let RequestUseCellularNetwork = "kRequestUseCellularNetwork"
 let CustomRequestUserAgent = "kCustomRequestUserAgent"
 let ViewedTitlesKey = "kViewedTitles"
 let IntelligentTorrentDownload = "kIntelligentTorrentDownload"
+let PrefersMagnet = "kPrefersMagnet"
 let ViewedResources = "ViewedResourcesKey"
 
 extension Notification.Name {

@@ -135,6 +135,16 @@
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
 		<dict>
+			<key>DefaultValue</key>
+			<true/>
+			<key>Key</key>
+			<string>kPrefersMagnet</string>
+			<key>Title</key>
+			<string>Prefers Magnet</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+		</dict>
+		<dict>
 			<key>Title</key>
 			<string>Mi Remote Settings</string>
 			<key>Type</key>

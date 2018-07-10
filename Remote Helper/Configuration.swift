@@ -24,6 +24,7 @@ open class Configuration {
                                  MiAccountUsernameKey: "",
                                  MiAccountPasswordKey: "",
                                  IntelligentTorrentDownload: false,
+                                 PrefersMagnet: true,
                                  ]
     private init() {
         defaults.register(defaults: defaultValues)
@@ -144,6 +145,16 @@ open class Configuration {
         }
     }
 
+    open var prefersManget: Bool {
+        get {
+            return defaults.bool(forKey: PrefersMagnet)
+        }
+        set {
+            defaults.set(newValue, forKey: PrefersMagnet)
+            defaults.synchronize()
+        }
+    }
+
     open var customUserAgent: String? {
         get {
             return defaults.string(forKey: CustomRequestUserAgent)
@@ -190,7 +201,7 @@ open class Configuration {
             if subPath.last == "/" {
                 subPath.removeLast()
             }
-            if subPath.first != "/" {
+            if !subPath.isEmpty, subPath.first != "/" {
                 subPath = "/\(subPath)"
             }
         }
@@ -200,6 +211,10 @@ open class Configuration {
 
     var torrentsListPath: String {
         return baseLink + "/torrents?stats=true"
+    }
+
+    func torrentPath(withInfoHash infoHash: String) -> String {
+        return baseLink + "/torrent/\(infoHash)"
     }
 
     func dbSearchPath(withKeyword keyword: String) -> String {

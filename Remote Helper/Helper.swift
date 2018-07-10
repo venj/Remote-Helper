@@ -189,22 +189,58 @@ open class Helper : NSObject {
         viewController.present(alertController, animated: true, completion: nil)
     }
 
-    //MARK: - Transmission Remote Download Helpers
-    func downloadTask(_ magnet:String, toDir dir: String, completionHandler:(() -> Void)? = nil,  errorHandler:(() -> Void)? = nil) {
-        let params = ["method" : "torrent-add", "arguments": ["paused" : false, "download-dir" : dir, "filename" : magnet]] as [String : Any]
-        let HTTPHeaders = ["X-Transmission-Session-Id" : sessionHeader]
-        //, parameters: params, encoding: .JSON, headers: HTTPHeaders
-        let request = Alamofire.request(Configuration.shared.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)
-        request.authenticate(user: Configuration.shared.transmissionUsername, password: Configuration.shared.transmissionPassword).responseJSON { response in
-            if response.result.isSuccess {
-                let responseObject = response.result.value as! [String: Any]
-                let result = responseObject["result"] as! String
-                if result == "success" {
-                    completionHandler?()
-                }
+    func infoHash(fromMagnet magnet: String) -> String {
+        return magnet.components(separatedBy: "&")[0].components(separatedBy: ":").last!
+    }
+
+    func downloadTorrent(withMagnet magnet: String, completion: @escaping (String) -> Void) {
+        if Configuration.shared.prefersManget {
+            completion(magnet)
+            return
+        }
+        let hash = infoHash(fromMagnet: magnet)
+        let address = Configuration.shared.torrentPath(withInfoHash: hash)
+        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+            let fileURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("\(hash).torrent")
+            return (fileURL, [.removePreviousFile, .createIntermediateDirectories])
+        }
+        Alamofire.download(address, to: destination).responseData { (response) in
+            if response.error == nil, response.result.isSuccess, let data = response.result.value {
+                completion(data.base64EncodedString())
             }
             else {
-                errorHandler?()
+                completion(magnet)
+            }
+        }
+    }
+
+    //MARK: - Transmission Remote Download Helpers
+    func downloadTask(_ magnet: String, toDir dir: String, completionHandler:(() -> Void)? = nil,  errorHandler:(() -> Void)? = nil) {
+        downloadTorrent(withMagnet: magnet) { [weak self] (file) in
+            guard let `self` = self else { return }
+            var params = ["method" : "torrent-add"] as [String : Any]
+            if file.prefix(6) == "magnet" {
+                params["arguments"] = ["paused" : false, "download-dir" : dir, "filename": file]
+            }
+            else {
+                params["arguments"] = ["paused" : false, "download-dir" : dir, "metainfo": file]
+            }
+            let HTTPHeaders = ["X-Transmission-Session-Id" : self.sessionHeader]
+            let request = Alamofire.request(Configuration.shared.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)
+            request.authenticate(user: Configuration.shared.transmissionUsername, password: Configuration.shared.transmissionPassword).responseJSON { response in
+                if response.result.isSuccess {
+                    let responseObject = response.result.value as! [String: Any]
+                    let result = responseObject["result"] as! String
+                    if result == "success" {
+                        completionHandler?()
+                    }
+                    else {
+                        errorHandler?()
+                    }
+                }
+                else {
+                    errorHandler?()
+                }
             }
         }
     }

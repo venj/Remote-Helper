@@ -144,8 +144,9 @@ open class Helper : NSObject {
                             return true
                         }
                         return false
-                    }.sorted { // Sort by date.
-                        $0.date > $1.date
+                    }
+                    .sorted { // Prefers shoter title over newer time.
+                        $0.title.count < $1.title.count || $0.date > $1.date
                     }
 
                     // Download it!

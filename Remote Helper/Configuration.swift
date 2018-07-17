@@ -195,7 +195,7 @@ open class Configuration {
     var baseLink: String {
         let host = serverHost
         let port = serverPort
-        var subPath = serverPath
+        var subPath = (serverPath == "/") ? "" : serverPath
 
         if subPath.count > 0 && subPath != "/" {
             if subPath.last == "/" {

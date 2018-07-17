@@ -135,20 +135,12 @@ open class Helper : NSObject {
                 if Configuration.shared.isIntelligentTorrentDownloadEnabled {
                     let selectedTorrents = torrents.filter { torrent in
                         let lowercasedTitle = torrent.title.lowercased()
-                        if torrent.date.timeIntervalSinceNow > 3153600 { // torrent older than 1 year
-                            return false
-                        }
-                        if lowercasedTitle.contains("mp4")  { // MP4 Prefered
+                        if torrent.date.timeIntervalSinceNow < 3153600, // torrent older than 1 year
+                           lowercasedTitle.contains("mp4"), // MP4 Prefered
+                           lowercasedTitle.matches("\\w+-?\\d+"), // Bango pattern
+                           (lowercasedTitle.contains(keyword.lowercased()) ||
+                           lowercasedTitle.contains(keyword.replacingOccurrences(of: "-", with: "").lowercased())) {
                             return true
-                        }
-                        if lowercasedTitle.matches("\\w+-?\\d+") { // Bango pattern
-                            if lowercasedTitle.contains(keyword.lowercased()) ||
-                                lowercasedTitle.contains(keyword.replacingOccurrences(of: "-", with: "").lowercased()) {
-                                return true
-                            }
-                            else {
-                                return false
-                            }
                         }
                         return false
                     }

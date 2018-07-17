@@ -31,8 +31,14 @@ open class Helper : NSObject {
     func kittenSearchPath(withKeyword keyword: String, page: Int = 1) -> String {
         let kw = keyword.addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics)
         let escapedKeyword = kw == nil ? "" : kw!
-        let pageString = page == 1 ? "" : "\(page)"
-        return "https://www.torrentkitty.tv/search/\(escapedKeyword)/\(pageString)"
+        let source = Configuration.shared.torrentKittenSource
+        switch source {
+        case .bt177:
+            return "http://www.bt177.me/word/\(escapedKeyword)_\(page).html"
+        default: // 0 or other out of bound value
+            let pageString = page == 1 ? "" : "\(page)"
+            return "https://www.torrentkitty.tv/search/\(escapedKeyword)/\(pageString)"
+        }
     }
 
     //MARK: - Local Files and ImageCache Helpers
@@ -98,8 +104,9 @@ open class Helper : NSObject {
     func showTorrentSearchAlertInViewController(_ viewController:UIViewController?) {
         guard let viewController = viewController else { return } // Just do nothing...
         if (self.showCellularHUD()) { return }
+        let source = Configuration.shared.torrentKittenSource
         let title = NSLocalizedString("Search Torrent Kitten", comment: "Search Torrent Kitten")
-        let message = NSLocalizedString("Please enter video serial (or anything):", comment: "Please enter video serial (or anything):")
+        let message = NSLocalizedString("Please enter video serial (or anything).\nUsing mirror: ", comment: "Please enter video serial (or anything).\nUsing mirror: ") + source.description
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addTextField { (textField) in
             textField.keyboardType = .default
@@ -123,7 +130,8 @@ open class Helper : NSObject {
                     return
                 }
 
-                let torrents = KittenTorrent.parse(data: data)
+                let source = Configuration.shared.torrentKittenSource
+                let torrents = KittenTorrent.parse(data: data, source: source)
                 if torrents.count == 0 {
                     DispatchQueue.main.async {
                         PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("No torrent found", comment: "No torrent found"))

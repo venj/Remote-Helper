@@ -25,6 +25,7 @@ open class Configuration {
                                  MiAccountPasswordKey: "",
                                  IntelligentTorrentDownload: false,
                                  PrefersMagnet: true,
+                                 TorrentKittenSource: KittenSource.main.rawValue,
                                  ]
     private init() {
         defaults.register(defaults: defaultValues)
@@ -151,6 +152,16 @@ open class Configuration {
         }
         set {
             defaults.set(newValue, forKey: PrefersMagnet)
+            defaults.synchronize()
+        }
+    }
+
+    open var torrentKittenSource: KittenSource {
+        get {
+            return KittenSource(rawValue: defaults.integer(forKey: TorrentKittenSource)) ?? .main
+        }
+        set {
+            defaults.set(newValue.rawValue, forKey: TorrentKittenSource)
             defaults.synchronize()
         }
     }

@@ -31,6 +31,7 @@ let CustomRequestUserAgent = "kCustomRequestUserAgent"
 let ViewedTitlesKey = "kViewedTitles"
 let IntelligentTorrentDownload = "kIntelligentTorrentDownload"
 let PrefersMagnet = "kPrefersMagnet"
+let TorrentKittenSource = "kTorrentKittenSource"
 let ViewedResources = "ViewedResourcesKey"
 
 extension Notification.Name {

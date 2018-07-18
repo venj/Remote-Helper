@@ -29,15 +29,14 @@ open class Helper : NSObject {
     var kittenBlackList: [String] = ["正品香烟", "中铧", "稥湮", "威信", "试抽"]
 
     func kittenSearchPath(withKeyword keyword: String, page: Int = 1) -> String {
-        let kw = keyword.addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics)
+        let kw = keyword.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
         let escapedKeyword = kw == nil ? "" : kw!
         let source = Configuration.shared.torrentKittenSource
         switch source {
         case .bt177:
             return "http://www.bt177.me/word/\(escapedKeyword)_\(page).html"
         default: // 0 or other out of bound value
-            let pageString = page == 1 ? "" : "\(page)"
-            return "https://www.torrentkitty.tv/search/\(escapedKeyword)/\(pageString)"
+            return "\(Configuration.shared.baseLink)/kitty/\(escapedKeyword)/\(page)"
         }
     }
 
@@ -105,6 +104,13 @@ open class Helper : NSObject {
         guard let viewController = viewController else { return } // Just do nothing...
         if (self.showCellularHUD()) { return }
         let source = Configuration.shared.torrentKittenSource
+        // Prevent Kitty Search when no server configured.
+        if source == .main && !Configuration.shared.hasTorrentServer {
+            let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: NSLocalizedString("Search TorrentKitty now requires server support, please change to other search sources in Settings.", comment: "Search TorrentKitty now requires server support, please change to other search sources in Settings."), preferredStyle: .alert)
+            let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .cancel)
+            alert.addAction(okAction)
+            return
+        }
         let title = NSLocalizedString("Search Torrent Kitten", comment: "Search Torrent Kitten")
         let message = NSLocalizedString("Please enter video serial (or anything).\nUsing mirror: ", comment: "Please enter video serial (or anything).\nUsing mirror: ") + source.description
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -119,7 +125,8 @@ open class Helper : NSObject {
             // Not show hud if intelligent torrent download is enabled
             if !Configuration.shared.isIntelligentTorrentDownloadEnabled { hud.showHUD() }
 
-            let url = URL(string: self.kittenSearchPath(withKeyword: keyword))!
+            let link = self.kittenSearchPath(withKeyword: keyword)
+            let url = URL(string: link)!
             let request = Alamofire.request(url)
             request.responseData { [weak self] response in
                 guard let `self` = self else { return }

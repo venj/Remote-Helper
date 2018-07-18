@@ -9,7 +9,7 @@
 import Foundation
 
 @available(iOS 5.0, OSX 10.7, *)
-public extension NSDictionary {
+public extension Dictionary {
     var JSONString: String? {
         get {
             guard let data = self.JSONData else { return nil }

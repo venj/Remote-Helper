@@ -1,8 +1,9 @@
-platform :ios, '8.0'
+
 use_frameworks!
 source 'https://github.com/CocoaPods/Specs.git'
 
 target "Remote Helper" do
+  platform :ios, '8.0'
   # Swift
   pod 'Alamofire'
   pod 'PKHUD'
@@ -15,5 +16,11 @@ target "Remote Helper" do
   pod 'InAppSettingsKit', '~> 2.7'
   pod 'MWPhotoBrowser', :git => 'https://github.com/venj/MWPhotoBrowser.git', :branch => 'master'
   pod 'TOWebViewController', :git => 'https://github.com/venj/TOWebViewController.git'
-  pod 'iOS8Colors', '~> 0.1.2'
+end
+
+target "Remote Helper Mac" do
+    platform :osx, '10.10'
+    pod 'Alamofire'
+    pod 'ReachabilitySwift'
+    pod 'Fuzi'
 end

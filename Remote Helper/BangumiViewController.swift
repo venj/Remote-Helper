@@ -9,7 +9,6 @@
 import UIKit
 import PKHUD
 import MWPhotoBrowser
-import iOS8Colors
 
 class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPopoverPresentationControllerDelegate {
     let CellIdentifier = "BangumiTableCell"
@@ -202,7 +201,7 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
             UIPasteboard.general.string = link.target
             PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
         }
-        copyAction.backgroundColor = UIColor.iOS8purple()
+        copyAction.backgroundColor = UIColor(red:0.42, green:0.44, blue:0.87, alpha:1.00)
 
         // Mi Download
         let miAction = UITableViewRowAction(style: .default, title: NSLocalizedString("Mi", comment: "Mi")) { [weak self] (_, _) in
@@ -211,7 +210,7 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
             Helper.shared.miDownloadForLink(link.target, fallbackIn: self)
         }
 
-        miAction.backgroundColor = UIColor.iOS8green()
+        miAction.backgroundColor = UIColor(red:0.34, green:0.86, blue:0.47, alpha:1.00)
 
         // Download Link
         if link.isMagnet {
@@ -220,7 +219,7 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
                 if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
                 Helper.shared.transmissionDownload(for: link.target)
             }
-            downloadAction.backgroundColor = UIColor.iOS8red()
+            downloadAction.backgroundColor = UIColor(red:1.00, green:0.33, blue:0.24, alpha:1.00)
             
             return [miAction, downloadAction, copyAction]
         }

@@ -98,14 +98,13 @@ open class Helper : NSObject {
 
     //MARK: - Transmission Remote Download Helpers
     func downloadTask(_ magnet: String, toDir dir: String, completionHandler:(() -> Void)? = nil,  errorHandler:(() -> Void)? = nil) {
-        downloadTorrent(withMagnet: magnet) { [weak self] (file) in
-            guard let `self` = self else { return }
+        func addTorrentInfo(_ magnetOrMetaInfo: String) {
             var params = ["method" : "torrent-add"] as [String : Any]
-            if file.prefix(6) == "magnet" {
-                params["arguments"] = ["paused" : false, "download-dir" : dir, "filename": file]
+            if magnetOrMetaInfo.prefix(6) == "magnet" {
+                params["arguments"] = ["paused" : false, "download-dir" : dir, "filename": magnetOrMetaInfo]
             }
             else {
-                params["arguments"] = ["paused" : false, "download-dir" : dir, "metainfo": file]
+                params["arguments"] = ["paused" : false, "download-dir" : dir, "metainfo": magnetOrMetaInfo]
             }
             let HTTPHeaders = ["X-Transmission-Session-Id" : self.sessionHeader]
             let request = Alamofire.request(Configuration.shared.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)
@@ -125,8 +124,16 @@ open class Helper : NSObject {
                 }
             }
         }
-    }
 
+        if magnet.prefix(6) != "magnet" {
+            addTorrentInfo(magnet)
+        }
+        else {
+            downloadTorrent(withMagnet: magnet) { (file) in
+                addTorrentInfo(file)
+            }
+        }
+    }
 }
 
 

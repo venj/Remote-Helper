@@ -251,7 +251,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             if response.result.isSuccess {
                 hud.hide()
                 guard let responseObject = response.result.value as? [String: Any] else { return }
-                guard let hash = responseObject["hash"] as? String else { return }
+                guard let hash = responseObject["hash"] as? String, let torrent = responseObject["torrent"] as? String else { return }
                 let message = "magnet:?xt=urn:btih:\(hash.uppercased())"
                 UIPasteboard.general.string = message
 
@@ -262,7 +262,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
                 alert.addAction(miAction)
 
                 let transmissionAction = UIAlertAction(title: "Transmission", style: .default, handler: { (action) in
-                    Helper.shared.transmissionDownload(for: message)
+                    Helper.shared.transmissionDownload(for: torrent)
                 })
                 alert.addAction(transmissionAction)
 

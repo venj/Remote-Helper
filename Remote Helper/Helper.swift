@@ -88,7 +88,12 @@ open class Helper : NSObject {
         }
         Alamofire.download(address, to: destination).responseData { (response) in
             if response.error == nil, response.result.isSuccess, let data = response.result.value {
-                completion(data.base64EncodedString())
+                if data.count < 512 { // Possibly not a torrent file.
+                    completion(magnet)
+                }
+                else {
+                    completion(data.base64EncodedString())
+                }
             }
             else {
                 completion(magnet)

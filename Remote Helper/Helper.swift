@@ -86,9 +86,9 @@ open class Helper : NSObject {
             let fileURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("\(hash).torrent")
             return (fileURL, [.removePreviousFile, .createIntermediateDirectories])
         }
-        Alamofire.download(address, to: destination).responseData { (response) in
+        Alamofire.download(address, to: destination).validate(statusCode: [200]).responseData { (response) in
             if response.error == nil, response.result.isSuccess, let data = response.result.value {
-                if data.count < 512 { // Possibly not a torrent file.
+                if data.count < 512 { // 404 or very small file size (possible bad torrent file)
                     completion(magnet)
                 }
                 else {

@@ -12,6 +12,7 @@ import Alamofire
 import SafariServices
 import TOWebViewController
 import Reachability
+import SwiftEntryKit
 
 extension Helper {
 
@@ -26,11 +27,33 @@ extension Helper {
         return UIColor(red:0.94, green:0.44, blue:0.19, alpha:1)
     }
 
+    func showNote(withMessage message: String) {
+        let text = message
+        let style = EKProperty.LabelStyle(font: UIFont.systemFont(ofSize: 14.0), color: .white, alignment: .center)
+        let labelContent = EKProperty.LabelContent(text: text, style: style)
+
+        let contentView = EKNoteMessageView(with: labelContent)
+        var attributes = EKAttributes.topNote
+        attributes.scroll = .disabled
+        attributes.windowLevel = .statusBar
+        attributes.entryInteraction = .absorbTouches
+        attributes.name = "Top Note"
+        attributes.hapticFeedbackType = .success
+        attributes.popBehavior = .animated(animation: .translation)
+        attributes.entryBackground = .color(color: UIColor(red:0.40, green:0.73, blue:0.16, alpha:1.00))
+        attributes.shadow = .active(with: .init(color: UIColor.init(red: 48.0/255.0, green: 47.0/255.0, blue: 48.0/255.0, alpha: 1.0), opacity: 0.5, radius: 2))
+        attributes.statusBar = .light
+
+        SwiftEntryKit.display(entry: contentView, using: attributes)
+    }
+
     func showCellularHUD() -> Bool {
         guard let reachability = self.reachability else { return false }
         if !Configuration.shared.userCellularNetwork && reachability.connection != .wifi {
-            DispatchQueue.main.async(execute: { () -> Void in
-                PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Cellular data is turned off.", comment: "Cellular data is turned off."))
+            DispatchQueue.main.async(execute: { [weak self] () -> Void in
+                //PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Cellular data is turned off.", comment: "Cellular data is turned off."))
+                guard let `self` = self else { return }
+                self.showNote(withMessage: NSLocalizedString("Cellular data is turned off.", comment: "Cellular data is turned off."))
             })
             return true
         }
@@ -73,8 +96,10 @@ extension Helper {
             request.responseData { [weak self] response in
                 guard let `self` = self else { return }
                 guard response.result.isSuccess, let data = response.result.value else {
-                    DispatchQueue.main.async {
-                        PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+                    DispatchQueue.main.async { [weak self] in
+                        guard let `self` = self else { return }
+                        self.showNote(withMessage: NSLocalizedString("Connection failed.", comment: "Connection failed."))
+                        //PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
                     }
                     return
                 }
@@ -82,8 +107,10 @@ extension Helper {
                 let source = Configuration.shared.torrentKittenSource
                 let torrents = KittenTorrent.parse(data: data, source: source)
                 if torrents.count == 0 {
-                    DispatchQueue.main.async {
-                        PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("No torrent found", comment: "No torrent found"))
+                    DispatchQueue.main.async { [weak self] in
+                        guard let `self` = self else { return }
+                        self.showNote(withMessage: NSLocalizedString("No torrent found", comment: "No torrent found"))
+                        //PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("No torrent found", comment: "No torrent found"))
                     }
                     return
                 }
@@ -149,10 +176,14 @@ extension Helper {
 
     func transmissionDownload(for link: String) {
         if !Configuration.shared.isIntelligentTorrentDownloadEnabled { PKHUD.sharedHUD.showHUD() }
-        parseSessionAndAddTask(link, completionHandler: {
-            PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
-        }, errorHandler: {
-            PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Transmission server error.", comment: "Transmission server error."))
+        parseSessionAndAddTask(link, completionHandler: { [weak self] in
+            guard let `self` = self else { return }
+            self.showNote(withMessage: NSLocalizedString("Task added.", comment: "Task added."))
+            //PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
+        }, errorHandler: { [weak self] in
+            guard let `self` = self else { return }
+            self.showNote(withMessage: NSLocalizedString("Transmission server error.", comment: "Transmission server error."))
+            //PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Transmission server error.", comment: "Transmission server error."))
         })
     }
 
@@ -166,7 +197,8 @@ extension Helper {
 
     func miDownloadForLinks(_ links: [String], fallbackIn viewController: UIViewController) {
         guard canStartMiDownload else {
-            PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Mi account not set.", comment: "Mi account not set."))
+            self.showNote(withMessage: NSLocalizedString("Mi account not set.", comment: "Mi account not set."))
+            //PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Mi account not set.", comment: "Mi account not set."))
             return
         }
         let hud = PKHUD.sharedHUD.showHUD()
@@ -191,17 +223,20 @@ extension Helper {
                 hud.setMessage(NSLocalizedString("Added! Code: ", comment: "Added! Code: ") + "\(code)")
             }
             hud.hide(afterDelay: 1.0)
-        }, error: { (error) in
+        }, error: { [weak self] (error) in
             hud.hide()
+            guard let `self` = self else { return }
             switch error {
             case .capchaError(let link):
                 PKHUD.sharedHUD.hide()
-                DispatchQueue.main.after(0.5, execute: {
+                DispatchQueue.main.after(0.5, execute: { [weak self] in
+                    guard let `self` = self else { return }
                     self.showMiDownload(for: link, inViewController: viewController)
                 })
             default:
                 let reason = error.localizedDescription
-                PKHUD.sharedHUD.showHudWithMessage(reason)
+                self.showNote(withMessage: reason)
+                //PKHUD.sharedHUD.showHudWithMessage(reason)
             }
         })
     }

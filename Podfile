@@ -11,6 +11,8 @@ target "Remote Helper" do
   pod 'ReachabilitySwift'
   pod 'Fuzi'
   #pod 'Kanna'
+  pod 'SwiftEntryKit', :git => 'https://github.com/imvenj/SwiftEntryKit.git', :branch => 'master'
+  pod 'QuickLayout', :git => 'https://github.com/imvenj/QuickLayout.git', :branch => 'master'
 
   # Objective-C
   pod 'InAppSettingsKit', '~> 2.7'

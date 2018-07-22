@@ -10,10 +10,13 @@ PODS:
     - SDWebImage
   - PasscodeLock (1.0.2)
   - PKHUD (5.1.0)
+  - QuickLayout (2.0.2)
   - ReachabilitySwift (4.1.0)
-  - SDWebImage (4.4.1):
-    - SDWebImage/Core (= 4.4.1)
-  - SDWebImage/Core (4.4.1)
+  - SDWebImage (4.4.2):
+    - SDWebImage/Core (= 4.4.2)
+  - SDWebImage/Core (4.4.2)
+  - SwiftEntryKit (0.5.6):
+    - QuickLayout
   - TOWebViewController (2.0.19)
 
 DEPENDENCIES:
@@ -23,7 +26,9 @@ DEPENDENCIES:
   - MWPhotoBrowser (from `https://github.com/venj/MWPhotoBrowser.git`, branch `master`)
   - PasscodeLock (from `https://github.com/venj/SwiftPasscodeLock.git`, branch `master`)
   - PKHUD
+  - QuickLayout (from `https://github.com/imvenj/QuickLayout.git`, branch `master`)
   - ReachabilitySwift
+  - SwiftEntryKit (from `https://github.com/imvenj/SwiftEntryKit.git`, branch `master`)
   - TOWebViewController (from `https://github.com/venj/TOWebViewController.git`)
 
 SPEC REPOS:
@@ -44,6 +49,12 @@ EXTERNAL SOURCES:
   PasscodeLock:
     :branch: master
     :git: https://github.com/venj/SwiftPasscodeLock.git
+  QuickLayout:
+    :branch: master
+    :git: https://github.com/imvenj/QuickLayout.git
+  SwiftEntryKit:
+    :branch: master
+    :git: https://github.com/imvenj/SwiftEntryKit.git
   TOWebViewController:
     :git: https://github.com/venj/TOWebViewController.git
 
@@ -54,6 +65,12 @@ CHECKOUT OPTIONS:
   PasscodeLock:
     :commit: 8444efd8317753baa99dde25b5f3748f1b2238e7
     :git: https://github.com/venj/SwiftPasscodeLock.git
+  QuickLayout:
+    :commit: a30c5ad4057fc419c288d56c927cef2556410f51
+    :git: https://github.com/imvenj/QuickLayout.git
+  SwiftEntryKit:
+    :commit: 32e4f3c8f8acd2e93c2161accf3f8d6cfc90c20e
+    :git: https://github.com/imvenj/SwiftEntryKit.git
   TOWebViewController:
     :commit: bea1f9051f96ee107eee3dc8a46bdf4b17b4345c
     :git: https://github.com/venj/TOWebViewController.git
@@ -67,10 +84,12 @@ SPEC CHECKSUMS:
   MWPhotoBrowser: 4fc9fdf49db5f13b56ff4b4ec5fbbb2bf16c950f
   PasscodeLock: b2856c4f60ebb83fc11ea4acc2bc184b8bea4990
   PKHUD: 62ea46a1e88c4def1da784878d199bb54c841e3c
+  QuickLayout: 63c8eb0b50077e65c25c410f164b2a72b9a6f8ca
   ReachabilitySwift: 6849231cd4e06559f3b9ef4a97a0a0f96d41e09f
-  SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
+  SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
+  SwiftEntryKit: c271bf9671516f84fcbbab94847820bd3ec59b3f
   TOWebViewController: accd62ec0acc8d5c2e1e195c6f7ff7654c3c840c
 
-PODFILE CHECKSUM: 2171513b47009489839d7626255d8f5909a8d643
+PODFILE CHECKSUM: c9608b7e5f546753cc34ffc5fcb3c3961f254f6e
 
 COCOAPODS: 1.5.3

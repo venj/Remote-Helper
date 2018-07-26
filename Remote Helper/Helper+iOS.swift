@@ -52,11 +52,11 @@ extension Helper {
         attributes.windowLevel = .statusBar
         attributes.entryInteraction = .absorbTouches
         attributes.name = "Top Note"
-        attributes.hapticFeedbackType = .success
+        attributes.hapticFeedbackType = .none
         attributes.popBehavior = .animated(animation: .translation)
-        attributes.entryBackground = .color(color: UIColor(red:0.40, green:0.73, blue:0.16, alpha:1.00))
-        attributes.shadow = .active(with: .init(color: UIColor(red:0.42, green:0.44, blue:0.89, alpha:1.00), opacity: 0.5, radius: 2))
-        attributes.statusBar = .light
+        attributes.entryBackground = .color(color: UIColor(red:0.42, green:0.44, blue:0.89, alpha:1.00))
+        attributes.shadow = .active(with: .init(color: UIColor.init(red: 48.0/255.0, green: 47.0/255.0, blue: 48.0/255.0, alpha: 1.0), opacity: 0.5, radius: 2))
+        attributes.statusBar = .inferred
 
         SwiftEntryKit.display(entry: contentView, using: attributes)
     }
@@ -76,7 +76,7 @@ extension Helper {
         attributes.popBehavior = .animated(animation: .translation)
         attributes.entryBackground = .color(color: type.color)
         attributes.shadow = .active(with: .init(color: UIColor.init(red: 48.0/255.0, green: 47.0/255.0, blue: 48.0/255.0, alpha: 1.0), opacity: 0.5, radius: 2))
-        attributes.statusBar = .light
+        attributes.statusBar = .inferred
 
         SwiftEntryKit.display(entry: contentView, using: attributes)
     }

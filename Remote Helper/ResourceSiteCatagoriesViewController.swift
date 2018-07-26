@@ -8,7 +8,7 @@
 
 import UIKit
 import Alamofire
-import PKHUD
+import SwiftEntryKit
 
 class ResourceSiteCatagoriesViewController: UITableViewController {
     let CellIdentifier = "ResourceSiteCatagoriesTableCell"
@@ -103,13 +103,13 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
     }
 
     func process(_ title: String, _ link: String) {
-        let hud = PKHUD.sharedHUD.showHUD()
+        Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
         let request = Alamofire.request(link)
         request.responseData { [weak self] response in
             guard let `self` = self else { return }
-            hud.hide()
+            SwiftEntryKit.dismiss()
             if !response.result.isSuccess {
-                PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Network Error", comment: "Network Error"))
+                Helper.shared.showNote(withMessage: NSLocalizedString("Network Error", comment: "Network Error"), type:.error)
                 return
             }
             if response.result.isFailure { return } // Fail

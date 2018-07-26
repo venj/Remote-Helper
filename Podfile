@@ -6,7 +6,6 @@ target "Remote Helper" do
   platform :ios, '8.0'
   # Swift
   pod 'Alamofire'
-  pod 'PKHUD'
   pod 'PasscodeLock', :git => 'https://github.com/venj/SwiftPasscodeLock.git', :branch => 'master'
   pod 'ReachabilitySwift'
   pod 'Fuzi'

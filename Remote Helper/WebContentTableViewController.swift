@@ -14,7 +14,6 @@ import MWPhotoBrowser
 import InAppSettingsKit
 import CoreData
 import Fuzi
-import PKHUD
 
 class WebContentTableViewController: UITableViewController, IASKSettingsDelegate, UIPopoverPresentationControllerDelegate {
     fileprivate let CellIdentifier = "WebContentTableViewCell"
@@ -200,7 +199,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             }
         }
         else if specifier.key() == ClearCacheNowKey {
-            let hud = PKHUD.sharedHUD.showHUD()
+            Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
             DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
                 SDImageCache.shared().clearDisk()
                 let defaults = UserDefaults.standard
@@ -209,8 +208,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                 defaults.synchronize()
                 sender.synchronizeSettings()
                 DispatchQueue.main.async {
-                    hud.hide()
-                    PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Cache Cleared!", comment: "Cache Cleared!"))
+                    Helper.shared.showNote(withMessage: NSLocalizedString("Cache Cleared!", comment: "Cache Cleared!"))
                     sender.tableView.reloadData()
                 }
             }
@@ -375,7 +373,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             validAddresses = links
 
             if validAddresses.count == 0 {
-                PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("No downloadable link.", comment: "No downloadable link."))
+                Helper.shared.showNote(withMessage: NSLocalizedString("No downloadable link.", comment: "No downloadable link."), type:.warning)
             }
             else {
                 let linksViewController = BangumiViewController()

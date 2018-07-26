@@ -7,15 +7,30 @@
 //
 
 import UIKit
-import PKHUD
 import Alamofire
 import SafariServices
 import TOWebViewController
 import Reachability
 import SwiftEntryKit
 
-extension Helper {
+enum NoteType {
+    case normal
+    case warning
+    case error
 
+    var color: UIColor {
+        switch self {
+        case .normal:
+            return UIColor(red:0.40, green:0.73, blue:0.16, alpha:1.00)
+        case .warning:
+            return UIColor(red:0.89, green:0.40, blue:0.00, alpha:1.00)
+        case .error:
+            return UIColor(red:0.94, green:0.28, blue:0.14, alpha:1.00)
+        }
+    }
+}
+
+extension Helper {
     var reachability: Reachability? {
         let reach = Reachability()
         try? reach?.startNotifier()
@@ -27,12 +42,11 @@ extension Helper {
         return UIColor(red:0.94, green:0.44, blue:0.19, alpha:1)
     }
 
-    func showNote(withMessage message: String) {
-        let text = message
+    func showProcessingNote(withMessage message: String) {
         let style = EKProperty.LabelStyle(font: UIFont.systemFont(ofSize: 14.0), color: .white, alignment: .center)
-        let labelContent = EKProperty.LabelContent(text: text, style: style)
+        let labelContent = EKProperty.LabelContent(text: message, style: style)
 
-        let contentView = EKNoteMessageView(with: labelContent)
+        let contentView = EKProcessingNoteMessageView(with: labelContent, activityIndicator: .white)
         var attributes = EKAttributes.topNote
         attributes.scroll = .disabled
         attributes.windowLevel = .statusBar
@@ -47,13 +61,32 @@ extension Helper {
         SwiftEntryKit.display(entry: contentView, using: attributes)
     }
 
+    func showNote(withMessage message: String, type: NoteType = .normal) {
+        let text = message
+        let style = EKProperty.LabelStyle(font: UIFont.systemFont(ofSize: 14.0), color: .white, alignment: .center)
+        let labelContent = EKProperty.LabelContent(text: text, style: style)
+
+        let contentView = EKNoteMessageView(with: labelContent)
+        var attributes = EKAttributes.topNote
+        attributes.scroll = .disabled
+        attributes.windowLevel = .statusBar
+        attributes.entryInteraction = .absorbTouches
+        attributes.name = "Top Note"
+        attributes.hapticFeedbackType = .success
+        attributes.popBehavior = .animated(animation: .translation)
+        attributes.entryBackground = .color(color: type.color)
+        attributes.shadow = .active(with: .init(color: UIColor.init(red: 48.0/255.0, green: 47.0/255.0, blue: 48.0/255.0, alpha: 1.0), opacity: 0.5, radius: 2))
+        attributes.statusBar = .light
+
+        SwiftEntryKit.display(entry: contentView, using: attributes)
+    }
+
     func showCellularHUD() -> Bool {
         guard let reachability = self.reachability else { return false }
         if !Configuration.shared.userCellularNetwork && reachability.connection != .wifi {
-            DispatchQueue.main.async(execute: { [weak self] () -> Void in
-                //PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Cellular data is turned off.", comment: "Cellular data is turned off."))
+            DispatchQueue.main.async(execute: { [weak self] in
                 guard let `self` = self else { return }
-                self.showNote(withMessage: NSLocalizedString("Cellular data is turned off.", comment: "Cellular data is turned off."))
+                self.showNote(withMessage: NSLocalizedString("Cellular data is turned off.", comment: "Cellular data is turned off."), type: .warning)
             })
             return true
         }
@@ -86,9 +119,10 @@ extension Helper {
         let searchAction = UIAlertAction(title: NSLocalizedString("Search", comment: "Search"), style: .default) { [weak self] _ in
             guard let `self` = self else { return }
             let keyword = alertController.textFields![0].text!
-            let hud = PKHUD.sharedHUD
             // Not show hud if intelligent torrent download is enabled
-            if !Configuration.shared.isIntelligentTorrentDownloadEnabled { hud.showHUD() }
+            if !Configuration.shared.isIntelligentTorrentDownloadEnabled {
+                self.showProcessingNote(withMessage: NSLocalizedString("Searching...", comment: "Searching..."))
+            }
 
             let link = self.kittenSearchPath(withKeyword: keyword)
             let url = URL(string: link)!
@@ -98,8 +132,7 @@ extension Helper {
                 guard response.result.isSuccess, let data = response.result.value else {
                     DispatchQueue.main.async { [weak self] in
                         guard let `self` = self else { return }
-                        self.showNote(withMessage: NSLocalizedString("Connection failed.", comment: "Connection failed."))
-                        //PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Connection failed.", comment: "Connection failed."))
+                        self.showNote(withMessage: NSLocalizedString("Connection failed.", comment: "Connection failed."), type: .error)
                     }
                     return
                 }
@@ -109,8 +142,7 @@ extension Helper {
                 if torrents.count == 0 {
                     DispatchQueue.main.async { [weak self] in
                         guard let `self` = self else { return }
-                        self.showNote(withMessage: NSLocalizedString("No torrent found", comment: "No torrent found"))
-                        //PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("No torrent found", comment: "No torrent found"))
+                        self.showNote(withMessage: NSLocalizedString("No torrent found", comment: "No torrent found"), type: .warning)
                     }
                     return
                 }
@@ -145,7 +177,7 @@ extension Helper {
                         searchControl.torrents = torrents
                         searchControl.keyword = keyword
                         searchControl.tableView.reloadData()
-                        hud.hide()
+                        SwiftEntryKit.dismiss()
                         return
                     }
                     let searchResultController = VPSearchResultController()
@@ -162,7 +194,7 @@ extension Helper {
                         searchResultController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target:self, action: #selector(Helper.dismissMe(_:)))
                         viewController.present(searchResultNavigationController, animated: true, completion: nil)
                     }
-                    hud.hide()
+                    SwiftEntryKit.dismiss()
                 }
             }
         }
@@ -175,15 +207,15 @@ extension Helper {
 
 
     func transmissionDownload(for link: String) {
-        if !Configuration.shared.isIntelligentTorrentDownloadEnabled { PKHUD.sharedHUD.showHUD() }
+        if !Configuration.shared.isIntelligentTorrentDownloadEnabled {
+            self.showProcessingNote(withMessage: NSLocalizedString("Connecting to Transmission...", comment: "Connecting to Transmission..."))
+        }
         parseSessionAndAddTask(link, completionHandler: { [weak self] in
             guard let `self` = self else { return }
             self.showNote(withMessage: NSLocalizedString("Task added.", comment: "Task added."))
-            //PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Task added.", comment: "Task added."))
         }, errorHandler: { [weak self] in
             guard let `self` = self else { return }
-            self.showNote(withMessage: NSLocalizedString("Transmission server error.", comment: "Transmission server error."))
-            //PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Transmission server error.", comment: "Transmission server error."))
+            self.showNote(withMessage: NSLocalizedString("Transmission server error.", comment: "Transmission server error."), type: .error)
         })
     }
 
@@ -197,46 +229,42 @@ extension Helper {
 
     func miDownloadForLinks(_ links: [String], fallbackIn viewController: UIViewController) {
         guard canStartMiDownload else {
-            self.showNote(withMessage: NSLocalizedString("Mi account not set.", comment: "Mi account not set."))
-            //PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Mi account not set.", comment: "Mi account not set."))
+            self.showNote(withMessage: NSLocalizedString("Mi account not set.", comment: "Mi account not set."), type: .warning)
             return
         }
-        let hud = PKHUD.sharedHUD.showHUD()
-        MiDownloader(withUsername:Configuration.shared.miAccountUsername, password: Configuration.shared.miAccountPassword, links: links).loginAndFetchDeviceList(progress: { (progress) in
+        MiDownloader(withUsername:Configuration.shared.miAccountUsername, password: Configuration.shared.miAccountPassword, links: links).loginAndFetchDeviceList(progress: { [weak self] (progress) in
+            guard let `self` = self else { return }
             switch progress {
             case .prepare:
-                hud.setMessage(NSLocalizedString("Preparing...", comment: "Preparing..."))
+                self.showProcessingNote(withMessage: NSLocalizedString("Preparing...", comment: "Preparing..."))
             case .login:
-                hud.setMessage(NSLocalizedString("Loging in...", comment: "Loging in..."))
+                self.showProcessingNote(withMessage: NSLocalizedString("Loging in...", comment: "Loging in..."))
             case .fetchDevice:
-                hud.setMessage(NSLocalizedString("Loading Device...", comment: "Loading Device..."))
+                self.showProcessingNote(withMessage: NSLocalizedString("Loading Device...", comment: "Loading Device..."))
             case .download:
-                hud.setMessage(NSLocalizedString("Add download...", comment: "Add download..."))
+                self.showProcessingNote(withMessage: NSLocalizedString("Add download...", comment: "Add download..."))
             }
         }, success: { (success) in
             switch success {
             case .added:
-                hud.setMessage(NSLocalizedString("Added!", comment: "Added!"))
+                self.showNote(withMessage: NSLocalizedString("Added!", comment: "Added!"))
             case .duplicate:
-                hud.setMessage(NSLocalizedString("Duplicated!", comment: "Duplicated!"))
+                self.showNote(withMessage: NSLocalizedString("Duplicated!", comment: "Duplicated!"), type: .warning)
             case .other(let code):
-                hud.setMessage(NSLocalizedString("Added! Code: ", comment: "Added! Code: ") + "\(code)")
+                self.showNote(withMessage: NSLocalizedString("Added! Code: ", comment: "Added! Code: ") + "\(code)")
             }
-            hud.hide(afterDelay: 1.0)
         }, error: { [weak self] (error) in
-            hud.hide()
             guard let `self` = self else { return }
             switch error {
             case .capchaError(let link):
-                PKHUD.sharedHUD.hide()
+                SwiftEntryKit.dismiss()
                 DispatchQueue.main.after(0.5, execute: { [weak self] in
                     guard let `self` = self else { return }
                     self.showMiDownload(for: link, inViewController: viewController)
                 })
             default:
                 let reason = error.localizedDescription
-                self.showNote(withMessage: reason)
-                //PKHUD.sharedHUD.showHudWithMessage(reason)
+                self.showNote(withMessage: reason, type: .error)
             }
         })
     }

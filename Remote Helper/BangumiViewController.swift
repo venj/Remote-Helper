@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import PKHUD
 import MWPhotoBrowser
 
 class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPopoverPresentationControllerDelegate {
@@ -199,7 +198,7 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
             guard let `self` = self else { return }
             if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
             UIPasteboard.general.string = link.target
-            PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Copied", comment: "Copied"))
+            Helper.shared.showNote(withMessage: NSLocalizedString("Copied", comment: "Copied"))
         }
         copyAction.backgroundColor = UIColor(red:0.42, green:0.44, blue:0.87, alpha:1.00)
 
@@ -274,16 +273,5 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
         guard let url = URL(string: imageLink) else { return nil }
         let mwPhoto = MWPhoto(url: url)
         return mwPhoto
-    }
-}
-
-public extension PKHUD {
-    public func setMessage(_ message: String) {
-        if let v = contentView as? PKHUDTextView {
-            v.titleLabel.text = message
-        }
-        else {
-            contentView = PKHUDTextView(text: message)
-        }
     }
 }

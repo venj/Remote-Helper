@@ -8,7 +8,7 @@
 
 import UIKit
 import Alamofire
-import PKHUD
+import SwiftEntryKit
 
 class ResourcePageViewController: UITableViewController {
     let CellIdentifier = "ResourcePageTableCell"
@@ -130,18 +130,18 @@ class ResourcePageViewController: UITableViewController {
     }
 
     func process(_ link: String) {
-        let hud = PKHUD.sharedHUD.showHUD()
+        Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
         let request = Alamofire.request(link)
         request.responseData { [weak self] response in
-            hud.hide()
+            SwiftEntryKit.dismiss()
             if !response.result.isSuccess {
-                PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Network Error", comment: "Network Error"))
+                Helper.shared.showNote(withMessage: NSLocalizedString("Network Error", comment: "Network Error"), type:.error)
                 return
             }
             guard let `self` = self else { return }
             guard let data = response.result.value, data.count > 0 else { return }
             guard let bangumi = Bangumi.parse(data: data, isGBK: true) else {
-                PKHUD.sharedHUD.showHudWithMessage(NSLocalizedString("Parse failed, please try again.", comment: "Parse failed, please try again."))
+                Helper.shared.showNote(withMessage: NSLocalizedString("Parse failed, please try again.", comment: "Parse failed, please try again."), type:.error)
                 return
             }
             // Show bangumi

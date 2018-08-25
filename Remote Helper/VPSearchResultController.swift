@@ -8,6 +8,7 @@
 
 import UIKit
 import TOWebViewController
+import Alamofire
 
 class VPSearchResultController: UITableViewController {
     let CellIdentifier = "FileListTableViewCell"
@@ -182,24 +183,30 @@ class VPSearchResultController: UITableViewController {
     func loadNextPage() {
         let nextPage = currentPage + 1
         spinner.startAnimating()
+
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let `self` = self else { return }
             let url = URL(string: Helper.shared.kittenSearchPath(withKeyword: self.keyword, page: nextPage))!
-            if let data = try? Data(contentsOf: url) {
-                let trs = KittenTorrent.parse(data: data)
-                DispatchQueue.main.async {
-                    self.spinner.stopAnimating()
-                    let torrentsCount = self.torrents.count
-                    self.torrents.append(contentsOf: (trs as [Any]))
-                    let indexPaths = (torrentsCount..<torrentsCount + trs.count).map { IndexPath(row: $0, section: 0) }
-                    self.tableView.insertRows(at: indexPaths, with: UITableViewRowAnimation.top)
-                    self.currentPage = nextPage
+
+            let request = Alamofire.request(url)
+            request.responseData { [weak self] response in
+                guard let `self` = self else { return }
+                if let data = response.result.value {
+                    let trs = KittenTorrent.parse(data: data, source: Configuration.shared.torrentKittenSource)
+                    DispatchQueue.main.async {
+                        self.spinner.stopAnimating()
+                        let torrentsCount = self.torrents.count
+                        self.torrents.append(contentsOf: (trs as [Any]))
+                        let indexPaths = (torrentsCount..<torrentsCount + trs.count).map { IndexPath(row: $0, section: 0) }
+                        self.tableView.insertRows(at: indexPaths, with: UITableViewRowAnimation.top)
+                        self.currentPage = nextPage
+                    }
                 }
-            }
-            else {
-                DispatchQueue.main.async {
-                    //hud.hide()
-                    self.spinner.stopAnimating()
+                else {
+                    DispatchQueue.main.async {
+                        //hud.hide()
+                        self.spinner.stopAnimating()
+                    }
                 }
             }
         }

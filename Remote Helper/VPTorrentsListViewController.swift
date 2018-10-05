@@ -406,6 +406,8 @@ extension VPTorrentsListViewController : UIViewControllerPreviewingDelegate {
         currentSelectedIndexPath = indexPath
         let list = !searchController.isActive ? dateList : filteredDateList
         guard let date = list[indexPath.row].addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) else { return nil }
+        // Reset photos
+        photos = []
         let pb = MWPhotoBrowser(delegate: self)!
         pb.displayActionButton = false
         pb.displayNavArrows = true

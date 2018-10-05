@@ -369,12 +369,13 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         newView.removeFromSuperview()
         aView.addSubview(newView)
         newView.translatesAutoresizingMaskIntoConstraints = false
+        let height: CGFloat = 2.0
         if #available(iOS 11.0, *) {
             let guide = aView.safeAreaLayoutGuide
             newView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
             newView.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
             newView.topAnchor.constraint(equalTo: guide.topAnchor).isActive = true
-            newView.heightAnchor.constraint(equalToConstant: 2).isActive = true
+            newView.heightAnchor.constraint(equalToConstant: height).isActive = true
         } else {
             NSLayoutConstraint(item: newView,
                                attribute: .top,
@@ -394,7 +395,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
                                multiplier: 1.0,
                                constant: 0).isActive = true
             if #available(iOS 9.0, *) {
-                newView.heightAnchor.constraint(equalToConstant: 2).isActive = true
+                newView.heightAnchor.constraint(equalToConstant: height).isActive = true
             }
             else {
                 NSLayoutConstraint(item: newView,
@@ -403,7 +404,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
                                    toItem: nil,
                                    attribute: .notAnAttribute,
                                    multiplier: 1.0,
-                                   constant: 2.0).isActive = true
+                                   constant: height).isActive = true
             }
         }
     }

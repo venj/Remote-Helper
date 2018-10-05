@@ -28,7 +28,7 @@ class WebViewController: TOWebViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+    override func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebView.NavigationType) -> Bool {
         if navigationType != .linkClicked { return super.webView(webView, shouldStartLoadWith: request, navigationType: navigationType) }
         if request.url?.host == self.url?.host {
             return super.webView(webView, shouldStartLoadWith: request, navigationType: navigationType)

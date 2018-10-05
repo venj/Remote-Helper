@@ -40,7 +40,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
         return presenter
     }()
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         // Configure Alamofire Request Manager
         configureAlamofireManager()
@@ -123,14 +123,14 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
 
         if UserDefaults.standard.bool(forKey: ClearCacheOnExitKey) == true {
             let app = UIApplication.shared
-            var identifier: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+            var identifier: UIBackgroundTaskIdentifier = UIBackgroundTaskIdentifier.invalid
             identifier = app.beginBackgroundTask(expirationHandler: { () -> Void in
-                app.endBackgroundTask(identifier)
-                identifier = UIBackgroundTaskInvalid
+                app.endBackgroundTask(convertToUIBackgroundTaskIdentifier(identifier.rawValue))
+                identifier = UIBackgroundTaskIdentifier.invalid
             })
             SDImageCache.shared().clearDisk(onCompletion: { () -> Void in
-                app.endBackgroundTask(identifier)
-                identifier = UIBackgroundTaskInvalid
+                app.endBackgroundTask(convertToUIBackgroundTaskIdentifier(identifier.rawValue))
+                identifier = UIBackgroundTaskIdentifier.invalid
             })
         }
     }
@@ -255,4 +255,9 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
             }
         }
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIBackgroundTaskIdentifier(_ input: Int) -> UIBackgroundTaskIdentifier {
+	return UIBackgroundTaskIdentifier(rawValue: input)
 }

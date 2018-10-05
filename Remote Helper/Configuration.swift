@@ -10,7 +10,7 @@ import Foundation
 
 open class Configuration {
 
-    open static let shared = Configuration()
+    public static let shared = Configuration()
     private let defaults = UserDefaults.standard
     private let defaultValues: [String: Any] = [ViewedResources: [],
                                  RequestUseSSL: true,

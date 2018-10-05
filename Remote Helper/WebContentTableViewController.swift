@@ -55,7 +55,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         // Theme
         navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
 
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
@@ -126,7 +126,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         return cell
     }
 
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             deleteCell(at: indexPath)
         }
@@ -303,7 +303,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         // Theme
         settingsNavigationController.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         settingsNavigationController.navigationBar.tintColor = UIColor.white
-        settingsNavigationController.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
+        settingsNavigationController.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
         if UIDevice.current.userInterfaceIdiom == .pad {
             settingsNavigationController.modalPresentationStyle = .formSheet
         }
@@ -330,7 +330,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         let transmissionNavigationController = UINavigationController(rootViewController: transmissionWebViewController!)
         transmissionNavigationController.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         transmissionNavigationController.navigationBar.tintColor = UIColor.white
-        transmissionNavigationController.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
+        transmissionNavigationController.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
         DispatchQueue.main.async { [weak self] in
             guard let `self` = self else { return }
             self.present(transmissionNavigationController, animated:true, completion: nil)

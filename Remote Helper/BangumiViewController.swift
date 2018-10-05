@@ -27,7 +27,7 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
         // Theme
         navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
         navigationController?.toolbar.tintColor = Helper.shared.mainThemeColor()
 
         // Revert back to old UITableView behavior
@@ -189,7 +189,7 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
         return true
     }
 
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) { }
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) { }
 
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         guard let link = bangumi?.links[indexPath.row] else { return nil }

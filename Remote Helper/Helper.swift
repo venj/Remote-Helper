@@ -11,7 +11,7 @@ import Alamofire
 
 @objc
 open class Helper : NSObject {
-    open static let shared = Helper()
+    public static let shared = Helper()
 
     var sessionHeader: String = ""
     var downloadPath: String = ""

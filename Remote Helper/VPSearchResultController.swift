@@ -42,7 +42,7 @@ class VPSearchResultController: UITableViewController {
 
     var currentPage: Int = 1
 
-    var spinner : UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .gray) {
+    var spinner : UIActivityIndicatorView = UIActivityIndicatorView(style: .gray) {
         didSet {
             spinner.hidesWhenStopped = true
         }
@@ -68,7 +68,7 @@ class VPSearchResultController: UITableViewController {
         // Theme
         navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
         tableView.tintColor = Helper.shared.mainThemeColor()
 
         // Revert back to old UITableView behavior
@@ -198,7 +198,7 @@ class VPSearchResultController: UITableViewController {
                         let torrentsCount = self.torrents.count
                         self.torrents.append(contentsOf: (trs as [Any]))
                         let indexPaths = (torrentsCount..<torrentsCount + trs.count).map { IndexPath(row: $0, section: 0) }
-                        self.tableView.insertRows(at: indexPaths, with: UITableViewRowAnimation.top)
+                        self.tableView.insertRows(at: indexPaths, with: UITableView.RowAnimation.top)
                         self.currentPage = nextPage
                     }
                 }

@@ -18,13 +18,13 @@ class ResourcePageViewController: UITableViewController {
             let bangumiLinksCount = bangumiLinks.count
             bangumiLinks.append(contentsOf: page.bangumiLinks)
             let indexPaths = (bangumiLinksCount..<bangumiLinksCount + page.bangumiLinks.count).map { IndexPath(row: $0, section: 0) }
-            tableView.insertRows(at: indexPaths, with: UITableViewRowAnimation.top)
+            tableView.insertRows(at: indexPaths, with: UITableView.RowAnimation.top)
         }
     }
 
     var bangumiLinks: [[String: String]] = []
 
-    var spinner : UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .gray) {
+    var spinner : UIActivityIndicatorView = UIActivityIndicatorView(style: .gray) {
         didSet {
             spinner.hidesWhenStopped = true
         }
@@ -38,7 +38,7 @@ class ResourcePageViewController: UITableViewController {
         // Theme
         navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
 
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
@@ -125,7 +125,7 @@ class ResourcePageViewController: UITableViewController {
         }
     }
 
-    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .none
     }
 

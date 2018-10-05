@@ -103,7 +103,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         // Theme
         navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
         navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
         tableView.tintColor = Helper.shared.mainThemeColor()
 
         // Revert back to old UITableView behavior
@@ -228,7 +228,31 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     func photoBrowser(_ photoBrowser: MWPhotoBrowser!, didDisplayPhotoAt index: UInt) {
         currentPhotoIndex = Int(index)
+        let progress = CGFloat(currentPhotoIndex) / CGFloat(photos.count)
+        let aView = photoBrowser!.view!.subviews[0].subviews[0].subviews[0]
+        updateProgress(forView: aView, toSize: aView.frame.size, progress: progress)
         photoBrowser.navigationItem.rightBarButtonItems  = [kittenItem, hashItem]
+    }
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        guard let photoBrowser = navigationController?.topViewController as?     MWPhotoBrowser else { return }
+        let progress = CGFloat(currentPhotoIndex) / CGFloat(photos.count)
+        updateProgress(forView: photoBrowser.view!.subviews[0].subviews[0].subviews[0], toSize: size, progress: progress)
+    }
+
+    func updateProgress(forView view: UIView, toSize size: CGSize, progress: CGFloat) {
+        let frame = view.frame
+        let subFrame = CGRect(origin: frame.origin, size: CGSize(width: size.width * progress, height: size.height))
+        var shape: CAShapeLayer
+        if let currentShape = view.layer.sublayers?.first as? CAShapeLayer {
+            shape = currentShape
+        }
+        else {
+            shape = CAShapeLayer()
+            view.layer.addSublayer(shape)
+        }
+        shape.backgroundColor = UIColor.green.withAlphaComponent(0.2).cgColor
+        shape.frame = subFrame
     }
 
     func photoBrowser(_ photoBrowser: MWPhotoBrowser!, titleForPhotoAt index: UInt) -> String! {

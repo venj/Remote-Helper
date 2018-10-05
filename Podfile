@@ -1,4 +1,3 @@
-
 use_frameworks!
 source 'https://github.com/CocoaPods/Specs.git'
 
@@ -20,8 +19,8 @@ target "Remote Helper" do
 end
 
 target "Remote Helper Mac" do
-    platform :osx, '10.10'
-    pod 'Alamofire'
-    pod 'ReachabilitySwift'
-    pod 'Fuzi'
+  platform :osx, '10.10'
+  pod 'Alamofire'
+  pod 'ReachabilitySwift'
+  pod 'Fuzi'
 end

@@ -362,6 +362,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     }
 
     // Attach Progress View to a view (PhotoBrowser)
+    // Works well on iOS 11, but not old iOS versions.
     func attachProgressView(to aView: UIView) {
         self.edgesForExtendedLayout = []
         let newView = attachedProgressView
@@ -392,10 +393,20 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
                                attribute: .trailing,
                                multiplier: 1.0,
                                constant: 0).isActive = true
-            newView.heightAnchor.constraint(equalToConstant: 2).isActive = true
+            if #available(iOS 9.0, *) {
+                newView.heightAnchor.constraint(equalToConstant: 2).isActive = true
+            }
+            else {
+                NSLayoutConstraint(item: newView,
+                                   attribute: .height,
+                                   relatedBy: .equal,
+                                   toItem: nil,
+                                   attribute: .notAnAttribute,
+                                   multiplier: 1.0,
+                                   constant: 2.0).isActive = true
+            }
         }
     }
-
 }
 
 extension VPTorrentsListViewController : UISearchResultsUpdating {

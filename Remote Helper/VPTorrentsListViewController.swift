@@ -83,6 +83,12 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         }
     }
 
+    lazy var attachedProgressView: UIProgressView = {
+        let v = UIProgressView(progressViewStyle: .default)
+        v.progressTintColor = Helper.shared.mainThemeColor()
+        return v
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = NSLocalizedString("Torrents", comment: "Torrents")
@@ -228,31 +234,12 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     func photoBrowser(_ photoBrowser: MWPhotoBrowser!, didDisplayPhotoAt index: UInt) {
         currentPhotoIndex = Int(index)
-        let progress = CGFloat(currentPhotoIndex) / CGFloat(photos.count)
-        let aView = photoBrowser!.view!.subviews[0].subviews[0].subviews[0]
-        updateProgress(forView: aView, toSize: aView.frame.size, progress: progress)
+        if !photoBrowser.view.subviews.contains(attachedProgressView) {
+            attachProgressView(to: photoBrowser.view)
+        }
+        let progress = Float(currentPhotoIndex) / Float(photos.count)
+        attachedProgressView.progress = progress
         photoBrowser.navigationItem.rightBarButtonItems  = [kittenItem, hashItem]
-    }
-
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        guard let photoBrowser = navigationController?.topViewController as?     MWPhotoBrowser else { return }
-        let progress = CGFloat(currentPhotoIndex) / CGFloat(photos.count)
-        updateProgress(forView: photoBrowser.view!.subviews[0].subviews[0].subviews[0], toSize: size, progress: progress)
-    }
-
-    func updateProgress(forView view: UIView, toSize size: CGSize, progress: CGFloat) {
-        let frame = view.frame
-        let subFrame = CGRect(origin: frame.origin, size: CGSize(width: size.width * progress, height: size.height))
-        var shape: CAShapeLayer
-        if let currentShape = view.layer.sublayers?.first as? CAShapeLayer {
-            shape = currentShape
-        }
-        else {
-            shape = CAShapeLayer()
-            view.layer.addSublayer(shape)
-        }
-        shape.backgroundColor = UIColor.green.withAlphaComponent(0.2).cgColor
-        shape.frame = subFrame
     }
 
     func photoBrowser(_ photoBrowser: MWPhotoBrowser!, titleForPhotoAt index: UInt) -> String! {
@@ -373,6 +360,42 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
     func viewedTitlesDidChange(_ notification: NSNotification) {
         tableView.reloadData()
     }
+
+    // Attach Progress View to a view (PhotoBrowser)
+    func attachProgressView(to aView: UIView) {
+        self.edgesForExtendedLayout = []
+        let newView = attachedProgressView
+        newView.removeFromSuperview()
+        aView.addSubview(newView)
+        newView.translatesAutoresizingMaskIntoConstraints = false
+        if #available(iOS 11.0, *) {
+            let guide = aView.safeAreaLayoutGuide
+            newView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
+            newView.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
+            newView.topAnchor.constraint(equalTo: guide.topAnchor).isActive = true
+            newView.heightAnchor.constraint(equalToConstant: 2).isActive = true
+        } else {
+            NSLayoutConstraint(item: newView,
+                               attribute: .top,
+                               relatedBy: .equal,
+                               toItem: view, attribute: .top,
+                               multiplier: 1.0, constant: 0).isActive = true
+            NSLayoutConstraint(item: newView,
+                               attribute: .leading,
+                               relatedBy: .equal, toItem: view,
+                               attribute: .leading,
+                               multiplier: 1.0,
+                               constant: 0).isActive = true
+            NSLayoutConstraint(item: newView, attribute: .trailing,
+                               relatedBy: .equal,
+                               toItem: view,
+                               attribute: .trailing,
+                               multiplier: 1.0,
+                               constant: 0).isActive = true
+            newView.heightAnchor.constraint(equalToConstant: 2).isActive = true
+        }
+    }
+
 }
 
 extension VPTorrentsListViewController : UISearchResultsUpdating {

@@ -89,6 +89,11 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         return v
     }()
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        attachedProgressView.removeFromSuperview()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = NSLocalizedString("Torrents", comment: "Torrents")
@@ -234,8 +239,8 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     func photoBrowser(_ photoBrowser: MWPhotoBrowser!, didDisplayPhotoAt index: UInt) {
         currentPhotoIndex = Int(index)
-        if !photoBrowser.view.subviews.contains(attachedProgressView) {
-            attachProgressView(to: photoBrowser.view)
+        if !navigationController!.view.subviews.contains(attachedProgressView) {
+            attachProgressView(to: navigationController!.view)
         }
         let progress = Float(currentPhotoIndex + 1) / Float(photos.count)
         attachedProgressView.progress = progress
@@ -374,13 +379,13 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             let guide = aView.safeAreaLayoutGuide
             newView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
             newView.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
-            newView.topAnchor.constraint(equalTo: guide.topAnchor).isActive = true
+            newView.bottomAnchor.constraint(equalTo: guide.bottomAnchor).isActive = true
             newView.heightAnchor.constraint(equalToConstant: height).isActive = true
         } else {
             NSLayoutConstraint(item: newView,
-                               attribute: .top,
+                               attribute: .bottom,
                                relatedBy: .equal,
-                               toItem: view, attribute: .top,
+                               toItem: view, attribute: .bottom,
                                multiplier: 1.0, constant: 0).isActive = true
             NSLayoutConstraint(item: newView,
                                attribute: .leading,

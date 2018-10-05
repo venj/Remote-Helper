@@ -237,7 +237,7 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         if !photoBrowser.view.subviews.contains(attachedProgressView) {
             attachProgressView(to: photoBrowser.view)
         }
-        let progress = Float(currentPhotoIndex) / Float(photos.count)
+        let progress = Float(currentPhotoIndex + 1) / Float(photos.count)
         attachedProgressView.progress = progress
         photoBrowser.navigationItem.rightBarButtonItems  = [kittenItem, hashItem]
     }

@@ -25,7 +25,7 @@ open class Helper : NSObject {
         let source = Configuration.shared.torrentKittenSource
         switch source {
         case .bt177:
-            return "http://www.bt177.me/word/\(escapedKeyword)_\(page).html"
+            return "http://www.bt177.biz/word/\(escapedKeyword)_\(page).html"
         default: // 0 or other out of bound value
             return "\(Configuration.shared.baseLink)/kitty/\(escapedKeyword)/\(page)"
         }

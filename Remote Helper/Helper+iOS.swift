@@ -48,6 +48,7 @@ extension Helper {
 
         let contentView = EKProcessingNoteMessageView(with: labelContent, activityIndicator: .white)
         var attributes = EKAttributes.topNote
+        attributes.statusBar = .light
         attributes.scroll = .disabled
         attributes.windowLevel = .statusBar
         attributes.entryInteraction = .absorbTouches
@@ -56,9 +57,8 @@ extension Helper {
         attributes.popBehavior = .animated(animation: .translation)
         attributes.entryBackground = .color(color: UIColor(red:0.42, green:0.44, blue:0.89, alpha:1.00))
         attributes.shadow = .active(with: .init(color: UIColor.init(red: 48.0/255.0, green: 47.0/255.0, blue: 48.0/255.0, alpha: 1.0), opacity: 0.5, radius: 2))
-        attributes.statusBar = .inferred
 
-        SwiftEntryKit.display(entry: contentView, using: attributes)
+        SwiftEntryKit.display(entry: contentView, using: attributes, presentInsideKeyWindow: true)
     }
 
     func showNote(withMessage message: String, type: NoteType = .normal) {
@@ -76,9 +76,8 @@ extension Helper {
         attributes.popBehavior = .animated(animation: .translation)
         attributes.entryBackground = .color(color: type.color)
         attributes.shadow = .active(with: .init(color: UIColor.init(red: 48.0/255.0, green: 47.0/255.0, blue: 48.0/255.0, alpha: 1.0), opacity: 0.5, radius: 2))
-        attributes.statusBar = .inferred
 
-        SwiftEntryKit.display(entry: contentView, using: attributes)
+        SwiftEntryKit.display(entry: contentView, using: attributes, presentInsideKeyWindow: true)
     }
 
     func showCellularHUD() -> Bool {

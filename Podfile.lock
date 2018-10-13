@@ -9,12 +9,12 @@ PODS:
     - MBProgressHUD
     - SDWebImage
   - PasscodeLock (1.0.2)
-  - QuickLayout (2.0.2)
+  - QuickLayout (2.1.1)
   - ReachabilitySwift (4.3.0)
   - SDWebImage (4.4.2):
     - SDWebImage/Core (= 4.4.2)
   - SDWebImage/Core (4.4.2)
-  - SwiftEntryKit (0.5.6):
+  - SwiftEntryKit (0.8.2):
     - QuickLayout
   - TOWebViewController (2.0.19)
 
@@ -60,13 +60,13 @@ CHECKOUT OPTIONS:
     :commit: dcce1ee9d8789217fb24bfa418536030f5d6055b
     :git: https://github.com/venj/MWPhotoBrowser.git
   PasscodeLock:
-    :commit: 8444efd8317753baa99dde25b5f3748f1b2238e7
+    :commit: 5afa0a757600f0d790b5e0029030009e3874c2a6
     :git: https://github.com/venj/SwiftPasscodeLock.git
   QuickLayout:
-    :commit: a30c5ad4057fc419c288d56c927cef2556410f51
+    :commit: 16d0c97f8fd8acde980aaa82992a18871273177a
     :git: https://github.com/imvenj/QuickLayout.git
   SwiftEntryKit:
-    :commit: 32e4f3c8f8acd2e93c2161accf3f8d6cfc90c20e
+    :commit: 8c1988750f1c858464c636d84571a7b37bb81853
     :git: https://github.com/imvenj/SwiftEntryKit.git
   TOWebViewController:
     :commit: bea1f9051f96ee107eee3dc8a46bdf4b17b4345c
@@ -80,10 +80,10 @@ SPEC CHECKSUMS:
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
   MWPhotoBrowser: 4fc9fdf49db5f13b56ff4b4ec5fbbb2bf16c950f
   PasscodeLock: b2856c4f60ebb83fc11ea4acc2bc184b8bea4990
-  QuickLayout: 63c8eb0b50077e65c25c410f164b2a72b9a6f8ca
+  QuickLayout: d5aff81f970266041d6dc73de1c044f898156f38
   ReachabilitySwift: 408477d1b6ed9779dba301953171e017c31241f3
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
-  SwiftEntryKit: c271bf9671516f84fcbbab94847820bd3ec59b3f
+  SwiftEntryKit: 0b8288de6eb044becbdd8faf10c91877605c052f
   TOWebViewController: accd62ec0acc8d5c2e1e195c6f7ff7654c3c840c
 
 PODFILE CHECKSUM: 342b54d4534006fc62c81963d2a8ee0f139bff5d

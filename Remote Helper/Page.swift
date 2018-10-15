@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Fuzi
+import Kanna
 import Darwin.POSIX.iconv
 
 struct Page {
@@ -27,19 +27,19 @@ struct Page {
         do {
             // get bangumi links
             let replaced = html.replacingOccurrences(of: "charset=gb2312", with: "charset=utf-8")
-            let doc = try HTMLDocument(string: replaced, encoding: .utf8)
+            let doc = try HTML(html: replaced, encoding: .utf8)
             doc.css("div.co_content8 table td a.ulink").forEach({ (element) in
                 var bangumiLink: [String: String] = [:]
                 guard let link = element["href"] else { return }
                 if link.contains("index.html") || link.last == "/" { return }
-                let title = element.stringValue
+                let title = element.text
                 bangumiLink["title"] = title
                 bangumiLink["link"] = link
                 bangumiLinks.append(bangumiLink)
             })
             // get next page
             doc.css("div.x a").forEach({ (element) in
-                if element.stringValue == "下一页" {
+                if element.text == "下一页" {
                     guard let link = element["href"] else { return }
                     let url = URL(string: pageLink)!
                     if link.first != "/" {

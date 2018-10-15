@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		210522F2FBFCB7833A7A45F6 /* Pods_Remote_Helper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 861F99A9B103E7EDE0E4618E /* Pods_Remote_Helper.framework */; };
 		2502ABDB1BE6F761004882FE /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2502ABDA1BE6F761004882FE /* Helper.swift */; };
 		2502ABDD1BE6F84B004882FE /* String+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2502ABDC1BE6F84B004882FE /* String+JSON.swift */; };
 		2502ABDF1BE6FBEC004882FE /* String+Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2502ABDE1BE6FBEC004882FE /* String+Base64.swift */; };
@@ -55,7 +54,6 @@
 		251B62AB20FF77550077FF2D /* MiDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25AFE0911E94E69600DFB501 /* MiDownloader.swift */; };
 		251B62B120FF7A080077FF2D /* Helper+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 251B62B020FF7A080077FF2D /* Helper+iOS.swift */; };
 		251B62B220FF7BAE0077FF2D /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2502ABDA1BE6F761004882FE /* Helper.swift */; };
-		251B62B420FF7BCF0077FF2D /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 251B62B320FF7BCF0077FF2D /* libiconv.tbd */; };
 		252C9C1A1FFBB73E00B24729 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252C9C191FFBB73E00B24729 /* WebViewController.swift */; };
 		252DFA801753784400FF8199 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA7F1753784400FF8199 /* UIKit.framework */; };
 		252DFA821753784400FF8199 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA811753784400FF8199 /* Foundation.framework */; };
@@ -68,10 +66,8 @@
 		255A7D241BEB8DC700E6012B /* UserDefaultsPasscodeRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255A7D221BEB8DC700E6012B /* UserDefaultsPasscodeRepository.swift */; };
 		255A7D251BEB8DC700E6012B /* PasscodeLockConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255A7D231BEB8DC700E6012B /* PasscodeLockConfiguration.swift */; };
 		255A7D2A1BEB902400E6012B /* PasscodeLockView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 255A7D291BEB902400E6012B /* PasscodeLockView.xib */; };
-		255A7D2B1BEB904E00E6012B /* PasscodeLock.strings in Resources */ = {isa = PBXBuildFile; fileRef = 255A7D2D1BEB904E00E6012B /* PasscodeLock.strings */; };
 		255A7D301BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255A7D2F1BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift */; };
 		2561854E1B6F8D1B0073ACD3 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 256185501B6F8D1B0073ACD3 /* Launch Screen.xib */; };
-		256EA4BF177D5F830081309B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 256EA4BD177D5F830081309B /* Localizable.strings */; };
 		2575F5711E97B2B7004B4D1E /* NSData+iconv.m in Sources */ = {isa = PBXBuildFile; fileRef = 2575F56E1E97B2B7004B4D1E /* NSData+iconv.m */; };
 		2575F5721E97B2B7004B4D1E /* iconv_wrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = 2575F5701E97B2B7004B4D1E /* iconv_wrapper.c */; };
 		2575F5751E97B359004B4D1E /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2575F5741E97B359004B4D1E /* libiconv.tbd */; };
@@ -86,8 +82,20 @@
 		25B0AA7C1753A67300141B0E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */; };
 		25C478D11FDFA61400AA8958 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C478D01FDFA61400AA8958 /* Configuration.swift */; };
 		25C8BF151BF243AB00CAC32E /* UITabBarController+StatusBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C8BF141BF243AB00CAC32E /* UITabBarController+StatusBarStyle.swift */; };
+		25E8523221747572003F8D5E /* SwiftEntryKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E8522921747572003F8D5E /* SwiftEntryKit.framework */; };
+		25E8523321747572003F8D5E /* UICircularProgressRing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E8522A21747572003F8D5E /* UICircularProgressRing.framework */; };
+		25E8523421747572003F8D5E /* Reachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E8522B21747572003F8D5E /* Reachability.framework */; };
+		25E8523521747572003F8D5E /* QuickLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E8522C21747572003F8D5E /* QuickLayout.framework */; };
+		25E8523621747572003F8D5E /* InAppSettingsKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E8522D21747572003F8D5E /* InAppSettingsKit.framework */; };
+		25E8523821747572003F8D5E /* MediaBrowser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E8522F21747572003F8D5E /* MediaBrowser.framework */; };
+		25E8523921747572003F8D5E /* PasscodeLock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E8523021747572003F8D5E /* PasscodeLock.framework */; };
+		25E8523A21747572003F8D5E /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E8523121747572003F8D5E /* SDWebImage.framework */; };
+		25E8523D21747757003F8D5E /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E8523C21747757003F8D5E /* Alamofire.framework */; };
+		25E85285217478D0003F8D5E /* TOWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E8527D217478C7003F8D5E /* TOWebViewController.m */; };
+		25E85286217478D0003F8D5E /* UIImage+TOWebViewControllerIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E8527E217478C8003F8D5E /* UIImage+TOWebViewControllerIcons.m */; };
+		25E85287217478D0003F8D5E /* TOActivityChrome.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E85282217478CD003F8D5E /* TOActivityChrome.m */; };
+		25E85288217478D0003F8D5E /* TOActivitySafari.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E85284217478D0003F8D5E /* TOActivitySafari.m */; };
 		25F94A621BE5E9FF009C9195 /* Dictionary+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F94A611BE5E9FF009C9195 /* Dictionary+JSON.swift */; };
-		FB415CA015B28B848DB87072 /* Pods_Remote_Helper_Mac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6ADD554BAC761F1B522ED64 /* Pods_Remote_Helper_Mac.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -120,7 +128,6 @@
 		251B629420FF75EC0077FF2D /* MainWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
 		251B62AF20FF78580077FF2D /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		251B62B020FF7A080077FF2D /* Helper+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Helper+iOS.swift"; sourceTree = "<group>"; };
-		251B62B320FF7BCF0077FF2D /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/lib/libiconv.tbd; sourceTree = DEVELOPER_DIR; };
 		252C9C191FFBB73E00B24729 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		252DFA7C1753784400FF8199 /* Remote Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Remote Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		252DFA7F1753784400FF8199 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -159,15 +166,37 @@
 		25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		25C478D01FDFA61400AA8958 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		25C8BF141BF243AB00CAC32E /* UITabBarController+StatusBarStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITabBarController+StatusBarStyle.swift"; sourceTree = "<group>"; };
+		25E8522921747572003F8D5E /* SwiftEntryKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftEntryKit.framework; path = Carthage/Build/iOS/SwiftEntryKit.framework; sourceTree = "<group>"; };
+		25E8522A21747572003F8D5E /* UICircularProgressRing.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UICircularProgressRing.framework; path = Carthage/Build/iOS/UICircularProgressRing.framework; sourceTree = "<group>"; };
+		25E8522B21747572003F8D5E /* Reachability.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Reachability.framework; path = Carthage/Build/iOS/Reachability.framework; sourceTree = "<group>"; };
+		25E8522C21747572003F8D5E /* QuickLayout.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLayout.framework; path = Carthage/Build/iOS/QuickLayout.framework; sourceTree = "<group>"; };
+		25E8522D21747572003F8D5E /* InAppSettingsKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = InAppSettingsKit.framework; path = Carthage/Build/iOS/InAppSettingsKit.framework; sourceTree = "<group>"; };
+		25E8522E21747572003F8D5E /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/iOS/Fuzi.framework; sourceTree = "<group>"; };
+		25E8522F21747572003F8D5E /* MediaBrowser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaBrowser.framework; path = Carthage/Build/iOS/MediaBrowser.framework; sourceTree = "<group>"; };
+		25E8523021747572003F8D5E /* PasscodeLock.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PasscodeLock.framework; path = Carthage/Build/iOS/PasscodeLock.framework; sourceTree = "<group>"; };
+		25E8523121747572003F8D5E /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
+		25E8523C21747757003F8D5E /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		25E8526921747830003F8D5E /* UICircularProgressRing.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = UICircularProgressRing.framework.dSYM; path = Carthage/Build/iOS/UICircularProgressRing.framework.dSYM; sourceTree = SOURCE_ROOT; };
+		25E8526A21747830003F8D5E /* Alamofire.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Alamofire.framework.dSYM; path = Carthage/Build/iOS/Alamofire.framework.dSYM; sourceTree = SOURCE_ROOT; };
+		25E8526B21747830003F8D5E /* PasscodeLock.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = PasscodeLock.framework.dSYM; path = Carthage/Build/iOS/PasscodeLock.framework.dSYM; sourceTree = SOURCE_ROOT; };
+		25E8526C21747830003F8D5E /* SwiftEntryKit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SwiftEntryKit.framework.dSYM; path = Carthage/Build/iOS/SwiftEntryKit.framework.dSYM; sourceTree = SOURCE_ROOT; };
+		25E8526D21747830003F8D5E /* Reachability.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Reachability.framework.dSYM; path = Carthage/Build/iOS/Reachability.framework.dSYM; sourceTree = SOURCE_ROOT; };
+		25E8526E21747830003F8D5E /* MediaBrowser.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = MediaBrowser.framework.dSYM; path = Carthage/Build/iOS/MediaBrowser.framework.dSYM; sourceTree = SOURCE_ROOT; };
+		25E8527021747830003F8D5E /* QuickLayout.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = QuickLayout.framework.dSYM; path = Carthage/Build/iOS/QuickLayout.framework.dSYM; sourceTree = SOURCE_ROOT; };
+		25E8527121747830003F8D5E /* SDWebImage.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SDWebImage.framework.dSYM; path = Carthage/Build/iOS/SDWebImage.framework.dSYM; sourceTree = SOURCE_ROOT; };
+		25E8527221747830003F8D5E /* InAppSettingsKit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = InAppSettingsKit.framework.dSYM; path = Carthage/Build/iOS/InAppSettingsKit.framework.dSYM; sourceTree = SOURCE_ROOT; };
+		25E8527D217478C7003F8D5E /* TOWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOWebViewController.m; sourceTree = "<group>"; };
+		25E8527E217478C8003F8D5E /* UIImage+TOWebViewControllerIcons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+TOWebViewControllerIcons.m"; sourceTree = "<group>"; };
+		25E8527F217478C9003F8D5E /* TOActivityChrome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOActivityChrome.h; sourceTree = "<group>"; };
+		25E85280217478CB003F8D5E /* TOWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOWebViewController.h; sourceTree = "<group>"; };
+		25E85281217478CC003F8D5E /* TOActivitySafari.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOActivitySafari.h; sourceTree = "<group>"; };
+		25E85282217478CD003F8D5E /* TOActivityChrome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOActivityChrome.m; sourceTree = "<group>"; };
+		25E85283217478CF003F8D5E /* UIImage+TOWebViewControllerIcons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+TOWebViewControllerIcons.h"; sourceTree = "<group>"; };
+		25E85284217478D0003F8D5E /* TOActivitySafari.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOActivitySafari.m; sourceTree = "<group>"; };
+		25E8528B21747A0E003F8D5E /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
+		25E8528D21747B27003F8D5E /* Kanna.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Kanna.framework.dSYM; path = Carthage/Build/iOS/Kanna.framework.dSYM; sourceTree = SOURCE_ROOT; };
 		25F94A601BE5E9FE009C9195 /* Remote Helper-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Remote Helper-Bridging-Header.h"; sourceTree = "<group>"; };
 		25F94A611BE5E9FF009C9195 /* Dictionary+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+JSON.swift"; sourceTree = "<group>"; };
-		4BB160D8EE8E668F3F4BE545 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		524B534A3FAB0E5A944DE9C7 /* Pods-Remote Helper Mac.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Remote Helper Mac.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Remote Helper Mac/Pods-Remote Helper Mac.debug.xcconfig"; sourceTree = "<group>"; };
-		6201A1F3662C96ECE8004A0B /* Pods-Remote Helper.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Remote Helper.release.xcconfig"; path = "Pods/Target Support Files/Pods-Remote Helper/Pods-Remote Helper.release.xcconfig"; sourceTree = "<group>"; };
-		75D8E1F4A645831E7C0BAB24 /* Pods-Remote Helper Mac.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Remote Helper Mac.release.xcconfig"; path = "Pods/Target Support Files/Pods-Remote Helper Mac/Pods-Remote Helper Mac.release.xcconfig"; sourceTree = "<group>"; };
-		861F99A9B103E7EDE0E4618E /* Pods_Remote_Helper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Remote_Helper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C6ADD554BAC761F1B522ED64 /* Pods_Remote_Helper_Mac.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Remote_Helper_Mac.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		FF635FFD5335C764D69C3093 /* Pods-Remote Helper.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Remote Helper.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Remote Helper/Pods-Remote Helper.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,8 +204,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				251B62B420FF7BCF0077FF2D /* libiconv.tbd in Frameworks */,
-				FB415CA015B28B848DB87072 /* Pods_Remote_Helper_Mac.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,7 +218,15 @@
 				252DFA801753784400FF8199 /* UIKit.framework in Frameworks */,
 				252DFA821753784400FF8199 /* Foundation.framework in Frameworks */,
 				252DFA841753784400FF8199 /* CoreGraphics.framework in Frameworks */,
-				210522F2FBFCB7833A7A45F6 /* Pods_Remote_Helper.framework in Frameworks */,
+				25E8523221747572003F8D5E /* SwiftEntryKit.framework in Frameworks */,
+				25E8523321747572003F8D5E /* UICircularProgressRing.framework in Frameworks */,
+				25E8523421747572003F8D5E /* Reachability.framework in Frameworks */,
+				25E8523521747572003F8D5E /* QuickLayout.framework in Frameworks */,
+				25E8523621747572003F8D5E /* InAppSettingsKit.framework in Frameworks */,
+				25E8523821747572003F8D5E /* MediaBrowser.framework in Frameworks */,
+				25E8523921747572003F8D5E /* PasscodeLock.framework in Frameworks */,
+				25E8523A21747572003F8D5E /* SDWebImage.framework in Frameworks */,
+				25E8523D21747757003F8D5E /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,7 +255,6 @@
 				251B628520FF661A0077FF2D /* Remote Helper Mac */,
 				252DFA7E1753784400FF8199 /* Frameworks */,
 				252DFA7D1753784400FF8199 /* Products */,
-				E88FE65FA8AB755A7B543534 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -236,17 +270,24 @@
 		252DFA7E1753784400FF8199 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				25E8528B21747A0E003F8D5E /* libxml2.tbd */,
+				25E8523C21747757003F8D5E /* Alamofire.framework */,
+				25E8522E21747572003F8D5E /* Fuzi.framework */,
+				25E8522D21747572003F8D5E /* InAppSettingsKit.framework */,
+				25E8522F21747572003F8D5E /* MediaBrowser.framework */,
+				25E8523021747572003F8D5E /* PasscodeLock.framework */,
+				25E8522C21747572003F8D5E /* QuickLayout.framework */,
+				25E8522B21747572003F8D5E /* Reachability.framework */,
+				25E8523121747572003F8D5E /* SDWebImage.framework */,
+				25E8522921747572003F8D5E /* SwiftEntryKit.framework */,
+				25E8522A21747572003F8D5E /* UICircularProgressRing.framework */,
 				2575F5741E97B359004B4D1E /* libiconv.tbd */,
-				251B62B320FF7BCF0077FF2D /* libiconv.tbd */,
 				25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */,
 				25B0AA791753A66C00141B0E /* SystemConfiguration.framework */,
 				25B0AA7317537B2D00141B0E /* MediaPlayer.framework */,
 				252DFA7F1753784400FF8199 /* UIKit.framework */,
 				252DFA811753784400FF8199 /* Foundation.framework */,
 				252DFA831753784400FF8199 /* CoreGraphics.framework */,
-				4BB160D8EE8E668F3F4BE545 /* Pods.framework */,
-				861F99A9B103E7EDE0E4618E /* Pods_Remote_Helper.framework */,
-				C6ADD554BAC761F1B522ED64 /* Pods_Remote_Helper_Mac.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -254,6 +295,7 @@
 		252DFA851753784400FF8199 /* Remote Helper */ = {
 			isa = PBXGroup;
 			children = (
+				25E852682174781A003F8D5E /* DSYMs */,
 				256F9B7E1FD4DE05000E8F8B /* Remote Helper.entitlements */,
 				25310E40177ACB1600D4A212 /* Libraries */,
 				2575F5731E97B2C1004B4D1E /* low level */,
@@ -286,6 +328,7 @@
 		25310E40177ACB1600D4A212 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				25E8528A217478E5003F8D5E /* TOWebViewController */,
 				255A7D261BEB8DCD00E6012B /* PasscodeLock */,
 				256D28F71B788B5A000A324B /* Extensions */,
 			);
@@ -371,15 +414,36 @@
 			name = Helpers;
 			sourceTree = "<group>";
 		};
-		E88FE65FA8AB755A7B543534 /* Pods */ = {
+		25E852682174781A003F8D5E /* DSYMs */ = {
 			isa = PBXGroup;
 			children = (
-				FF635FFD5335C764D69C3093 /* Pods-Remote Helper.debug.xcconfig */,
-				6201A1F3662C96ECE8004A0B /* Pods-Remote Helper.release.xcconfig */,
-				524B534A3FAB0E5A944DE9C7 /* Pods-Remote Helper Mac.debug.xcconfig */,
-				75D8E1F4A645831E7C0BAB24 /* Pods-Remote Helper Mac.release.xcconfig */,
+				25E8528D21747B27003F8D5E /* Kanna.framework.dSYM */,
+				25E8526A21747830003F8D5E /* Alamofire.framework.dSYM */,
+				25E8527221747830003F8D5E /* InAppSettingsKit.framework.dSYM */,
+				25E8526E21747830003F8D5E /* MediaBrowser.framework.dSYM */,
+				25E8526B21747830003F8D5E /* PasscodeLock.framework.dSYM */,
+				25E8527021747830003F8D5E /* QuickLayout.framework.dSYM */,
+				25E8526D21747830003F8D5E /* Reachability.framework.dSYM */,
+				25E8527121747830003F8D5E /* SDWebImage.framework.dSYM */,
+				25E8526C21747830003F8D5E /* SwiftEntryKit.framework.dSYM */,
+				25E8526921747830003F8D5E /* UICircularProgressRing.framework.dSYM */,
 			);
-			name = Pods;
+			name = DSYMs;
+			sourceTree = "<group>";
+		};
+		25E8528A217478E5003F8D5E /* TOWebViewController */ = {
+			isa = PBXGroup;
+			children = (
+				25E8527F217478C9003F8D5E /* TOActivityChrome.h */,
+				25E85282217478CD003F8D5E /* TOActivityChrome.m */,
+				25E85281217478CC003F8D5E /* TOActivitySafari.h */,
+				25E85284217478D0003F8D5E /* TOActivitySafari.m */,
+				25E85280217478CB003F8D5E /* TOWebViewController.h */,
+				25E8527D217478C7003F8D5E /* TOWebViewController.m */,
+				25E85283217478CF003F8D5E /* UIImage+TOWebViewControllerIcons.h */,
+				25E8527E217478C8003F8D5E /* UIImage+TOWebViewControllerIcons.m */,
+			);
+			name = TOWebViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -389,11 +453,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 251B629320FF661B0077FF2D /* Build configuration list for PBXNativeTarget "Remote Helper Mac" */;
 			buildPhases = (
-				5D75D8992C2DAB9095C722FF /* [CP] Check Pods Manifest.lock */,
 				251B628020FF66190077FF2D /* Sources */,
 				251B628120FF66190077FF2D /* Frameworks */,
 				251B628220FF66190077FF2D /* Resources */,
-				1677109C2B03580746B984E3 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -408,11 +470,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 252DFA991753784400FF8199 /* Build configuration list for PBXNativeTarget "Remote Helper" */;
 			buildPhases = (
-				04F10479EF960C14A407C68E /* [CP] Check Pods Manifest.lock */,
 				252DFA781753784400FF8199 /* Sources */,
 				252DFA791753784400FF8199 /* Frameworks */,
 				252DFA7A1753784400FF8199 /* Resources */,
-				B86065FA347A676D587B5B93 /* [CP] Embed Pods Frameworks */,
+				25E8523B21747586003F8D5E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -497,8 +558,6 @@
 				258CD0101A3B28B400B3EB55 /* Images.xcassets in Resources */,
 				2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */,
 				255A7D2A1BEB902400E6012B /* PasscodeLockView.xib in Resources */,
-				255A7D2B1BEB904E00E6012B /* PasscodeLock.strings in Resources */,
-				256EA4BF177D5F830081309B /* Localizable.strings in Resources */,
 				2561854E1B6F8D1B0073ACD3 /* Launch Screen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -506,103 +565,42 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		04F10479EF960C14A407C68E /* [CP] Check Pods Manifest.lock */ = {
+		25E8523B21747586003F8D5E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
+			inputFileListPaths = (
 			);
-			name = "[CP] Check Pods Manifest.lock";
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Kanna.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/InAppSettingsKit.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/MediaBrowser.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/PasscodeLock.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/QuickLayout.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Reachability.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftEntryKit.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/UICircularProgressRing.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
+			);
+			outputFileListPaths = (
+			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Remote Helper-checkManifestLockResult.txt",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Kanna.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/InAppSettingsKit.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/MediaBrowser.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/PasscodeLock.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/QuickLayout.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Reachability.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SDWebImage.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftEntryKit.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/UICircularProgressRing.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Alamofire.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		1677109C2B03580746B984E3 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Remote Helper Mac/Pods-Remote Helper Mac-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire-macOS/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/Fuzi-macOS/Fuzi.framework",
-				"${BUILT_PRODUCTS_DIR}/ReachabilitySwift-macOS/Reachability.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Fuzi.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Remote Helper Mac/Pods-Remote Helper Mac-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		5D75D8992C2DAB9095C722FF /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Remote Helper Mac-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B86065FA347A676D587B5B93 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Remote Helper/Pods-Remote Helper-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire-iOS/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/DACircularProgress/DACircularProgress.framework",
-				"${BUILT_PRODUCTS_DIR}/Fuzi-iOS/Fuzi.framework",
-				"${BUILT_PRODUCTS_DIR}/InAppSettingsKit/InAppSettingsKit.framework",
-				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
-				"${BUILT_PRODUCTS_DIR}/MWPhotoBrowser/MWPhotoBrowser.framework",
-				"${BUILT_PRODUCTS_DIR}/PasscodeLock/PasscodeLock.framework",
-				"${BUILT_PRODUCTS_DIR}/QuickLayout/QuickLayout.framework",
-				"${BUILT_PRODUCTS_DIR}/ReachabilitySwift-iOS/Reachability.framework",
-				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
-				"${BUILT_PRODUCTS_DIR}/SwiftEntryKit/SwiftEntryKit.framework",
-				"${BUILT_PRODUCTS_DIR}/TOWebViewController/TOWebViewController.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DACircularProgress.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Fuzi.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InAppSettingsKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MWPhotoBrowser.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PasscodeLock.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/QuickLayout.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftEntryKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TOWebViewController.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Remote Helper/Pods-Remote Helper-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n/usr/local/bin/carthage copy-frameworks\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -646,6 +644,7 @@
 				250354D51BE9BEC900E9F93A /* AppDelegate.swift in Sources */,
 				2502ABE71BE723A2004882FE /* String+URLEncode.swift in Sources */,
 				2502ABDD1BE6F84B004882FE /* String+JSON.swift in Sources */,
+				25E85287217478D0003F8D5E /* TOActivityChrome.m in Sources */,
 				25C8BF151BF243AB00CAC32E /* UITabBarController+StatusBarStyle.swift in Sources */,
 				254CBE4D1BE890210050A288 /* VPSearchResultController.swift in Sources */,
 				250354DE1BEA41F300E9F93A /* Constants.swift in Sources */,
@@ -653,6 +652,7 @@
 				25AFE0921E94E69600DFB501 /* MiDownloader.swift in Sources */,
 				25AFE0951E96244500DFB501 /* DispatchQueueExtension.swift in Sources */,
 				2502ABDB1BE6F761004882FE /* Helper.swift in Sources */,
+				25E85288217478D0003F8D5E /* TOActivitySafari.m in Sources */,
 				2502ABE31BE70507004882FE /* FileAttributeHelper.swift in Sources */,
 				254CBE401BE8481F0050A288 /* URLConverter.swift in Sources */,
 				254729F71DEBD28300787C20 /* KittenTorrent.swift in Sources */,
@@ -660,6 +660,7 @@
 				254CBE421BE857520050A288 /* String+MD5.swift in Sources */,
 				25C478D11FDFA61400AA8958 /* Configuration.swift in Sources */,
 				255A7D241BEB8DC700E6012B /* UserDefaultsPasscodeRepository.swift in Sources */,
+				25E85286217478D0003F8D5E /* UIImage+TOWebViewControllerIcons.m in Sources */,
 				255A7D301BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift in Sources */,
 				252C9C1A1FFBB73E00B24729 /* WebViewController.swift in Sources */,
 				2575F5721E97B2B7004B4D1E /* iconv_wrapper.c in Sources */,
@@ -679,6 +680,7 @@
 				2575F5711E97B2B7004B4D1E /* NSData+iconv.m in Sources */,
 				255A7D251BEB8DC700E6012B /* PasscodeLockConfiguration.swift in Sources */,
 				2502ABDF1BE6FBEC004882FE /* String+Base64.swift in Sources */,
+				25E85285217478D0003F8D5E /* TOWebViewController.m in Sources */,
 				25782C081FD7C77300BD2E6C /* Remote-Helper.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -734,7 +736,6 @@
 /* Begin XCBuildConfiguration section */
 		251B629120FF661B0077FF2D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 524B534A3FAB0E5A944DE9C7 /* Pods-Remote Helper Mac.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -777,7 +778,6 @@
 		};
 		251B629220FF661B0077FF2D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 75D8E1F4A645831E7C0BAB24 /* Pods-Remote Helper Mac.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -793,7 +793,6 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 32Y52676KN;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -862,7 +861,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -895,7 +894,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -905,7 +904,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -916,7 +915,6 @@
 		};
 		252DFA9A1753784400FF8199 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FF635FFD5335C764D69C3093 /* Pods-Remote Helper.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -925,13 +923,19 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 32Y52676KN;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				INFOPLIST_FILE = "Remote Helper/Remote Helper-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.Video-Player";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "c649645a-2275-429b-831d-84429caabd7e";
 				PROVISIONING_PROFILE_SPECIFIER = "Remote Helper Development";
+				SWIFT_ENABLE_BATCH_MODE = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Remote Helper/Remote Helper-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
@@ -941,7 +945,6 @@
 		};
 		252DFA9B1753784400FF8199 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6201A1F3662C96ECE8004A0B /* Pods-Remote Helper.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -950,13 +953,19 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 32Y52676KN;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				INFOPLIST_FILE = "Remote Helper/Remote Helper-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.Video-Player";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "d29dfa3c-208e-4aab-ac00-6abda19ad156";
 				PROVISIONING_PROFILE_SPECIFIER = "Remote Helper Distribution";
+				SWIFT_ENABLE_BATCH_MODE = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Remote Helper/Remote Helper-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = app;

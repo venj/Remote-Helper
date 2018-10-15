@@ -7,9 +7,9 @@
 //
 
 import UIKit
-import MWPhotoBrowser
+import MediaBrowser
 
-class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPopoverPresentationControllerDelegate {
+class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopoverPresentationControllerDelegate {
     let CellIdentifier = "BangumiTableCell"
     var bangumi: Bangumi? = nil
 
@@ -229,11 +229,12 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
 
     // MARK: - Actions
     @objc func showImages(_ sender: Any?) {
-        let photoBrowser = MWPhotoBrowser(delegate: self)
-        photoBrowser?.displayActionButton = false
-        photoBrowser?.displayNavArrows = true
-        photoBrowser?.zoomPhotosToFill = false
-        self.navigationController?.pushViewController(photoBrowser!, animated: true)
+        let photoBrowser = MediaBrowser(delegate: self)
+        photoBrowser.displayActionButton = false
+        photoBrowser.displayMediaNavigationArrows = true
+        photoBrowser.zoomPhotosToFill = false
+        photoBrowser.enableGrid = false
+        self.navigationController?.pushViewController(photoBrowser, animated: true)
     }
 
     @objc func showInfo(_ sender: Any?) {
@@ -264,14 +265,14 @@ class BangumiViewController: UITableViewController, MWPhotoBrowserDelegate, UIPo
 
     // MARK: - MWPhotoBrowserDelegate
 
-    func numberOfPhotos(in photoBrowser: MWPhotoBrowser!) -> UInt {
-        return UInt(bangumi?.images.count ?? 0)
+    func numberOfMedia(in mediaBrowser: MediaBrowser) -> Int {
+        return bangumi?.images.count ?? 0
     }
 
-    func photoBrowser(_ photoBrowser: MWPhotoBrowser!, photoAt index: UInt) -> MWPhotoProtocol! {
-        guard let imageLink = bangumi?.images[Int(index)] else { return nil }
-        guard let url = URL(string: imageLink) else { return nil }
-        let mwPhoto = MWPhoto(url: url)
+    func media(for mediaBrowser: MediaBrowser, at index: Int) -> Media {
+        // FIXME: Guard nil 
+        let imageLink = bangumi!.images[Int(index)]
+        let mwPhoto = Media(url: URL(string: imageLink)!)
         return mwPhoto
     }
 }

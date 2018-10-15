@@ -8,12 +8,11 @@
 
 import UIKit
 import SDWebImage
-import TOWebViewController
-import MWPhotoBrowser
+import MediaBrowser
 import Alamofire
 import SwiftEntryKit
 
-class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegate, UIPopoverPresentationControllerDelegate {
+class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate, UIPopoverPresentationControllerDelegate {
     let CellIdentifier = "VPTorrentsListViewCell"
     let localizedStatusStrings: [String: String] = ["completed" : NSLocalizedString("completed", comment: "completed"),
         "waiting" : NSLocalizedString("waiting", comment:"waiting"),
@@ -42,11 +41,11 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         return filteredDateList.enumerated().map { "\($1) (\(filteredCountList[$0]))"}
     }
 
-    var mwPhotos: [MWPhoto] {
+    var mwPhotos: [Media] {
         return photos.compactMap { photo in
             guard let url = URL(string: Configuration.shared.baseLink) else { return nil }
             let fullURL = url.appendingPathComponent(photo)
-            guard let p = MWPhoto(url: fullURL) else { return nil }
+            let p = Media(url: fullURL)
             p.caption = fullURL.lastPathComponent
             return p
         }
@@ -91,7 +90,13 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        updateTheme()
         attachedProgressView.removeFromSuperview()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        updateTheme()
     }
 
     override func viewDidLoad() {
@@ -111,12 +116,6 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
         self.loadTorrentList(nil)
 
-        // Theme
-        navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
-        navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
-        tableView.tintColor = Helper.shared.mainThemeColor()
-
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
             tableView.cellLayoutMarginsFollowReadableWidth = false
@@ -127,8 +126,11 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
             registerForPreviewing(with: self, sourceView: tableView)
         }
 
-        NotificationCenter.default.addObserver(self, selector: #selector(photoPreloadFinished(_:)), name: NSNotification.Name(rawValue: MWPHOTO_LOADING_DID_END_NOTIFICATION), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(showNoMorePhotosHUD(_:)), name: NSNotification.Name(rawValue: MWPHOTO_NO_MORE_PHOTOS_NOTIFICATION), object: nil)
+        updateTheme()
+
+        // TODO: Replace with new implementation.
+        //NotificationCenter.default.addObserver(self, selector: #selector(photoPreloadFinished(_:)), name: NSNotification.Name(rawValue: MWPHOTO_LOADING_DID_END_NOTIFICATION), object: nil)
+        //NotificationCenter.default.addObserver(self, selector: #selector(showNoMorePhotosHUD(_:)), name: NSNotification.Name(rawValue: MWPHOTO_NO_MORE_PHOTOS_NOTIFICATION), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(viewedTitlesDidChange(_:)), name: NSNotification.Name.viewedTitlesDidChangeNotification, object: nil)
     }
 
@@ -150,6 +152,14 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
         viewedTitles.forEach { title in
             if !titles.contains(title) { viewedTitles.remove(title) }
         }
+    }
+
+    func updateTheme() {
+        // Theme
+        navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
+        navigationController?.navigationBar.tintColor = UIColor.white
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
+        tableView.tintColor = Helper.shared.mainThemeColor()
     }
     
     // MARK: - Table view data source
@@ -226,28 +236,33 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
 
     //MARK: - MWPhotoBrowser delegate
 
-    func numberOfPhotos(in photoBrowser: MWPhotoBrowser!) -> UInt {
-        return UInt(mwPhotos.count)
+    func numberOfMedia(in mediaBrowser: MediaBrowser) -> Int {
+        return mwPhotos.count
     }
 
-    func photoBrowser(_ photoBrowser: MWPhotoBrowser!, photoAt index: UInt) -> MWPhotoProtocol! {
-        if (index < UInt(self.mwPhotos.count)) {
-            return self.mwPhotos[Int(index)]
+    func media(for mediaBrowser: MediaBrowser, at index: Int) -> Media {
+        if (index < mwPhotos.count) {
+            return mwPhotos[index]
         }
-        return nil
+        else {
+            return index < 0 ? mwPhotos[0] : mwPhotos[mwPhotos.count - 1]
+        }
     }
 
-    func photoBrowser(_ photoBrowser: MWPhotoBrowser!, didDisplayPhotoAt index: UInt) {
-        currentPhotoIndex = Int(index)
+    func thumbnail(for mediaBrowser: MediaBrowser, at index: Int) -> Media {
+        return media(for: mediaBrowser, at: index)
+    }
+
+    func didDisplayMedia(at index: Int, in mediaBrowser: MediaBrowser) {
         if !navigationController!.view.subviews.contains(attachedProgressView) {
             attachProgressView(to: navigationController!.view)
         }
-        let progress = Float(currentPhotoIndex + 1) / Float(photos.count)
+        let progress = Float(index + 1) / Float(photos.count)
         attachedProgressView.progress = progress
-        photoBrowser.navigationItem.rightBarButtonItems  = [kittenItem, hashItem]
+        mediaBrowser.navigationItem.rightBarButtonItems  = [kittenItem, hashItem]
     }
 
-    func photoBrowser(_ photoBrowser: MWPhotoBrowser!, titleForPhotoAt index: UInt) -> String! {
+    func title(for mediaBrowser: MediaBrowser, at index: Int) -> String? {
         guard let indexPath = currentSelectedIndexPath else { return nil }
         let list = !searchController.isActive ? dateList : filteredDateList
         let title = list[indexPath.row]
@@ -327,11 +342,11 @@ class VPTorrentsListViewController: UITableViewController, MWPhotoBrowserDelegat
                 if index > photos.count - 1 {
                     sIndex = photos.count - 1
                 }
-                let pb = MWPhotoBrowser(delegate: self)!
+                let pb = MediaBrowser(delegate: self)
                 pb.displayActionButton = false
-                pb.displayNavArrows = true
+                pb.displayMediaNavigationArrows = true
                 pb.zoomPhotosToFill = false
-                pb.setCurrentPhotoIndex(UInt(sIndex))
+                pb.setCurrentIndex(at: sIndex)
                 self.navigationController?.pushViewController(pb, animated: true)
             }
             else {
@@ -448,9 +463,9 @@ extension VPTorrentsListViewController : UIViewControllerPreviewingDelegate {
         guard let date = list[indexPath.row].addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) else { return nil }
         // Reset photos
         photos = []
-        let pb = MWPhotoBrowser(delegate: self)!
+        let pb = MediaBrowser(delegate: self)
         pb.displayActionButton = false
-        pb.displayNavArrows = true
+        pb.displayMediaNavigationArrows = true
         pb.zoomPhotosToFill = false
 
         let request = Alamofire.request(Configuration.shared.searchPath(withKeyword: date))
@@ -460,7 +475,7 @@ extension VPTorrentsListViewController : UIViewControllerPreviewingDelegate {
                 guard let photos = response.result.value as? [String] else { return }
                 self.photos = photos
                 self.mwPhotos.forEach {
-                    $0.loadUnderlyingImageAndNotify();
+                    $0.loadUnderlyingImageAndNotify()
                 }
                 pb.reloadData()
             }
@@ -480,7 +495,7 @@ extension VPTorrentsListViewController : UIViewControllerPreviewingDelegate {
             viewedTitles.insert(title)
         }
 
-        (viewControllerToCommit as? MWPhotoBrowser)?.reloadData()
+        (viewControllerToCommit as? MediaBrowser)?.reloadData()
     }
 }
 

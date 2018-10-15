@@ -9,7 +9,6 @@
 import UIKit
 import Alamofire
 import SafariServices
-import TOWebViewController
 import Reachability
 import SwiftEntryKit
 

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-// Import CommonCrypto in bridge header.
+import CommonCrypto
 
 // via https://github.com/mnbayan/StringHash
 

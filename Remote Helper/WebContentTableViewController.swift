@@ -9,18 +9,17 @@
 import UIKit
 import SDWebImage
 import PasscodeLock
-import TOWebViewController
-import MWPhotoBrowser
+import MediaBrowser
 import InAppSettingsKit
 import CoreData
-import Fuzi
+import Kanna
 
 class WebContentTableViewController: UITableViewController, IASKSettingsDelegate, UIPopoverPresentationControllerDelegate {
     fileprivate let CellIdentifier = "WebContentTableViewCell"
 
     var webViewController:WebViewController!
     var settingsViewController: IASKAppSettingsViewController!
-    var mwPhotos: [MWPhoto]!
+    var mwPhotos: [Media] = []
     var addresses: [ResourceSite] = [] {
         didSet {
             addresses.enumerated().forEach({ (args) in
@@ -352,9 +351,9 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     func processHTML(_ html: String) {
         var validAddresses: [Link] = []
         do {
-            let doc = try HTMLDocument(string: html)
+            let doc = try HTML(html: html, encoding: .utf8)
             let links: [Link] = doc.css("a").compactMap { e in
-                guard let href = e.attr("href") else { return nil }
+                guard let href = e["href"] else { return nil }
                 let loweredLink = href.lowercased()
                 if loweredLink.hasPrefix("magnet:?")
                     || loweredLink.hasPrefix("ed2k://")

@@ -1,0 +1,8 @@
+github "Alamofire/Alamofire"
+github "ashleymills/Reachability.swift"
+github "tid-kijyun/Kanna"
+github "imvenj/SwiftEntryKit"
+github "imvenj/QuickLayout"
+github "futuretap/InAppSettingsKit"
+github "imvenj/MediaBrowser" "master"
+github "venj/SwiftPasscodeLock" "master"

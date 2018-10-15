@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import TOWebViewController
 
 class WebViewController: TOWebViewController {
 

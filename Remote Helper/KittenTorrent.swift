@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Fuzi
+import Kanna
 
 public enum KittenSource: Int, CustomStringConvertible {
     case main = 0
@@ -70,31 +70,31 @@ public struct KittenTorrent {
         var results : [KittenTorrent] = []
 
         do {
-            let doc = try HTMLDocument(data: data)
+            let doc = try HTML(html: data, encoding: .utf8)
             var page = 1
 
             switch source {
             case .bt177:
                 let numberOfItemsPerPage = 10.0
-                let itemsCount = Double(doc.css("#container .tips span.number")[0].stringValue) ?? 1
+                let itemsCount = Double(doc.css("#container .tips span.number")[0].text ?? "1") ?? 1
                 var page = Int(ceil(itemsCount / numberOfItemsPerPage))
                 if page > 100 { page = 100 } // Max to 100 pages else 500 error.
                 for row in doc.css("#container .main ul.mlist li") {
-                    guard let title = row.css(".T1 a").first?.stringValue else { continue }
+                    guard let title = row.css(".T1 a").first?.text else { continue }
                     // Filter based on ad black list.
                     if Helper.shared.kittenBlackList.filter({ title.contains($0) }).count > 0 { continue }
                     // Filter out no result
                     if title.contains("No result - ") { continue }
-                    let size = row.css(".BotInfo dt span")[0].stringValue
-                    let dateString = row.css(".BotInfo dt span")[1].stringValue
-                    guard let magnetContent = row.css(".dInfo").first?.stringValue else { continue }
+                    let size = row.css(".BotInfo dt span")[0].text ?? "0"
+                    let dateString = row.css(".BotInfo dt span")[1].text ?? ""
+                    guard let magnetContent = row.css(".dInfo").first?.text else { continue }
                     let magnet = magnetContent.replacingOccurrences(of: "HASH值：\\s*", with: "magnet:?xt=urn:btih:", options: [.caseInsensitive, .regularExpression], range: Range.init(NSRange(location: 0, length: magnetContent.count), in: magnetContent))
                     let torrent = KittenTorrent(title: title, magnet: magnet, dateString: dateString, size: size, maxPage: page, source: source)
                     results.append(torrent)
                 }
             default: // 0 or other
                 doc.css("div.pagination a").forEach {
-                    let pageString = $0.stringValue
+                    let pageString = $0.text ?? ""
                     let i = Int(pageString) ?? page
                     if page < i {
                         page = i
@@ -102,14 +102,14 @@ public struct KittenTorrent {
                 }
 
                 for row in doc.css("#archiveResult tr") {
-                    guard let title = row.css("td.name") .first?.stringValue else { continue }
+                    guard let title = row.css("td.name") .first?.text else { continue }
                     // Filter based on ad black list.
                     if Helper.shared.kittenBlackList.filter({ title.contains($0) }).count > 0 { continue }
                     // Filter out no result
                     if title.contains("No result - ") { continue }
-                    let size = row.css("td.size") .first?.stringValue ??  ""
-                    let dateString = row.css("td.date") .first?.stringValue ??  ""
-                    let magnet = row.css("td.action a").filter{ $0.attr("rel") == "magnet" }.first?.attr("href") ?? ""
+                    let size = row.css("td.size") .first?.text ??  ""
+                    let dateString = row.css("td.date") .first?.text ??  ""
+                    let magnet = row.css("td.action a").filter{ $0["rel"] == "magnet" }.first?["href"] ?? ""
                     let torrent = KittenTorrent(title: title, magnet: magnet, dateString: dateString, size: size, maxPage: page, source: source)
                     results.append(torrent)
                 }

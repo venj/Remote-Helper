@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Fuzi
+import Kanna
 
 struct Bangumi {
     var title: String
@@ -33,8 +33,8 @@ struct Bangumi {
         guard let html = isGBK ? (data as NSData).convertToUTF8String(fromEncoding: "GBK", allowLoosy: true) : String(data: data, encoding: .utf8) else { return nil }
         do {
             let replaced = html.replacingOccurrences(of: "charset=gb2312", with: "charset=utf-8")
-            let doc = try HTMLDocument(string: replaced)
-            let title = doc.css("div.title_all h1").first?.stringValue ?? NSLocalizedString("Unknown Title", comment: "Unknown Title")
+            let doc = try HTML(html: replaced, encoding: .utf8)
+            let title = doc.css("div.title_all h1").first?.text ?? NSLocalizedString("Unknown Title", comment: "Unknown Title")
             var links: [Link] = []
             doc.css("div.co_content8 table td a").forEach({ (element) in
                 guard let link = element["href"] else { return }
@@ -48,7 +48,7 @@ struct Bangumi {
             }
 
             let info = doc.css("div.co_content8 #Zoom")
-                .map{$0.rawXML}
+                .compactMap{$0.toXML}
                 .joined()
                 .replacingOccurrences(of: "<br>", with: "\n")
                 .replacingOccurrences(of: "\r", with: "")

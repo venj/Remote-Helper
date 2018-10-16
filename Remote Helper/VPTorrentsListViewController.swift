@@ -104,7 +104,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         title = NSLocalizedString("Torrents", comment: "Torrents")
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(loadTorrentList(_:)))
 
-        self.definesPresentationContext = true
+        definesPresentationContext = true
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         let searchBar = searchController.searchBar
@@ -114,7 +114,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         searchBar.sizeToFit()
         tableView.tableHeaderView = searchBar
 
-        self.loadTorrentList(nil)
+        loadTorrentList(nil)
 
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
@@ -149,9 +149,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     }
 
     func cleanupUselessViewedTitles() {
-        viewedTitles.forEach { title in
-            if !titles.contains(title) { viewedTitles.remove(title) }
-        }
+        viewedTitles = viewedTitles.intersection(titles)
     }
 
     func updateTheme() {
@@ -363,22 +361,34 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         request.responseJSON { [weak self] response in
             guard let `self` = self else { return }
             if response.result.isSuccess {
-                self.navigationItem.rightBarButtonItem?.isEnabled = true
                 self.datesDict = response.result.value as! [String: [Any]]
-                self.cleanupUselessViewedTitles()
-                self.tableView.reloadData()
+                DispatchQueue.global(qos: .background).async { [weak self] in
+                    guard let `self` = self else { return }
+                    self.cleanupUselessViewedTitles()
+                    DispatchQueue.main.async { [weak self] in
+                        guard let `self` = self else { return }
+                        self.navigationItem.rightBarButtonItem?.isEnabled = true
+                        self.tableView.reloadData()
+                    }
+                }
             }
             else {
-                self.navigationItem.rightBarButtonItem?.isEnabled = true
                 print(response.result.error?.localizedDescription ?? "")
-                Helper.shared.showNote(withMessage: NSLocalizedString("Connection failed.", comment: "Connection failed."), type:.error)
+                DispatchQueue.main.async { [weak self] in
+                    guard let `self` = self else { return }
+                    self.navigationItem.rightBarButtonItem?.isEnabled = true
+                    Helper.shared.showNote(withMessage: NSLocalizedString("Connection failed.", comment: "Connection failed."), type:.error)
+                }
             }
         }
     }
 
     @objc
     func viewedTitlesDidChange(_ notification: NSNotification) {
-        tableView.reloadData()
+        DispatchQueue.main.async { [weak self] in
+            guard let `self` = self else { return }
+            self.tableView.reloadData()
+        }
     }
 
     // Attach Progress View to a view (PhotoBrowser)

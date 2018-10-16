@@ -91,10 +91,6 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         super.viewWillAppear(animated)
         attachedProgressView.removeFromSuperview()
         tabBarController?.tabBar.isTranslucent = false
-
-        navigationController?.navigationBar.tintColor = .white
-        navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor : UIColor.white]
     }
 
     override func viewDidLoad() {

@@ -118,9 +118,8 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
             registerForPreviewing(with: self, sourceView: tableView)
         }
 
-        // TODO: Replace with new implementation.
-        //NotificationCenter.default.addObserver(self, selector: #selector(photoPreloadFinished(_:)), name: NSNotification.Name(rawValue: MWPHOTO_LOADING_DID_END_NOTIFICATION), object: nil)
-        //NotificationCenter.default.addObserver(self, selector: #selector(showNoMorePhotosHUD(_:)), name: NSNotification.Name(rawValue: MWPHOTO_NO_MORE_PHOTOS_NOTIFICATION), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(photoPreloadFinished(_:)), name: MediaBrowser.mediaLoadingDidEndNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(showNoMorePhotosHUD(_:)), name: MediaBrowser.noMoreMediaNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(viewedTitlesDidChange(_:)), name: NSNotification.Name.viewedTitlesDidChangeNotification, object: nil)
     }
 

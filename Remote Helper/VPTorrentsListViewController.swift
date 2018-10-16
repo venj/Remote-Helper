@@ -323,7 +323,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
                 let pb = MediaBrowser(delegate: self)
                 pb.displayActionButton = false
                 pb.displayMediaNavigationArrows = true
-                pb.zoomPhotosToFill = false
+                pb.zoomPhotosToFill = true
                 pb.setCurrentIndex(at: sIndex)
                 self.navigationController?.pushViewController(pb, animated: true)
             }
@@ -457,7 +457,7 @@ extension VPTorrentsListViewController : UIViewControllerPreviewingDelegate {
         let pb = MediaBrowser(delegate: self)
         pb.displayActionButton = false
         pb.displayMediaNavigationArrows = true
-        pb.zoomPhotosToFill = false
+        pb.zoomPhotosToFill = true
 
         let request = Alamofire.request(Configuration.shared.searchPath(withKeyword: date))
         request.responseJSON { [weak self] response in

@@ -48,7 +48,6 @@ extension Helper {
         let contentView = EKProcessingNoteMessageView(with: labelContent, activityIndicator: .white)
         var attributes = EKAttributes.topNote
         attributes.displayDuration = .infinity
-        attributes.statusBar = .light
         attributes.scroll = .disabled
         attributes.windowLevel = .statusBar
         attributes.entryInteraction = .absorbTouches

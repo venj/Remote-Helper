@@ -24,12 +24,6 @@ class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopo
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Theme
-        navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
-        navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
-        navigationController?.toolbar.tintColor = Helper.shared.mainThemeColor()
-
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
             tableView.cellLayoutMarginsFollowReadableWidth = false
@@ -176,8 +170,7 @@ class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopo
 
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel)
         alert.addAction(cancelAction)
-        alert.view.tintColor = Helper.shared.mainThemeColor()
-        
+
         present(alert, animated: true, completion: nil)
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -243,7 +236,6 @@ class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopo
             let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .cancel, handler: nil)
             alert.addAction(cancelAction)
             alert.popoverPresentationController?.delegate = self
-            alert.view.tintColor = Helper.shared.mainThemeColor()
             present(alert, animated: true) {
                 alert.popoverPresentationController?.passthroughViews = nil
             }
@@ -252,7 +244,6 @@ class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopo
             let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: NSLocalizedString("There's no infomation available.", comment: "There's no infomation available."), preferredStyle: .alert)
             let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .cancel, handler: nil)
             alert.addAction(cancelAction)
-            alert.view.tintColor = Helper.shared.mainThemeColor()
             present(alert, animated: true, completion: nil)
         }
     }

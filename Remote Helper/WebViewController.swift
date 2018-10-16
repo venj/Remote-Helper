@@ -12,8 +12,6 @@ class WebViewController: TOWebViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Theme
-        loadingBarTintColor = Helper.shared.mainThemeColor()
         if UIDevice.current.userInterfaceIdiom == .phone {
             buttonTintColor = Helper.shared.mainThemeColor()
         }

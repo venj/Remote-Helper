@@ -64,12 +64,6 @@ class VPSearchResultController: UITableViewController {
             navigationItem.rightBarButtonItems = [kittenItem]
         }
 
-        // Theme
-        navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
-        navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
-        tableView.tintColor = Helper.shared.mainThemeColor()
-
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
             tableView.cellLayoutMarginsFollowReadableWidth = false
@@ -155,7 +149,6 @@ class VPSearchResultController: UITableViewController {
 
         let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
-        alertController.view.tintColor = Helper.shared.mainThemeColor()
         present(alertController, animated: true, completion: nil)
     }
 
@@ -216,7 +209,6 @@ class VPSearchResultController: UITableViewController {
         let webViewController = TOWebViewController(urlString: "http://www.d21b.com/cn/vl_searchbyid.php?keyword=\(keyword)")
         webViewController?.showUrlWhileLoading = false
         webViewController?.hidesBottomBarWhenPushed = true
-        webViewController?.loadingBarTintColor = Helper.shared.mainThemeColor()
         if UIDevice.current.userInterfaceIdiom == .phone {
             webViewController?.buttonTintColor = Helper.shared.mainThemeColor()
         }

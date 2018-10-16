@@ -17,7 +17,7 @@ import CloudKit
 class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelegate {
     var window: UIWindow?
     var fileListViewController: WebContentTableViewController!
-    var tabbarController: UITabBarController!
+    lazy var tabbarController = UITabBarController()
 
     let bundleIdentifier = Bundle.main.bundleIdentifier!
     @available(iOS 9.0, *)
@@ -43,10 +43,9 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
         self.window = UIWindow(frame: UIScreen.main.bounds)
         // Configure Alamofire Request Manager
         configureAlamofireManager()
-        // Tabbar
-        tabbarController = UITabBarController()
-        tabbarController.delegate = self
-        tabbarController.tabBar.tintColor = Helper.shared.mainThemeColor()
+        // Theming
+        updateTheme()
+
         configureTabbarController()
         window?.rootViewController = tabbarController
         // Passcode Lock
@@ -61,6 +60,23 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
         // Window
         self.window?.makeKeyAndVisible()
         return true
+    }
+
+    func updateTheme() {
+        // Global tint
+        window?.tintColor = Helper.shared.mainThemeColor()
+
+        let navBarAppearance = UINavigationBar.appearance()
+        navBarAppearance.tintColor = .white
+        navBarAppearance.barTintColor = Helper.shared.mainThemeColor()
+        navBarAppearance.titleTextAttributes = [.foregroundColor : UIColor.white]
+
+        let searchBarAppearance = UISearchBar.appearance()
+        searchBarAppearance.tintColor = UIColor.white
+        searchBarAppearance.barTintColor = Helper.shared.mainThemeColor()
+        
+        UISwitch.appearance().onTintColor = Helper.shared.mainThemeColor()
+        UIProgressView.appearance().progressTintColor = Helper.shared.mainThemeColor()
     }
 
     @objc

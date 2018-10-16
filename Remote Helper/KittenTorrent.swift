@@ -76,7 +76,7 @@ public struct KittenTorrent {
             switch source {
             case .bt177:
                 let numberOfItemsPerPage = 10.0
-                let itemsCount = Double(doc.css("#container .tips span.number")[0].text ?? "1") ?? 1
+                let itemsCount = Double(doc.css("#container .tips span.number").first?.text ?? "1") ?? 1
                 var page = Int(ceil(itemsCount / numberOfItemsPerPage))
                 if page > 100 { page = 100 } // Max to 100 pages else 500 error.
                 for row in doc.css("#container .main ul.mlist li") {

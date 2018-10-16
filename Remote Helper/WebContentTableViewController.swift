@@ -51,11 +51,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             tableView.dragDelegate = self
         }
 
-        // Theme
-        navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
-        navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
-
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
             tableView.cellLayoutMarginsFollowReadableWidth = false
@@ -193,7 +188,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                 alert.addAction(confirmAction)
                 let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "取消"), style: .cancel, handler: nil)
                 alert.addAction(cancelAction)
-                alert.view.tintColor = Helper.shared.mainThemeColor()
                 sender.present(alert, animated: true, completion: nil)
             }
         }
@@ -244,7 +238,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         alertController.addAction(saveAction)
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
-        alertController.view.tintColor = Helper.shared.mainThemeColor()
         present(alertController, animated: true, completion: nil)
     }
 
@@ -268,7 +261,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
         sheet.addAction(cancelAction)
         sheet.popoverPresentationController?.delegate = self
-        sheet.view.tintColor = Helper.shared.mainThemeColor()
         present(sheet, animated: true) {
             sheet.popoverPresentationController?.passthroughViews = nil
         }
@@ -292,17 +284,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         settingsViewController = IASKAppSettingsViewController(style: .grouped)
         settingsViewController.delegate = self
         settingsViewController.showCreditsFooter = false
-        if #available(iOS 9.0, *) {
-            UIView.appearance(whenContainedInInstancesOf: [IASKAppSettingsViewController.self]).tintColor = Helper.shared.mainThemeColor()
-            UISwitch.appearance(whenContainedInInstancesOf: [IASKAppSettingsViewController.self]).onTintColor = Helper.shared.mainThemeColor()
-        } else {
-            //TODO: How to handle deprecated iOS 8 themeing? 
-        }
         let settingsNavigationController = UINavigationController(rootViewController: settingsViewController)
-        // Theme
-        settingsNavigationController.navigationBar.barTintColor = Helper.shared.mainThemeColor()
-        settingsNavigationController.navigationBar.tintColor = UIColor.white
-        settingsNavigationController.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
         if UIDevice.current.userInterfaceIdiom == .pad {
             settingsNavigationController.modalPresentationStyle = .formSheet
         }
@@ -319,7 +301,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         transmissionWebViewController?.urlRequest.cachePolicy = .reloadIgnoringLocalCacheData
         transmissionWebViewController?.title = "Transmission"
         transmissionWebViewController?.showUrlWhileLoading = false
-        transmissionWebViewController?.loadingBarTintColor = Helper.shared.mainThemeColor()
         if UIDevice.current.userInterfaceIdiom == .phone {
             transmissionWebViewController?.buttonTintColor = Helper.shared.mainThemeColor()
         }
@@ -327,9 +308,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             transmissionWebViewController?.buttonTintColor = UIColor.white
         }
         let transmissionNavigationController = UINavigationController(rootViewController: transmissionWebViewController!)
-        transmissionNavigationController.navigationBar.barTintColor = Helper.shared.mainThemeColor()
-        transmissionNavigationController.navigationBar.tintColor = UIColor.white
-        transmissionNavigationController.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
         DispatchQueue.main.async { [weak self] in
             guard let `self` = self else { return }
             self.present(transmissionNavigationController, animated:true, completion: nil)
@@ -402,7 +380,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         webViewController?.urlRequest.cachePolicy = .returnCacheDataElseLoad
         webViewController?.additionalBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(fetchHTMLAndParse))]
         // Theme
-        webViewController?.loadingBarTintColor = Helper.shared.mainThemeColor()
         if UIDevice.current.userInterfaceIdiom == .phone {
             webViewController?.buttonTintColor = Helper.shared.mainThemeColor()
         }

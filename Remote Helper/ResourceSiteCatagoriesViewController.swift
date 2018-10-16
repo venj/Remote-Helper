@@ -46,11 +46,6 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
         super.viewDidLoad()
         navigationController?.title = siteName
 
-        // Theme
-        navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
-        navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
-
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
             tableView.cellLayoutMarginsFollowReadableWidth = false
@@ -120,7 +115,6 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
                 let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: "There's no program under this catagory, or catagory failed to load.", preferredStyle: .alert)
                 let action = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .default, handler: nil)
                 alert.addAction(action)
-                alert.view.tintColor = Helper.shared.mainThemeColor()
                 self.present(alert, animated: true, completion: nil)
             }
             else {

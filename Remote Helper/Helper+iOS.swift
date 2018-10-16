@@ -47,6 +47,7 @@ extension Helper {
 
         let contentView = EKProcessingNoteMessageView(with: labelContent, activityIndicator: .white)
         var attributes = EKAttributes.topNote
+        attributes.displayDuration = .infinity
         attributes.statusBar = .light
         attributes.scroll = .disabled
         attributes.windowLevel = .statusBar
@@ -199,7 +200,6 @@ extension Helper {
         alertController.addAction(searchAction)
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
-        alertController.view.tintColor = Helper.shared.mainThemeColor()
         viewController.present(alertController, animated: true, completion: nil)
     }
 
@@ -307,7 +307,6 @@ extension Helper {
                             let alertController = UIAlertController(title: NSLocalizedString("Error", comment:"Error"), message: NSLocalizedString("Unkown error.", comment: "Unknow error."), preferredStyle: .alert)
                             let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
                             alertController.addAction(cancelAction)
-                            alertController.view.tintColor = Helper.shared.mainThemeColor()
                             AppDelegate.shared.window?.rootViewController?.present(alertController, animated: true, completion: nil)
                         }
                     }

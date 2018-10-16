@@ -84,19 +84,17 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
 
     lazy var attachedProgressView: UIProgressView = {
         let v = UIProgressView(progressViewStyle: .default)
-        v.progressTintColor = Helper.shared.mainThemeColor()
         return v
     }()
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        updateTheme()
         attachedProgressView.removeFromSuperview()
-    }
+        tabBarController?.tabBar.isTranslucent = false
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        updateTheme()
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor : UIColor.white]
     }
 
     override func viewDidLoad() {
@@ -108,8 +106,6 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         let searchBar = searchController.searchBar
-        searchBar.tintColor = UIColor.white
-        searchBar.barTintColor = Helper.shared.mainThemeColor()
         searchBar.keyboardType = .numbersAndPunctuation
         searchBar.sizeToFit()
         tableView.tableHeaderView = searchBar
@@ -125,8 +121,6 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         if #available(iOS 9.0, *), traitCollection.forceTouchCapability == .available {
             registerForPreviewing(with: self, sourceView: tableView)
         }
-
-        updateTheme()
 
         // TODO: Replace with new implementation.
         //NotificationCenter.default.addObserver(self, selector: #selector(photoPreloadFinished(_:)), name: NSNotification.Name(rawValue: MWPHOTO_LOADING_DID_END_NOTIFICATION), object: nil)
@@ -150,14 +144,6 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
 
     func cleanupUselessViewedTitles() {
         viewedTitles = viewedTitles.intersection(titles)
-    }
-
-    func updateTheme() {
-        // Theme
-        navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
-        navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
-        tableView.tintColor = Helper.shared.mainThemeColor()
     }
     
     // MARK: - Table view data source
@@ -228,7 +214,6 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         alertController.addAction(okAction)
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
-        alertController.view.tintColor = Helper.shared.mainThemeColor()
         present(alertController, animated: true, completion: nil)
     }
 
@@ -299,7 +284,6 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
                 alert.addAction(cancelAction)
 
                 alert.popoverPresentationController?.delegate = self
-                alert.view.tintColor = Helper.shared.mainThemeColor()
                 DispatchQueue.main.async {
                     self.navigationController?.topViewController?.present(alert, animated: true) {
                         alert.popoverPresentationController?.passthroughViews = nil
@@ -368,6 +352,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
                     DispatchQueue.main.async { [weak self] in
                         guard let `self` = self else { return }
                         self.navigationItem.rightBarButtonItem?.isEnabled = true
+                        SwiftEntryKit.dismiss()
                         self.tableView.reloadData()
                     }
                 }

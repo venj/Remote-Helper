@@ -35,11 +35,6 @@ class ResourcePageViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Theme
-        navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
-        navigationController?.navigationBar.tintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
-
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
             tableView.cellLayoutMarginsFollowReadableWidth = false
@@ -149,7 +144,6 @@ class ResourcePageViewController: UITableViewController {
                 let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: NSLocalizedString("This program is online only, now available for download.", comment: "This program is online only, now available for download."), preferredStyle: .alert)
                 let action = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .default, handler: nil)
                 alert.addAction(action)
-                alert.view.tintColor = Helper.shared.mainThemeColor()
                 self.present(alert, animated: true, completion: nil)
             }
             else {

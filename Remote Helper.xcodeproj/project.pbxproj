@@ -59,15 +59,14 @@
 		252DFA821753784400FF8199 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA811753784400FF8199 /* Foundation.framework */; };
 		252DFA841753784400FF8199 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA831753784400FF8199 /* CoreGraphics.framework */; };
 		252DFA8A1753784400FF8199 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 252DFA881753784400FF8199 /* InfoPlist.strings */; };
+		2538A19D21789BD8000AA2C0 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2538A19C21789BD7000AA2C0 /* Launch Screen.xib */; };
 		254729F71DEBD28300787C20 /* KittenTorrent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254729F61DEBD28300787C20 /* KittenTorrent.swift */; };
 		254CBE401BE8481F0050A288 /* URLConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE3F1BE8481F0050A288 /* URLConverter.swift */; };
 		254CBE421BE857520050A288 /* String+MD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE411BE857520050A288 /* String+MD5.swift */; };
 		254CBE4D1BE890210050A288 /* VPSearchResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE4C1BE890210050A288 /* VPSearchResultController.swift */; };
 		255A7D241BEB8DC700E6012B /* UserDefaultsPasscodeRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255A7D221BEB8DC700E6012B /* UserDefaultsPasscodeRepository.swift */; };
 		255A7D251BEB8DC700E6012B /* PasscodeLockConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255A7D231BEB8DC700E6012B /* PasscodeLockConfiguration.swift */; };
-		255A7D2A1BEB902400E6012B /* PasscodeLockView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 255A7D291BEB902400E6012B /* PasscodeLockView.xib */; };
 		255A7D301BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255A7D2F1BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift */; };
-		2561854E1B6F8D1B0073ACD3 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 256185501B6F8D1B0073ACD3 /* Launch Screen.xib */; };
 		2575F5711E97B2B7004B4D1E /* NSData+iconv.m in Sources */ = {isa = PBXBuildFile; fileRef = 2575F56E1E97B2B7004B4D1E /* NSData+iconv.m */; };
 		2575F5721E97B2B7004B4D1E /* iconv_wrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = 2575F5701E97B2B7004B4D1E /* iconv_wrapper.c */; };
 		2575F5751E97B359004B4D1E /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2575F5741E97B359004B4D1E /* libiconv.tbd */; };
@@ -135,17 +134,16 @@
 		252DFA831753784400FF8199 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		252DFA871753784400FF8199 /* Remote Helper-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Remote Helper-Info.plist"; sourceTree = "<group>"; };
 		252DFA891753784400FF8199 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2538A19C21789BD7000AA2C0 /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
 		254729F61DEBD28300787C20 /* KittenTorrent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KittenTorrent.swift; sourceTree = "<group>"; };
 		254CBE3F1BE8481F0050A288 /* URLConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLConverter.swift; sourceTree = "<group>"; };
 		254CBE411BE857520050A288 /* String+MD5.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+MD5.swift"; sourceTree = "<group>"; };
 		254CBE4C1BE890210050A288 /* VPSearchResultController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VPSearchResultController.swift; sourceTree = "<group>"; };
 		255A7D221BEB8DC700E6012B /* UserDefaultsPasscodeRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsPasscodeRepository.swift; sourceTree = "<group>"; };
 		255A7D231BEB8DC700E6012B /* PasscodeLockConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasscodeLockConfiguration.swift; sourceTree = "<group>"; };
-		255A7D291BEB902400E6012B /* PasscodeLockView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PasscodeLockView.xib; sourceTree = "<group>"; };
 		255A7D2C1BEB904E00E6012B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/PasscodeLock.strings; sourceTree = "<group>"; };
 		255A7D2E1BEB905600E6012B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/PasscodeLock.strings"; sourceTree = "<group>"; };
 		255A7D2F1BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UINavigationController+StatusBarStyle.swift"; sourceTree = "<group>"; };
-		2561854F1B6F8D1B0073ACD3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/Launch Screen.xib"; sourceTree = "<group>"; };
 		256EA4BC177D5ED30081309B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		256EA4BE177D5F830081309B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		256EA4C0177D5F8E0081309B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -312,8 +310,7 @@
 			isa = PBXGroup;
 			children = (
 				258CD00F1A3B28B400B3EB55 /* Images.xcassets */,
-				255A7D291BEB902400E6012B /* PasscodeLockView.xib */,
-				256185501B6F8D1B0073ACD3 /* Launch Screen.xib */,
+				2538A19C21789BD7000AA2C0 /* Launch Screen.xib */,
 				25782C061FD7C77200BD2E6C /* Remote-Helper.xcdatamodeld */,
 				255A7D2D1BEB904E00E6012B /* PasscodeLock.strings */,
 				25F94A601BE5E9FE009C9195 /* Remote Helper-Bridging-Header.h */,
@@ -557,8 +554,7 @@
 				252DFA8A1753784400FF8199 /* InfoPlist.strings in Resources */,
 				258CD0101A3B28B400B3EB55 /* Images.xcassets in Resources */,
 				2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */,
-				255A7D2A1BEB902400E6012B /* PasscodeLockView.xib in Resources */,
-				2561854E1B6F8D1B0073ACD3 /* Launch Screen.xib in Resources */,
+				2538A19D21789BD8000AA2C0 /* Launch Screen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -712,14 +708,6 @@
 				255A7D2E1BEB905600E6012B /* zh-Hans */,
 			);
 			name = PasscodeLock.strings;
-			sourceTree = "<group>";
-		};
-		256185501B6F8D1B0073ACD3 /* Launch Screen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2561854F1B6F8D1B0073ACD3 /* en */,
-			);
-			name = "Launch Screen.xib";
 			sourceTree = "<group>";
 		};
 		256EA4BD177D5F830081309B /* Localizable.strings */ = {

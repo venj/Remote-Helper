@@ -169,6 +169,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                 passcodeVC.dismissCompletionCallback = {
                     sender.tableView.reloadData()
                 }
+                passcodeVC.mainColor = Helper.shared.mainThemeColor()
                 sender.navigationController?.pushViewController(passcodeVC, animated: true)
             }
             else {
@@ -183,6 +184,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                     passcodeVC.dismissCompletionCallback = {
                         sender.tableView.reloadData()
                     }
+                    passcodeVC.mainColor = Helper.shared.mainThemeColor()
                     sender.navigationController?.pushViewController(passcodeVC, animated: true)
                 })
                 alert.addAction(confirmAction)

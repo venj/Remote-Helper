@@ -10,11 +10,11 @@ import Foundation
 import PasscodeLock
 
 struct PasscodeLockConfiguration: PasscodeLockConfigurationType {
-    public var touchIdReason: String? = NSLocalizedString("Remote Helper needs your finger print to protect your content.", comment: "Remote Helper needs your finger print to protect your content.")
+    var isBiometricAuthAllowed: Bool = true
+    var shouldRequestBiometricAuthImmediately: Bool = true
+    var biometricAuthReason: String? = NSLocalizedString("Remote Helper needs your finger print to protect your content.", comment: "Remote Helper needs your finger print to protect your content.")
     let repository: PasscodeRepositoryType
     let passcodeLength = 4
-    var isTouchIDAllowed = true
-    let shouldRequestTouchIDImmediately = true
     let maximumInccorectPasscodeAttempts = -1
     
     init(repository: PasscodeRepositoryType) {

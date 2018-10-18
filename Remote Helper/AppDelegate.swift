@@ -35,7 +35,8 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
 
     lazy var passcodeLockPresenter: PasscodeLockPresenter = {
         let configuration = PasscodeLockConfiguration()
-        let presenter = PasscodeLockPresenter(mainWindow: self.window, configuration: configuration)
+        let presenter = PasscodeLockPresenter(configuration: configuration)
+        presenter.passcodeLockVC.mainColor = Helper.shared.mainThemeColor()
         return presenter
     }()
 

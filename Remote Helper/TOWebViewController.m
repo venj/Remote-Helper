@@ -25,8 +25,6 @@
 //  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "TOWebViewController.h"
-#import "TOActivitySafari.h"
-#import "TOActivityChrome.h"
 #import "UIImage+TOWebViewControllerIcons.h"
 
 #import <QuartzCore/QuartzCore.h>
@@ -87,11 +85,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
 
 #pragma mark -
 #pragma mark Hidden Properties/Methods
-@interface TOWebViewController () <UIActionSheetDelegate,
-                                   UIPopoverControllerDelegate,
-                                   MFMailComposeViewControllerDelegate,
-                                   MFMessageComposeViewControllerDelegate,
-                                   CAAnimationDelegate>
+@interface TOWebViewController () <CAAnimationDelegate>
 {
     
     //The state of the UIWebView's scroll view before the rotation animation has started
@@ -160,6 +154,8 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
 @property (nonatomic, strong, readonly) UIBarButtonItem *customBackButtonItem;
 @property (nonatomic, strong, readonly) UIBarButtonItem *closeButtonItem;
 
+@property (nonatomic, strong) UIBarButtonItem *containerItem;
+@property (nonatomic, strong) UIActivityViewController *activityViewController;
 /* Perform all common setup steps */
 - (void)setup;
 
@@ -178,13 +174,6 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
 - (void)reloadStopButtonTapped:(id)sender;
 - (void)actionButtonTapped:(id)sender;
 - (void)doneButtonTapped:(id)sender;
-
-/* Event handlers for items in the 'action' popup */
-- (void)copyURLToClipboard;
-- (void)openInBrowser;
-- (void)openMailDialog;
-- (void)openMessageDialog;
-- (void)openTwitterDialog;
 
 /* Methods related to tracking load progress of current page */
 - (void)resetLoadProgress;
@@ -452,19 +441,20 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     //create the buttons view and add them to either the navigation bar or toolbar
     self.buttonsContainerView = [self containerViewWithNavigationButtons];
     if (IPAD) {
-        UIBarButtonItem *webNavigationBarItem = [[UIBarButtonItem alloc] initWithCustomView:self.buttonsContainerView];
+        self.containerItem = [[UIBarButtonItem alloc] initWithCustomView:self.buttonsContainerView];
         if (self.showAdditionalBarButtonItems && [self.additionalBarButtonItems count] > 0) {
-            self.navigationItem.rightBarButtonItems =  [self.additionalBarButtonItems arrayByAddingObject:webNavigationBarItem];
+            self.navigationItem.rightBarButtonItems =  [self.additionalBarButtonItems arrayByAddingObject:self.containerItem];
         }
         else {
-            self.navigationItem.rightBarButtonItem = webNavigationBarItem;
+            self.navigationItem.rightBarButtonItem = self.containerItem;
         }
     }
     else {
         if (self.showAdditionalBarButtonItems && [self.additionalBarButtonItems count] > 0) {
             self.navigationItem.rightBarButtonItems = self.additionalBarButtonItems;
         }
-        NSArray *items = @[BLANK_BARBUTTONITEM, [[UIBarButtonItem alloc] initWithCustomView:self.buttonsContainerView], BLANK_BARBUTTONITEM];
+        self.containerItem = [[UIBarButtonItem alloc] initWithCustomView:self.buttonsContainerView];
+        NSArray *items = @[BLANK_BARBUTTONITEM, self.containerItem, BLANK_BARBUTTONITEM];
         self.toolbarItems = items;
     }
     
@@ -566,42 +556,6 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
     return UIStatusBarStyleDefault;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-{
-    if (self.webViewRotationSnapshot)
-        return NO;
-    
-    return YES;
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    //get the web view ready for rotation
-    [self setUpWebViewForRotationToOrientation:toInterfaceOrientation withDuration:duration];
-}
-
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    //reset the gradient layer's frame to match the new bounds
-    self.gradientLayer.frame = self.view.bounds;
-    
-    //update the loading bar to match the proper bounds
-    self.loadingBarView.frame = ({
-        CGRect frame = self.loadingBarView.frame;
-        frame.origin.y = self.webView.scrollView.contentInset.top;
-        frame.origin.x = -CGRectGetWidth(self.loadingBarView.frame) + (CGRectGetWidth(self.view.bounds) * _loadingProgressState.loadingProgress);
-        frame;
-    });
-    
-    //animate the web view snapshot into the proper place
-    [self animateWebViewRotationToOrientation:toInterfaceOrientation withDuration:duration];
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-    [self restoreWebViewFromRotationFromOrientation:fromInterfaceOrientation];
 }
 
 #pragma mark -
@@ -917,231 +871,16 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
 #pragma mark Action Item Event Handlers
 - (void)actionButtonTapped:(id)sender
 {
-    // If we're on iOS 6 or above, we can use the super-duper activity view controller :)
-    if (NSClassFromString(@"UIPresentationController")) {
-        NSArray *browserActivities = @[[TOActivitySafari new], [TOActivityChrome new]];
-        UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[self.url] applicationActivities:browserActivities];
-        activityViewController.modalPresentationStyle = UIModalPresentationPopover;
-        activityViewController.popoverPresentationController.sourceRect = self.actionButton.frame;
-        activityViewController.popoverPresentationController.sourceView = self.actionButton.superview;
-        [self presentViewController:activityViewController animated:YES completion:nil];
-    }
-    else if (NSClassFromString(@"UIActivityViewController"))
-    {
-        NSArray *browserActivities = @[[TOActivitySafari new], [TOActivityChrome new]];
-        UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[self.url] applicationActivities:browserActivities];
-        
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-        {
-            //If we're on an iPhone, we can just present it modally
-            [self presentViewController:activityViewController animated:YES completion:nil];
-        }
-        else
-        {
-            //UIPopoverController requires we retain our own instance of it.
-            //So if we somehow have a prior instance, clean it out
-            if (self.sharingPopoverController)
-            {
-                [self.sharingPopoverController dismissPopoverAnimated:NO];
-                self.sharingPopoverController = nil;
-            }
-            
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-            
-            //Create the sharing popover controller
-            self.sharingPopoverController = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
-            self.sharingPopoverController.delegate = self;
-            [self.sharingPopoverController presentPopoverFromRect:self.actionButton.frame inView:self.actionButton.superview permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-
-#pragma GCC diagnostic pop
-        }
-    }
-    else //We must be on iOS 5
-    {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                                 delegate:self
-                                                        cancelButtonTitle:nil
-                                                   destructiveButtonTitle:nil
-                                                        otherButtonTitles:NSLocalizedStringFromTable(@"Copy URL", @"TOWebViewControllerLocalizable", @"Copy the URL"), nil];
-
-        NSInteger numberOfButtons = 1;
-
-        //Add Browser
-        BOOL chromeIsInstalled = [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"googlechrome://"]];
-        NSString *browserMessage = NSLocalizedStringFromTable(@"Open in Safari", @"TOWebViewControllerLocalizable", @"Open in Safari");
-        if (chromeIsInstalled)
-            browserMessage = NSLocalizedStringFromTable(@"Open in Chrome", @"TOWebViewControllerLocalizable", @"Open in Chrome");
-        
-        [actionSheet addButtonWithTitle:browserMessage];
-        numberOfButtons++;
-        
-        //Add Email
-        if ([MFMailComposeViewController canSendMail]) {
-            [actionSheet addButtonWithTitle:NSLocalizedStringFromTable(@"Mail", @"TOWebViewControllerLocalizable", @"Send Email")];
-            numberOfButtons++;
-        }
-        
-        //Add SMS
-        if ([MFMessageComposeViewController canSendText]) {
-            [actionSheet addButtonWithTitle:NSLocalizedStringFromTable(@"Message", @"TOWebViewControllerLocalizable", @"Send iMessage")];
-            numberOfButtons++;
-        }
-        
-        //Add Twitter
-        if ([TWTweetComposeViewController canSendTweet]) {
-            [actionSheet addButtonWithTitle:NSLocalizedStringFromTable(@"Twitter", @"TOWebViewControllerLocalizable", @"Send a Tweet")];
-            numberOfButtons++;
-        }
-
-        
-        //Add a cancel button if on iPhone
-        if (IPAD == NO) {
-            [actionSheet addButtonWithTitle:NSLocalizedStringFromTable(@"Cancel", @"TOWebViewControllerLocalizable", @"Cancel")];
-            [actionSheet setCancelButtonIndex:numberOfButtons];
-            [actionSheet showInView:self.view];
-        }
-        else {
-            [actionSheet showFromRect:[(UIView *)sender frame] inView:[(UIView *)sender superview] animated:YES];
-        }
-        
-        #pragma clang diagnostic pop
-    }
+    self.activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[self.url] applicationActivities:nil];
+    self.activityViewController.popoverPresentationController.delegate = self;
+    [self presentViewController:self.activityViewController animated:YES completion:nil];
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    //Handle whichever button was tapped
-    switch (buttonIndex) {
-        case 0:
-            [self copyURLToClipboard];
-            break;
-        case 1:
-            [self openInBrowser];
-            break;
-        case 2: //Email
-        {
-            if ([MFMailComposeViewController canSendMail])
-                [self openMailDialog];
-            else if ([MFMessageComposeViewController canSendText])
-                [self openMessageDialog];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            else if ([TWTweetComposeViewController canSendTweet])
-                [self openTwitterDialog];
-#pragma clang diagnostic pop
-        }
-            break;
-        case 3: //SMS or Twitter
-        {
-            if ([MFMessageComposeViewController canSendText])
-                [self openMessageDialog];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            else if ([TWTweetComposeViewController canSendTweet])
-                [self openTwitterDialog];
-#pragma clang diagnostic pop
-        }
-            break;
-        case 4: //Twitter (or Cancel)
-            if ([MFMessageComposeViewController canSendText])
-                [self openTwitterDialog];
-        default:
-            break;
-    }
+#pragma mark -
+#pragma mark Popover Delegate.
+- (void)prepareForPopoverPresentation:(UIPopoverPresentationController *)popoverPresentationController {
+    popoverPresentationController.barButtonItem = self.containerItem;
 }
-
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
-{
-    //Once the popover controller is dismissed, we can release our own reference to it
-    self.sharingPopoverController = nil;
-}
-
-- (void)copyURLToClipboard
-{
-    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    pasteboard.string = self.url.absoluteString;
-}
-
-- (void)openInBrowser
-{
-    BOOL chromeIsInstalled = [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"googlechrome://"]];
-    NSURL *inputURL = self.webView.request.URL;
-    
-    if (chromeIsInstalled)
-    {
-        NSString *scheme = inputURL.scheme;
-        
-        // Replace the URL Scheme with the Chrome equivalent.
-        NSString *chromeScheme = nil;
-        if ([scheme isEqualToString:@"http"])
-        {
-            chromeScheme = @"googlechrome";
-        }
-        else if ([scheme isEqualToString:@"https"])
-        {
-            chromeScheme = @"googlechromes";
-        }
-        
-        // Proceed only if a valid Google Chrome URI Scheme is available.
-        if (chromeScheme)
-        {
-            NSString *absoluteString    = [inputURL absoluteString];
-            NSRange rangeForScheme      = [absoluteString rangeOfString:@":"];
-            NSString *urlNoScheme       = [absoluteString substringFromIndex:rangeForScheme.location];
-            NSString *chromeURLString   = [chromeScheme stringByAppendingString:urlNoScheme];
-            NSURL *chromeURL            = [NSURL URLWithString:chromeURLString];
-            
-            // Open the URL with Chrome.
-            [[UIApplication sharedApplication] openURL:chromeURL];
-            
-            return;
-        }
-    }
-    
-    //If all else fails (Or Chrome is simply not installed), open as per usual
-    [[UIApplication sharedApplication] openURL:inputURL];
-}
-
-- (void)openMailDialog
-{
-    MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
-    mailViewController.mailComposeDelegate = self;
-    [mailViewController setMessageBody:[self.url absoluteString] isHTML:NO];
-    [self presentViewController:mailViewController animated:YES completion:nil];
-}
-
-- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)openMessageDialog
-{
-    MFMessageComposeViewController *messageViewController = [[MFMessageComposeViewController alloc] init];
-    messageViewController.messageComposeDelegate = self;
-    [messageViewController setBody:[self.url absoluteString]];
-    [self presentViewController:messageViewController animated:YES completion:nil];
-}
-
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)openTwitterDialog
-{
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    TWTweetComposeViewController *tweetComposer = [[TWTweetComposeViewController alloc] init];
-    [tweetComposer addURL:self.url];
-    [self presentViewController:tweetComposer animated:YES completion:nil];
-#pragma clang diagnostic pop
-}
-
 
 #pragma mark -
 #pragma mark Page Load Progress Tracking Handlers

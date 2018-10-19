@@ -92,8 +92,6 @@
 		25E8523D21747757003F8D5E /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E8523C21747757003F8D5E /* Alamofire.framework */; };
 		25E85285217478D0003F8D5E /* TOWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E8527D217478C7003F8D5E /* TOWebViewController.m */; };
 		25E85286217478D0003F8D5E /* UIImage+TOWebViewControllerIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E8527E217478C8003F8D5E /* UIImage+TOWebViewControllerIcons.m */; };
-		25E85287217478D0003F8D5E /* TOActivityChrome.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E85282217478CD003F8D5E /* TOActivityChrome.m */; };
-		25E85288217478D0003F8D5E /* TOActivitySafari.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E85284217478D0003F8D5E /* TOActivitySafari.m */; };
 		25F94A621BE5E9FF009C9195 /* Dictionary+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F94A611BE5E9FF009C9195 /* Dictionary+JSON.swift */; };
 /* End PBXBuildFile section */
 
@@ -185,12 +183,8 @@
 		25E8527221747830003F8D5E /* InAppSettingsKit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = InAppSettingsKit.framework.dSYM; path = Carthage/Build/iOS/InAppSettingsKit.framework.dSYM; sourceTree = SOURCE_ROOT; };
 		25E8527D217478C7003F8D5E /* TOWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOWebViewController.m; sourceTree = "<group>"; };
 		25E8527E217478C8003F8D5E /* UIImage+TOWebViewControllerIcons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+TOWebViewControllerIcons.m"; sourceTree = "<group>"; };
-		25E8527F217478C9003F8D5E /* TOActivityChrome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOActivityChrome.h; sourceTree = "<group>"; };
 		25E85280217478CB003F8D5E /* TOWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOWebViewController.h; sourceTree = "<group>"; };
-		25E85281217478CC003F8D5E /* TOActivitySafari.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOActivitySafari.h; sourceTree = "<group>"; };
-		25E85282217478CD003F8D5E /* TOActivityChrome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOActivityChrome.m; sourceTree = "<group>"; };
 		25E85283217478CF003F8D5E /* UIImage+TOWebViewControllerIcons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+TOWebViewControllerIcons.h"; sourceTree = "<group>"; };
-		25E85284217478D0003F8D5E /* TOActivitySafari.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOActivitySafari.m; sourceTree = "<group>"; };
 		25E8528B21747A0E003F8D5E /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		25E8528D21747B27003F8D5E /* Kanna.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Kanna.framework.dSYM; path = Carthage/Build/iOS/Kanna.framework.dSYM; sourceTree = SOURCE_ROOT; };
 		25F94A601BE5E9FE009C9195 /* Remote Helper-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Remote Helper-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -431,10 +425,6 @@
 		25E8528A217478E5003F8D5E /* TOWebViewController */ = {
 			isa = PBXGroup;
 			children = (
-				25E8527F217478C9003F8D5E /* TOActivityChrome.h */,
-				25E85282217478CD003F8D5E /* TOActivityChrome.m */,
-				25E85281217478CC003F8D5E /* TOActivitySafari.h */,
-				25E85284217478D0003F8D5E /* TOActivitySafari.m */,
 				25E85280217478CB003F8D5E /* TOWebViewController.h */,
 				25E8527D217478C7003F8D5E /* TOWebViewController.m */,
 				25E85283217478CF003F8D5E /* UIImage+TOWebViewControllerIcons.h */,
@@ -640,7 +630,6 @@
 				250354D51BE9BEC900E9F93A /* AppDelegate.swift in Sources */,
 				2502ABE71BE723A2004882FE /* String+URLEncode.swift in Sources */,
 				2502ABDD1BE6F84B004882FE /* String+JSON.swift in Sources */,
-				25E85287217478D0003F8D5E /* TOActivityChrome.m in Sources */,
 				25C8BF151BF243AB00CAC32E /* UITabBarController+StatusBarStyle.swift in Sources */,
 				254CBE4D1BE890210050A288 /* VPSearchResultController.swift in Sources */,
 				250354DE1BEA41F300E9F93A /* Constants.swift in Sources */,
@@ -648,7 +637,6 @@
 				25AFE0921E94E69600DFB501 /* MiDownloader.swift in Sources */,
 				25AFE0951E96244500DFB501 /* DispatchQueueExtension.swift in Sources */,
 				2502ABDB1BE6F761004882FE /* Helper.swift in Sources */,
-				25E85288217478D0003F8D5E /* TOActivitySafari.m in Sources */,
 				2502ABE31BE70507004882FE /* FileAttributeHelper.swift in Sources */,
 				254CBE401BE8481F0050A288 /* URLConverter.swift in Sources */,
 				254729F71DEBD28300787C20 /* KittenTorrent.swift in Sources */,

@@ -26,7 +26,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TOWebViewController : UIViewController <UIWebViewDelegate>
+@interface TOWebViewController : UIViewController <UIWebViewDelegate, UIPopoverPresentationControllerDelegate>
 
 /**
  Initializes a new `TOWebViewController` object with the specified URL.

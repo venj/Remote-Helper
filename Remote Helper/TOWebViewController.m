@@ -26,21 +26,10 @@
 
 #import "TOWebViewController.h"
 
-#import <QuartzCore/QuartzCore.h>
-#import <MessageUI/MessageUI.h>
-#import <MessageUI/MFMailComposeViewController.h>
-#import <MessageUI/MFMessageComposeViewController.h>
-#import <Twitter/Twitter.h>
-
 #import "Remote_Helper-Swift.h"
 
 const NSString *TOWebViewControllerButtonTintColor       = @"TOWebViewControllerButtonFillColor";
 const NSString *TOWebViewControllerButtonBevelOpacity    = @"TOWebViewControllerButtonBevelOpacity";
-
-/* Detect if we're running iOS 7.0 or higher (With the new minimal UI) */
-#define MINIMAL_UI      ([[UIViewController class] instancesRespondToSelector:@selector(edgesForExtendedLayout)])
-/* Detect if we're running iOS 8.0 (With the new device rotation system) */
-#define NEW_ROTATIONS   ([[UIViewController class] instancesRespondToSelector:NSSelectorFromString(@"viewWillTransitionToSize:withTransitionCoordinator:")])
 
 /* The default blue tint color of iOS 7.0 */
 #define DEFAULT_BAR_TINT_COLOR [UIColor colorWithRed:0.0f green:110.0f/255.0f blue:1.0f alpha:1.0f]
@@ -52,16 +41,14 @@ const NSString *TOWebViewControllerButtonBevelOpacity    = @"TOWebViewController
 #define BLANK_BARBUTTONITEM [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil]
 
 /* View Controller Theming Properties */
-#define BACKGROUND_COLOR_MINIMAL    [UIColor colorWithRed:0.741f green:0.741 blue:0.76f alpha:1.0f]
-#define BACKGROUND_COLOR_CLASSIC    [UIColor scrollViewTexturedBackgroundColor]
-#define BACKGROUND_COLOR            ((MINIMAL_UI) ? BACKGROUND_COLOR_MINIMAL : BACKGROUND_COLOR_CLASSIC)
+#define BACKGROUND_COLOR            [UIColor colorWithRed:0.741f green:0.741 blue:0.76f alpha:1.0f]
 
 /* Navigation Bar Properties */
 #define NAVIGATION_BUTTON_WIDTH             31
 #define NAVIGATION_BUTTON_SIZE              CGSizeMake(31,31)
 #define NAVIGATION_BUTTON_SPACING           40
 #define NAVIGATION_BUTTON_SPACING_IPAD      20
-#define NAVIGATION_BAR_HEIGHT               (MINIMAL_UI ? 64.0f : 44.0f)
+#define NAVIGATION_BAR_HEIGHT               64.0f
 #define NAVIGATION_TOGGLE_ANIM_TIME         0.3
 
 /* Toolbar Properties */
@@ -276,15 +263,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     view.opaque = YES;
     view.clipsToBounds = YES;
     self.view = view;
-    
-    //create and add the detail gradient to the background view
-    if (MINIMAL_UI == NO) {
-        self.gradientLayer = [CAGradientLayer layer];
-        self.gradientLayer.colors = @[(id)[[UIColor colorWithWhite:0.0f alpha:0.0f] CGColor],(id)[[UIColor colorWithWhite:0.0f alpha:0.35f] CGColor]];
-        self.gradientLayer.frame = self.view.bounds;
-        [self.view.layer addSublayer:self.gradientLayer];
-    }
-    
+
     //Create the web view
     self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
     self.webView.delegate = self;
@@ -303,7 +282,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
         self.loadingBarView.tintColor = self.loadingBarTintColor;
     
     //set the tint color for the loading bar
-    if (MINIMAL_UI && self.loadingBarTintColor == nil) {
+    if (self.loadingBarTintColor == nil) {
         if (self.navigationController && self.navigationController.view.window.tintColor)
             self.loadingBarView.backgroundColor = self.navigationController.view.window.tintColor;
         else if (self.view.window.tintColor)
@@ -311,17 +290,8 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
         else
             self.loadingBarView.backgroundColor = DEFAULT_BAR_TINT_COLOR;
     }
-    else if (self.loadingBarTintColor)
+    else {
         self.loadingBarView.backgroundColor = self.loadingBarTintColor;
-    else
-        self.loadingBarView.backgroundColor = DEFAULT_BAR_TINT_COLOR;
-    
-    //set up a subtle gradient to add over the loading bar
-    if (MINIMAL_UI == NO) {
-        CAGradientLayer *loadingBarGradientLayer = [CAGradientLayer layer];
-        loadingBarGradientLayer.colors = @[(id)[[UIColor colorWithWhite:0.0f alpha:0.25f] CGColor],(id)[[UIColor colorWithWhite:0.0f alpha:0.0f] CGColor]];
-        loadingBarGradientLayer.frame = self.loadingBarView.bounds;
-        [self.loadingBarView.layer addSublayer:loadingBarGradientLayer];
     }
 
     //only load the buttons if we need to
@@ -334,9 +304,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     //set up the buttons for the navigation bar
     CGRect buttonFrame = CGRectZero; buttonFrame.size = NAVIGATION_BUTTON_SIZE;
     
-    UIButtonType buttonType = UIButtonTypeCustom;
-    if (MINIMAL_UI)
-        buttonType = UIButtonTypeSystem;
+    UIButtonType buttonType = UIButtonTypeSystem;
     
     //set up the back button
     UIImage *backButtonImage = [UIImage backButtonIconWith:self.buttonThemeAttributes];
@@ -427,17 +395,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
         self.hideToolbarOnClose = self.navigationController.toolbarHidden;
         self.hideNavBarOnClose  = self.navigationBar.hidden;
     }
-    
-    //remove the shadow that lines the bottom of the webview
-    if (MINIMAL_UI == NO) {
-        for (UIView *view in self.webView.scrollView.subviews) {
-            if ([view isKindOfClass:[UIImageView class]] && CGRectGetWidth(view.frame) == CGRectGetWidth(self.view.frame) && CGRectGetMinY(view.frame) > 0.0f + FLT_EPSILON)
-                [view removeFromSuperview];
-            else if ([view isKindOfClass:[UIImageView class]] && self.hideWebViewBoundaries)
-                [view setHidden:YES];
-        }
-    }
-    
+
     //if we are hiding the web view boundaries, hide the gradient layer
     if (self.hideWebViewBoundaries)
         self.gradientLayer.hidden = YES;
@@ -461,10 +419,9 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
         NSArray *items = @[BLANK_BARBUTTONITEM, self.containerItem, BLANK_BARBUTTONITEM];
         self.toolbarItems = items;
     }
-    
+
     //override the tint color of the buttons, if desired.
-    if (MINIMAL_UI)
-        self.buttonsContainerView.tintColor = self.buttonTintColor;
+    self.buttonsContainerView.tintColor = self.buttonTintColor;
     
     // Create the Done button
     if (self.showDoneButton && self.beingPresentedModally && !self.onTopOfNavigationControllerStack) {
@@ -684,17 +641,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
         return;
     
     _buttonTintColor = buttonTintColor;
-    
-    if (MINIMAL_UI) {
-        self.buttonsContainerView.tintColor = _buttonTintColor;
-    }
-    else {
-        if (self.buttonThemeAttributes == nil)
-            self.buttonThemeAttributes = [NSMutableDictionary dictionary];
-        
-        self.buttonThemeAttributes[TOWebViewControllerButtonTintColor] = _buttonTintColor;
-        [self setUpNavigationButtons];
-    }
+    self.buttonsContainerView.tintColor = _buttonTintColor;
 }
 
 - (void)setButtonBevelOpacity:(CGFloat)buttonBevelOpacity
@@ -906,7 +853,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
         CGRect frame = self.loadingBarView.frame;
         frame.size.width = CGRectGetWidth(self.view.bounds);
         frame.origin.x = -frame.size.width;
-        frame.origin.y = self.webView.scrollView.contentInset.top;
+        frame.origin.y = -self.webView.scrollView.contentOffset.y;
         self.loadingBarView.frame = frame;
         self.loadingBarView.alpha = 1.0f;
         
@@ -1191,19 +1138,6 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     else //rotating from landscape to portrait. We need to make sure we capture content outside the visible region so it can pan back in
     {
         CGFloat heightInPortraitMode = webViewSize.width;
-        //dirty hack for pre-iOS 7 devices, where we can't derive the target
-        //height of the webview with the UINavigationController changing the bounds
-        if (MINIMAL_UI == NO) {
-            if (self.navigationBar)
-                heightInPortraitMode -= 44.0f;
-            
-            if (self.toolbar)
-                heightInPortraitMode -= 44.0f;
-            
-            if ([UIApplication sharedApplication].statusBarHidden == NO)
-                heightInPortraitMode -= [[UIApplication sharedApplication] statusBarFrame].size.width;
-        }
-        
         CGSize  contentSize   = self.webView.scrollView.contentSize;
         
         if ([self webViewPageWidthIsDynamic])
@@ -1223,16 +1157,6 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
             
             //The height of the region we're animating to, in the same space as the current content
             CGFloat portraitWidth = webViewSize.height;
-            if (MINIMAL_UI == NO) {
-                if (self.navigationBar)
-                    portraitWidth += CGRectGetHeight(self.navigationBar.frame);
-                
-                if (self.toolbar)
-                    portraitWidth += CGRectGetHeight(self.toolbar.frame);
-                
-                if ([UIApplication sharedApplication].statusBarHidden == NO)
-                    heightInPortraitMode -= [[UIApplication sharedApplication] statusBarFrame].size.width;
-            }
             
             CGFloat scaledHeight = heightInPortraitMode * (webViewSize.width / portraitWidth);
             
@@ -1372,26 +1296,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     
     self.webViewRotationSnapshot.frame = frame;
     [self.view insertSubview:self.webViewRotationSnapshot aboveSubview:self.webView];
-    
-    
-    //This is a dirty, dirty, DIRTY hack. When a UIWebView's frame changes (At least on iOS 6), in certain conditions,
-    //the content view will NOT resize with it. This can result in visual artifacts, such as black bars up the side,
-    //and weird touch feedback like not being able to properly zoom out until the user has first zoomed in and released the touch.
-    //So far, the only way I've found to actually correct this is to invoke a trivial zoom animation, and this will
-    //trip the webview into redrawing its content.
-    //Once the view has finished rotating, we'll figure out the proper placement + zoom scale and reset it.
-    
-    //UPDATE: Looks like it's no longer necessary in iOS 8! :)
-    
-    if (NEW_ROTATIONS == NO) {
-        //This animation must be complete by the time the view rotation animation is complete, else we'll have incorrect bounds data. This will speed it up to near instant.
-        self.webView.scrollView.layer.speed = 9999.0f;
-        
-        //zoom into the mid point of the scale. Zooming into either extreme doesn't work.
-        CGFloat zoomScale = (self.webView.scrollView.minimumZoomScale+self.webView.scrollView.maximumZoomScale) * 0.5f;
-        [self.webView.scrollView setZoomScale:zoomScale animated:YES];
-    }
-        
+
     //hide the webview while the snapshot is animating
     self.webView.hidden = YES;
 }
@@ -1491,23 +1396,9 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     
     //Pull out the animation and attach a delegate so we can receive an event when it's finished, to clean it up properly
     CABasicAnimation *anim = [[self.webView.scrollView.layer animationForKey:@"bounds"] mutableCopy];
-    if (NEW_ROTATIONS == NO) {
-        [self.webView.scrollView.layer removeAllAnimations];
-        self.webView.scrollView.layer.speed = 9999.0f;
-        [self.webView.scrollView setZoomScale:translatedScale animated:YES];
-        
-        if (anim == nil) { //anim may be nil if the zoomScale wasn't sufficiently different to warrant an animation
-            [self animationDidStop:anim finished:YES];
-            return;
-        }
-        [self.webView.scrollView.layer removeAnimationForKey:@"bounds"];
-        [anim setDelegate:self];
-        [self.webView.scrollView.layer addAnimation:anim forKey:@"bounds"];
-    }
-    else {
-        [self.webView.scrollView setZoomScale:translatedScale animated:NO];
-        [self animationDidStop:anim finished:YES];
-    }
+
+    [self.webView.scrollView setZoomScale:translatedScale animated:NO];
+    [self animationDidStop:anim finished:YES];
 }
 
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag

@@ -73,6 +73,7 @@
 		25782C081FD7C77300BD2E6C /* Remote-Helper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 25782C061FD7C77200BD2E6C /* Remote-Helper.xcdatamodeld */; };
 		2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2581D48717544A4C00EF3867 /* InAppSettings.bundle */; };
 		258CD0101A3B28B400B3EB55 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 258CD00F1A3B28B400B3EB55 /* Images.xcassets */; };
+		258E11962179CF8D00D116CC /* UIImage+TOWebViewControllerIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258E11952179CF8D00D116CC /* UIImage+TOWebViewControllerIcons.swift */; };
 		25953BC11FFE1C3F00D8AE53 /* Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25953BC01FFE1C3F00D8AE53 /* Link.swift */; };
 		25AFE0921E94E69600DFB501 /* MiDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25AFE0911E94E69600DFB501 /* MiDownloader.swift */; };
 		25AFE0951E96244500DFB501 /* DispatchQueueExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25AFE0941E96244500DFB501 /* DispatchQueueExtension.swift */; };
@@ -91,7 +92,6 @@
 		25E8523A21747572003F8D5E /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E8523121747572003F8D5E /* SDWebImage.framework */; };
 		25E8523D21747757003F8D5E /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E8523C21747757003F8D5E /* Alamofire.framework */; };
 		25E85285217478D0003F8D5E /* TOWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E8527D217478C7003F8D5E /* TOWebViewController.m */; };
-		25E85286217478D0003F8D5E /* UIImage+TOWebViewControllerIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E8527E217478C8003F8D5E /* UIImage+TOWebViewControllerIcons.m */; };
 		25F94A621BE5E9FF009C9195 /* Dictionary+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F94A611BE5E9FF009C9195 /* Dictionary+JSON.swift */; };
 /* End PBXBuildFile section */
 
@@ -154,6 +154,7 @@
 		25782C071FD7C77300BD2E6C /* Remote-Helper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Remote-Helper.xcdatamodel"; sourceTree = "<group>"; };
 		2581D48717544A4C00EF3867 /* InAppSettings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InAppSettings.bundle; sourceTree = "<group>"; };
 		258CD00F1A3B28B400B3EB55 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		258E11952179CF8D00D116CC /* UIImage+TOWebViewControllerIcons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+TOWebViewControllerIcons.swift"; sourceTree = "<group>"; };
 		25953BC01FFE1C3F00D8AE53 /* Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Link.swift; sourceTree = "<group>"; };
 		25AFE0911E94E69600DFB501 /* MiDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiDownloader.swift; sourceTree = "<group>"; };
 		25AFE0941E96244500DFB501 /* DispatchQueueExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchQueueExtension.swift; sourceTree = "<group>"; };
@@ -182,9 +183,7 @@
 		25E8527121747830003F8D5E /* SDWebImage.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SDWebImage.framework.dSYM; path = Carthage/Build/iOS/SDWebImage.framework.dSYM; sourceTree = SOURCE_ROOT; };
 		25E8527221747830003F8D5E /* InAppSettingsKit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = InAppSettingsKit.framework.dSYM; path = Carthage/Build/iOS/InAppSettingsKit.framework.dSYM; sourceTree = SOURCE_ROOT; };
 		25E8527D217478C7003F8D5E /* TOWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOWebViewController.m; sourceTree = "<group>"; };
-		25E8527E217478C8003F8D5E /* UIImage+TOWebViewControllerIcons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+TOWebViewControllerIcons.m"; sourceTree = "<group>"; };
 		25E85280217478CB003F8D5E /* TOWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOWebViewController.h; sourceTree = "<group>"; };
-		25E85283217478CF003F8D5E /* UIImage+TOWebViewControllerIcons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+TOWebViewControllerIcons.h"; sourceTree = "<group>"; };
 		25E8528B21747A0E003F8D5E /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		25E8528D21747B27003F8D5E /* Kanna.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Kanna.framework.dSYM; path = Carthage/Build/iOS/Kanna.framework.dSYM; sourceTree = SOURCE_ROOT; };
 		25F94A601BE5E9FE009C9195 /* Remote Helper-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Remote Helper-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -427,8 +426,7 @@
 			children = (
 				25E85280217478CB003F8D5E /* TOWebViewController.h */,
 				25E8527D217478C7003F8D5E /* TOWebViewController.m */,
-				25E85283217478CF003F8D5E /* UIImage+TOWebViewControllerIcons.h */,
-				25E8527E217478C8003F8D5E /* UIImage+TOWebViewControllerIcons.m */,
+				258E11952179CF8D00D116CC /* UIImage+TOWebViewControllerIcons.swift */,
 			);
 			name = TOWebViewController;
 			sourceTree = "<group>";
@@ -644,7 +642,6 @@
 				254CBE421BE857520050A288 /* String+MD5.swift in Sources */,
 				25C478D11FDFA61400AA8958 /* Configuration.swift in Sources */,
 				255A7D241BEB8DC700E6012B /* UserDefaultsPasscodeRepository.swift in Sources */,
-				25E85286217478D0003F8D5E /* UIImage+TOWebViewControllerIcons.m in Sources */,
 				255A7D301BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift in Sources */,
 				252C9C1A1FFBB73E00B24729 /* WebViewController.swift in Sources */,
 				2575F5721E97B2B7004B4D1E /* iconv_wrapper.c in Sources */,
@@ -660,6 +657,7 @@
 				2506AA231E90F5D40064EABB /* BangumiViewController.swift in Sources */,
 				2506AA1B1E90E2F90064EABB /* Extensions.swift in Sources */,
 				2502ABEA1BE73AB7004882FE /* String+Path.swift in Sources */,
+				258E11962179CF8D00D116CC /* UIImage+TOWebViewControllerIcons.swift in Sources */,
 				250354D11BE9911700E9F93A /* WebContentTableViewController.swift in Sources */,
 				2575F5711E97B2B7004B4D1E /* NSData+iconv.m in Sources */,
 				255A7D251BEB8DC700E6012B /* PasscodeLockConfiguration.swift in Sources */,

@@ -25,13 +25,17 @@
 //  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "TOWebViewController.h"
-#import "UIImage+TOWebViewControllerIcons.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
 #import <MessageUI/MFMessageComposeViewController.h>
 #import <Twitter/Twitter.h>
+
+#import "Remote_Helper-Swift.h"
+
+const NSString *TOWebViewControllerButtonTintColor       = @"TOWebViewControllerButtonFillColor";
+const NSString *TOWebViewControllerButtonBevelOpacity    = @"TOWebViewControllerButtonBevelOpacity";
 
 /* Detect if we're running iOS 7.0 or higher (With the new minimal UI) */
 #define MINIMAL_UI      ([[UIViewController class] instancesRespondToSelector:@selector(edgesForExtendedLayout)])
@@ -335,7 +339,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
         buttonType = UIButtonTypeSystem;
     
     //set up the back button
-    UIImage *backButtonImage = [UIImage TOWebViewControllerIcon_backButtonWithAttributes:self.buttonThemeAttributes];
+    UIImage *backButtonImage = [UIImage backButtonIconWith:self.buttonThemeAttributes];
     if (self.backButton == nil) {
         self.backButton = [UIButton buttonWithType:buttonType];
         [self.backButton setFrame:buttonFrame];
@@ -344,7 +348,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     [self.backButton setImage:backButtonImage forState:UIControlStateNormal];
     
     //set up the forward button (Don't worry about the frame at this point as it will be hidden by default)
-    UIImage *forwardButtonImage = [UIImage TOWebViewControllerIcon_forwardButtonWithAttributes:self.buttonThemeAttributes];
+    UIImage *forwardButtonImage = [UIImage forwardButtonIconWith:self.buttonThemeAttributes];
     if (self.forwardButton == nil) {
         self.forwardButton  = [UIButton buttonWithType:buttonType];
         [self.forwardButton setFrame:buttonFrame];
@@ -359,8 +363,8 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
         [self.reloadStopButton setShowsTouchWhenHighlighted:YES];
     }
     
-    self.reloadIcon = [UIImage TOWebViewControllerIcon_refreshButtonWithAttributes:self.buttonThemeAttributes];
-    self.stopIcon   = [UIImage TOWebViewControllerIcon_stopButtonWithAttributes:self.buttonThemeAttributes];
+    self.reloadIcon = [UIImage refreshButtonIconWith:self.buttonThemeAttributes];
+    self.stopIcon   = [UIImage stopButtonIconWith:self.buttonThemeAttributes];
     [self.reloadStopButton setImage:self.reloadIcon forState:UIControlStateNormal];
     
     //if desired, show the action button
@@ -371,7 +375,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
             [self.actionButton setShowsTouchWhenHighlighted:YES];
         }
         
-        [self.actionButton setImage:[UIImage TOWebViewControllerIcon_actionButtonWithAttributes:self.buttonThemeAttributes] forState:UIControlStateNormal];
+        [self.actionButton setImage:[UIImage actionButtonIconWith:self.buttonThemeAttributes] forState:UIControlStateNormal];
     }
 }
 

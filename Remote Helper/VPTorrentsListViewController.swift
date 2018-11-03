@@ -7,10 +7,10 @@
 //
 
 import UIKit
-import SDWebImage
 import MediaBrowser
 import Alamofire
 import SwiftEntryKit
+import Kingfisher
 
 class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate, UIPopoverPresentationControllerDelegate {
     let CellIdentifier = "VPTorrentsListViewCell"
@@ -130,7 +130,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-        SDWebImageManager.shared().imageCache?.clearMemory()
+        ImageCache.default.clearMemoryCache()
     }
 
     override var preferredStatusBarStyle : UIStatusBarStyle {

@@ -7,12 +7,12 @@
 //
 
 import UIKit
-import SDWebImage
 import PasscodeLock
 import MediaBrowser
 import InAppSettingsKit
 import CoreData
 import Kanna
+import Kingfisher
 
 class WebContentTableViewController: UITableViewController, IASKSettingsDelegate, UIPopoverPresentationControllerDelegate {
     fileprivate let CellIdentifier = "WebContentTableViewCell"
@@ -195,8 +195,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         }
         else if specifier.key() == ClearCacheNowKey {
             Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
-            DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
-                SDImageCache.shared().clearDisk()
+            ImageCache.default.clearDiskCache() {
                 let defaults = UserDefaults.standard
                 let localFileSize = Helper.shared.fileSizeString(withInteger: Helper.shared.localFileSize())
                 defaults.set(localFileSize, forKey: LocalFileSize)
@@ -270,7 +269,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     func showSettings() {
         let defaults = UserDefaults.standard
-        let cacheSizeInBytes = SDImageCache.shared().getSize()
+        let cacheSizeInBytes = ImageCache.default.usedSize
         let cacheSize = Helper.shared.fileSizeString(withInteger: Int(cacheSizeInBytes)) // Maybe problematic on 32-bit system
         defaults.set(cacheSize, forKey: ImageCacheSizeKey)
         let passcodeRepo = UserDefaultsPasscodeRepository()

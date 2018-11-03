@@ -28,9 +28,6 @@
 
 #import "Remote_Helper-Swift.h"
 
-const NSString *TOWebViewControllerButtonTintColor       = @"TOWebViewControllerButtonFillColor";
-const NSString *TOWebViewControllerButtonBevelOpacity    = @"TOWebViewControllerButtonBevelOpacity";
-
 /* The default blue tint color of iOS 7.0 */
 #define DEFAULT_BAR_TINT_COLOR [UIColor colorWithRed:0.0f green:110.0f/255.0f blue:1.0f alpha:1.0f]
 
@@ -127,15 +124,6 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
 /* Images for the Reload/Stop button */
 @property (nonatomic,strong) UIImage *reloadIcon;
 @property (nonatomic,strong) UIImage *stopIcon;
-
-/* Theming attributes for generating navigation button art. */
-@property (nonatomic,strong) NSMutableDictionary *buttonThemeAttributes;
-
-/* Popover View Controller Handlers */
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-@property (nonatomic,strong) UIPopoverController *sharingPopoverController;
-#pragma GCC diagnostic pop
 
 /* See if we need to revert the toolbar to 'hidden' when we pop off a navigation controller. */
 @property (nonatomic,assign) BOOL hideToolbarOnClose;
@@ -307,7 +295,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     UIButtonType buttonType = UIButtonTypeSystem;
     
     //set up the back button
-    UIImage *backButtonImage = [UIImage backButtonIconWith:self.buttonThemeAttributes];
+    UIImage *backButtonImage = [UIImage backButtonIcon];
     if (self.backButton == nil) {
         self.backButton = [UIButton buttonWithType:buttonType];
         [self.backButton setFrame:buttonFrame];
@@ -316,7 +304,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     [self.backButton setImage:backButtonImage forState:UIControlStateNormal];
     
     //set up the forward button (Don't worry about the frame at this point as it will be hidden by default)
-    UIImage *forwardButtonImage = [UIImage forwardButtonIconWith:self.buttonThemeAttributes];
+    UIImage *forwardButtonImage = [UIImage forwardButtonIcon];
     if (self.forwardButton == nil) {
         self.forwardButton  = [UIButton buttonWithType:buttonType];
         [self.forwardButton setFrame:buttonFrame];
@@ -331,8 +319,8 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
         [self.reloadStopButton setShowsTouchWhenHighlighted:YES];
     }
     
-    self.reloadIcon = [UIImage refreshButtonIconWith:self.buttonThemeAttributes];
-    self.stopIcon   = [UIImage stopButtonIconWith:self.buttonThemeAttributes];
+    self.reloadIcon = [UIImage refreshButtonIcon];
+    self.stopIcon   = [UIImage stopButtonIcon];
     [self.reloadStopButton setImage:self.reloadIcon forState:UIControlStateNormal];
     
     //if desired, show the action button
@@ -343,7 +331,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
             [self.actionButton setShowsTouchWhenHighlighted:YES];
         }
         
-        [self.actionButton setImage:[UIImage actionButtonIconWith:self.buttonThemeAttributes] forState:UIControlStateNormal];
+        [self.actionButton setImage:[UIImage actionButtonIcon] forState:UIControlStateNormal];
     }
 }
 
@@ -642,20 +630,6 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     
     _buttonTintColor = buttonTintColor;
     self.buttonsContainerView.tintColor = _buttonTintColor;
-}
-
-- (void)setButtonBevelOpacity:(CGFloat)buttonBevelOpacity
-{
-    if (buttonBevelOpacity == _buttonBevelOpacity)
-        return;
-    
-    _buttonBevelOpacity = buttonBevelOpacity;
-    
-    if (self.buttonThemeAttributes == nil)
-        self.buttonThemeAttributes = [NSMutableDictionary dictionary];
-    
-    self.buttonThemeAttributes[TOWebViewControllerButtonBevelOpacity] = @(_buttonBevelOpacity);
-    [self setUpNavigationButtons];
 }
 
 #pragma mark -

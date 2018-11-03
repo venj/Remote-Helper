@@ -1,5 +1,5 @@
 //
-//  UIImage+TOWebViewControllerIcons.swift
+//  UIImage+BarButtomItemIcon.swift
 //  Remote Helper
 //
 //  Created by venj on 10/19/18.
@@ -10,7 +10,7 @@ import Foundation
 
 @objc 
 extension UIImage {
-    static func backButtonIcon(with attributes: [String: Any]) -> UIImage {
+    static func backButtonIcon() -> UIImage {
         var backButtonImage: UIImage
 
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 12.0, height: 21.0), false, UIScreen.main.scale)
@@ -39,7 +39,7 @@ extension UIImage {
         return backButtonImage
     }
 
-    static func forwardButtonIcon(with attributes: [String: Any]) -> UIImage {
+    static func forwardButtonIcon() -> UIImage {
         var forwardButtonImage: UIImage
 
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 12.0, height: 21.0), false, UIScreen.main.scale)
@@ -68,7 +68,7 @@ extension UIImage {
         return forwardButtonImage
     }
 
-    static func refreshButtonIcon(with attributes: [String: Any]) -> UIImage {
+    static func refreshButtonIcon() -> UIImage {
         var refreshButtonImage: UIImage
 
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 19.0, height: 22.0), false, UIScreen.main.scale)
@@ -103,7 +103,7 @@ extension UIImage {
         return refreshButtonImage
     }
 
-    static func stopButtonIcon(with attributes: [String: Any]) -> UIImage {
+    static func stopButtonIcon() -> UIImage {
         var stopButtonImage: UIImage
 
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 19.0, height: 19.0), false, UIScreen.main.scale)
@@ -134,7 +134,7 @@ extension UIImage {
         return stopButtonImage
     }
 
-    static func actionButtonIcon(with attributes: [String: Any]) -> UIImage {
+    static func actionButtonIcon() -> UIImage {
         var actionButtonImage: UIImage
 
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 19.0, height: 30.0), false, UIScreen.main.scale)

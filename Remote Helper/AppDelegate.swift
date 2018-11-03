@@ -7,11 +7,11 @@
 //
 
 import UIKit
-import SDWebImage
 import PasscodeLock
 import Alamofire
 import CoreData
 import CloudKit
+import Kingfisher
 
 @UIApplicationMain
 class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelegate {
@@ -144,10 +144,10 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
                 app.endBackgroundTask(convertToUIBackgroundTaskIdentifier(identifier.rawValue))
                 identifier = UIBackgroundTaskIdentifier.invalid
             })
-            SDImageCache.shared().clearDisk(onCompletion: { () -> Void in
+            ImageCache.default.clearDiskCache {
                 app.endBackgroundTask(convertToUIBackgroundTaskIdentifier(identifier.rawValue))
                 identifier = UIBackgroundTaskIdentifier.invalid
-            })
+            }
         }
     }
 

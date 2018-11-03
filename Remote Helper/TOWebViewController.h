@@ -156,11 +156,6 @@
  */
 @property (nonatomic,strong)    UIColor *buttonTintColor;
 
-/** 
- On iOS 6 or below, this overrides the default opacity level of the bevel around the navigation buttons.
- */
-@property (nonatomic,assign)    CGFloat buttonBevelOpacity;
-
 /**
  Decide whether show additional bar button items. Default to YES if additional button items was set.
  */

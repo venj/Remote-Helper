@@ -232,6 +232,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     }
 
     func didDisplayMedia(at index: Int, in mediaBrowser: MediaBrowser) {
+        currentPhotoIndex = index
         if !navigationController!.view.subviews.contains(attachedProgressView) {
             attachProgressView(to: navigationController!.view)
         }

@@ -176,10 +176,8 @@
 		25E8522B21747572003F8D5E /* Reachability.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Reachability.framework; path = Carthage/Build/iOS/Reachability.framework; sourceTree = "<group>"; };
 		25E8522C21747572003F8D5E /* QuickLayout.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLayout.framework; path = Carthage/Build/iOS/QuickLayout.framework; sourceTree = "<group>"; };
 		25E8522D21747572003F8D5E /* InAppSettingsKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = InAppSettingsKit.framework; path = Carthage/Build/iOS/InAppSettingsKit.framework; sourceTree = "<group>"; };
-		25E8522E21747572003F8D5E /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/iOS/Fuzi.framework; sourceTree = "<group>"; };
 		25E8522F21747572003F8D5E /* MediaBrowser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaBrowser.framework; path = Carthage/Build/iOS/MediaBrowser.framework; sourceTree = "<group>"; };
 		25E8523021747572003F8D5E /* PasscodeLock.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PasscodeLock.framework; path = Carthage/Build/iOS/PasscodeLock.framework; sourceTree = "<group>"; };
-		25E8523121747572003F8D5E /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
 		25E8523C21747757003F8D5E /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		25E8526921747830003F8D5E /* UICircularProgressRing.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = UICircularProgressRing.framework.dSYM; path = Carthage/Build/iOS/UICircularProgressRing.framework.dSYM; sourceTree = SOURCE_ROOT; };
 		25E8526A21747830003F8D5E /* Alamofire.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Alamofire.framework.dSYM; path = Carthage/Build/iOS/Alamofire.framework.dSYM; sourceTree = SOURCE_ROOT; };
@@ -273,13 +271,11 @@
 				251E0B7D218D4E050067B78F /* Kingfisher.framework */,
 				25E8528B21747A0E003F8D5E /* libxml2.tbd */,
 				25E8523C21747757003F8D5E /* Alamofire.framework */,
-				25E8522E21747572003F8D5E /* Fuzi.framework */,
 				25E8522D21747572003F8D5E /* InAppSettingsKit.framework */,
 				25E8522F21747572003F8D5E /* MediaBrowser.framework */,
 				25E8523021747572003F8D5E /* PasscodeLock.framework */,
 				25E8522C21747572003F8D5E /* QuickLayout.framework */,
 				25E8522B21747572003F8D5E /* Reachability.framework */,
-				25E8523121747572003F8D5E /* SDWebImage.framework */,
 				25E8522921747572003F8D5E /* SwiftEntryKit.framework */,
 				25E8522A21747572003F8D5E /* UICircularProgressRing.framework */,
 				2575F5741E97B359004B4D1E /* libiconv.tbd */,

@@ -68,6 +68,11 @@ class VPSearchResultController: UITableViewController {
         if #available(iOS 9.0, *) {
             tableView.cellLayoutMarginsFollowReadableWidth = false
         }
+
+        // Apply themimg for kitten search.
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.barTintColor = Helper.shared.mainThemeColor()
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor : UIColor.white]
     }
 
     override func didReceiveMemoryWarning() {
@@ -76,7 +81,7 @@ class VPSearchResultController: UITableViewController {
     }
 
     override var prefersStatusBarHidden: Bool {
-        return false
+        return UIDevice.current.userInterfaceIdiom == .phone && UIApplication.shared.statusBarOrientation.isLandscape
     }
 
     override func viewWillAppear(_ animated: Bool) {

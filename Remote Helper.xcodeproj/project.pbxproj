@@ -54,6 +54,8 @@
 		251B62AB20FF77550077FF2D /* MiDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25AFE0911E94E69600DFB501 /* MiDownloader.swift */; };
 		251B62B120FF7A080077FF2D /* Helper+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 251B62B020FF7A080077FF2D /* Helper+iOS.swift */; };
 		251B62B220FF7BAE0077FF2D /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2502ABDA1BE6F761004882FE /* Helper.swift */; };
+		251C965121ABE94400DAD597 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 256EA4BD177D5F830081309B /* Localizable.strings */; };
+		251C965221ABE94900DAD597 /* PasscodeLock.strings in Resources */ = {isa = PBXBuildFile; fileRef = 255A7D2D1BEB904E00E6012B /* PasscodeLock.strings */; };
 		251E0B7E218D4E050067B78F /* Kingfisher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 251E0B7D218D4E050067B78F /* Kingfisher.framework */; };
 		251E0B82218D4EC40067B78F /* Kanna.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 251E0B81218D4EC40067B78F /* Kanna.framework */; };
 		251E0BC9218D56860067B78F /* Kingfisher+size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 251E0BC8218D56860067B78F /* Kingfisher+size.swift */; };
@@ -550,8 +552,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				251C965121ABE94400DAD597 /* Localizable.strings in Resources */,
 				252DFA8A1753784400FF8199 /* InfoPlist.strings in Resources */,
 				258CD0101A3B28B400B3EB55 /* Images.xcassets in Resources */,
+				251C965221ABE94900DAD597 /* PasscodeLock.strings in Resources */,
 				2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */,
 				2538A19D21789BD8000AA2C0 /* Launch Screen.xib in Resources */,
 			);

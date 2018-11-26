@@ -174,7 +174,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let list = tableView == self.tableView ? dateList : filteredDateList
+        let list = !searchController.isActive ? dateList : filteredDateList
         currentSelectedTitle = list[(indexPath as NSIndexPath).row]
         if Helper.shared.showCellularHUD() { return }
         if let cell = tableView.cellForRow(at: indexPath), let title = cell.textLabel?.text {
@@ -193,7 +193,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     }
 
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        let list = tableView == self.tableView ? dateList : filteredDateList
+        let list = !searchController.isActive ? dateList : filteredDateList
         currentSelectedTitle = list[(indexPath as NSIndexPath).row]
         if Helper.shared.showCellularHUD() { return }
         let alertController = UIAlertController(title: NSLocalizedString("Initial Index", comment: "Initial Index"), message: NSLocalizedString("Please enter a number for photo index(from 1).", comment: "Please enter a number for photo index(from 1)."), preferredStyle: .alert)
@@ -301,9 +301,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     func showPhotoBrowser(forIndexPath indexPath: IndexPath, initialPhotoIndex index: Int = 0) {
         let list = !searchController.isActive ? dateList : filteredDateList
         guard indexPath.row < (list.count) else { return }
-        searchController.isActive = false
         if Helper.shared.showCellularHUD() { return }
-        searchController.searchBar.resignFirstResponder()
         guard let date = list[indexPath.row].addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) else { return }
         Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
         let request = Alamofire.request(Configuration.shared.searchPath(withKeyword: date))

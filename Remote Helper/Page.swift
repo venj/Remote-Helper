@@ -10,7 +10,7 @@ import Foundation
 import Kanna
 import Darwin.POSIX.iconv
 
-struct Page {
+class Page {
     var pageLink: String
     var bangumiLinks: [[String: String]]
     var nextPageLink: String?
@@ -20,7 +20,13 @@ struct Page {
         }
     }
 
-    static func parse(data: Data, pageLink: String, isGBK: Bool = false) -> Page? {
+    init(pageLink: String, bangumiLinks: [[String: String]], nextPageLink: String?) {
+        self.pageLink = pageLink
+        self.bangumiLinks = bangumiLinks
+        self.nextPageLink = nextPageLink
+    }
+
+    class func parse(data: Data, pageLink: String, isGBK: Bool = false) -> Page? {
         guard let html = isGBK ? (data as NSData).convertToUTF8String(fromEncoding: "GBK", allowLoosy: true) : String(data: data, encoding: .utf8) else { return nil }
         var bangumiLinks: [[String: String]] = []
         var nextPageLink: String? = nil
@@ -48,7 +54,6 @@ struct Page {
                     else {
                         nextPageLink = url.scheme! + "://" + url.host! + "/" + link
                     }
-
                 }
             })
 

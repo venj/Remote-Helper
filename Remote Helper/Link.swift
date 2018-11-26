@@ -25,7 +25,7 @@ struct Link {
     }
 
     private static func processLink(_ link: String) -> String {
-        let loLink = link.lowercased()
+        let loLink = link.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).lowercased()
         if (loLink.hasPrefix("qqdl://")
             || loLink.lowercased().hasPrefix("thunder://")
             || loLink.lowercased().hasPrefix("flashget://"))

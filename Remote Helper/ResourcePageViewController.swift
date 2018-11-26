@@ -166,8 +166,15 @@ class ResourcePageViewController: UITableViewController {
             self.spinner.stopAnimating()
             if response.result.isFailure { return } // Fail
             guard let data = response.result.value else { return }
-            guard let page = Page.parse(data: data, pageLink: nextPageLink, isGBK: true) else { return }
-            self.page = page
+            if let p = self.page, p is SearchPage {
+                guard let page = SearchPage.parse(data: data, pageLink: nextPageLink, isGBK: true) else { return }
+                self.page = page
+            }
+            else {
+                guard let page = Page.parse(data: data, pageLink: nextPageLink, isGBK: true) else { return }
+                self.page = page
+            }
+
         }
     }
 }

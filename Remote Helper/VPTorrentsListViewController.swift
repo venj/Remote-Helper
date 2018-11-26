@@ -66,7 +66,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         let item = UIBarButtonItem(title: "🐱", style: .plain, target: self, action: #selector(showKitten))
         return item
     }()
-    var currentSelectedIndexPath: IndexPath?
+    var currentSelectedTitle: String = ""
     var previewingIndexPath: IndexPath?
 
     var viewedTitles: Set<String> {
@@ -174,7 +174,8 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        currentSelectedIndexPath = indexPath
+        let list = tableView == self.tableView ? dateList : filteredDateList
+        currentSelectedTitle = list[(indexPath as NSIndexPath).row]
         if Helper.shared.showCellularHUD() { return }
         if let cell = tableView.cellForRow(at: indexPath), let title = cell.textLabel?.text {
             cell.textLabel?.textColor = UIColor.gray
@@ -192,7 +193,8 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     }
 
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        currentSelectedIndexPath = indexPath
+        let list = tableView == self.tableView ? dateList : filteredDateList
+        currentSelectedTitle = list[(indexPath as NSIndexPath).row]
         if Helper.shared.showCellularHUD() { return }
         let alertController = UIAlertController(title: NSLocalizedString("Initial Index", comment: "Initial Index"), message: NSLocalizedString("Please enter a number for photo index(from 1).", comment: "Please enter a number for photo index(from 1)."), preferredStyle: .alert)
         alertController.addTextField { (textField) in
@@ -242,10 +244,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     }
 
     func title(for mediaBrowser: MediaBrowser, at index: Int) -> String? {
-        guard let indexPath = currentSelectedIndexPath else { return nil }
-        let list = !searchController.isActive ? dateList : filteredDateList
-        let title = list[indexPath.row]
-        return "\(title) (\(currentPhotoIndex + 1)/\(photos.count))"
+        return "\(currentSelectedTitle) (\(currentPhotoIndex + 1)/\(photos.count))"
     }
 
     //MARK: - Action
@@ -304,6 +303,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         guard indexPath.row < (list.count) else { return }
         searchController.isActive = false
         if Helper.shared.showCellularHUD() { return }
+        searchController.searchBar.resignFirstResponder()
         guard let date = list[indexPath.row].addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) else { return }
         Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
         let request = Alamofire.request(Configuration.shared.searchPath(withKeyword: date))
@@ -449,8 +449,8 @@ extension VPTorrentsListViewController : UIViewControllerPreviewingDelegate {
             cell.textLabel?.textColor = UIColor.gray
             viewedTitles.insert(title)
         }
-        currentSelectedIndexPath = indexPath
         let list = !searchController.isActive ? dateList : filteredDateList
+        currentSelectedTitle = list[(indexPath as NSIndexPath).row]
         guard let date = list[indexPath.row].addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) else { return nil }
         // Reset photos
         photos = []

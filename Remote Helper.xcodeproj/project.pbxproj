@@ -58,6 +58,7 @@
 		251E0B82218D4EC40067B78F /* Kanna.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 251E0B81218D4EC40067B78F /* Kanna.framework */; };
 		251E0BC9218D56860067B78F /* Kingfisher+size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 251E0BC8218D56860067B78F /* Kingfisher+size.swift */; };
 		252C9C1A1FFBB73E00B24729 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252C9C191FFBB73E00B24729 /* WebViewController.swift */; };
+		252D3C4B21AB9ADD005DDAFC /* SearchPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252D3C4A21AB9ADD005DDAFC /* SearchPage.swift */; };
 		252DFA801753784400FF8199 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA7F1753784400FF8199 /* UIKit.framework */; };
 		252DFA821753784400FF8199 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA811753784400FF8199 /* Foundation.framework */; };
 		252DFA841753784400FF8199 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA831753784400FF8199 /* CoreGraphics.framework */; };
@@ -133,6 +134,7 @@
 		251E0B81218D4EC40067B78F /* Kanna.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kanna.framework; path = Carthage/Build/iOS/Kanna.framework; sourceTree = "<group>"; };
 		251E0BC8218D56860067B78F /* Kingfisher+size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Kingfisher+size.swift"; sourceTree = "<group>"; };
 		252C9C191FFBB73E00B24729 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		252D3C4A21AB9ADD005DDAFC /* SearchPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPage.swift; sourceTree = "<group>"; };
 		252DFA7C1753784400FF8199 /* Remote Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Remote Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		252DFA7F1753784400FF8199 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		252DFA811753784400FF8199 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -378,6 +380,7 @@
 			isa = PBXGroup;
 			children = (
 				2506AA1E1E90EF010064EABB /* Page.swift */,
+				252D3C4A21AB9ADD005DDAFC /* SearchPage.swift */,
 				2506AA1C1E90E4070064EABB /* Bangumi.swift */,
 				25953BC01FFE1C3F00D8AE53 /* Link.swift */,
 				2506AA181E90DD190064EABB /* ResourceSiteCatagoriesViewController.swift */,
@@ -665,6 +668,7 @@
 				2506AA191E90DD190064EABB /* ResourceSiteCatagoriesViewController.swift in Sources */,
 				25F94A621BE5E9FF009C9195 /* Dictionary+JSON.swift in Sources */,
 				2506AA231E90F5D40064EABB /* BangumiViewController.swift in Sources */,
+				252D3C4B21AB9ADD005DDAFC /* SearchPage.swift in Sources */,
 				2506AA1B1E90E2F90064EABB /* Extensions.swift in Sources */,
 				2502ABEA1BE73AB7004882FE /* String+Path.swift in Sources */,
 				258E11962179CF8D00D116CC /* UIImage+BarButtomItemIcon.swift in Sources */,

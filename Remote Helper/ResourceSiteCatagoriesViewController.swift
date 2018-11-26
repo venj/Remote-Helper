@@ -42,6 +42,8 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
                                              ["name": "游戏下载", "link": "http://www.dytt8.net/html/game/index.html"],
                                              ["name": "高分经典", "link": "http://www.dytt8.net/html/gndy/jddy/20160320/50510.html"]]
 
+    let dyttSearchBase = "http://s.ygdy8.com/plus/so.php?keyword="
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.title = siteName
@@ -50,6 +52,9 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
         if #available(iOS 9.0, *) {
             tableView.cellLayoutMarginsFollowReadableWidth = false
         }
+
+        let searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(search(_:)))
+        navigationItem.rightBarButtonItem = searchItem
     }
 
     override func didReceiveMemoryWarning() {
@@ -112,7 +117,7 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
             guard let page = Page.parse(data: data, pageLink: link, isGBK: true) else { return }
 
             if page.bangumiLinks.count == 0 {
-                let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: "There's no program under this catagory, or catagory failed to load.", preferredStyle: .alert)
+                let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: NSLocalizedString("There's no program under this catagory, or catagory failed to load.", comment: "There's no program under this catagory, or catagory failed to load."), preferredStyle: .alert)
                 let action = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .default, handler: nil)
                 alert.addAction(action)
                 self.present(alert, animated: true, completion: nil)
@@ -126,5 +131,49 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
                 self.navigationController?.pushViewController(rpvc, animated: true)
             }
         }
+    }
+
+    @objc func search(_ sender: UIBarButtonItem) {
+        let alert = UIAlertController(title: NSLocalizedString("Search DYTT", comment: "Search DYTT"), message: NSLocalizedString("Please enter Movie/TV Show name.", comment: "Please enter film/TV show name."), preferredStyle: .alert)
+        alert.addTextField { (textfield) in
+            textfield.placeholder = NSLocalizedString("Movie, TV Show etc.", comment: "Movie, TV Show etc.")
+        }
+        let searchAction = UIAlertAction(title: NSLocalizedString("Search", comment: "Search"), style: .default) { [weak self] (action) in
+            guard let `self` = self else { return }
+            guard let keyword = alert.textFields?.first?.text else { return }
+            let cfgb18030encoding = CFStringEncodings.GB_18030_2000.rawValue
+            let gbkEncoding = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(cfgb18030encoding))
+            let gbk = String.Encoding(rawValue: gbkEncoding)
+            let searchLink = self.dyttSearchBase + (keyword.percentEncodedString(gbk) ?? "")
+            Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
+            let request = Alamofire.request(searchLink)
+            request.responseData { [weak self] response in
+                guard let `self` = self else { return }
+                SwiftEntryKit.dismiss()
+                if response.result.isFailure { return } // Fail
+                guard let data = response.result.value else { return }
+                guard let page = SearchPage.parse(data: data, pageLink: searchLink, isGBK: true) else { return }
+
+                if page.bangumiLinks.count == 0 {
+                    let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: NSLocalizedString("There's no program under this catagory, or catagory failed to load.", comment: "There's no program under this catagory, or catagory failed to load."), preferredStyle: .alert)
+                    let action = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .default, handler: nil)
+                    alert.addAction(action)
+                    alert.view.tintColor = Helper.shared.mainThemeColor()
+                    self.present(alert, animated: true, completion: nil)
+                }
+                else {
+                    let rpvc = ResourcePageViewController()
+                    rpvc.page = page
+                    rpvc.hidesBottomBarWhenPushed = true
+                    rpvc.title = NSLocalizedString("Search", comment: "Search") + ": " + keyword
+                    self.navigationController?.pushViewController(rpvc, animated: true)
+                }
+            }
+        }
+        alert.addAction(searchAction)
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
+        alert.addAction(cancelAction)
+        alert.view.tintColor = Helper.shared.mainThemeColor()
+        present(alert, animated: true, completion: nil)
     }
 }

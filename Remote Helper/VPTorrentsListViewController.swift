@@ -19,27 +19,29 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         "downloading" : NSLocalizedString("downloading", comment:"downloading"),
         "failed or unknown" : NSLocalizedString("failed or unknown", comment: "failed or unknown")]
 
-    var datesDict: [String: [Any]] = [:]
-    var dateList: [String] {
-        get {
-            if datesDict.count == 0 { return [] }
-            return datesDict["items"] as! [String]
+    var datesDict: [String: [Any]] = [:] {
+        didSet {
+            dateList = datesDict.count == 0 ? [] : datesDict["items"] as! [String]
+            titles = dateList.enumerated().map { "\($1) (\(countList[$0]))"}
         }
     }
+    var dateList: [String] = []
+    var titles: [String] = []
+
+    var filteredDateList: [String] = [] {
+        didSet {
+            filteredTitles = filteredDateList.enumerated().map { "\($1) (\(filteredCountList[$0]))"}
+        }
+    }
+    var filteredTitles: [String] = []
+
     var countList: [Int] {
         get {
             if datesDict.count == 0 { return [] }
             return datesDict["count"] as! [Int]
         }
     }
-
-    var titles: [String] {
-        return dateList.enumerated().map { "\($1) (\(countList[$0]))"}
-    }
-
-    var filteredTitles: [String] {
-        return filteredDateList.enumerated().map { "\($1) (\(filteredCountList[$0]))"}
-    }
+    var filteredCountList: [Int] = []
 
     var mwPhotos: [Media] {
         return photos.compactMap { photo in
@@ -54,8 +56,6 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     var photos: [String] = []
 
     var currentPhotoIndex: Int = 0
-    var filteredDateList: [String] = []
-    var filteredCountList: [Int] = []
     lazy var searchController: UISearchController = UISearchController(searchResultsController: nil)
     var cloudItem: UIBarButtonItem!
     lazy var hashItem: UIBarButtonItem = {

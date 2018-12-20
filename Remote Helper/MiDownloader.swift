@@ -108,9 +108,13 @@ class MiDownloader {
                                 let body = params.map { k,v in k + "=" + v.percentEncodedString }.joined(separator: "&") + "&" + self.linksQuery
                                 Alamofire.request(self.confirmDownloadLink, method: .post, parameters: [:], encoding: body).responseString { response in
                                     if response.result.isSuccess {
-                                        guard let text = response.result.value else { return }
-                                        let result = text.JSONObject() as! [String: Any]
-                                        let data = result["data"] as! [String: [[String: Any]]]
+                                        guard let text = response.result.value,
+                                            let result = text.JSONObject() as? [String: Any],
+                                            let data = result["data"] as? [String: [[String: Any]]]
+                                        else {
+                                            error?(.downloadError("Unknown error."))
+                                            return
+                                        }
                                         if result["code"] as! Int == 0 && data["list"]![0]["errorCode"] as! Int == 0 {
                                             success?(.added)
                                         }

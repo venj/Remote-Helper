@@ -22,6 +22,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     var datesDict: [String: [Any]] = [:] {
         didSet {
             dateList = datesDict.count == 0 ? [] : datesDict["items"] as! [String]
+            countList = datesDict.count == 0 ? [] : datesDict["count"] as! [Int]
             titles = dateList.enumerated().map { "\($1) (\(countList[$0]))"}
         }
     }
@@ -35,12 +36,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     }
     var filteredTitles: [String] = []
 
-    var countList: [Int] {
-        get {
-            if datesDict.count == 0 { return [] }
-            return datesDict["count"] as! [Int]
-        }
-    }
+    var countList: [Int] = []
     var filteredCountList: [Int] = []
 
     var mwPhotos: [Media] {
@@ -423,8 +419,8 @@ extension VPTorrentsListViewController : UISearchResultsUpdating {
 
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchString = searchController.searchBar.text else { return }
-        filteredDateList = dateList
         filteredCountList = countList
+        filteredDateList = dateList
         for dateString in dateList {
             if dateString.range(of: searchString) == nil {
                 guard let index = filteredDateList.index(of: dateString) else { continue }

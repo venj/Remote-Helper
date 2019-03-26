@@ -31,9 +31,9 @@ enum NoteType {
 
 extension Helper {
     var reachability: Reachability? {
-        let reach = Reachability()
-        try? reach?.startNotifier()
-        return reach!
+        guard let reach = Reachability() else { return nil }
+        try? reach.startNotifier()
+        return reach
     }
 
     //MARK: - UI Related Helpers

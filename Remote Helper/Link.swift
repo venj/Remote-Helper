@@ -39,8 +39,9 @@ struct Link {
 }
 
 extension Link : Hashable {
-    var hashValue: Int {
-        return target.hashValue & name.hashValue
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(target.hashValue)
+        hasher.combine(name.hashValue)
     }
 
     static func ==(lhs: Link, rhs: Link) -> Bool {

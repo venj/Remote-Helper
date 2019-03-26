@@ -43,7 +43,7 @@ extension String {
         }
         else if protocal == "ed2k" {
             let parts = decodedLink.components(separatedBy: "|")
-            let index: Int? = parts.index(of: "file")
+            let index: Int? = parts.firstIndex(of: "file")
             if index != nil && parts.count > index! + 2 {
                 return parts[index! + 1]
             }

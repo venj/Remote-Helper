@@ -12,8 +12,8 @@ extension ImageCache {
     var usedSize: UInt {
         var result: UInt = 0
         let sema = DispatchSemaphore(value: 1)
-        ImageCache.default.calculateDiskCacheSize { size in
-            result = size
+        ImageCache.default.calculateDiskStorageSize { (r) in
+            result = (try? r.get()) ?? 0
             sema.signal()
         }
         _ = sema.wait(timeout: DispatchTime.distantFuture)

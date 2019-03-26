@@ -423,7 +423,7 @@ extension VPTorrentsListViewController : UISearchResultsUpdating {
         filteredDateList = dateList
         for dateString in dateList {
             if dateString.range(of: searchString) == nil {
-                guard let index = filteredDateList.index(of: dateString) else { continue }
+                guard let index = filteredDateList.firstIndex(of: dateString) else { continue }
                 filteredDateList.remove(at: index)
                 filteredCountList.remove(at: index)
             }

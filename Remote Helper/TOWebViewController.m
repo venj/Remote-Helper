@@ -54,6 +54,8 @@
 /* Hieght of the loading progress bar view */
 #define LOADING_BAR_HEIGHT          2
 
+#define TORRENT_CLICK_HACK_PREFIX @"https://torrent.example.com/?magnet="
+
 /* Unique URL triggered when JavaScript reports page load is complete */
 NSString *kCompleteRPCURL = @"webviewprogress:///complete";
 
@@ -378,6 +380,9 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    // Pasteboard Notification
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pasteboardChanged:) name:UIPasteboardChangedNotification object:nil];
     
     if (self.navigationController) {
         self.hideToolbarOnClose = self.navigationController.toolbarHidden;
@@ -492,6 +497,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
 {
     [super viewDidDisappear:animated];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIPasteboardChangedNotification object:nil];
 }
 
 - (BOOL)shouldAutorotate
@@ -637,7 +643,7 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     BOOL shouldStart = YES;
-    
+
     //If a request handler has been set, check to see if we should go ahead
     if (self.shouldStartLoadRequestHandler)
         shouldStart = self.shouldStartLoadRequestHandler(request, navigationType);
@@ -647,6 +653,12 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     //if the URL is the load completed notification from JavaScript
     if ([request.URL.absoluteString isEqualToString:kCompleteRPCURL] || !shouldStart) {
         [self finishLoadProgress];
+        return NO;
+    }
+
+    if ([request.URL.absoluteString.lowercaseString hasPrefix:TORRENT_CLICK_HACK_PREFIX]) {
+        NSString *magnet = [request.URL.absoluteString substringFromIndex:TORRENT_CLICK_HACK_PREFIX.length];
+        [[[Helper alloc] init] selectDownloadMethodFor: magnet andTorrent: magnet showIn: self];
         return NO;
     }
     
@@ -877,6 +889,9 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     
     if (self.reloadStopButton)
         [self.reloadStopButton setImage:self.reloadIcon forState:UIControlStateNormal];
+
+    NSString *js = [NSString stringWithFormat:@"for (e of document.getElementsByTagName('a')) {const prefix = '%@'; const url = e.toString(); if (url.indexOf(prefix) !== -1) { continue; }; if (url.indexOf('magnet:?') !== -1) { e.addEventListener('click', (event) => {event.preventDefault(); event.stopPropagation(); window.location=prefix + url; }); } }", TORRENT_CLICK_HACK_PREFIX];
+    [self.webView stringByEvaluatingJavaScriptFromString:js];
 }
 
 - (void)setLoadingProgress:(CGFloat)loadingProgress
@@ -1463,6 +1478,17 @@ static const float kAfterInteractiveMaxProgressValue    = 0.9f;
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
+}
+
+- (void)pasteboardChanged: (id)sender {
+    // Remove listen
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIPasteboardChangedNotification object:nil];
+    NSString *content = UIPasteboard.generalPasteboard.string;
+    if ([content hasPrefix:@"magnet:?"]) {
+        [[[Helper alloc] init] selectDownloadMethodFor: content andTorrent: content showIn: self];
+    }
+    // Add back.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pasteboardChanged:) name:UIPasteboardChangedNotification object:nil];
 }
 
 @end

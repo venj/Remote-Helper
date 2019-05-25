@@ -252,34 +252,14 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         guard let base64FileName = photos[currentPhotoIndex].base64String() else { return }
         Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
         let request = Alamofire.request(Configuration.shared.hashTorrent(withName: base64FileName))
-        request.responseJSON { response in
+        request.responseJSON { [weak self] response in
+            guard let self = self else { return }
             if response.result.isSuccess {
                 SwiftEntryKit.dismiss()
                 guard let responseObject = response.result.value as? [String: Any] else { return }
                 guard let hash = responseObject["hash"] as? String, let torrent = responseObject["torrent"] as? String else { return }
                 let message = "magnet:?xt=urn:btih:\(hash.uppercased())"
-                UIPasteboard.general.string = message
-
-                let alert = UIAlertController(title: NSLocalizedString("Choose...", comment: "Choose..."), message: NSLocalizedString("Please choose a download method.", comment: "Please choose a download method."), preferredStyle: .actionSheet)
-                let miAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi"), style: .default, handler: { (action) in
-                    Helper.shared.miDownloadForLink(message, fallbackIn: self)
-                })
-                alert.addAction(miAction)
-
-                let transmissionAction = UIAlertAction(title: "Transmission", style: .default, handler: { (action) in
-                    Helper.shared.transmissionDownload(for: torrent)
-                })
-                alert.addAction(transmissionAction)
-
-                let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
-                alert.addAction(cancelAction)
-
-                alert.popoverPresentationController?.delegate = self
-                DispatchQueue.main.async {
-                    self.navigationController?.topViewController?.present(alert, animated: true) {
-                        alert.popoverPresentationController?.passthroughViews = nil
-                    }
-                }
+                Helper.shared.selectDownloadMethod(for: message, andTorrent: torrent, showIn: self)
             }
             else {
                 Helper.shared.showNote(withMessage: NSLocalizedString("Connection failed.", comment: "Connection failed."), type:.error)

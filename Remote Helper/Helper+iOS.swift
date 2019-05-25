@@ -29,7 +29,9 @@ enum NoteType {
     }
 }
 
+@objc
 extension Helper {
+    @nonobjc
     var reachability: Reachability? {
         guard let reach = Reachability() else { return nil }
         try? reach.startNotifier()
@@ -60,6 +62,7 @@ extension Helper {
         SwiftEntryKit.display(entry: contentView, using: attributes, presentInsideKeyWindow: true)
     }
 
+    @nonobjc
     func showNote(withMessage message: String, type: NoteType = .normal) {
         let text = message
         let style = EKProperty.LabelStyle(font: UIFont.systemFont(ofSize: 14.0), color: .white, alignment: .center)
@@ -77,6 +80,10 @@ extension Helper {
         attributes.shadow = .active(with: .init(color: UIColor.init(red: 48.0/255.0, green: 47.0/255.0, blue: 48.0/255.0, alpha: 1.0), opacity: 0.5, radius: 2))
 
         SwiftEntryKit.display(entry: contentView, using: attributes, presentInsideKeyWindow: true)
+    }
+
+    func showNote(withMessage message: String) {
+        self.showNote(withMessage: message, type: .normal)
     }
 
     func showCellularHUD() -> Bool {
@@ -332,6 +339,39 @@ extension Helper {
             webView.modalPresentationStyle = .formSheet
             webView.modalTransitionStyle = .coverVertical
             viewController.navigationController?.present(webView, animated: true, completion: nil)
+        }
+    }
+
+    func selectDownloadMethod(for magnet: String, andTorrent torrent: String, showIn viewController: UIViewController) {
+        if (UIPasteboard.general.string != magnet) {
+            UIPasteboard.general.string = magnet
+        }
+
+        let alert = UIAlertController(title: NSLocalizedString("Choose...", comment: "Choose..."), message: NSLocalizedString("Please choose a download method.", comment: "Please choose a download method."), preferredStyle: .actionSheet)
+        let miAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi"), style: .default, handler: { (action) in
+            Helper.shared.miDownloadForLink(magnet, fallbackIn: viewController)
+        })
+        alert.addAction(miAction)
+
+        let transmissionAction = UIAlertAction(title: "Transmission", style: .default, handler: { (action) in
+            Helper.shared.transmissionDownload(for: torrent)
+        })
+        alert.addAction(transmissionAction)
+
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
+        alert.addAction(cancelAction)
+
+        if let delegate = viewController as? UIPopoverPresentationControllerDelegate {
+            alert.popoverPresentationController?.delegate = delegate
+        }
+        else {
+            // ViewController should comform to UIPopoverPresentationControllerDelegate!!!
+            abort()
+        }
+        DispatchQueue.main.async {
+            viewController.navigationController?.topViewController?.present(alert, animated: true) {
+                alert.popoverPresentationController?.passthroughViews = nil
+            }
         }
     }
 }

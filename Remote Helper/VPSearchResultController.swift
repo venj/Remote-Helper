@@ -211,7 +211,7 @@ class VPSearchResultController: UITableViewController {
 
     //MARK: - Action
     @objc func showWiki() {
-        let webViewController = TOWebViewController(urlString: "http://www.d21b.com/cn/vl_searchbyid.php?keyword=\(keyword)")
+        let webViewController = TOWebViewController(urlString: "http://www.javlibrary.com/cn/vl_searchbyid.php?keyword=\(keyword)")
         webViewController?.showUrlWhileLoading = false
         webViewController?.hidesBottomBarWhenPushed = true
         if UIDevice.current.userInterfaceIdiom == .phone {

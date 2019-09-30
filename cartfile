@@ -1,4 +1,4 @@
-github "Alamofire/Alamofire"
+github "Alamofire/Alamofire" "4.8.2"
 github "ashleymills/Reachability.swift"
 github "tid-kijyun/Kanna"
 github "imvenj/SwiftEntryKit"

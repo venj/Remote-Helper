@@ -71,10 +71,18 @@ class ResourcePageViewController: UITableViewController {
         cell.textLabel?.text = bangumi["title"]
         let link = fullLink(withHref: bangumi["link"]!)
         if Configuration.shared.viewedResources.contains(link.md5) {
-            cell.textLabel?.textColor = .gray
+            if #available(iOS 13.0, *) {
+                cell.textLabel?.textColor = .secondaryLabel
+            } else {
+                cell.textLabel?.textColor = .gray
+            }
         }
         else {
-            cell.textLabel?.textColor = .black
+            if #available(iOS 13.0, *) {
+                cell.textLabel?.textColor = .label
+            } else {
+                cell.textLabel?.textColor = .black
+            }
         }
         return cell
     }
@@ -99,7 +107,11 @@ class ResourcePageViewController: UITableViewController {
         let link = fullLink(withHref: bangumi["link"]!)
         Configuration.shared.viewedResources.append(link.md5)
         let cell = tableView.cellForRow(at: indexPath)
-        cell?.textLabel?.textColor = .gray
+        if #available(iOS 13.0, *) {
+            cell?.textLabel?.textColor = .secondaryLabel
+        } else {
+            cell?.textLabel?.textColor = .gray
+        }
         process(link)
         tableView.deselectRow(at: indexPath, animated: true)
     }

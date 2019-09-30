@@ -40,7 +40,11 @@ extension Helper {
 
     //MARK: - UI Related Helpers
     func mainThemeColor() -> UIColor {
-        return UIColor(red:0.94, green:0.44, blue:0.19, alpha:1)
+        if #available(iOS 11.0, *) {
+            return UIColor(named: "mainThemeColor")!
+        } else {
+            return UIColor(red:0.94, green:0.44, blue:0.19, alpha:1)
+        }
     }
 
     func showProcessingNote(withMessage message: String) {

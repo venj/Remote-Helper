@@ -73,9 +73,9 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
         navBarAppearance.titleTextAttributes = [.foregroundColor : UIColor.white]
 
         let searchBarAppearance = UISearchBar.appearance()
-        searchBarAppearance.tintColor = UIColor.white
         searchBarAppearance.barTintColor = Helper.shared.mainThemeColor()
-        
+        UIBarButtonItem.appearance(whenContainedInInstancesOf:[UISearchBar.self]).tintColor = UIColor.white
+
         UISwitch.appearance().onTintColor = Helper.shared.mainThemeColor()
         UIProgressView.appearance().progressTintColor = Helper.shared.mainThemeColor()
     }

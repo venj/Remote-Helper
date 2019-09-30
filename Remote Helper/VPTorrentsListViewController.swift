@@ -159,10 +159,18 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         let title = currentTitles[indexPath.row]
         cell.textLabel?.text = title
         if viewedTitles.contains(title) {
-            cell.textLabel?.textColor = UIColor.gray
+            if #available(iOS 13.0, *) {
+                cell.textLabel?.textColor = .secondaryLabel
+            } else {
+                cell.textLabel?.textColor = .gray
+            }
         }
         else {
-            cell.textLabel?.textColor = UIColor.black
+            if #available(iOS 13.0, *) {
+                cell.textLabel?.textColor = .label
+            } else {
+                cell.textLabel?.textColor = .black
+            }
         }
 
         return cell
@@ -174,7 +182,11 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         currentSelectedTitle = list[(indexPath as NSIndexPath).row]
         if Helper.shared.showCellularHUD() { return }
         if let cell = tableView.cellForRow(at: indexPath), let title = cell.textLabel?.text {
-            cell.textLabel?.textColor = UIColor.gray
+            if #available(iOS 13.0, *) {
+                cell.textLabel?.textColor = .secondaryLabel
+            } else {
+                cell.textLabel?.textColor = .gray
+            }
             viewedTitles.insert(title)
         }
         self.showPhotoBrowser(forIndexPath: indexPath)
@@ -420,7 +432,11 @@ extension VPTorrentsListViewController : UIViewControllerPreviewingDelegate {
             let cell = tableView.cellForRow(at: indexPath) else { return nil }
         previewingIndexPath = indexPath
         if let title = cell.textLabel?.text {
-            cell.textLabel?.textColor = UIColor.gray
+            if #available(iOS 13.0, *) {
+                cell.textLabel?.textColor = .secondaryLabel
+            } else {
+                cell.textLabel?.textColor = .gray
+            }
             viewedTitles.insert(title)
         }
         let list = !searchController.isActive ? dateList : filteredDateList
@@ -456,7 +472,11 @@ extension VPTorrentsListViewController : UIViewControllerPreviewingDelegate {
         if let indexPath = previewingIndexPath,
             let cell = tableView.cellForRow(at: indexPath),
             let title = cell.textLabel?.text {
-            cell.textLabel?.textColor = UIColor.gray
+            if #available(iOS 13.0, *) {
+                cell.textLabel?.textColor = .secondaryLabel
+            } else {
+                cell.textLabel?.textColor = .gray
+            }
             viewedTitles.insert(title)
         }
 

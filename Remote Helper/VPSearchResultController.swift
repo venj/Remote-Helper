@@ -211,16 +211,8 @@ class VPSearchResultController: UITableViewController {
 
     //MARK: - Action
     @objc func showWiki() {
-        let webViewController = TOWebViewController(urlString: "http://www.javlibrary.com/cn/vl_searchbyid.php?keyword=\(keyword)")
-        webViewController?.showUrlWhileLoading = false
-        webViewController?.hidesBottomBarWhenPushed = true
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            webViewController?.buttonTintColor = Helper.shared.mainThemeColor()
-        }
-        else {
-            webViewController?.buttonTintColor = UIColor.white
-        }
-        navigationController?.pushViewController(webViewController!, animated: true)
+        let webViewController = WebViewController(urlString: "http://www.javlibrary.com/cn/vl_searchbyid.php?keyword=\(keyword)")
+        navigationController?.pushViewController(webViewController, animated: true)
     }
 
     @objc func showKitten() {

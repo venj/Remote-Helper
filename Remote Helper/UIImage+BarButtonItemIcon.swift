@@ -6,9 +6,9 @@
 //  Copyright © 2018 Home. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
-@objc 
+@objc
 extension UIImage {
     static func backButtonIcon() -> UIImage {
         var backButtonImage: UIImage
@@ -31,7 +31,7 @@ extension UIImage {
         backButtonPath.close()
         backColor.setFill()
         backButtonPath.fill()
-        
+
         backButtonImage = UIGraphicsGetImageFromCurrentImageContext()!
 
         UIGraphicsEndImageContext()
@@ -193,4 +193,5 @@ extension UIImage {
     }
 
 }
+
 

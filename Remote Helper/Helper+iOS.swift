@@ -102,7 +102,7 @@ extension Helper {
         return false
     }
 
-    @objc func dismissMe(_ sender: UIBarButtonItem) {
+    @objc func dismissMe(_ sender: Any?) {
         AppDelegate.shared.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
 
@@ -338,7 +338,7 @@ extension Helper {
             viewController.navigationController?.present(sfVC, animated: true, completion: nil)
         } else {
             // Fallback on earlier versions
-            let webView = TOWebViewController(url: miURL)!
+            let webView = WebViewController(url: miURL)
             webView.title = NSLocalizedString("Mi Remote", comment: "Mi Remote")
             webView.modalPresentationStyle = .formSheet
             webView.modalTransitionStyle = .coverVertical

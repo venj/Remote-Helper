@@ -134,6 +134,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         tableView.deselectRow(at: indexPath, animated: true)
         if Helper.shared.showCellularHUD() { return }
         webViewController = createWebViewController(forIndexPath: indexPath)
+        webViewController.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(webViewController, animated: true)
     }
 
@@ -215,8 +216,13 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     //MARK: - Action
     @objc func fetchHTMLAndParse() {
-        guard let html = webViewController.webView.stringByEvaluatingJavaScript(from: "document.body.innerHTML") else { return }
-        processHTML(html)
+        webViewController.webView.evaluateJavaScript("document.body.innerHTML") { [weak self] (result, error) in
+            guard let self = self else { return }
+            if error == nil {
+                guard let html = result as? String else { return }
+                self.processHTML(html)
+            }
+        }
     }
 
     @objc func addAddress() {
@@ -287,7 +293,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         settingsViewController.showCreditsFooter = false
         let settingsNavigationController = UINavigationController(rootViewController: settingsViewController)
         if UIDevice.current.userInterfaceIdiom == .pad {
-            settingsNavigationController.modalPresentationStyle = .formSheet
+            settingsNavigationController.modalPresentationStyle = .pageSheet
         }
         DispatchQueue.main.async { [weak self] in
             guard let `self` = self else { return }
@@ -298,17 +304,10 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     func showTransmission() {
         if Helper.shared.showCellularHUD() { return }
         let link = Configuration.shared.transmissionServerAddress()
-        let transmissionWebViewController = TOWebViewController(urlString: link)
-        transmissionWebViewController?.urlRequest.cachePolicy = .reloadIgnoringLocalCacheData
-        transmissionWebViewController?.title = "Transmission"
-        transmissionWebViewController?.showUrlWhileLoading = false
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            transmissionWebViewController?.buttonTintColor = Helper.shared.mainThemeColor()
-        }
-        else {
-            transmissionWebViewController?.buttonTintColor = UIColor.white
-        }
-        let transmissionNavigationController = UINavigationController(rootViewController: transmissionWebViewController!)
+        let transmissionWebViewController = WebViewController(urlString: link)
+        transmissionWebViewController.urlRequest?.cachePolicy = .reloadIgnoringLocalCacheData
+        transmissionWebViewController.title = "Transmission"
+        let transmissionNavigationController = UINavigationController(rootViewController: transmissionWebViewController)
         DispatchQueue.main.async { [weak self] in
             guard let `self` = self else { return }
             self.present(transmissionNavigationController, animated:true, completion: nil)
@@ -374,19 +373,10 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     }
 
     func createWebViewController(forIndexPath indexPath: IndexPath) -> WebViewController? {
-        let urlString = addresses[indexPath.row].link
+        guard let urlString = addresses[indexPath.row].link else { return nil }
         let webViewController = WebViewController(urlString: urlString)
-        webViewController?.showUrlWhileLoading = false
-        webViewController?.hidesBottomBarWhenPushed = true
-        webViewController?.urlRequest.cachePolicy = .returnCacheDataElseLoad
-        webViewController?.additionalBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(fetchHTMLAndParse))]
-        // Theme
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            webViewController?.buttonTintColor = Helper.shared.mainThemeColor()
-        }
-        else {
-            webViewController?.buttonTintColor = UIColor.white
-        }
+        // webViewController?.urlRequest.cachePolicy = .returnCacheDataElseLoad
+        webViewController.additionalBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(fetchHTMLAndParse))]
         return webViewController
     }
 
@@ -468,6 +458,6 @@ extension WebContentTableViewController : UIViewControllerPreviewingDelegate {
 
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
         navigationController?.pushViewController(viewControllerToCommit, animated: false)
-        (viewControllerToCommit as? TOWebViewController)?.isPeeking = false
+        (viewControllerToCommit as? WebViewController)?.isPeeking = false
     }
 }

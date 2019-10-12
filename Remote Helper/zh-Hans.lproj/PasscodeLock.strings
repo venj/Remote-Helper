@@ -28,6 +28,8 @@
 
 /* Touch ID Reason */
 "PasscodeLockTouchIDReason" = "继续操作需要验证您的指纹信息";
+"PasscodeLockFaceIDReason" = "继续操作需要验证您的面容信息";
+"PasscodeLockBiometricAuthReason" = "继续操作需要验证您的指纹或面容信息";
 
 /* Touch ID Fallback Button */
-"PasscodeLockTouchIDButton" = "输入密码";
+"PasscodeLockBiometricAuthButton" = "输入密码";

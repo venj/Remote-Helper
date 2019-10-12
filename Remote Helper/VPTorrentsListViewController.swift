@@ -98,6 +98,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         let searchBar = searchController.searchBar
+        searchBar.tintColor = .white
         searchBar.keyboardType = .numbersAndPunctuation
         searchBar.sizeToFit()
         tableView.tableHeaderView = searchBar
@@ -113,6 +114,9 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         if #available(iOS 9.0, *), traitCollection.forceTouchCapability == .available {
             registerForPreviewing(with: self, sourceView: tableView)
         }
+
+        // Hide searchbar initially.
+        tableView.contentOffset = CGPoint(x: 0.0, y: searchBar.frame.height)
 
         NotificationCenter.default.addObserver(self, selector: #selector(photoPreloadFinished(_:)), name: MediaBrowser.mediaLoadingDidEndNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(showNoMorePhotosHUD(_:)), name: MediaBrowser.noMoreMediaNotification, object: nil)

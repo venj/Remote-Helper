@@ -36,7 +36,7 @@ struct Bangumi {
             let doc = try SwiftSoup.parse(replaced)
             let title = try doc.select("div.title_all h1").first?.text() ?? NSLocalizedString("Unknown Title", comment: "Unknown Title")
             var links: [Link] = []
-            try doc.select("div.co_content8 table td a").forEach({ (element) in
+            try doc.select("div.co_content8 #Zoom table td a").forEach({ (element) in
                 let link = try element.attr("href")
                 links.append(Link(link))
             })

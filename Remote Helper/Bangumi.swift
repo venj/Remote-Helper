@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Kanna
+import SwiftSoup
 
 struct Bangumi {
     var title: String
@@ -33,22 +33,22 @@ struct Bangumi {
         guard let html = isGBK ? (data as NSData).convertToUTF8String(fromEncoding: "GBK", allowLoosy: true) : String(data: data, encoding: .utf8) else { return nil }
         do {
             let replaced = html.replacingOccurrences(of: "charset=gb2312", with: "charset=utf-8")
-            let doc = try HTML(html: replaced, encoding: .utf8)
-            let title = doc.css("div.title_all h1").first?.text ?? NSLocalizedString("Unknown Title", comment: "Unknown Title")
+            let doc = try SwiftSoup.parse(replaced)
+            let title = try doc.select("div.title_all h1").first?.text() ?? NSLocalizedString("Unknown Title", comment: "Unknown Title")
             var links: [Link] = []
-            doc.css("div.co_content8 table td a").forEach({ (element) in
-                guard let link = element["href"] else { return }
+            try doc.select("div.co_content8 table td a").forEach({ (element) in
+                let link = try element.attr("href")
                 links.append(Link(link))
             })
 
             var images: [String] = []
-            doc.css("div.co_content8 #Zoom img").forEach { element in
-                guard let src = element["src"] else { return }
+            try doc.select("div.co_content8 #Zoom img").forEach { element in
+                let src = try element.attr("src")
                 images.append(src)
             }
 
-            let info = doc.css("div.co_content8 #Zoom")
-                .compactMap{$0.toXML}
+            let info = try doc.select("div.co_content8 #Zoom")
+                .compactMap{ $0.description }
                 .joined()
                 .replacingOccurrences(of: "<br>", with: "\n")
                 .replacingOccurrences(of: "\r", with: "")

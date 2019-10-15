@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Kanna
+import SwiftSoup
 import Darwin.POSIX.iconv
 
 class SearchPage: Page {
@@ -19,21 +19,21 @@ class SearchPage: Page {
         do {
             // get bangumi links
             let replaced = html.replacingOccurrences(of: "charset=gb2312", with: "charset=utf-8")
-            let doc = try HTML(html: replaced, encoding: .utf8)
-            doc.css("div.co_content8 table td a").forEach({ (element) in
+            let doc = try SwiftSoup.parse(replaced)
+            try doc.select("div.co_content8 table td a").forEach({ (element) in
                 var bangumiLink: [String: String] = [:]
-                guard let link = element["href"] else { return }
+                let link = try element.attr("href")
                 if link.contains("index.html") || String(link.last!) == "/" { return }
-                let title = element.text ?? ""
+                let title = try element.text()
                 bangumiLink["title"] = title
                 bangumiLink["link"] = link
                 if title.count <= 3 { return }
                 bangumiLinks.append(bangumiLink)
             })
             // get next page
-            doc.css("div.co_content8 table td a").forEach({ (element) in
-                if element.text == "下一页" {
-                    guard let link = element["href"] else { return }
+            try doc.select("div.co_content8 table td a").forEach({ (element) in
+                if try element.text() == "下一页" {
+                    let link = try element.attr("href")
                     let url = URL(string: pageLink)!
                     nextPageLink = url.scheme! + "://" + url.host! + "/" + link
                 }

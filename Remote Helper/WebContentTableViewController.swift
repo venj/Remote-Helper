@@ -11,7 +11,7 @@ import PasscodeLock
 import MediaBrowser
 import InAppSettingsKit
 import CoreData
-import Kanna
+import SwiftSoup
 import Kingfisher
 
 class WebContentTableViewController: UITableViewController, IASKSettingsDelegate, UIPopoverPresentationControllerDelegate {
@@ -329,9 +329,9 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     func processHTML(_ html: String) {
         var validAddresses: [Link] = []
         do {
-            let doc = try HTML(html: html, encoding: .utf8)
-            let links: [Link] = doc.css("a").compactMap { e in
-                guard let href = e["href"] else { return nil }
+            let doc = try SwiftSoup.parse(html)
+            let links: [Link] = try doc.select("a").compactMap { e in
+                let href = try e.attr("href")
                 let loweredLink = href.lowercased()
                 if loweredLink.hasPrefix("magnet:?")
                     || loweredLink.hasPrefix("ed2k://")

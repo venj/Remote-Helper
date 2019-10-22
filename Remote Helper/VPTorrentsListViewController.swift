@@ -395,18 +395,8 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
                                attribute: .trailing,
                                multiplier: 1.0,
                                constant: 0).isActive = true
-            if #available(iOS 9.0, *) {
-                newView.heightAnchor.constraint(equalToConstant: height).isActive = true
-            }
-            else {
-                NSLayoutConstraint(item: newView,
-                                   attribute: .height,
-                                   relatedBy: .equal,
-                                   toItem: nil,
-                                   attribute: .notAnAttribute,
-                                   multiplier: 1.0,
-                                   constant: height).isActive = true
-            }
+
+            newView.heightAnchor.constraint(equalToConstant: height).isActive = true
         }
     }
 }

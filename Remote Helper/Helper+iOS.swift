@@ -33,7 +33,7 @@ enum NoteType {
 extension Helper {
     @nonobjc
     var reachability: Reachability? {
-        guard let reach = Reachability() else { return nil }
+        guard let reach = try? Reachability() else { return nil }
         try? reach.startNotifier()
         return reach
     }

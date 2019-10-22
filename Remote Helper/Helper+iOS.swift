@@ -60,8 +60,8 @@ extension Helper {
         attributes.name = "Top Note"
         attributes.hapticFeedbackType = .none
         attributes.popBehavior = .animated(animation: .translation)
-        attributes.entryBackground = .color(color: UIColor(red:0.42, green:0.44, blue:0.89, alpha:1.00))
-        attributes.shadow = .active(with: .init(color: UIColor.init(red: 48.0/255.0, green: 47.0/255.0, blue: 48.0/255.0, alpha: 1.0), opacity: 0.5, radius: 2))
+        attributes.entryBackground = .color(color: EKColor(light: UIColor(red:0.42, green:0.44, blue:0.89, alpha:1.00), dark: UIColor(red: 0.25, green: 0.09, blue: 0.58, alpha: 1.00)))
+        attributes.shadow = .active(with: EKAttributes.Shadow.Value.init(color: EKColor(light: UIColor(red: 48.0/255.0, green: 47.0/255.0, blue: 48.0/255.0, alpha: 1.0), dark: UIColor(red: 48.0/255.0, green: 47.0/255.0, blue: 48.0/255.0, alpha: 1.0)), opacity: 0.5, radius: 2))
 
         SwiftEntryKit.display(entry: contentView, using: attributes, presentInsideKeyWindow: true)
     }
@@ -80,8 +80,8 @@ extension Helper {
         attributes.name = "Top Note"
         attributes.hapticFeedbackType = .success
         attributes.popBehavior = .animated(animation: .translation)
-        attributes.entryBackground = .color(color: type.color)
-        attributes.shadow = .active(with: .init(color: UIColor.init(red: 48.0/255.0, green: 47.0/255.0, blue: 48.0/255.0, alpha: 1.0), opacity: 0.5, radius: 2))
+        attributes.entryBackground = .color(color: EKColor(light: UIColor(red: 0.88, green: 0.40, blue: 0.01, alpha: 1.00), dark: UIColor(red: 0.69, green: 0.26, blue: 0.03, alpha: 1.00)))
+        attributes.shadow = .active(with: EKAttributes.Shadow.Value.init(color: EKColor(light: UIColor(red: 48.0/255.0, green: 47.0/255.0, blue: 48.0/255.0, alpha: 1.0), dark: UIColor(red: 48.0/255.0, green: 47.0/255.0, blue: 48.0/255.0, alpha: 1.0)), opacity: 0.5, radius: 2))
 
         SwiftEntryKit.display(entry: contentView, using: attributes, presentInsideKeyWindow: true)
     }

@@ -47,6 +47,7 @@
 		255A7D251BEB8DC700E6012B /* PasscodeLockConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255A7D231BEB8DC700E6012B /* PasscodeLockConfiguration.swift */; };
 		255A7D301BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255A7D2F1BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift */; };
 		25650A37235F09D000B314C3 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 25650A36235F09D000B314C3 /* Kingfisher */; };
+		25650A3A235F0B5F00B314C3 /* SwiftEntryKit in Frameworks */ = {isa = PBXBuildFile; productRef = 25650A39235F0B5F00B314C3 /* SwiftEntryKit */; };
 		2575F5711E97B2B7004B4D1E /* NSData+iconv.m in Sources */ = {isa = PBXBuildFile; fileRef = 2575F56E1E97B2B7004B4D1E /* NSData+iconv.m */; };
 		2575F5721E97B2B7004B4D1E /* iconv_wrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = 2575F5701E97B2B7004B4D1E /* iconv_wrapper.c */; };
 		2575F5751E97B359004B4D1E /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2575F5741E97B359004B4D1E /* libiconv.tbd */; };
@@ -62,9 +63,7 @@
 		25B22FE52354A49400F9DFC6 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 25B22FE42354A49400F9DFC6 /* Alamofire */; };
 		25C478D11FDFA61400AA8958 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C478D01FDFA61400AA8958 /* Configuration.swift */; };
 		25C8BF151BF243AB00CAC32E /* UITabBarController+StatusBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C8BF141BF243AB00CAC32E /* UITabBarController+StatusBarStyle.swift */; };
-		25E8523221747572003F8D5E /* SwiftEntryKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E8522921747572003F8D5E /* SwiftEntryKit.framework */; };
 		25E8523421747572003F8D5E /* Reachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E8522B21747572003F8D5E /* Reachability.framework */; };
-		25E8523521747572003F8D5E /* QuickLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E8522C21747572003F8D5E /* QuickLayout.framework */; };
 		25E8523621747572003F8D5E /* InAppSettingsKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E8522D21747572003F8D5E /* InAppSettingsKit.framework */; };
 		25E8523921747572003F8D5E /* PasscodeLock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E8523021747572003F8D5E /* PasscodeLock.framework */; };
 		25F2962E2350DDFE00AB782A /* UIImage+BarButtonItemIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F2962D2350DDFE00AB782A /* UIImage+BarButtonItemIcon.swift */; };
@@ -132,9 +131,7 @@
 		25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		25C478D01FDFA61400AA8958 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		25C8BF141BF243AB00CAC32E /* UITabBarController+StatusBarStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITabBarController+StatusBarStyle.swift"; sourceTree = "<group>"; };
-		25E8522921747572003F8D5E /* SwiftEntryKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftEntryKit.framework; path = Carthage/Build/iOS/SwiftEntryKit.framework; sourceTree = "<group>"; };
 		25E8522B21747572003F8D5E /* Reachability.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Reachability.framework; path = Carthage/Build/iOS/Reachability.framework; sourceTree = "<group>"; };
-		25E8522C21747572003F8D5E /* QuickLayout.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLayout.framework; path = Carthage/Build/iOS/QuickLayout.framework; sourceTree = "<group>"; };
 		25E8522D21747572003F8D5E /* InAppSettingsKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = InAppSettingsKit.framework; path = Carthage/Build/iOS/InAppSettingsKit.framework; sourceTree = "<group>"; };
 		25E8523021747572003F8D5E /* PasscodeLock.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PasscodeLock.framework; path = Carthage/Build/iOS/PasscodeLock.framework; sourceTree = "<group>"; };
 		25E8526921747830003F8D5E /* UICircularProgressRing.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = UICircularProgressRing.framework.dSYM; path = Carthage/Build/iOS/UICircularProgressRing.framework.dSYM; sourceTree = SOURCE_ROOT; };
@@ -165,9 +162,8 @@
 				252DFA801753784400FF8199 /* UIKit.framework in Frameworks */,
 				252DFA821753784400FF8199 /* Foundation.framework in Frameworks */,
 				252DFA841753784400FF8199 /* CoreGraphics.framework in Frameworks */,
-				25E8523221747572003F8D5E /* SwiftEntryKit.framework in Frameworks */,
 				25E8523421747572003F8D5E /* Reachability.framework in Frameworks */,
-				25E8523521747572003F8D5E /* QuickLayout.framework in Frameworks */,
+				25650A3A235F0B5F00B314C3 /* SwiftEntryKit in Frameworks */,
 				25E8523621747572003F8D5E /* InAppSettingsKit.framework in Frameworks */,
 				251998452355BEB900DC080D /* SwiftSoup in Frameworks */,
 				25B22FE52354A49400F9DFC6 /* Alamofire in Frameworks */,
@@ -200,9 +196,7 @@
 			children = (
 				25E8522D21747572003F8D5E /* InAppSettingsKit.framework */,
 				25E8523021747572003F8D5E /* PasscodeLock.framework */,
-				25E8522C21747572003F8D5E /* QuickLayout.framework */,
 				25E8522B21747572003F8D5E /* Reachability.framework */,
-				25E8522921747572003F8D5E /* SwiftEntryKit.framework */,
 				2575F5741E97B359004B4D1E /* libiconv.tbd */,
 				25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */,
 				25B0AA791753A66C00141B0E /* SystemConfiguration.framework */,
@@ -376,6 +370,7 @@
 				251998442355BEB900DC080D /* SwiftSoup */,
 				2515C5C52355CC5F00BFD49D /* MediaBrowser */,
 				25650A36235F09D000B314C3 /* Kingfisher */,
+				25650A39235F0B5F00B314C3 /* SwiftEntryKit */,
 			);
 			productName = "Video Player";
 			productReference = 252DFA7C1753784400FF8199 /* Remote Helper.app */;
@@ -427,6 +422,7 @@
 				251998432355BEB900DC080D /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				2515C5C42355CC5F00BFD49D /* XCRemoteSwiftPackageReference "MediaBrowser" */,
 				25650A35235F09D000B314C3 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				25650A38235F0B5E00B314C3 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */,
 			);
 			productRefGroup = 252DFA7D1753784400FF8199 /* Products */;
 			projectDirPath = "";
@@ -464,18 +460,14 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/InAppSettingsKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/PasscodeLock.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/QuickLayout.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Reachability.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/SwiftEntryKit.framework",
 			);
 			outputFileListPaths = (
 			);
 			outputPaths = (
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/InAppSettingsKit.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/PasscodeLock.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/QuickLayout.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Reachability.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftEntryKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -776,6 +768,14 @@
 				minimumVersion = 5.8.3;
 			};
 		};
+		25650A38235F0B5E00B314C3 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/huri000/SwiftEntryKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
 		25B22FE32354A49400F9DFC6 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire";
@@ -801,6 +801,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 25650A35235F09D000B314C3 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		25650A39235F0B5F00B314C3 /* SwiftEntryKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 25650A38235F0B5E00B314C3 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */;
+			productName = SwiftEntryKit;
 		};
 		25B22FE42354A49400F9DFC6 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -2,6 +2,8 @@
 
 一个简单的远程下载客户端，请配合[服务器端](https://github.com/venj/movie_server)一起使用。
 
+本项目现已完全使用 Swift Package Manager，并初步支持 Project Catalyst。
+
 **从 v3.8 开始，客户端可以脱离服务端使用。如果没有服务端，客户端将缺少种子功能。**
 
 先看看效果（不依赖服务端的功能）：
@@ -39,7 +41,7 @@
 
 如果作为独立客户端使用，你只需要配置蓝色框中的这些选项。
 
-![截图](screenshots/settings_example.png) 
+![截图](screenshots/settings_example.png)
 
 ### 主要设置项说明
 
@@ -82,6 +84,10 @@ Allow Use Cellular Network | 允许手机网络下使用
 其他配置项不重要，就不一一说明了。
 
 ## 新功能介绍
+
+**4.0**
+
+- 远程助手现已可以通过 Project Catalyst 支持 macOS。
 
 **3.8**
 

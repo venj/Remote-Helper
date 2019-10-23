@@ -92,7 +92,6 @@
 		2506AA201E90F4710064EABB /* ResourcePageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourcePageViewController.swift; sourceTree = "<group>"; };
 		2506AA221E90F5D40064EABB /* BangumiViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BangumiViewController.swift; sourceTree = "<group>"; };
 		251B62B020FF7A080077FF2D /* Helper+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Helper+iOS.swift"; sourceTree = "<group>"; };
-		251E0B7F218D4E2C0067B78F /* Kingfisher.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Kingfisher.framework.dSYM; path = Carthage/Build/iOS/Kingfisher.framework.dSYM; sourceTree = SOURCE_ROOT; };
 		251E0BC8218D56860067B78F /* Kingfisher+size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Kingfisher+size.swift"; sourceTree = "<group>"; };
 		251F89962341D1DE008020E9 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		252D3C4A21AB9ADD005DDAFC /* SearchPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPage.swift; sourceTree = "<group>"; };
@@ -134,15 +133,7 @@
 		25C478D01FDFA61400AA8958 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		25C8BF141BF243AB00CAC32E /* UITabBarController+StatusBarStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITabBarController+StatusBarStyle.swift"; sourceTree = "<group>"; };
 		25E8522D21747572003F8D5E /* InAppSettingsKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = InAppSettingsKit.framework; path = Carthage/Build/iOS/InAppSettingsKit.framework; sourceTree = "<group>"; };
-		25E8526921747830003F8D5E /* UICircularProgressRing.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = UICircularProgressRing.framework.dSYM; path = Carthage/Build/iOS/UICircularProgressRing.framework.dSYM; sourceTree = SOURCE_ROOT; };
-		25E8526A21747830003F8D5E /* Alamofire.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Alamofire.framework.dSYM; path = Carthage/Build/iOS/Alamofire.framework.dSYM; sourceTree = SOURCE_ROOT; };
-		25E8526B21747830003F8D5E /* PasscodeLock.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = PasscodeLock.framework.dSYM; path = Carthage/Build/iOS/PasscodeLock.framework.dSYM; sourceTree = SOURCE_ROOT; };
-		25E8526C21747830003F8D5E /* SwiftEntryKit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SwiftEntryKit.framework.dSYM; path = Carthage/Build/iOS/SwiftEntryKit.framework.dSYM; sourceTree = SOURCE_ROOT; };
-		25E8526D21747830003F8D5E /* Reachability.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Reachability.framework.dSYM; path = Carthage/Build/iOS/Reachability.framework.dSYM; sourceTree = SOURCE_ROOT; };
-		25E8526E21747830003F8D5E /* MediaBrowser.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = MediaBrowser.framework.dSYM; path = Carthage/Build/iOS/MediaBrowser.framework.dSYM; sourceTree = SOURCE_ROOT; };
-		25E8527021747830003F8D5E /* QuickLayout.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = QuickLayout.framework.dSYM; path = Carthage/Build/iOS/QuickLayout.framework.dSYM; sourceTree = SOURCE_ROOT; };
 		25E8527221747830003F8D5E /* InAppSettingsKit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = InAppSettingsKit.framework.dSYM; path = Carthage/Build/iOS/InAppSettingsKit.framework.dSYM; sourceTree = SOURCE_ROOT; };
-		25E8528D21747B27003F8D5E /* Kanna.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Kanna.framework.dSYM; path = Carthage/Build/iOS/Kanna.framework.dSYM; sourceTree = SOURCE_ROOT; };
 		25F2962D2350DDFE00AB782A /* UIImage+BarButtonItemIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+BarButtonItemIcon.swift"; sourceTree = "<group>"; };
 		25F94A601BE5E9FE009C9195 /* Remote Helper-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Remote Helper-Bridging-Header.h"; sourceTree = "<group>"; };
 		25F94A611BE5E9FF009C9195 /* Dictionary+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+JSON.swift"; sourceTree = "<group>"; };
@@ -333,16 +324,7 @@
 		25E852682174781A003F8D5E /* DSYMs */ = {
 			isa = PBXGroup;
 			children = (
-				25E8528D21747B27003F8D5E /* Kanna.framework.dSYM */,
-				25E8526A21747830003F8D5E /* Alamofire.framework.dSYM */,
 				25E8527221747830003F8D5E /* InAppSettingsKit.framework.dSYM */,
-				25E8526E21747830003F8D5E /* MediaBrowser.framework.dSYM */,
-				25E8526B21747830003F8D5E /* PasscodeLock.framework.dSYM */,
-				25E8527021747830003F8D5E /* QuickLayout.framework.dSYM */,
-				251E0B7F218D4E2C0067B78F /* Kingfisher.framework.dSYM */,
-				25E8526D21747830003F8D5E /* Reachability.framework.dSYM */,
-				25E8526C21747830003F8D5E /* SwiftEntryKit.framework.dSYM */,
-				25E8526921747830003F8D5E /* UICircularProgressRing.framework.dSYM */,
 			);
 			name = DSYMs;
 			sourceTree = "<group>";

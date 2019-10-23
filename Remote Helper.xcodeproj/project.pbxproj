@@ -633,10 +633,6 @@
 				CURRENT_PROJECT_VERSION = 381;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 32Y52676KN;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = "Remote Helper/Remote Helper-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -666,15 +662,11 @@
 				CODE_SIGN_ENTITLEMENTS = "Remote Helper/Remote Helper.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: WEN JIE ZHU (32Y52676KN)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 381;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 32Y52676KN;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = "Remote Helper/Remote Helper-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -686,7 +678,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "d29dfa3c-208e-4aab-ac00-6abda19ad156";
 				PROVISIONING_PROFILE_SPECIFIER = "Remote Helper Distribution";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "Remote Helper Mac Catalyst Development";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "Remote Helper Mac Distribution";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_ENABLE_BATCH_MODE = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Remote Helper/Remote Helper-Bridging-Header.h";

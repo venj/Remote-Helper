@@ -18,16 +18,13 @@
 
 ## 编译安装
 
-1. 执行如下命令：
+1. 签出代码
 
 	``` bash
 	git clone https://github.com/venj/Remote-Helper.git
-	cd Remote-Helper
-	gem install cocoapods
-	pod install
 	```
 
-2. 用Xcode 9.x打开`Remote Helper.xcworkspace`
+2. 用Xcode 9.x打开`Remote Helper.xcodeproj`
 3. 编译安装
 
 ## 使用说明

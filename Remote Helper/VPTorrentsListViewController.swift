@@ -86,12 +86,10 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         attachedProgressView.removeFromSuperview()
-        tabBarController?.tabBar.isTranslucent = false
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = NSLocalizedString("Torrents", comment: "Torrents")
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(loadTorrentList(_:)))
 
         definesPresentationContext = true

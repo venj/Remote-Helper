@@ -44,6 +44,8 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
 
     let dyttSearchBase = "http://s.ygdy8.com/plus/so.php?keyword="
 
+    var page: Page? = nil
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.title = siteName
@@ -90,19 +92,33 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
         return cell
     }
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let index = indexPath.row
-        let catagory = catagoryLinks[index]
-        var link = catagory["link"]!
-        if !link.contains("http://") {
-            link = "http://www.dygod.net" + link
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if identifier == "ShowDYTTSegue" {
+            if let index = tableView.indexPathForSelectedRow?.row {
+                let catagory = catagoryLinks[index]
+                var link = catagory["link"]!
+                if !link.contains("http://") {
+                    link = "http://www.dygod.net" + link
+                }
+                process(link)
+                return false
+            }
         }
-        let title = catagory["name"] ?? "未分类"
-        process(title, link)
-        tableView.deselectRow(at: indexPath, animated: true)
+        return true
     }
 
-    func process(_ title: String, _ link: String) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowDYTTSegue" {
+            if let vc = segue.destination as? ResourcePageViewController,
+                let index = tableView.indexPathForSelectedRow?.row {
+                let catagory = catagoryLinks[index]
+                vc.title = catagory["name"] ?? "未分类"
+                vc.page = page
+            }
+        }
+    }
+
+    func process(_ link: String) {
         Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
         let request = Alamofire.request(link)
         request.responseData { [weak self] response in
@@ -123,12 +139,8 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
                 self.present(alert, animated: true, completion: nil)
             }
             else {
-                let rpvc = ResourcePageViewController()
-                //rpvc.bangumiLinks = page.bangumiLinks
-                rpvc.page = page
-                rpvc.hidesBottomBarWhenPushed = true
-                rpvc.title = title
-                self.navigationController?.pushViewController(rpvc, animated: true)
+                self.page = page
+                self.performSegue(withIdentifier: "ShowDYTTSegue", sender: nil)
             }
         }
     }

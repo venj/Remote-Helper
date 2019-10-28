@@ -85,14 +85,14 @@ class WebViewController: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        webView.stopLoading()
+        webView?.stopLoading()
         if UIDevice.current.userInterfaceIdiom == .phone {
             navigationController?.setToolbarHidden(true, animated: false)
         }
     }
 
     func configureBarButtonItems() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.backButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(goBack(_:)))
+        // navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.backButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(goBack(_:)))
         reloadStopBarButtonItem = UIBarButtonItem(image: UIImage.stopButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(reloadOrStop(_:)))
         navBackBarButtonItem = UIBarButtonItem(image: UIImage.backButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(navBack(_:)))
         navForwardBarButtonItem = UIBarButtonItem(image: UIImage.forwardButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(navForward(_:)))

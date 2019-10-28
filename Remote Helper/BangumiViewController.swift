@@ -18,7 +18,7 @@ class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopo
     var imagesButton: UIBarButtonItem?
 
     var shouldAddInfomationButtons: Bool {
-        return bangumi?.images.count != 0 || bangumi?.info.count != 0
+        return bangumi?.images.count != 0 && bangumi?.info.count != 0
     }
 
     override func viewDidLoad() {
@@ -100,6 +100,7 @@ class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopo
     }
 
     @objc func showEdit(_ sender: UIBarButtonItem?) {
+        if bangumi == nil || bangumi!.links.count == 0 { return }
         if !tableView.isEditing {
             tableView.setEditing(true, animated: true)
             editButton?.title = NSLocalizedString("Done", comment: "Done")
@@ -222,6 +223,7 @@ class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopo
 
     // MARK: - Actions
     @objc func showImages(_ sender: Any?) {
+        if bangumi == nil || bangumi!.images.count == 0 { return }
         let photoBrowser = MediaBrowser(delegate: self)
         photoBrowser.displayActionButton = false
         photoBrowser.displayMediaNavigationArrows = true

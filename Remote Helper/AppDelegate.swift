@@ -16,11 +16,13 @@ import Kingfisher
 @UIApplicationMain
 class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelegate {
     var window: UIWindow?
+    var tabBarController: UITabBarController? {
+        return window?.rootViewController as? UITabBarController
+    }
     var fileListViewController: WebContentTableViewController!
-    lazy var tabbarController = UITabBarController()
 
     let bundleIdentifier = Bundle.main.bundleIdentifier!
-    @available(iOS 9.0, *)
+
     lazy var addressItem: UIApplicationShortcutItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).openaddresses", localizedTitle: "Addresses", localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_addresses"), userInfo: nil)
     @available(iOS 9.0, *)
     lazy var dyttItem: UIApplicationShortcutItem = UIApplicationShortcutItem(type: "\(bundleIdentifier).opendytt", localizedTitle: "DYTT", localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "shortcut_dytt"), userInfo: nil)
@@ -41,20 +43,15 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
     }()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        self.window = UIWindow(frame: UIScreen.main.bounds)
         // Configure Alamofire Request Manager
         configureAlamofireManager()
         // Theming
         updateTheme()
 
-        configureTabbarController()
-        window?.rootViewController = tabbarController
         // Passcode Lock
         passcodeLockPresenter.presentPasscodeLock()
         // Quick actions
-        if #available(iOS 9.0, *) {
-            createActionMenus()
-        }
+        createActionMenus()
         // iCloud Key-Value Setup
         NotificationCenter.default.addObserver(self, selector: #selector(storeDidChange(_:)), name: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: NSUbiquitousKeyValueStore.default)
         NSUbiquitousKeyValueStore.default.synchronize()
@@ -99,31 +96,6 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
         }
         defaults.synchronize()
         NotificationCenter.default.post(name: NSNotification.Name.viewedTitlesDidChangeNotification, object: nil)
-    }
-
-    func configureTabbarController() {
-        // FileList
-        fileListViewController = WebContentTableViewController()
-        fileListViewController.title = NSLocalizedString("Addresses", comment: "Addresses")
-        fileListViewController.tabBarItem.image = UIImage(named: "tab_cloud")
-        let fileListNavigationController = UINavigationController(rootViewController: fileListViewController)
-        // DYTT
-        let resourceSiteViewController = ResourceSiteCatagoriesViewController()
-        resourceSiteViewController.title = NSLocalizedString("DYTT", comment: "DYTT")
-        resourceSiteViewController.tabBarItem.image = UIImage(named: "tab_dytt")
-        let resourceSiteNavigationController = UINavigationController(rootViewController: resourceSiteViewController)
-
-        // torrent list
-        if Configuration.shared.hasTorrentServer {
-            let torrentListViewController = VPTorrentsListViewController()
-            torrentListViewController.title = NSLocalizedString("Torrents", comment: "Torrents")
-            torrentListViewController.tabBarItem.image = UIImage(named: "tab_torrents")
-            let torrentListNavigationController = UINavigationController(rootViewController: torrentListViewController)
-            tabbarController.viewControllers = [fileListNavigationController, torrentListNavigationController, resourceSiteNavigationController]
-        }
-        else {
-            tabbarController.viewControllers = [fileListNavigationController, resourceSiteNavigationController]
-        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -173,13 +145,13 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
     func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
         let bundleIdentifier = Bundle.main.bundleIdentifier!
         if shortcutItem.type == "\(bundleIdentifier).openaddresses" {
-            tabbarController.selectedIndex = 0
+            tabBarController?.selectedIndex = 0
         }
         else if shortcutItem.type == "\(bundleIdentifier).opentorrents" {
-            tabbarController.selectedIndex = 1
+            tabBarController?.selectedIndex = 1
         }
         else if shortcutItem.type == "\(bundleIdentifier).opendytt" {
-            tabbarController.selectedIndex = 2
+            tabBarController?.selectedIndex = 2
         }
         else if shortcutItem.type == "\(bundleIdentifier).kittensearch" {
             Helper.shared.showTorrentSearchAlertInViewController(window?.rootViewController)

@@ -34,12 +34,8 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = NSLocalizedString("Addresses", comment: "Addresses")
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: CellIdentifier)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addAddress))
         readAddresses()
         migrateOldStorageIfNecessary()
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: NSLocalizedString("More", comment: "More"), style: .plain, target: self, action: #selector(showActionSheet))
 
         let defaults = UserDefaults.standard
         if !defaults.bool(forKey: ServerSetupDone) {
@@ -130,12 +126,17 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         return true
     }
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        if Helper.shared.showCellularHUD() { return }
-        webViewController = createWebViewController(forIndexPath: indexPath)
-        webViewController.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(webViewController, animated: true)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        print("Prepare segue.")
+        if segue.identifier == "ShowAddressSegue" {
+            if let nav = segue.destination as? UINavigationController,
+                let webViewController = nav.topViewController as? WebViewController,
+                let index = tableView.indexPathForSelectedRow?.row,
+                let urlString = addresses[index].link {
+                webViewController.urlString = urlString
+                webViewController.additionalBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(fetchHTMLAndParse))]
+            }
+        }
     }
 
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
@@ -153,7 +154,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             let defaults = UserDefaults.standard
             defaults.set(true, forKey: ServerSetupDone)
             sender.synchronizeSettings()
-            AppDelegate.shared.configureTabbarController()
         }
     }
 
@@ -225,7 +225,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         }
     }
 
-    @objc func addAddress() {
+    @IBAction func addAddress(_ sender: Any?) {
         let alertController = UIAlertController(title: NSLocalizedString("Add address", comment: "Add address"), message: NSLocalizedString("Please input an address:", comment: "Please input an address:"), preferredStyle: .alert)
         alertController.addTextField { (textField) in
             textField.keyboardType = .URL
@@ -248,7 +248,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         present(alertController, animated: true, completion: nil)
     }
 
-    @objc func showActionSheet() {
+    @IBAction func showActionSheet(_ sender: Any?) {
         let sheet = UIAlertController(title: NSLocalizedString("Please select your operation", comment: "Please select your operation"), message: nil, preferredStyle: .actionSheet)
         let transmissionAction = UIAlertAction(title: NSLocalizedString("Transmission", comment: "Transmission"), style: .default) { [weak self] _ in
             guard let `self` = self else { return }
@@ -372,14 +372,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         }
     }
 
-    func createWebViewController(forIndexPath indexPath: IndexPath) -> WebViewController? {
-        guard let urlString = addresses[indexPath.row].link else { return nil }
-        let webViewController = WebViewController(urlString: urlString)
-        // webViewController?.urlRequest.cachePolicy = .returnCacheDataElseLoad
-        webViewController.additionalBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(fetchHTMLAndParse))]
-        return webViewController
-    }
-
     func deletePreviewingCell() {
         if let previewingIndexPath = previewingIndexPath {
             deleteCell(at: previewingIndexPath)
@@ -447,8 +439,11 @@ extension WebContentTableViewController : UITableViewDragDelegate {
 extension WebContentTableViewController : UIViewControllerPreviewingDelegate {
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let indexPath = tableView.indexPathForRow(at: location),
-            let cell = tableView.cellForRow(at: indexPath) else { return nil }
-        guard let webViewController = createWebViewController(forIndexPath: indexPath) else { return nil }
+            let cell = tableView.cellForRow(at: indexPath),
+            let webViewController = storyboard?.instantiateViewController(withIdentifier: "WebViewController") as? WebViewController,
+            let urlString = addresses[indexPath.row].link else { return nil }
+        webViewController.urlString = urlString
+        webViewController.additionalBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(fetchHTMLAndParse))]
         webViewController.isPeeking = true
         previewingContext.sourceRect = cell.frame
         previewingIndexPath = indexPath

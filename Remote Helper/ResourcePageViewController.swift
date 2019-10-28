@@ -30,6 +30,8 @@ class ResourcePageViewController: UITableViewController {
         }
     }
 
+    var bangumi: Bangumi? = nil
+
     private var isLoading: Bool = false
     
     override func viewDidLoad() {
@@ -61,11 +63,7 @@ class ResourcePageViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: CellIdentifier)
-        if cell == nil {
-            cell = UITableViewCell(style: .subtitle, reuseIdentifier: CellIdentifier)
-        }
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier, for: indexPath)
         let index = indexPath.row
         let bangumi = bangumiLinks[index]
         cell.textLabel?.text = bangumi["title"]
@@ -101,19 +99,31 @@ class ResourcePageViewController: UITableViewController {
         return link
     }
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let index = indexPath.row
-        let bangumi = bangumiLinks[index]
-        let link = fullLink(withHref: bangumi["link"]!)
-        Configuration.shared.viewedResources.append(link.md5)
-        let cell = tableView.cellForRow(at: indexPath)
-        if #available(iOS 13.0, *) {
-            cell?.textLabel?.textColor = .secondaryLabel
-        } else {
-            cell?.textLabel?.textColor = .gray
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if identifier == "ShowBangumiSegue" {
+            if let indexPath = tableView.indexPathForSelectedRow {
+                let index = indexPath.row
+                let bangumi = bangumiLinks[index]
+                let link = fullLink(withHref: bangumi["link"]!)
+                let cell = tableView.cellForRow(at: indexPath)
+                if #available(iOS 13.0, *) {
+                    cell?.textLabel?.textColor = .secondaryLabel
+                } else {
+                    cell?.textLabel?.textColor = .gray
+                }
+                process(link)
+            }
+            return false
         }
-        process(link)
-        tableView.deselectRow(at: indexPath, animated: true)
+        return true
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowBangumiSegue",
+            let nav =  segue.destination as? UINavigationController,
+            let vc = nav.topViewController as? BangumiViewController {
+            vc.bangumi = bangumi
+        }
     }
 
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -159,9 +169,16 @@ class ResourcePageViewController: UITableViewController {
                 self.present(alert, animated: true, completion: nil)
             }
             else {
-                let bvc = BangumiViewController()
-                bvc.bangumi = bangumi
-                self.navigationController?.pushViewController(bvc, animated: true)
+                if let indexPath = self.tableView.indexPathForSelectedRow, let cell = self.tableView.cellForRow(at: indexPath) {
+                    Configuration.shared.viewedResources.append(link.md5)
+                    if #available(iOS 13.0, *) {
+                        cell.textLabel?.textColor = .secondaryLabel
+                    } else {
+                        cell.textLabel?.textColor = .gray
+                    }
+                }
+                self.bangumi = bangumi
+                self.performSegue(withIdentifier: "ShowBangumiSegue", sender: nil)
             }
         }
     }

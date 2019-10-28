@@ -68,6 +68,26 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
         // iCloud Key-Value Setup
         NotificationCenter.default.addObserver(self, selector: #selector(storeDidChange(_:)), name: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: NSUbiquitousKeyValueStore.default)
         NSUbiquitousKeyValueStore.default.synchronize()
+
+        #if targetEnvironment(macCatalyst)
+        if let windowScene = window?.windowScene {
+            if let titlebar = windowScene.titlebar {
+                let toolbar = NSToolbar(identifier: "MainToolbar")
+                toolbar.delegate = self
+                toolbar.allowsUserCustomization = false
+                toolbar.centeredItemIdentifier = NSToolbarItem.Identifier(rawValue: "TabItemsGroup")
+                titlebar.titleVisibility = .hidden
+
+                titlebar.toolbar = toolbar
+            }
+        }
+        #endif
+
+        #if targetEnvironment(macCatalyst)
+        let rootViewController = window?.rootViewController as? UITabBarController
+        rootViewController?.tabBar.isHidden = true
+        #endif
+
         // Window
         self.window?.makeKeyAndVisible()
         return true
@@ -262,3 +282,33 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
 fileprivate func convertToUIBackgroundTaskIdentifier(_ input: Int) -> UIBackgroundTaskIdentifier {
 	return UIBackgroundTaskIdentifier(rawValue: input)
 }
+
+#if targetEnvironment(macCatalyst)
+extension AppDelegate: NSToolbarDelegate {
+    func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
+        if (itemIdentifier == NSToolbarItem.Identifier(rawValue: "TabItemsGroup")) {
+            let group = NSToolbarItemGroup.init(itemIdentifier: NSToolbarItem.Identifier(rawValue: "TabItemsGroup"), titles: [NSLocalizedString("Addresses", comment: "Addresses"), NSLocalizedString("Torrents", comment: "Torrents"), NSLocalizedString("DYTT", comment: "DYTT")], selectionMode: .selectOne, labels: ["addresses", "torrents", "dytt"], target: self, action: #selector(toolbarGroupSelectionChanged))
+
+            group.setSelected(true, at: 0)
+
+            return group
+        }
+
+        return nil
+    }
+
+
+    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return [NSToolbarItem.Identifier(rawValue: "TabItemsGroup")]
+    }
+
+    func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return self.toolbarDefaultItemIdentifiers(toolbar)
+    }
+
+    @objc func toolbarGroupSelectionChanged(sender: NSToolbarItemGroup) {
+        let rootViewController = window?.rootViewController as? UITabBarController
+        rootViewController?.selectedIndex = sender.selectedIndex
+    }
+}
+#endif

@@ -164,7 +164,13 @@
                             <outlet property="delegate" destination="eHC-md-X3U" id="Nja-lB-oXZ"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Torrents" id="6fa-zh-yOh"/>
+                    <navigationItem key="navigationItem" title="Torrents" id="6fa-zh-yOh">
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="vg4-E7-FCR">
+                            <connections>
+                                <action selector="loadTorrentList:" destination="eHC-md-X3U" id="c4o-gL-CXt"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fVM-E6-WOr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -382,7 +388,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="87O-sE-POn"/>
-        <segue reference="08t-F3-UJX"/>
+        <segue reference="hk6-Hg-DmK"/>
         <segue reference="eQY-Bb-Xiv"/>
     </inferredMetricsTieBreakers>
 </document>

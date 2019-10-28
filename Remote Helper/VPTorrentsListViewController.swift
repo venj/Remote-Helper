@@ -94,8 +94,6 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
 
         AppDelegate.shared.torrentsSplitViewController?.delegate = self
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(loadTorrentList(_:)))
-
         definesPresentationContext = true
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
@@ -340,7 +338,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         }
     }
 
-    @objc func loadTorrentList(_ sender: Any?) {
+    @IBAction func loadTorrentList(_ sender: Any?) {
         if Helper.shared.showCellularHUD() { return }
         Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
         navigationItem.rightBarButtonItem?.isEnabled = false

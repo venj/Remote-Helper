@@ -48,6 +48,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
             return p
         }
     }
+    var collapseDetailViewController: Bool = true
 
     var photos: [String] = []
 
@@ -90,6 +91,9 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        AppDelegate.shared.torrentsSplitViewController?.delegate = self
+
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(loadTorrentList(_:)))
 
         definesPresentationContext = true
@@ -178,20 +182,38 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         return cell
     }
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        let list = !searchController.isActive ? dateList : filteredDateList
-        currentSelectedTitle = list[(indexPath as NSIndexPath).row]
-        if Helper.shared.showCellularHUD() { return }
-        if let cell = tableView.cellForRow(at: indexPath), let title = cell.textLabel?.text {
-            if #available(iOS 13.0, *) {
-                cell.textLabel?.textColor = .secondaryLabel
-            } else {
-                cell.textLabel?.textColor = .gray
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if Helper.shared.showCellularHUD() { return false }
+        if identifier == "ShowTorrentsSegue" {
+            if let indexPath = tableView.indexPathForSelectedRow {
+                showPhotoBrowser(forIndexPath: indexPath)
             }
-            viewedTitles.insert(title)
+            return false
         }
-        self.showPhotoBrowser(forIndexPath: indexPath)
+        return true
+    }
+
+
+    var mediaStartIndex = 0
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowTorrentsSegue" {
+            if let nav = segue.destination as? UINavigationController,
+                let pb = nav.topViewController as? MediaBrowser,
+                let indexPath = tableView.indexPathForSelectedRow {
+                // Update currentSelectedTitle
+                let list = !searchController.isActive ? dateList : filteredDateList
+                currentSelectedTitle = list[indexPath.row]
+
+                pb.delegate = self
+                pb.displayActionButton = false
+                pb.displayMediaNavigationArrows = true
+                pb.zoomPhotosToFill = true
+                pb.hideControlsOnStartup = false
+                pb.delayToHideElements = TimeInterval(Int.max) // FIXME: do not hide controls.
+                pb.setCurrentIndex(at: mediaStartIndex)
+            }
+        }
     }
 
     @objc func photoPreloadFinished(_ notification: Notification) {
@@ -216,6 +238,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
             var index = 1
             if let i = Int((alertController.textFields?[0].text)!) { index = i }
             if index < 1 { index = 1 }
+            if index > self.photos.count { index = self.photos.count }
             self.showPhotoBrowser(forIndexPath: indexPath, initialPhotoIndex: index - 1)
         }
         alertController.addAction(okAction)
@@ -251,6 +274,10 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         let progress = Float(index + 1) / Float(photos.count)
         attachedProgressView.progress = progress
         mediaBrowser.navigationItem.rightBarButtonItems  = [kittenItem, hashItem]
+
+        let modeItem = AppDelegate.shared.addressesSplitViewController!.displayModeButtonItem
+        mediaBrowser.navigationItem.leftBarButtonItem = modeItem
+        mediaBrowser.navigationItem.leftItemsSupplementBackButton = true
     }
 
     func title(for mediaBrowser: MediaBrowser, at index: Int) -> String? {
@@ -301,19 +328,11 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
             if response.result.isSuccess {
                 guard let photos = response.result.value as? [String] else { return }
                 self.photos = photos
+                self.mediaStartIndex = index
                 self.mwPhotos.forEach {
                     $0.loadUnderlyingImageAndNotify();
                 }
-                var sIndex = index
-                if index > photos.count - 1 {
-                    sIndex = photos.count - 1
-                }
-                let pb = MediaBrowser(delegate: self)
-                pb.displayActionButton = false
-                pb.displayMediaNavigationArrows = true
-                pb.zoomPhotosToFill = true
-                pb.setCurrentIndex(at: sIndex)
-                self.navigationController?.pushViewController(pb, animated: true)
+                self.performSegue(withIdentifier: "ShowTorrentsSegue", sender: nil)
             }
             else {
                 Helper.shared.showNote(withMessage: NSLocalizedString("Connection failed.", comment: "Connection failed."), type:.error)
@@ -476,3 +495,15 @@ extension VPTorrentsListViewController : UIViewControllerPreviewingDelegate {
     }
 }
 
+extension VPTorrentsListViewController: UISplitViewControllerDelegate {
+    func splitViewController(_ splitViewController: UISplitViewController,
+                             collapseSecondary secondaryViewController: UIViewController,
+                             onto primaryViewController: UIViewController) -> Bool {
+        guard let navigationController = primaryViewController as? UINavigationController,
+            let controller = navigationController.topViewController as? VPTorrentsListViewController else {
+            return true
+        }
+
+        return controller.collapseDetailViewController
+    }
+}

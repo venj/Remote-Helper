@@ -29,7 +29,9 @@ class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopo
             tableView.cellLayoutMarginsFollowReadableWidth = false
         }
 
-        title = bangumi?.title ?? ""
+        if let title = bangumi?.title {
+            self.title = title
+        }
 
         // Toolbar Button Items
         let selectAllButton = UIBarButtonItem(title: NSLocalizedString("Select All", comment: "Select All"), style: .plain, target: self, action: #selector(selectAllCells(_:)))
@@ -55,6 +57,10 @@ class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopo
         else {
             navigationItem.rightBarButtonItem = editButtonItem
         }
+
+        let modeItem = AppDelegate.shared.dyttSplitViewController!.displayModeButtonItem
+        navigationItem.leftBarButtonItem = modeItem
+        navigationItem.leftItemsSupplementBackButton = true
     }
 
     override func didReceiveMemoryWarning() {
@@ -132,11 +138,7 @@ class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopo
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: CellIdentifier)
-        if cell == nil {
-            cell = UITableViewCell(style: .subtitle, reuseIdentifier: CellIdentifier)
-        }
-
+        let cell: UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: CellIdentifier, for: indexPath)
         let index = indexPath.row
         let link = bangumi?.links[index]
         cell.textLabel?.text = link?.name

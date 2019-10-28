@@ -14,3 +14,10 @@ extension UITabBarController {
         return selectedViewController.preferredStatusBarStyle
     }
 }
+
+extension UISplitViewController {
+    override open var preferredStatusBarStyle : UIStatusBarStyle {
+        guard let selectedViewController = children.last else { return .default }
+        return selectedViewController.preferredStatusBarStyle
+    }
+}

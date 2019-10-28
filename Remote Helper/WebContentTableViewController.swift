@@ -8,7 +8,6 @@
 
 import UIKit
 import PasscodeLock
-import MediaBrowser
 import InAppSettingsKit
 import CoreData
 import SwiftSoup
@@ -19,7 +18,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     var webViewController:WebViewController!
     var settingsViewController: IASKAppSettingsViewController!
-    var mwPhotos: [Media] = []
     var addresses: [ResourceSite] = [] {
         didSet {
             addresses.enumerated().forEach({ (args) in
@@ -31,11 +29,14 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     }
 
     var previewingIndexPath: IndexPath?
+    var collapseDetailViewController: Bool = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
         readAddresses()
         migrateOldStorageIfNecessary()
+
+        AppDelegate.shared.addressesSplitViewController?.delegate = self
 
         let defaults = UserDefaults.standard
         if !defaults.bool(forKey: ServerSetupDone) {
@@ -133,6 +134,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                 let webViewController = nav.topViewController as? WebViewController,
                 let index = tableView.indexPathForSelectedRow?.row,
                 let urlString = addresses[index].link {
+                collapseDetailViewController = false
                 webViewController.urlString = urlString
                 webViewController.additionalBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(fetchHTMLAndParse))]
             }
@@ -454,5 +456,18 @@ extension WebContentTableViewController : UIViewControllerPreviewingDelegate {
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
         navigationController?.pushViewController(viewControllerToCommit, animated: false)
         (viewControllerToCommit as? WebViewController)?.isPeeking = false
+    }
+}
+
+extension WebContentTableViewController: UISplitViewControllerDelegate {
+    func splitViewController(_ splitViewController: UISplitViewController,
+                             collapseSecondary secondaryViewController: UIViewController,
+                             onto primaryViewController: UIViewController) -> Bool {
+        guard let navigationController = primaryViewController as? UINavigationController,
+            let controller = navigationController.topViewController as? WebContentTableViewController else {
+            return true
+        }
+
+        return controller.collapseDetailViewController
     }
 }

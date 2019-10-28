@@ -19,6 +19,19 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
     var tabBarController: UITabBarController? {
         return window?.rootViewController as? UITabBarController
     }
+
+    var addressesSplitViewController: UISplitViewController? {
+        return tabBarController?.children.first { $0.restorationIdentifier == "AddressesSplitViewController" } as? UISplitViewController
+    }
+
+    var torrentsSplitViewController: UISplitViewController? {
+        return tabBarController?.children.first { $0.restorationIdentifier == "TorrentsSplitViewController" } as? UISplitViewController
+    }
+
+    var dyttSplitViewController: UISplitViewController? {
+        return tabBarController?.children.first { $0.restorationIdentifier == "DYTTSplitViewController" } as? UISplitViewController
+    }
+
     var fileListViewController: WebContentTableViewController!
 
     let bundleIdentifier = Bundle.main.bundleIdentifier!

@@ -27,17 +27,17 @@
             </objects>
             <point key="canvasLocation" x="-2892" y="-238"/>
         </scene>
-        <!--View Controller-->
+        <!--Media Browser-->
         <scene sceneID="PVn-s7-23w">
             <objects>
-                <viewController hidesBottomBarWhenPushed="YES" id="8Kj-FX-D9S" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="8Kj-FX-D9S" customClass="MediaBrowser" customModule="MediaBrowser" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ryR-fa-Xbp">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="gGz-wO-epC"/>
                     </view>
-                    <navigationItem key="navigationItem" id="5rv-ZO-s9V"/>
+                    <navigationItem key="navigationItem" title="Media Browser" id="5rv-ZO-s9V"/>
                     <nil key="simulatedBottomBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oyD-KH-rRb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -127,7 +127,7 @@
         <!--DYTT-->
         <scene sceneID="5vt-hf-q3P">
             <objects>
-                <splitViewController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="SLF-uC-ize" sceneMemberID="viewController">
+                <splitViewController storyboardIdentifier="DYTTSplitViewController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="SLF-uC-ize" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="DYTT" image="tab_dytt" id="vpO-Bt-1WM"/>
                     <connections>
                         <segue destination="TDL-qg-ySQ" kind="relationship" relationship="masterViewController" id="ria-FU-YoN"/>
@@ -155,7 +155,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="50f-KZ-TAy" kind="showDetail" identifier="ShowTorrentSegue" id="hk6-Hg-DmK"/>
+                                    <segue destination="50f-KZ-TAy" kind="showDetail" identifier="ShowTorrentsSegue" id="hk6-Hg-DmK"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -189,7 +189,7 @@
         <!--Torrents-->
         <scene sceneID="0z5-D3-kaa">
             <objects>
-                <splitViewController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="OrK-bK-XHo" sceneMemberID="viewController">
+                <splitViewController storyboardIdentifier="TorrentsSplitViewController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="OrK-bK-XHo" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Torrents" image="tab_torrents" id="gvi-kb-4Wa"/>
                     <connections>
                         <segue destination="QJ3-BQ-XxV" kind="relationship" relationship="masterViewController" id="LDd-OH-eRv"/>
@@ -279,7 +279,7 @@
         <!--Addresses-->
         <scene sceneID="fvm-wf-bid">
             <objects>
-                <splitViewController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="POv-ad-GRv" sceneMemberID="viewController">
+                <splitViewController storyboardIdentifier="AddressesSplitViewController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="POv-ad-GRv" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Addresses" image="tab_cloud" id="C60-9n-TUA"/>
                     <connections>
                         <segue destination="VcP-dH-YOt" kind="relationship" relationship="masterViewController" id="8gk-vi-6j7"/>
@@ -353,7 +353,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="HT7-dJ-HuZ">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="BangumiTableCell" id="HT7-dJ-HuZ">
                                 <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="HT7-dJ-HuZ" id="2fP-hq-cqJ">
@@ -381,8 +381,8 @@
         <image name="tab_torrents" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="P48-9K-jEi"/>
-        <segue reference="hk6-Hg-DmK"/>
+        <segue reference="87O-sE-POn"/>
+        <segue reference="08t-F3-UJX"/>
         <segue reference="eQY-Bb-Xiv"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -45,10 +45,13 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
     let dyttSearchBase = "http://s.ygdy8.com/plus/so.php?keyword="
 
     var page: Page? = nil
+    var collapseDetailViewController: Bool = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.title = siteName
+
+        AppDelegate.shared.dyttSplitViewController?.delegate = self
 
         // Revert back to old UITableView behavior
         if #available(iOS 9.0, *) {
@@ -187,5 +190,18 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
         alert.addAction(cancelAction)
         alert.view.tintColor = Helper.shared.mainThemeColor()
         present(alert, animated: true, completion: nil)
+    }
+}
+
+extension ResourceSiteCatagoriesViewController: UISplitViewControllerDelegate {
+    func splitViewController(_ splitViewController: UISplitViewController,
+                             collapseSecondary secondaryViewController: UIViewController,
+                             onto primaryViewController: UIViewController) -> Bool {
+        guard let navigationController = primaryViewController as? UINavigationController,
+            let controller = navigationController.topViewController as? ResourceSiteCatagoriesViewController else {
+            return true
+        }
+
+        return controller.collapseDetailViewController
     }
 }

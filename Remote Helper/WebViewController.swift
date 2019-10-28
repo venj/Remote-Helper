@@ -91,8 +91,14 @@ class WebViewController: UIViewController {
         }
     }
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
     func configureBarButtonItems() {
-        // navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.backButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(goBack(_:)))
+        let modeItem = AppDelegate.shared.addressesSplitViewController!.displayModeButtonItem
+        navigationItem.leftBarButtonItem = modeItem
+        navigationItem.leftItemsSupplementBackButton = true
         reloadStopBarButtonItem = UIBarButtonItem(image: UIImage.stopButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(reloadOrStop(_:)))
         navBackBarButtonItem = UIBarButtonItem(image: UIImage.backButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(navBack(_:)))
         navForwardBarButtonItem = UIBarButtonItem(image: UIImage.forwardButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(navForward(_:)))

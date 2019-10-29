@@ -10,7 +10,6 @@ import UIKit
 import PasscodeLock
 import InAppSettingsKit
 import CoreData
-import SwiftSoup
 import Kingfisher
 
 class WebContentTableViewController: UITableViewController, IASKSettingsDelegate, UIPopoverPresentationControllerDelegate {
@@ -136,7 +135,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                 let urlString = addresses[index].link {
                 collapseDetailViewController = false
                 webViewController.urlString = urlString
-                webViewController.additionalBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(fetchHTMLAndParse))]
+                self.webViewController = webViewController
             }
         }
     }
@@ -217,16 +216,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     }
 
     //MARK: - Action
-    @objc func fetchHTMLAndParse() {
-        webViewController.webView.evaluateJavaScript("document.body.innerHTML") { [weak self] (result, error) in
-            guard let self = self else { return }
-            if error == nil {
-                guard let html = result as? String else { return }
-                self.processHTML(html)
-            }
-        }
-    }
-
     @IBAction func addAddress(_ sender: Any?) {
         let alertController = UIAlertController(title: NSLocalizedString("Add address", comment: "Add address"), message: NSLocalizedString("Please input an address:", comment: "Please input an address:"), preferredStyle: .alert)
         alertController.addTextField { (textField) in
@@ -328,43 +317,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         Helper.shared.showTorrentSearchAlertInViewController(navigationController!)
     }
 
-    func processHTML(_ html: String) {
-        var validAddresses: [Link] = []
-        do {
-            let doc = try SwiftSoup.parse(html)
-            let links: [Link] = try doc.select("a").compactMap { e in
-                let href = try e.attr("href")
-                let loweredLink = href.lowercased()
-                if loweredLink.hasPrefix("magnet:?")
-                    || loweredLink.hasPrefix("ed2k://")
-                    || loweredLink.hasPrefix("thunder://")
-                    || loweredLink.hasPrefix("ftp://")
-                    || loweredLink.hasPrefix("ftps://")
-                    || loweredLink.hasPrefix("qqdl://")
-                    || loweredLink.hasPrefix("flashget://") {
-                    return Link(href)
-                }
-                else {
-                    return nil
-                }
-            }
-
-            validAddresses = links
-
-            if validAddresses.count == 0 {
-                Helper.shared.showNote(withMessage: NSLocalizedString("No downloadable link.", comment: "No downloadable link."), type:.warning)
-            }
-            else {
-                let linksViewController = BangumiViewController()
-                let bangumi = Bangumi(title: String(format: NSLocalizedString("Found %ld links", comment: "Found %ld links"), validAddresses.count), links: validAddresses)
-                linksViewController.bangumi = bangumi
-                navigationController?.pushViewController(linksViewController, animated: true)
-            }
-        } catch let error as NSError {
-            print("HTML Parse Error: \(error), \(error.userInfo)")
-        }
-    }
-
     // Update kitten ads black list.
     func updateKittenBlackList() {
         DispatchQueue.global(qos: .background).after(2.0) {
@@ -445,7 +397,6 @@ extension WebContentTableViewController : UIViewControllerPreviewingDelegate {
             let webViewController = storyboard?.instantiateViewController(withIdentifier: "WebViewController") as? WebViewController,
             let urlString = addresses[indexPath.row].link else { return nil }
         webViewController.urlString = urlString
-        webViewController.additionalBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(fetchHTMLAndParse))]
         webViewController.isPeeking = true
         previewingContext.sourceRect = cell.frame
         previewingIndexPath = indexPath

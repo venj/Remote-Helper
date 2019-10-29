@@ -38,7 +38,6 @@
                         <viewLayoutGuide key="safeArea" id="gGz-wO-epC"/>
                     </view>
                     <navigationItem key="navigationItem" title="Media Browser" id="5rv-ZO-s9V"/>
-                    <nil key="simulatedBottomBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oyD-KH-rRb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -79,7 +78,7 @@
         <!--Category-->
         <scene sceneID="cnr-sz-U0v">
             <objects>
-                <tableViewController id="mAA-3U-xMc" customClass="ResourcePageViewController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController hidesBottomBarWhenPushed="YES" id="mAA-3U-xMc" customClass="ResourcePageViewController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="JlW-dP-mam">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -217,7 +216,6 @@
                         <viewLayoutGuide key="safeArea" id="mgi-Tn-37Z"/>
                     </view>
                     <navigationItem key="navigationItem" title="Web" id="IiF-NN-iMM"/>
-                    <nil key="simulatedBottomBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lcc-it-94A" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -374,7 +372,6 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Bangumi" id="Y9W-EJ-uil"/>
-                    <nil key="simulatedBottomBarMetrics"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wVq-1y-XCA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -387,7 +384,7 @@
         <image name="tab_torrents" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="87O-sE-POn"/>
+        <segue reference="P48-9K-jEi"/>
         <segue reference="hk6-Hg-DmK"/>
         <segue reference="eQY-Bb-Xiv"/>
     </inferredMetricsTieBreakers>

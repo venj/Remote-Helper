@@ -8,6 +8,7 @@
 
 import UIKit
 import WebKit
+import SwiftSoup
 
 class WebViewController: UIViewController {
 
@@ -27,6 +28,7 @@ class WebViewController: UIViewController {
     var reloadStopBarButtonItem: UIBarButtonItem!
     var navBackBarButtonItem: UIBarButtonItem!
     var navForwardBarButtonItem: UIBarButtonItem!
+    var parseHTMLBarButtonItem: UIBarButtonItem!
 
     override init(nibName: String?, bundle: Bundle?) {
         super.init(nibName: nibName, bundle: bundle)
@@ -72,14 +74,27 @@ class WebViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        setupBarButtonItems()
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        if view.traitCollection.horizontalSizeClass != previousTraitCollection?.horizontalSizeClass {
+            setupBarButtonItems()
+        }
+    }
+
+    func setupBarButtonItems() {
         let flexspaceBarButtonItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        if UIDevice.current.userInterfaceIdiom == .phone {
+
+        if view.traitCollection.horizontalSizeClass == .compact {
             navigationController?.setToolbarHidden(false, animated: false)
             navigationController?.toolbar.setItems([flexspaceBarButtonItem, navBackBarButtonItem, flexspaceBarButtonItem, navForwardBarButtonItem, flexspaceBarButtonItem, reloadStopBarButtonItem, flexspaceBarButtonItem], animated: false)
-            navigationItem.rightBarButtonItems = additionalBarButtonItems
+            navigationItem.rightBarButtonItems = additionalBarButtonItems + [parseHTMLBarButtonItem]
         }
         else {
-            navigationItem.rightBarButtonItems = additionalBarButtonItems + [reloadStopBarButtonItem, navForwardBarButtonItem, navBackBarButtonItem]
+            navigationController?.toolbar.setItems([], animated: false)
+            navigationController?.setToolbarHidden(true, animated: false)
+            navigationItem.rightBarButtonItems = additionalBarButtonItems + [parseHTMLBarButtonItem, reloadStopBarButtonItem, navForwardBarButtonItem, navBackBarButtonItem]
         }
     }
 
@@ -102,6 +117,7 @@ class WebViewController: UIViewController {
         reloadStopBarButtonItem = UIBarButtonItem(image: UIImage.stopButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(reloadOrStop(_:)))
         navBackBarButtonItem = UIBarButtonItem(image: UIImage.backButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(navBack(_:)))
         navForwardBarButtonItem = UIBarButtonItem(image: UIImage.forwardButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(navForward(_:)))
+        parseHTMLBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(fetchHTMLAndParse(_:)))
     }
 
     func reload() {
@@ -206,5 +222,54 @@ extension WebViewController {
 extension WebViewController: UIPopoverPresentationControllerDelegate {
     func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
         popoverPresentationController.barButtonItem = navigationItem.rightBarButtonItems?[0]
+    }
+}
+
+extension WebViewController {
+    @IBAction func fetchHTMLAndParse(_ sender: Any?) {
+        webView.evaluateJavaScript("document.body.innerHTML") { [weak self] (result, error) in
+            guard let self = self else { return }
+            if error == nil {
+                guard let html = result as? String else { return }
+                self.processHTML(html)
+            }
+        }
+    }
+
+    func processHTML(_ html: String) {
+        var validAddresses: [Link] = []
+        do {
+            let doc = try SwiftSoup.parse(html)
+            let links: [Link] = try doc.select("a").compactMap { e in
+                let href = try e.attr("href")
+                let loweredLink = href.lowercased()
+                if loweredLink.hasPrefix("magnet:?")
+                    || loweredLink.hasPrefix("ed2k://")
+                    || loweredLink.hasPrefix("thunder://")
+                    || loweredLink.hasPrefix("ftp://")
+                    || loweredLink.hasPrefix("ftps://")
+                    || loweredLink.hasPrefix("qqdl://")
+                    || loweredLink.hasPrefix("flashget://") {
+                    return Link(href)
+                }
+                else {
+                    return nil
+                }
+            }
+
+            validAddresses = links
+
+            if validAddresses.count == 0 {
+                Helper.shared.showNote(withMessage: NSLocalizedString("No downloadable link.", comment: "No downloadable link."), type:.warning)
+            }
+            else {
+                let linksViewController = BangumiViewController()
+                let bangumi = Bangumi(title: String(format: NSLocalizedString("Found %ld links", comment: "Found %ld links"), validAddresses.count), links: validAddresses)
+                linksViewController.bangumi = bangumi
+                navigationController?.pushViewController(linksViewController, animated: true)
+            }
+        } catch let error as NSError {
+            print("HTML Parse Error: \(error), \(error.userInfo)")
+        }
     }
 }

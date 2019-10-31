@@ -20,16 +20,14 @@ class MySplitViewController: UISplitViewController, UISplitViewControllerDelegat
              _ splitViewController: UISplitViewController,
              collapseSecondary secondaryViewController: UIViewController,
              onto primaryViewController: UIViewController) -> Bool {
+        preferredDisplayMode = .automatic
         return true
     }
 
     func splitViewController(_ svc: UISplitViewController, willChangeTo displayMode: UISplitViewController.DisplayMode) {
-        if displayMode == .primaryHidden {
-            preferredDisplayMode = .primaryHidden
-        }
-        else {
-            preferredDisplayMode = .allVisible
-        }
     }
 
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        preferredDisplayMode = .automatic
+    }
 }

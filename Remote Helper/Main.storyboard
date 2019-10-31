@@ -126,7 +126,7 @@
         <!--DYTT-->
         <scene sceneID="5vt-hf-q3P">
             <objects>
-                <splitViewController storyboardIdentifier="DYTTSplitViewController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="SLF-uC-ize" sceneMemberID="viewController">
+                <splitViewController storyboardIdentifier="DYTTSplitViewController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="SLF-uC-ize" customClass="MySplitViewController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="DYTT" image="tab_dytt" id="vpO-Bt-1WM"/>
                     <connections>
                         <segue destination="TDL-qg-ySQ" kind="relationship" relationship="masterViewController" id="ria-FU-YoN"/>
@@ -194,7 +194,7 @@
         <!--Torrents-->
         <scene sceneID="0z5-D3-kaa">
             <objects>
-                <splitViewController storyboardIdentifier="TorrentsSplitViewController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="OrK-bK-XHo" sceneMemberID="viewController">
+                <splitViewController storyboardIdentifier="TorrentsSplitViewController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="OrK-bK-XHo" customClass="MySplitViewController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Torrents" image="tab_torrents" id="gvi-kb-4Wa"/>
                     <connections>
                         <segue destination="QJ3-BQ-XxV" kind="relationship" relationship="masterViewController" id="LDd-OH-eRv"/>
@@ -283,7 +283,7 @@
         <!--Addresses-->
         <scene sceneID="fvm-wf-bid">
             <objects>
-                <splitViewController storyboardIdentifier="AddressesSplitViewController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="POv-ad-GRv" sceneMemberID="viewController">
+                <splitViewController storyboardIdentifier="AddressesSplitViewController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="POv-ad-GRv" customClass="MySplitViewController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Addresses" image="tab_cloud" id="C60-9n-TUA"/>
                     <connections>
                         <segue destination="VcP-dH-YOt" kind="relationship" relationship="masterViewController" id="8gk-vi-6j7"/>
@@ -384,8 +384,8 @@
         <image name="tab_torrents" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="P48-9K-jEi"/>
-        <segue reference="hk6-Hg-DmK"/>
+        <segue reference="87O-sE-POn"/>
+        <segue reference="08t-F3-UJX"/>
         <segue reference="qYs-Vh-AK0"/>
     </inferredMetricsTieBreakers>
 </document>

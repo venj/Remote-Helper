@@ -34,6 +34,7 @@
 		251B62B120FF7A080077FF2D /* Helper+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 251B62B020FF7A080077FF2D /* Helper+iOS.swift */; };
 		251C965121ABE94400DAD597 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 256EA4BD177D5F830081309B /* Localizable.strings */; };
 		251C965221ABE94900DAD597 /* PasscodeLock.strings in Resources */ = {isa = PBXBuildFile; fileRef = 255A7D2D1BEB904E00E6012B /* PasscodeLock.strings */; };
+		251CD7DB236B16DB0023CD34 /* MySplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 251CD7DA236B16DB0023CD34 /* MySplitViewController.swift */; };
 		251E0BC9218D56860067B78F /* Kingfisher+size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 251E0BC8218D56860067B78F /* Kingfisher+size.swift */; };
 		251F89972341D1DE008020E9 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 251F89962341D1DE008020E9 /* WebViewController.swift */; };
 		252D3C4B21AB9ADD005DDAFC /* SearchPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252D3C4A21AB9ADD005DDAFC /* SearchPage.swift */; };
@@ -110,6 +111,7 @@
 		2515E1B323600EDB001E2BF2 /* InAppSettingsKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = InAppSettingsKit.xcframework; sourceTree = "<group>"; };
 		2515E1B823601409001E2BF2 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/CoreServices.framework; sourceTree = DEVELOPER_DIR; };
 		251B62B020FF7A080077FF2D /* Helper+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Helper+iOS.swift"; sourceTree = "<group>"; };
+		251CD7DA236B16DB0023CD34 /* MySplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySplitViewController.swift; sourceTree = "<group>"; };
 		251E0BC8218D56860067B78F /* Kingfisher+size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Kingfisher+size.swift"; sourceTree = "<group>"; };
 		251F89962341D1DE008020E9 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		252D3C4A21AB9ADD005DDAFC /* SearchPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPage.swift; sourceTree = "<group>"; };
@@ -322,6 +324,7 @@
 				250354D01BE9911700E9F93A /* WebContentTableViewController.swift */,
 				250354CE1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift */,
 				254CBE4C1BE890210050A288 /* VPSearchResultController.swift */,
+				251CD7DA236B16DB0023CD34 /* MySplitViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -480,6 +483,7 @@
 				2506AA1D1E90E4070064EABB /* Bangumi.swift in Sources */,
 				2502ABE11BE6FE78004882FE /* Data+Base64.swift in Sources */,
 				2506AA191E90DD190064EABB /* ResourceSiteCatagoriesViewController.swift in Sources */,
+				251CD7DB236B16DB0023CD34 /* MySplitViewController.swift in Sources */,
 				25F94A621BE5E9FF009C9195 /* Dictionary+JSON.swift in Sources */,
 				2506AA231E90F5D40064EABB /* BangumiViewController.swift in Sources */,
 				252D3C4B21AB9ADD005DDAFC /* SearchPage.swift in Sources */,
@@ -634,7 +638,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 381;
+				CURRENT_PROJECT_VERSION = 390;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 32Y52676KN;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
@@ -643,7 +647,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.0;
+				MARKETING_VERSION = 4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.Video-Player";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "c649645a-2275-429b-831d-84429caabd7e";
@@ -668,7 +672,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 381;
+				CURRENT_PROJECT_VERSION = 390;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 32Y52676KN;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
@@ -677,7 +681,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.0;
+				MARKETING_VERSION = 4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.Video-Player";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "d29dfa3c-208e-4aab-ac00-6abda19ad156";

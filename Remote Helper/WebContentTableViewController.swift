@@ -35,8 +35,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         readAddresses()
         migrateOldStorageIfNecessary()
 
-        AppDelegate.shared.addressesSplitViewController?.delegate = self
-
         let defaults = UserDefaults.standard
         if !defaults.bool(forKey: ServerSetupDone) {
             self.showSettings()
@@ -407,18 +405,5 @@ extension WebContentTableViewController : UIViewControllerPreviewingDelegate {
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
         navigationController?.pushViewController(viewControllerToCommit, animated: false)
         (viewControllerToCommit as? WebViewController)?.isPeeking = false
-    }
-}
-
-extension WebContentTableViewController: UISplitViewControllerDelegate {
-    func splitViewController(_ splitViewController: UISplitViewController,
-                             collapseSecondary secondaryViewController: UIViewController,
-                             onto primaryViewController: UIViewController) -> Bool {
-        guard let navigationController = primaryViewController as? UINavigationController,
-            let controller = navigationController.topViewController as? WebContentTableViewController else {
-            return true
-        }
-
-        return controller.collapseDetailViewController
     }
 }

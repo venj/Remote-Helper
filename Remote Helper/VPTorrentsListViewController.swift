@@ -92,8 +92,6 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        AppDelegate.shared.torrentsSplitViewController?.delegate = self
-
         definesPresentationContext = true
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
@@ -490,18 +488,5 @@ extension VPTorrentsListViewController : UIViewControllerPreviewingDelegate {
         }
 
         (viewControllerToCommit as? MediaBrowser)?.reloadData()
-    }
-}
-
-extension VPTorrentsListViewController: UISplitViewControllerDelegate {
-    func splitViewController(_ splitViewController: UISplitViewController,
-                             collapseSecondary secondaryViewController: UIViewController,
-                             onto primaryViewController: UIViewController) -> Bool {
-        guard let navigationController = primaryViewController as? UINavigationController,
-            let controller = navigationController.topViewController as? VPTorrentsListViewController else {
-            return true
-        }
-
-        return controller.collapseDetailViewController
     }
 }

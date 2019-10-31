@@ -80,10 +80,6 @@ class VPSearchResultController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    override var prefersStatusBarHidden: Bool {
-        return UIDevice.current.userInterfaceIdiom == .phone && UIApplication.shared.statusBarOrientation.isLandscape
-    }
-
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setToolbarHidden(true, animated: true)

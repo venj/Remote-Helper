@@ -283,7 +283,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         settingsViewController.delegate = self
         settingsViewController.showCreditsFooter = false
         let settingsNavigationController = UINavigationController(rootViewController: settingsViewController)
-        if UIDevice.current.userInterfaceIdiom == .pad {
+        if view.traitCollection.horizontalSizeClass == .regular {
             settingsNavigationController.modalPresentationStyle = .pageSheet
         }
         DispatchQueue.main.async { [weak self] in

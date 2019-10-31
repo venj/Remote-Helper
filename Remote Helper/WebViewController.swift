@@ -101,9 +101,7 @@ class WebViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         webView?.stopLoading()
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            navigationController?.setToolbarHidden(true, animated: false)
-        }
+        navigationController?.setToolbarHidden(true, animated: false)
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {

@@ -271,7 +271,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         attachedProgressView.progress = progress
         mediaBrowser.navigationItem.rightBarButtonItems  = [kittenItem, hashItem]
 
-        let modeItem = AppDelegate.shared.addressesSplitViewController!.displayModeButtonItem
+        let modeItem = AppDelegate.shared.torrentsSplitViewController!.displayModeButtonItem
         mediaBrowser.navigationItem.leftBarButtonItem = modeItem
         mediaBrowser.navigationItem.leftItemsSupplementBackButton = true
     }

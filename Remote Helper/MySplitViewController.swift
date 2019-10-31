@@ -23,4 +23,13 @@ class MySplitViewController: UISplitViewController, UISplitViewControllerDelegat
         return true
     }
 
+    func splitViewController(_ svc: UISplitViewController, willChangeTo displayMode: UISplitViewController.DisplayMode) {
+        if displayMode == .primaryHidden {
+            preferredDisplayMode = .primaryHidden
+        }
+        else {
+            preferredDisplayMode = .allVisible
+        }
+    }
+
 }

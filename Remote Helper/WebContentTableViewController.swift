@@ -125,7 +125,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        print("Prepare segue.")
         if segue.identifier == "ShowAddressSegue" {
             if let nav = segue.destination as? UINavigationController,
                 let webViewController = nav.topViewController as? WebViewController,
@@ -249,6 +248,11 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             self.torrentSearch()
         }
         sheet.addAction(searchKittenAction)
+        let downloadMangetAction = UIAlertAction(title: NSLocalizedString("Download Magnet", comment: "Download Magnet"), style: .default) { [weak self] _ in
+            guard let `self` = self else { return }
+            self.addMagnet()
+        }
+        sheet.addAction(downloadMangetAction)
         let settingsAction = UIAlertAction(title: NSLocalizedString("Settings", comment: "Settings"), style: .default) { [weak self] _ in
             guard let `self` = self else { return }
             self.showSettings()
@@ -293,7 +297,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     func showTransmission() {
         if Helper.shared.showCellularHUD() { return }
         let link = Configuration.shared.transmissionServerAddress()
-        let transmissionWebViewController = WebViewController(urlString: link)
+        let transmissionWebViewController = TransmissionWebViewController(urlString: link)
         transmissionWebViewController.urlRequest?.cachePolicy = .reloadIgnoringLocalCacheData
         transmissionWebViewController.title = "Transmission"
         let transmissionNavigationController = UINavigationController(rootViewController: transmissionWebViewController)
@@ -301,6 +305,23 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             guard let `self` = self else { return }
             self.present(transmissionNavigationController, animated:true, completion: nil)
         }
+    }
+
+    func addMagnet() {
+        let alert = UIAlertController(title: NSLocalizedString("Download magnet", comment: "Download magnet"), message: NSLocalizedString("Please paste in a magnet address:", comment: "Please paste in a magnet address:"), preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.keyboardType = .URL
+            textField.clearButtonMode = .whileEditing
+            // TODO: Read pastboard.
+        }
+        let saveAction = UIAlertAction(title: NSLocalizedString("Download", comment:"Download"), style: .default) { _ in
+            let address = alert.textFields![0].text!
+            Helper.shared.transmissionDownload(for: address)
+        }
+        alert.addAction(saveAction)
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
     }
 
     //MARK: - Helper

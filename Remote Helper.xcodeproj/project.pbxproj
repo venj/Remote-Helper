@@ -58,7 +58,6 @@
 		2575F5711E97B2B7004B4D1E /* NSData+iconv.m in Sources */ = {isa = PBXBuildFile; fileRef = 2575F56E1E97B2B7004B4D1E /* NSData+iconv.m */; };
 		2575F5721E97B2B7004B4D1E /* iconv_wrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = 2575F5701E97B2B7004B4D1E /* iconv_wrapper.c */; };
 		2575F5751E97B359004B4D1E /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2575F5741E97B359004B4D1E /* libiconv.tbd */; };
-		2577FE34236708D300BFEC1D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2577FE33236708D300BFEC1D /* Main.storyboard */; };
 		25782C081FD7C77300BD2E6C /* Remote-Helper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 25782C061FD7C77200BD2E6C /* Remote-Helper.xcdatamodeld */; };
 		2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2581D48717544A4C00EF3867 /* InAppSettings.bundle */; };
 		258CD0101A3B28B400B3EB55 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 258CD00F1A3B28B400B3EB55 /* Images.xcassets */; };
@@ -68,6 +67,9 @@
 		25B0AA7417537B2D00141B0E /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA7317537B2D00141B0E /* MediaPlayer.framework */; };
 		25B0AA7A1753A66C00141B0E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0AA791753A66C00141B0E /* SystemConfiguration.framework */; };
 		25B22FE52354A49400F9DFC6 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 25B22FE42354A49400F9DFC6 /* Alamofire */; };
+		25B91D0423752A48005AF0E8 /* ResourceWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B91D0323752A48005AF0E8 /* ResourceWebViewController.swift */; };
+		25B91D0623752D75005AF0E8 /* TransmissionWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B91D0523752D75005AF0E8 /* TransmissionWebViewController.swift */; };
+		25B91D0723753F65005AF0E8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25B91D0923753F65005AF0E8 /* Main.storyboard */; };
 		25C478D11FDFA61400AA8958 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C478D01FDFA61400AA8958 /* Configuration.swift */; };
 		25C8BF151BF243AB00CAC32E /* UITabBarController+StatusBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C8BF141BF243AB00CAC32E /* UITabBarController+StatusBarStyle.swift */; };
 		25F2962E2350DDFE00AB782A /* UIImage+BarButtonItemIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F2962D2350DDFE00AB782A /* UIImage+BarButtonItemIcon.swift */; };
@@ -141,7 +143,6 @@
 		2575F56F1E97B2B7004B4D1E /* iconv_wrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iconv_wrapper.h; sourceTree = "<group>"; };
 		2575F5701E97B2B7004B4D1E /* iconv_wrapper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = iconv_wrapper.c; sourceTree = "<group>"; };
 		2575F5741E97B359004B4D1E /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
-		2577FE33236708D300BFEC1D /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		25782C071FD7C77300BD2E6C /* Remote-Helper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Remote-Helper.xcdatamodel"; sourceTree = "<group>"; };
 		2581D48717544A4C00EF3867 /* InAppSettings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = InAppSettings.bundle; sourceTree = "<group>"; };
 		258CD00F1A3B28B400B3EB55 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -151,6 +152,10 @@
 		25B0AA7317537B2D00141B0E /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		25B0AA791753A66C00141B0E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		25B91D0323752A48005AF0E8 /* ResourceWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceWebViewController.swift; sourceTree = "<group>"; };
+		25B91D0523752D75005AF0E8 /* TransmissionWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransmissionWebViewController.swift; sourceTree = "<group>"; };
+		25B91D0823753F65005AF0E8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		25B91D0B23753F6C005AF0E8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		25C478D01FDFA61400AA8958 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		25C8BF141BF243AB00CAC32E /* UITabBarController+StatusBarStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITabBarController+StatusBarStyle.swift"; sourceTree = "<group>"; };
 		25F2962D2350DDFE00AB782A /* UIImage+BarButtonItemIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+BarButtonItemIcon.swift"; sourceTree = "<group>"; };
@@ -235,7 +240,7 @@
 		252DFA861753784400FF8199 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				2577FE33236708D300BFEC1D /* Main.storyboard */,
+				25B91D0923753F65005AF0E8 /* Main.storyboard */,
 				258CD00F1A3B28B400B3EB55 /* Images.xcassets */,
 				2538A19C21789BD7000AA2C0 /* Launch Screen.xib */,
 				25650A41235F575A00B314C3 /* PasscodeLockView.xib */,
@@ -320,6 +325,8 @@
 			isa = PBXGroup;
 			children = (
 				251F89962341D1DE008020E9 /* WebViewController.swift */,
+				25B91D0323752A48005AF0E8 /* ResourceWebViewController.swift */,
+				25B91D0523752D75005AF0E8 /* TransmissionWebViewController.swift */,
 				25F2962D2350DDFE00AB782A /* UIImage+BarButtonItemIcon.swift */,
 				250354D01BE9911700E9F93A /* WebContentTableViewController.swift */,
 				250354CE1BE8FDBD00E9F93A /* VPTorrentsListViewController.swift */,
@@ -439,7 +446,7 @@
 				251C965121ABE94400DAD597 /* Localizable.strings in Resources */,
 				252DFA8A1753784400FF8199 /* InfoPlist.strings in Resources */,
 				258CD0101A3B28B400B3EB55 /* Images.xcassets in Resources */,
-				2577FE34236708D300BFEC1D /* Main.storyboard in Resources */,
+				25B91D0723753F65005AF0E8 /* Main.storyboard in Resources */,
 				25650A42235F575A00B314C3 /* PasscodeLockView.xib in Resources */,
 				251C965221ABE94900DAD597 /* PasscodeLock.strings in Resources */,
 				2581D48817544A4C00EF3867 /* InAppSettings.bundle in Resources */,
@@ -487,6 +494,7 @@
 				25F94A621BE5E9FF009C9195 /* Dictionary+JSON.swift in Sources */,
 				2506AA231E90F5D40064EABB /* BangumiViewController.swift in Sources */,
 				252D3C4B21AB9ADD005DDAFC /* SearchPage.swift in Sources */,
+				25B91D0623752D75005AF0E8 /* TransmissionWebViewController.swift in Sources */,
 				251F89972341D1DE008020E9 /* WebViewController.swift in Sources */,
 				2506AA1B1E90E2F90064EABB /* Extensions.swift in Sources */,
 				2502ABEA1BE73AB7004882FE /* String+Path.swift in Sources */,
@@ -495,6 +503,7 @@
 				255A7D251BEB8DC700E6012B /* PasscodeLockConfiguration.swift in Sources */,
 				2502ABDF1BE6FBEC004882FE /* String+Base64.swift in Sources */,
 				25782C081FD7C77300BD2E6C /* Remote-Helper.xcdatamodeld in Sources */,
+				25B91D0423752A48005AF0E8 /* ResourceWebViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -528,6 +537,15 @@
 			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
+		25B91D0923753F65005AF0E8 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				25B91D0823753F65005AF0E8 /* Base */,
+				25B91D0B23753F6C005AF0E8 /* zh-Hans */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -558,6 +576,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -609,6 +628,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -638,7 +658,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 391;
+				CURRENT_PROJECT_VERSION = 392;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 32Y52676KN;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
@@ -647,7 +667,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.1.1;
+				MARKETING_VERSION = 4.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.Video-Player";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "c649645a-2275-429b-831d-84429caabd7e";
@@ -672,7 +692,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 391;
+				CURRENT_PROJECT_VERSION = 392;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 32Y52676KN;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
@@ -681,7 +701,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.1.1;
+				MARKETING_VERSION = 4.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.Video-Player";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "d29dfa3c-208e-4aab-ac00-6abda19ad156";

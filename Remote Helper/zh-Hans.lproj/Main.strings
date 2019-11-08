@@ -1,0 +1,36 @@
+/* Class = "UINavigationItem"; title = "Media Browser"; ObjectID = "5rv-ZO-s9V"; */
+"5rv-ZO-s9V.title" = "图片浏览";
+
+/* Class = "UINavigationItem"; title = "Torrents"; ObjectID = "6fa-zh-yOh"; */
+"6fa-zh-yOh.title" = "种子";
+
+/* Class = "UINavigationItem"; title = "DYTT"; ObjectID = "aic-3P-OoN"; */
+"aic-3P-OoN.title" = "电影天堂";
+
+/* Class = "UITabBarItem"; title = "Addresses"; ObjectID = "C60-9n-TUA"; */
+"C60-9n-TUA.title" = "地址";
+
+/* Class = "UITabBarItem"; title = "Torrents"; ObjectID = "gvi-kb-4Wa"; */
+"gvi-kb-4Wa.title" = "种子";
+
+/* Class = "UINavigationItem"; title = "Web"; ObjectID = "IiF-NN-iMM"; */
+"IiF-NN-iMM.title" = "网页";
+
+/* Class = "UINavigationItem"; title = "Addresses"; ObjectID = "Jug-BD-6Ug"; */
+"Jug-BD-6Ug.title" = "地址";
+
+/* Class = "UINavigationItem"; title = "Category"; ObjectID = "Oc5-dB-2wB"; */
+"Oc5-dB-2wB.title" = "分类";
+
+/* Class = "UIBarButtonItem"; title = "More"; ObjectID = "Tvb-Gm-65K"; */
+"Tvb-Gm-65K.title" = "更多";
+
+/* Class = "UITabBarItem"; title = "DYTT"; ObjectID = "vpO-Bt-1WM"; */
+"vpO-Bt-1WM.title" = "电影天堂";
+
+/* Class = "UINavigationItem"; title = "Bangumi"; ObjectID = "WKF-Kl-raK"; */
+"WKF-Kl-raK.title" = "节目";
+
+/* Class = "UINavigationItem"; title = "Bangumi"; ObjectID = "Y9W-EJ-uil"; */
+"Y9W-EJ-uil.title" = "节目";
+

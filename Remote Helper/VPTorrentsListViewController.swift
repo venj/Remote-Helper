@@ -200,6 +200,11 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
                 // Update currentSelectedTitle
                 let list = !searchController.isActive ? dateList : filteredDateList
                 currentSelectedTitle = list[indexPath.row]
+                if Helper.shared.showCellularHUD() { return }
+                if let cell = tableView.cellForRow(at: indexPath), let title = cell.textLabel?.text {
+                    cell.textLabel?.textColor = UIColor.gray
+                    viewedTitles.insert(title)
+                }
 
                 pb.delegate = self
                 pb.displayActionButton = false
@@ -235,6 +240,11 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
             if let i = Int((alertController.textFields?[0].text)!) { index = i }
             if index < 1 { index = 1 }
             if index > self.photos.count { index = self.photos.count }
+            if let cell = tableView.cellForRow(at: indexPath), let title = cell.textLabel?.text {
+                cell.textLabel?.textColor = UIColor.gray
+                self.viewedTitles.insert(title)
+            }
+            // self.tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
             self.showPhotoBrowser(forIndexPath: indexPath, initialPhotoIndex: index - 1)
         }
         alertController.addAction(okAction)
@@ -328,6 +338,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
                 self.mwPhotos.forEach {
                     $0.loadUnderlyingImageAndNotify();
                 }
+                // FIXME: Prepare for segue not executed.
                 self.performSegue(withIdentifier: "ShowTorrentsSegue", sender: nil)
             }
             else {
@@ -337,6 +348,10 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     }
 
     @IBAction func loadTorrentList(_ sender: Any?) {
+        if !Configuration.shared.hasTorrentServer {
+            Helper.shared.showNote(withMessage: NSLocalizedString("No server configuration found.", comment: "No server configuration found."), type:.error)
+            return
+        }
         if Helper.shared.showCellularHUD() { return }
         Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
         navigationItem.rightBarButtonItem?.isEnabled = false

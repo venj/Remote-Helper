@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="B4O-Zl-KdQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="B4O-Zl-KdQ">
     <device id="ipad9_7" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -208,7 +208,7 @@
         <!--Web-->
         <scene sceneID="zaE-Uj-utc">
             <objects>
-                <viewController storyboardIdentifier="WebViewController" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="07M-kM-gi5" customClass="WebViewController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WebViewController" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="07M-kM-gi5" customClass="ResourceWebViewController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="mrm-RR-Kn6">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -216,6 +216,9 @@
                         <viewLayoutGuide key="safeArea" id="mgi-Tn-37Z"/>
                     </view>
                     <navigationItem key="navigationItem" title="Web" id="IiF-NN-iMM"/>
+                    <connections>
+                        <segue destination="B3D-SW-1eh" kind="show" identifier="showBangumiFromWebPageSegue" id="8AE-S3-OG8"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lcc-it-94A" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -375,7 +378,36 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wVq-1y-XCA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="203" y="1853"/>
+            <point key="canvasLocation" x="187" y="1853"/>
+        </scene>
+        <!--Bangumi-->
+        <scene sceneID="goE-0u-BmX">
+            <objects>
+                <tableViewController hidesBottomBarWhenPushed="YES" id="B3D-SW-1eh" customClass="BangumiViewController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="5Am-S1-t8j">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="BangumiTableCell" id="jJ9-Li-BKq">
+                                <rect key="frame" x="0.0" y="28" width="768" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="jJ9-Li-BKq" id="chi-dI-fmE">
+                                    <rect key="frame" x="0.0" y="0.0" width="737" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="B3D-SW-1eh" id="Sxs-Gf-Ggk"/>
+                            <outlet property="delegate" destination="B3D-SW-1eh" id="Z5Y-7l-CWZ"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Bangumi" id="WKF-Kl-raK"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="U9M-4P-CYd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1106" y="-889"/>
         </scene>
     </scenes>
     <resources>
@@ -384,7 +416,7 @@
         <image name="tab_torrents" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="87O-sE-POn"/>
+        <segue reference="P48-9K-jEi"/>
         <segue reference="08t-F3-UJX"/>
         <segue reference="qYs-Vh-AK0"/>
     </inferredMetricsTieBreakers>

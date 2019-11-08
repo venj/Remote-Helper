@@ -1,35 +1,42 @@
-/*
- PasscodeLock.strings
- PasscodeLock
+/* Touch ID Fallback Button */
+"PasscodeLockBiometricAuthButton" = "输入密码";
 
- Created by Yanko Dimitrov on 8/28/15.
- Copyright (c) 2015 Yanko Dimitrov. All rights reserved.
- */
+/* (No Comment) */
+"PasscodeLockBiometricAuthReason" = "继续操作需要验证您的指纹或面容信息";
 
-/* Enter Passcode State */
-"PasscodeLockEnterTitle" = "输入密码";
-"PasscodeLockEnterDescription" = "输入密码以保护您的隐私信息。";
-
-/* Set Passcode State */
-"PasscodeLockSetTitle" = "输入一个密码";
-"PasscodeLockSetDescription" = "选择您的密码。";
-
-/* Confirm Passcode State */
-"PasscodeLockConfirmTitle" = "确认密码";
-"PasscodeLockConfirmDescription" = "请再次输入密码。";
+/* (No Comment) */
+"PasscodeLockChangeDescription" = "请输入您的旧密码。";
 
 /* Change Passcode State */
 "PasscodeLockChangeTitle" = "输入旧密码";
-"PasscodeLockChangeDescription" = "请输入您的旧密码。";
+
+/* (No Comment) */
+"PasscodeLockConfirmDescription" = "请再次输入密码。";
+
+/* Confirm Passcode State */
+"PasscodeLockConfirmTitle" = "确认密码";
+
+/* (No Comment) */
+"PasscodeLockEnterDescription" = "输入密码以保护您的隐私信息。";
+
+/* Enter Passcode State */
+"PasscodeLockEnterTitle" = "输入密码";
+
+/* (No Comment) */
+"PasscodeLockFaceIDReason" = "继续操作需要验证您的面容信息";
+
+/* (No Comment) */
+"PasscodeLockMismatchDescription" = "两次输入的密码不一致。";
 
 /* Passcode Mismatch State */
 "PasscodeLockMismatchTitle" = "请重试";
-"PasscodeLockMismatchDescription" = "两次输入的密码不一致。";
+
+/* (No Comment) */
+"PasscodeLockSetDescription" = "选择您的密码。";
+
+/* Set Passcode State */
+"PasscodeLockSetTitle" = "输入一个密码";
 
 /* Touch ID Reason */
 "PasscodeLockTouchIDReason" = "继续操作需要验证您的指纹信息";
-"PasscodeLockFaceIDReason" = "继续操作需要验证您的面容信息";
-"PasscodeLockBiometricAuthReason" = "继续操作需要验证您的指纹或面容信息";
 
-/* Touch ID Fallback Button */
-"PasscodeLockBiometricAuthButton" = "输入密码";

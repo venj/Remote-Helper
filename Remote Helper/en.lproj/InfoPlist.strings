@@ -1,3 +1,6 @@
 /* Localized versions of Info.plist keys */
-
 "CFBundleDisplayName" = "Remote Helper";
+
+/* Bundle name */
+"CFBundleName" = "Remote Helper";
+

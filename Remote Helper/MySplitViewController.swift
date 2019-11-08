@@ -16,6 +16,7 @@ class MySplitViewController: UISplitViewController, UISplitViewControllerDelegat
         self.preferredDisplayMode = .allVisible
     }
 
+    #if !targetEnvironment(macCatalyst)
     func splitViewController(
              _ splitViewController: UISplitViewController,
              collapseSecondary secondaryViewController: UIViewController,
@@ -30,4 +31,5 @@ class MySplitViewController: UISplitViewController, UISplitViewControllerDelegat
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         preferredDisplayMode = .automatic
     }
+    #endif
 }

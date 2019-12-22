@@ -13,11 +13,7 @@ class MySplitViewController: UISplitViewController, UISplitViewControllerDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         self.delegate = self
-        #if targetEnvironment(macCatalyst)
         self.preferredDisplayMode = .allVisible
-        #else
-        self.preferredDisplayMode = .automatic
-        #endif
     }
 
     #if !targetEnvironment(macCatalyst)

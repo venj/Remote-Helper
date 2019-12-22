@@ -15,6 +15,8 @@ class MySplitViewController: UISplitViewController, UISplitViewControllerDelegat
         self.delegate = self
         #if targetEnvironment(macCatalyst)
         self.preferredDisplayMode = .allVisible
+        #else
+        self.preferredDisplayMode = .automatic
         #endif
     }
 

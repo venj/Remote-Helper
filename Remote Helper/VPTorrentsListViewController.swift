@@ -274,8 +274,8 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
 
     func didDisplayMedia(at index: Int, in mediaBrowser: MediaBrowser) {
         currentPhotoIndex = index
-        if !navigationController!.view.subviews.contains(attachedProgressView) {
-            attachProgressView(to: navigationController!.view)
+        if !mediaBrowser.view.subviews.contains(attachedProgressView) {
+            attachProgressView(to: mediaBrowser.view)
         }
         let progress = Float(index + 1) / Float(photos.count)
         attachedProgressView.progress = progress

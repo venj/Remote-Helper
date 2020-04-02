@@ -277,7 +277,7 @@ Allow Use Cellular Network | 允许手机网络下使用
 ## 版权许可
 
 [The MIT License (MIT)](http://opensource.org/licenses/MIT)
-Copyright (c) 2013 venj
+Copyright (c) 2013-2020 venj
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

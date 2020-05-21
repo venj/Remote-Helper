@@ -32,18 +32,18 @@ class WebViewController: UIViewController {
         super.init(nibName: nibName, bundle: bundle)
     }
 
-    convenience init(urlString: String) {
+    convenience init(urlString: String?) {
         self.init(nibName: nil, bundle: nil)
-        self.urlString = urlString
-        self.url = URL(string: urlString)
-        if let url = self.url {
-            self.urlRequest = URLRequest(url: url)
+        defer {
+            self.urlString = urlString
         }
     }
 
-    convenience init(url: URL) {
+    convenience init(url: URL?) {
         self.init(nibName: nil, bundle: nil)
-        self.urlString = url.absoluteString
+        defer {
+            self.urlString = url?.absoluteString
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -156,6 +156,9 @@ extension WebViewController : WKNavigationDelegate {
             self.reloadStopBarButtonItem.image = UIImage.refreshButtonIcon()
             self.navBackBarButtonItem.isEnabled = webView.canGoBack
             self.navForwardBarButtonItem.isEnabled = webView.canGoForward
+            DispatchQueue.main.after(0.05) { [weak self] in
+                self?.webView.layoutSubviews()
+            }
         }
     }
 

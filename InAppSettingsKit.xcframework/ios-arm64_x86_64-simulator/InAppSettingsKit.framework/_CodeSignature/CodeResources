@@ -78,7 +78,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		gHLUMFwxmoECiWzldLowc0jOXNs=
+		rOup44m2MR5JkfInhAI6aqPGPB8=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -287,10 +287,6 @@
 	<dict>
 		<key>Base.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			vXopMdncbvoWgboOpeSGhcsDoS0=
-			</data>
 			<key>hash2</key>
 			<data>
 			3yd5YNtT/lQQM0lGYHNlCwITVWqLGkIfbuDn6NfYRVM=
@@ -298,10 +294,6 @@
 		</dict>
 		<key>Headers/IASKAppSettingsViewController.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			hnAwjVaPwq8czrQyEAuikvBzmho=
-			</data>
 			<key>hash2</key>
 			<data>
 			GHIopmtvCkw7YNI40hhpX1RKKmZnkQaUqLcrdZGBL6I=
@@ -309,10 +301,6 @@
 		</dict>
 		<key>Headers/IASKAppSettingsWebViewController.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			q6oLcrZNUN39CN7HJiWQgnPWFjQ=
-			</data>
 			<key>hash2</key>
 			<data>
 			uh+NIpYsQKZ5e6CEBVwUwVJYkQBs1cQCHDnoCUwZoMg=
@@ -320,10 +308,6 @@
 		</dict>
 		<key>Headers/IASKPSSliderSpecifierViewCell.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			YESo1bd98URCWpWJ5ojuFT0EYc0=
-			</data>
 			<key>hash2</key>
 			<data>
 			CJ1qj2So/UibCDX2HPzrgDEVbfJXXpKHlpLf4bAzEro=
@@ -331,10 +315,6 @@
 		</dict>
 		<key>Headers/IASKPSTextFieldSpecifierViewCell.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			R1+H9Bq2PDTv1KE2dTOS9MwFGqM=
-			</data>
 			<key>hash2</key>
 			<data>
 			1K3lnwOxIuKTiTwbjJF5xbdqNSid2rJZwk9VcqVW4ts=
@@ -342,10 +322,6 @@
 		</dict>
 		<key>Headers/IASKSettingsReader.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			Xfb0RiUvRBKXv8J6t2fIpNdpd1Q=
-			</data>
 			<key>hash2</key>
 			<data>
 			dZxfsHH4E7ap6u4TXs1j3kRw8qgo32qYfqssGjluEZw=
@@ -353,10 +329,6 @@
 		</dict>
 		<key>Headers/IASKSettingsStore.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			nElSR8seIoqMa3/9bvSBL5yYnXg=
-			</data>
 			<key>hash2</key>
 			<data>
 			k01znft8yfB/I8i/kw+/zd2B7rwjpVkEGoAJ/KrfiI8=
@@ -364,10 +336,6 @@
 		</dict>
 		<key>Headers/IASKSettingsStoreFile.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			4wO59eGKSpDd7uNSy8N79DWojmw=
-			</data>
 			<key>hash2</key>
 			<data>
 			ioe+dHXXrWB/gyfInXssj2TaWcbocVWQWumxjnDYs3Q=
@@ -375,10 +343,6 @@
 		</dict>
 		<key>Headers/IASKSettingsStoreUserDefaults.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			r0CAObykozHgiZNqxrKFXQI/dOQ=
-			</data>
 			<key>hash2</key>
 			<data>
 			BYPjOJez4pJQB7u/iXGfEd2+LWEm5n8zmzj4fwJYk3Y=
@@ -386,10 +350,6 @@
 		</dict>
 		<key>Headers/IASKSlider.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			0bV7cB/5c5ZNT6yz1hq7YpeqkFo=
-			</data>
 			<key>hash2</key>
 			<data>
 			nZuyXU40tuvC5vQlBc5rZFHrvFLdSMVBf0gyveMHobg=
@@ -397,10 +357,6 @@
 		</dict>
 		<key>Headers/IASKSpecifier.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			ORjMTHSR7tzuWAvrfaDtXpUMXCQ=
-			</data>
 			<key>hash2</key>
 			<data>
 			YZN61dG/2hjnBLWSYQk9FNm+AS7Nyc/zK6hell6q4Es=
@@ -408,10 +364,6 @@
 		</dict>
 		<key>Headers/IASKSpecifierValuesViewController.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			ODDeKxWc9gBhY/CsszgXOlSv0oE=
-			</data>
 			<key>hash2</key>
 			<data>
 			UGUSRMdVJgXZ0Xt1O4L4Hyizc7whTm9dVx85qizThes=
@@ -419,10 +371,6 @@
 		</dict>
 		<key>Headers/IASKSwitch.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			NFW+sLjRTVEBEwMiyApf5rxz3Qc=
-			</data>
 			<key>hash2</key>
 			<data>
 			VheFoGd7r/kdWpZBOYZUbPkGeAlvnXQXhVJBQ/KxoiM=
@@ -430,10 +378,6 @@
 		</dict>
 		<key>Headers/IASKTextField.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			29osqtyssxyFqDDsSZdM0CHPOVM=
-			</data>
 			<key>hash2</key>
 			<data>
 			ZaJwplRbeZrZhViQ13p6fdkrO3zWQU683iDf/xc8g34=
@@ -441,10 +385,6 @@
 		</dict>
 		<key>Headers/IASKTextView.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			UGo259804JHT6/Cpzi5o1EgTm5g=
-			</data>
 			<key>hash2</key>
 			<data>
 			KmyAE9ul+fSGqm2gr520BGknO0VxKLVR/fHKdJ9czZs=
@@ -452,10 +392,6 @@
 		</dict>
 		<key>Headers/IASKTextViewCell.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			Xi6ptSfYuY/tA1hcDwlPUYaz+58=
-			</data>
 			<key>hash2</key>
 			<data>
 			uTspWGhp+nGWyC1iV3X+WXk6bXsO8znAET3v7PgByBA=
@@ -463,10 +399,6 @@
 		</dict>
 		<key>Headers/IASKViewController.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			yYKpHauiZZ/RXOZaBwAXfJoE3z8=
-			</data>
 			<key>hash2</key>
 			<data>
 			0vzROEPlA9Z04HITRU2JgpzBk4L9RI6Z1zZlMrLkS10=
@@ -474,10 +406,6 @@
 		</dict>
 		<key>Headers/InAppSettingsKit.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			I5GxBoHzDNS73ri8UpE7NUa4ESA=
-			</data>
 			<key>hash2</key>
 			<data>
 			96eaffezKJ7te/g/RJ4Sn9DJOQOyhuRpAG+mTnDpSFY=
@@ -485,10 +413,6 @@
 		</dict>
 		<key>Modules/module.modulemap</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			2tE9gVrU6VmS2eUaobIAxalF0aU=
-			</data>
 			<key>hash2</key>
 			<data>
 			M2+GnKbgoHF+vFhP6u5wv2eI7UT14IhkrPuZnqegxjU=
@@ -496,10 +420,6 @@
 		</dict>
 		<key>ca.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			LQd2VR0jKIjjHcmIa8e6Pn6ux8s=
-			</data>
 			<key>hash2</key>
 			<data>
 			GN1wUgjVcR8b+YDlXw3zDOQTwlZWfaoLFswvC0+DQDs=
@@ -509,10 +429,6 @@
 		</dict>
 		<key>de.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			violAH9m/THqg0w9ShgBY/r4Q9o=
-			</data>
 			<key>hash2</key>
 			<data>
 			/9DZZ4mh6z4rgQpSADZwP8p02SbcKz1JGK2Q61Pkg88=
@@ -522,10 +438,6 @@
 		</dict>
 		<key>el.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			95HROAeT4G62CT1kgeJj8+CkoTA=
-			</data>
 			<key>hash2</key>
 			<data>
 			lZQZjiI5LmsXJCAzC0c6o310ADDXNEF46wIaTUAUHyg=
@@ -535,10 +447,6 @@
 		</dict>
 		<key>en.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			vXopMdncbvoWgboOpeSGhcsDoS0=
-			</data>
 			<key>hash2</key>
 			<data>
 			3yd5YNtT/lQQM0lGYHNlCwITVWqLGkIfbuDn6NfYRVM=
@@ -548,10 +456,6 @@
 		</dict>
 		<key>es.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			3Sgs9VieABZZ36QZDopMaAZDkN4=
-			</data>
 			<key>hash2</key>
 			<data>
 			SsDTb1XVGEWhxfIi1bzoawC+HC3sBM0Aota+NKWHl/E=
@@ -561,10 +465,6 @@
 		</dict>
 		<key>fr.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			1xI/RvnrigMouQvaNtDiS8jY2AY=
-			</data>
 			<key>hash2</key>
 			<data>
 			k0iL1jkUkLbatZeTnNfhfCSBfcbEg9fU5luhgWay70I=
@@ -574,10 +474,6 @@
 		</dict>
 		<key>hr.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			4jqqlmk/nnJZ6S0lQwQw8/R+eDU=
-			</data>
 			<key>hash2</key>
 			<data>
 			8CtS3yWOD4/2X2CTMPq3lXPEzXuvRat7DsPQix1pWSs=
@@ -587,10 +483,6 @@
 		</dict>
 		<key>hu.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			mu20qKOiyH6B9BOK6lBMiXV4t7M=
-			</data>
 			<key>hash2</key>
 			<data>
 			Hfk5jjQAy17R+xish0b4gD7WTOyR2LSMQCpcWNFnMds=
@@ -600,10 +492,6 @@
 		</dict>
 		<key>it.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			vRzapbI8TxF7MwvzsNgW3uAtCPc=
-			</data>
 			<key>hash2</key>
 			<data>
 			YaGKUfhpD3rrpacFm710NbivhIRckq8CxjnSCSVcWmU=
@@ -613,10 +501,6 @@
 		</dict>
 		<key>ja.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			b9aBczjnLuda8dW8f8H29uJlrsY=
-			</data>
 			<key>hash2</key>
 			<data>
 			hQwa5yJ7HkHbApkCJfpJi9yR+pfUEjRUmawb/hsPonk=
@@ -626,10 +510,6 @@
 		</dict>
 		<key>nb.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			CkSNBk+6LwDZRTd0OeWNqad/O5I=
-			</data>
 			<key>hash2</key>
 			<data>
 			XZx7qDkH7Kozs1s/UVJdLx2eor2gLnkVvKJlzopEQIA=
@@ -639,10 +519,6 @@
 		</dict>
 		<key>nl.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			qHZuRh4pU9u1kwLt1o+hbDrj94Q=
-			</data>
 			<key>hash2</key>
 			<data>
 			nRXfIDix6EO7t8gBNejYkW8H1S8NQXp+4d1D5wXxo+s=
@@ -652,10 +528,6 @@
 		</dict>
 		<key>pl.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			9/gk2aL2aSN3247BbplHT6CIxt4=
-			</data>
 			<key>hash2</key>
 			<data>
 			CKwZzGdGLlHOSO/i9wHuS+T70PWeC208hmcKth+/0MY=
@@ -665,10 +537,6 @@
 		</dict>
 		<key>pt-PT.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			3aBEf3CASoOCdTZvljiI1qGnDgI=
-			</data>
 			<key>hash2</key>
 			<data>
 			UiyMpyaeRFjbT3/DFHouYUo8T8gIg/tNr9Ee5mwJuRA=
@@ -678,10 +546,6 @@
 		</dict>
 		<key>pt.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			q3P90X5rwcNLfGLxnQpjLfbGl3c=
-			</data>
 			<key>hash2</key>
 			<data>
 			rPTXztPwNGj4pHWM/ZifiUH7JJsRWK8/PSauBesnUh8=
@@ -691,10 +555,6 @@
 		</dict>
 		<key>ru.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			uANeYdt3pYE+PCROFUrIvedtNQo=
-			</data>
 			<key>hash2</key>
 			<data>
 			2mSsXEPhHNwvq3gRw3xsH7X2E8PNRy0c0sZ4IXeFNs8=
@@ -704,10 +564,6 @@
 		</dict>
 		<key>sv.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			vhw6X8hev3MLXFHRCjddK6/4V2M=
-			</data>
 			<key>hash2</key>
 			<data>
 			UbkPL4DTOUGNbhukYI29ydUc3tZXtm2cVDyeW0z9hec=
@@ -717,10 +573,6 @@
 		</dict>
 		<key>th.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			k79CkPNfdJscyi1pQ14DQsAVbfw=
-			</data>
 			<key>hash2</key>
 			<data>
 			ST93/kiO0gaPYP5Z9ily41LsPLqYYMBub5L+nUdb+sQ=
@@ -730,10 +582,6 @@
 		</dict>
 		<key>tr.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			qwNx4a7FJo6D93j0rnLgAYL4wTc=
-			</data>
 			<key>hash2</key>
 			<data>
 			yW/S4yx1azss80KJ9xDwnJsR3cNE6weR2KaR9840zvU=
@@ -743,10 +591,6 @@
 		</dict>
 		<key>uk.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			rUIk9XNYYyeBhUhgHju5jPVVmtE=
-			</data>
 			<key>hash2</key>
 			<data>
 			45I1L13Jntie+r25+DQIWGt854hGEYwDwufWZZzlv3k=
@@ -756,10 +600,6 @@
 		</dict>
 		<key>zh-Hans.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			SA4nE51qKxDtk08R5YRtt2Hwhbs=
-			</data>
 			<key>hash2</key>
 			<data>
 			poLA+hnILbzA5h/IaRTBN7nu2k8ByzQpVNMpUwhl8zE=
@@ -769,10 +609,6 @@
 		</dict>
 		<key>zh-Hant.lproj/IASKLocalizable.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			dCcXhUzNZxZ1K6pV/ollatTdWJY=
-			</data>
 			<key>hash2</key>
 			<data>
 			v5JXoRNW7uQUCgNPsb7GZttyxxSUeZVKTpIfL/Ier7k=

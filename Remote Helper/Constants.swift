@@ -6,7 +6,7 @@
 //  Copyright © 2015 Home. All rights reserved.
 //
 
-let REQUEST_TIME_OUT = 10.0
+let REQUEST_TIME_OUT = 60.0
 let ServerHostKey = "kServerHostKey"
 let ServerPortKey = "kServerPortKey"
 let ServerPathKey = "kServerPathKey"

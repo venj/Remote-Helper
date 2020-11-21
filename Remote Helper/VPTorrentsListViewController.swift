@@ -94,7 +94,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
 
         definesPresentationContext = true
         searchController.searchResultsUpdater = self
-        searchController.dimsBackgroundDuringPresentation = false
+        searchController.obscuresBackgroundDuringPresentation = false
         let searchBar = searchController.searchBar
         searchBar.tintColor = .white
         searchBar.keyboardType = .numbersAndPunctuation

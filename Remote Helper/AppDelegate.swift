@@ -299,7 +299,11 @@ extension AppDelegate: NSToolbarDelegate {
 
 
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return [NSToolbarItem.Identifier(rawValue: "TabItemsGroup")]
+        if #available(macCatalyst 14.0, *) {
+            return [.primarySidebarTrackingSeparatorItemIdentifier, NSToolbarItem.Identifier(rawValue: "TabItemsGroup")]
+        } else {
+            return [NSToolbarItem.Identifier(rawValue: "TabItemsGroup")]
+        }
     }
 
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {

@@ -49,7 +49,6 @@
 		255A7D241BEB8DC700E6012B /* UserDefaultsPasscodeRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255A7D221BEB8DC700E6012B /* UserDefaultsPasscodeRepository.swift */; };
 		255A7D251BEB8DC700E6012B /* PasscodeLockConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255A7D231BEB8DC700E6012B /* PasscodeLockConfiguration.swift */; };
 		255A7D301BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255A7D2F1BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift */; };
-		25650A37235F09D000B314C3 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 25650A36235F09D000B314C3 /* Kingfisher */; };
 		25650A3A235F0B5F00B314C3 /* SwiftEntryKit in Frameworks */ = {isa = PBXBuildFile; productRef = 25650A39235F0B5F00B314C3 /* SwiftEntryKit */; };
 		25650A3D235F561800B314C3 /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = 25650A3C235F561800B314C3 /* Reachability */; };
 		25650A40235F568E00B314C3 /* PasscodeLock in Frameworks */ = {isa = PBXBuildFile; productRef = 25650A3F235F568E00B314C3 /* PasscodeLock */; };
@@ -170,7 +169,6 @@
 				2515E1B523600EE1001E2BF2 /* InAppSettingsKit.xcframework in Frameworks */,
 				25B0AA7A1753A66C00141B0E /* SystemConfiguration.framework in Frameworks */,
 				25B0AA7417537B2D00141B0E /* MediaPlayer.framework in Frameworks */,
-				25650A37235F09D000B314C3 /* Kingfisher in Frameworks */,
 				2515C5C62355CC5F00BFD49D /* MediaBrowser in Frameworks */,
 				252DFA801753784400FF8199 /* UIKit.framework in Frameworks */,
 				25650A40235F568E00B314C3 /* PasscodeLock in Frameworks */,
@@ -366,7 +364,6 @@
 				25B22FE42354A49400F9DFC6 /* Alamofire */,
 				251998442355BEB900DC080D /* SwiftSoup */,
 				2515C5C52355CC5F00BFD49D /* MediaBrowser */,
-				25650A36235F09D000B314C3 /* Kingfisher */,
 				25650A39235F0B5F00B314C3 /* SwiftEntryKit */,
 				25650A3C235F561800B314C3 /* Reachability */,
 				25650A3F235F568E00B314C3 /* PasscodeLock */,
@@ -420,7 +417,6 @@
 				25B22FE32354A49400F9DFC6 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				251998432355BEB900DC080D /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				2515C5C42355CC5F00BFD49D /* XCRemoteSwiftPackageReference "MediaBrowser" */,
-				25650A35235F09D000B314C3 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				25650A38235F0B5E00B314C3 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */,
 				25650A3B235F561800B314C3 /* XCRemoteSwiftPackageReference "Reachability" */,
 				25650A3E235F568E00B314C3 /* XCRemoteSwiftPackageReference "SwiftPasscodeLock" */,
@@ -656,7 +652,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 399;
+				CURRENT_PROJECT_VERSION = 400;
 				DEVELOPMENT_TEAM = 32Y52676KN;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = "Remote Helper/Remote Helper-Info.plist";
@@ -689,7 +685,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 399;
+				CURRENT_PROJECT_VERSION = 400;
 				DEVELOPMENT_TEAM = 32Y52676KN;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = "Remote Helper/Remote Helper-Info.plist";
@@ -751,14 +747,6 @@
 				minimumVersion = 2.2.1;
 			};
 		};
-		25650A35235F09D000B314C3 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/onevcat/Kingfisher";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.8.3;
-			};
-		};
 		25650A38235F0B5E00B314C3 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/huri000/SwiftEntryKit";
@@ -803,11 +791,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 251998432355BEB900DC080D /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
-		};
-		25650A36235F09D000B314C3 /* Kingfisher */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 25650A35235F09D000B314C3 /* XCRemoteSwiftPackageReference "Kingfisher" */;
-			productName = Kingfisher;
 		};
 		25650A39235F0B5F00B314C3 /* SwiftEntryKit */ = {
 			isa = XCSwiftPackageProductDependency;

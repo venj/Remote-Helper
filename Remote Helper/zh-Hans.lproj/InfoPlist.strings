@@ -4,3 +4,5 @@
 /* Bundle name */
 "CFBundleName" = "远程助手";
 
+/* NSFaceIDUsageDescription */
+"NSFaceIDUsageDescription" = "本应用使用 Face ID 来保护你的数据隐私。";

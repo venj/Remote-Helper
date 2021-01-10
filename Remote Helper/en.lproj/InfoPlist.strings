@@ -4,3 +4,5 @@
 /* Bundle name */
 "CFBundleName" = "Remote Helper";
 
+/* NSFaceIDUsageDescription */
+"NSFaceIDUsageDescription" = "Face ID is used protect your private content.";

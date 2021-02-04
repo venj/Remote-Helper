@@ -16,18 +16,17 @@ open class Helper : NSObject {
     var sessionHeader: String = ""
     var downloadPath: String = ""
 
-    // AD black list.
-    var kittenBlackList: [String] = ["正品香烟", "中铧", "稥湮", "威信", "试抽"]
-
     func kittenSearchPath(withKeyword keyword: String, page: Int = 1) -> String {
         let kw = keyword.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
         let escapedKeyword = kw == nil ? "" : kw!
         let source = Configuration.shared.torrentKittenSource
         switch source {
-        case .bt177:
-            return "http://www.bt177.biz/word/\(escapedKeyword)_\(page).html"
-        default: // 0 or other out of bound value
-            return "\(Configuration.shared.baseLink)/kitty/\(escapedKeyword)/\(page)"
+        case .main:
+            let base = "suk" + "ebei." + "ny" + "aa" + ".s" + "i"
+            return "https://\(base)/?f=0&c=0_0&q=\(escapedKeyword)&p=\(page)"
+        case .sub:
+            let base = "ny" + "aa" + ".s" + "i"
+            return "https://\(base)/?f=0&c=0_0&q=\(escapedKeyword)&p=\(page)"
         }
     }
 

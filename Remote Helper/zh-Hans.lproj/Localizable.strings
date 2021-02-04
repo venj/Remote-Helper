@@ -177,7 +177,7 @@
 "Kitten" = "种子喵搜索";
 
 /* Kitten Search */
-"Kitten Search" = "种子喵搜索";
+"Kitten Search" = "磁力搜索";
 
 /* (No Comment) */
 "Lixian" = "离线";
@@ -303,10 +303,7 @@
 "Search DYTT" = "搜索电影天堂";
 
 /* Search Torrent Kitten */
-"Search Torrent Kitten" = "在“种子喵”上搜索";
-
-/* Search TorrentKitty now requires server support, please change to other search sources in Settings. */
-"Search TorrentKitty now requires server support, please change to other search sources in Settings." = "种子喵搜索使用 TorrentKitty 作为搜索源的时候，因为源站的限制，需要服务端支持。请到设置里修改为其他搜索源。";
+"Search Torrent Kitten" = "磁力搜索";
 
 /* Searching... */
 "Searching..." = "正在搜索...";

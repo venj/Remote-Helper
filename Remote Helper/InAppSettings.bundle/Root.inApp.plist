@@ -144,34 +144,34 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
-        <dict>
-            <key>Title</key>
-            <string>Torrent Kitten Settings</string>
-            <key>Type</key>
-            <string>PSGroupSpecifier</string>
-        </dict>
-        <dict>
-            <key>DefaultValue</key>
-            <string>0</string>
-            <key>Key</key>
-            <string>kTorrentKittenSource</string>
-            <key>Title</key>
-            <string>TorrentKitten Source</string>
-            <key>Titles</key>
-            <array>
-                <string>TorrentKitten</string>
-                <string>BT177</string>
-            </array>
-            <key>Type</key>
-            <string>PSMultiValueSpecifier</string>
-            <key>Values</key>
-            <array>
-                <string>0</string>
-                <string>1</string>
-            </array>
-            <key>DisplaySortedByTitle</key>
-            <false/>
-        </dict>
+		<dict>
+			<key>Title</key>
+			<string>Magnet Search Settings</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>DefaultValue</key>
+			<string>0</string>
+			<key>Key</key>
+			<string>kTorrentKittenSource</string>
+			<key>Title</key>
+			<string>Magnet Source</string>
+			<key>Titles</key>
+			<array>
+				<string>NY S</string>
+				<string>NY N</string>
+			</array>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Values</key>
+			<array>
+				<string>0</string>
+				<string>1</string>
+			</array>
+			<key>DisplaySortedByTitle</key>
+			<false/>
+		</dict>
 		<dict>
 			<key>Title</key>
 			<string>Mi Remote Settings</string>

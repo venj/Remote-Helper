@@ -54,9 +54,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         if #available(iOS 9.0, *), traitCollection.forceTouchCapability == .available {
             registerForPreviewing(with: self, sourceView: tableView)
         }
-
-        // Update Kittent Black list.
-        updateKittenBlackList()
     }
 
     override func didReceiveMemoryWarning() {
@@ -334,15 +331,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     func torrentSearch() {
         Helper.shared.showTorrentSearchAlertInViewController(navigationController!)
-    }
-
-    // Update kitten ads black list.
-    func updateKittenBlackList() {
-        DispatchQueue.global(qos: .background).after(2.0) {
-            guard let content = try? String(contentsOf: URL(string: "http" + "s://ww" + "w.ve" + "nj.m" + "e/kit" + "ten_bla" + "ckli" + "st.txt")!) else { return }
-            let blackList = content.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).components(separatedBy: ",").map { $0.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
-            Helper.shared.kittenBlackList = blackList
-        }
     }
 
     func deletePreviewingCell() {

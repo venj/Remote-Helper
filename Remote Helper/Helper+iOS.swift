@@ -111,13 +111,6 @@ extension Helper {
         guard let viewController = viewController else { return } // Just do nothing...
         if (self.showCellularHUD()) { return }
         let source = Configuration.shared.torrentKittenSource
-        // Prevent Kitty Search when no server configured.
-        if source == .main && !Configuration.shared.hasTorrentServer {
-            let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: NSLocalizedString("Search TorrentKitty now requires server support, please change to other search sources in Settings.", comment: "Search TorrentKitty now requires server support, please change to other search sources in Settings."), preferredStyle: .alert)
-            let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .cancel)
-            alert.addAction(okAction)
-            return
-        }
         let title = NSLocalizedString("Search Torrent Kitten", comment: "Search Torrent Kitten")
         let message = NSLocalizedString("Please enter video serial (or anything).\nUsing mirror: ", comment: "Please enter video serial (or anything).\nUsing mirror: ") + source.description
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)

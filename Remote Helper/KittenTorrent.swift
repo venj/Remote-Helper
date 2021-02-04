@@ -11,14 +11,14 @@ import SwiftSoup
 
 public enum KittenSource: Int, CustomStringConvertible {
     case main = 0
-    case bt177
+    case sub
 
     public var description: String {
         switch self {
         case .main:
-            return "TorrentKitty"
-        default:
-            return "BT177"
+            return "NYH"
+        case .sub:
+            return "NY"
         }
     }
 }
@@ -33,28 +33,6 @@ public struct KittenTorrent {
     var date: Date {
         let defaultDate = Date().addingTimeInterval(-157680000) // Default to 5 years ago if string is not parsable.
         switch source {
-        case .bt177:
-            if dateString == "今天" {
-                return Date()
-            }
-            else if dateString == "昨天" {
-                return Date.init(timeIntervalSinceNow: -86400)
-            }
-            else if dateString.contains("天前") {
-                let day = Int(dateString.replacingOccurrences(of: "天前", with: ""))!
-                return Date.init(timeIntervalSinceNow: Double(-86400 * day))
-            }
-            else if dateString.contains("个月前") {
-                let month = Int(dateString.replacingOccurrences(of: "个月前", with: ""))!
-                return Date.init(timeIntervalSinceNow: Double(-86400 * 30 * month))
-            }
-            else if dateString.contains("年前") {
-                let month = Int(dateString.replacingOccurrences(of: "年前", with: ""))!
-                return Date.init(timeIntervalSinceNow: Double(-86400 * 365 * month))
-            }
-            else {
-                return defaultDate
-            }
         default:
             let c = dateString.components(separatedBy: "-")
             if c.count < 3 { return defaultDate }
@@ -74,26 +52,8 @@ public struct KittenTorrent {
             var page = 1
 
             switch source {
-            case .bt177:
-                let numberOfItemsPerPage = 10.0
-                let itemsCount = Double(try doc.select("#container .tips span.number").first?.text() ?? "1") ?? 1
-                var page = Int(ceil(itemsCount / numberOfItemsPerPage))
-                if page > 100 { page = 100 } // Max to 100 pages else 500 error.
-                for row in try doc.select("#container .main ul.mlist li") {
-                    guard let title = try row.select(".T1 a").first?.text() else { continue }
-                    // Filter based on ad black list.
-                    if Helper.shared.kittenBlackList.filter({ title.contains($0) }).count > 0 { continue }
-                    // Filter out no result
-                    if title.contains("No result - ") { continue }
-                    let size = (try? row.select(".BotInfo dt span")[0].text()) ?? "0"
-                    let dateString = (try? row.select(".BotInfo dt span")[1].text()) ?? ""
-                    guard let magnetContent = try row.select(".dInfo").first?.text() else { continue }
-                    let magnet = magnetContent.replacingOccurrences(of: "HASH值：\\s*", with: "magnet:?xt=urn:btih:", options: [.caseInsensitive, .regularExpression], range: Range.init(NSRange(location: 0, length: magnetContent.count), in: magnetContent))
-                    let torrent = KittenTorrent(title: title, magnet: magnet, dateString: dateString, size: size, maxPage: page, source: source)
-                    results.append(torrent)
-                }
-            default: // 0 or other
-                try doc.select("div.pagination a").forEach {
+            default:
+                try doc.select("ul.pagination a").forEach {
                     let pageString = (try? $0.text()) ?? ""
                     let i = Int(pageString) ?? page
                     if page < i {
@@ -101,15 +61,12 @@ public struct KittenTorrent {
                     }
                 }
 
-                for row in try doc.select("#archiveResult tr") {
-                    guard let title = try row.select("td.name").first?.text() else { continue }
-                    // Filter based on ad black list.
-                    if Helper.shared.kittenBlackList.filter({ title.contains($0) }).count > 0 { continue }
-                    // Filter out no result
-                    if title.contains("No result - ") { continue }
-                    let size = try row.select("td.size") .first?.text() ??  ""
-                    let dateString = try row.select("td.date") .first?.text() ??  ""
-                    let magnet = try row.select("td.action a").filter{ ((try? $0.attr("rel")) ?? "") == "magnet" }.first?.attr("href") ?? ""
+                for row in try doc.select(".torrent-list tr.default") {
+                    let tds = try row.select("td")
+                    guard let title = try? tds[1].text() else { continue }
+                    let size = (try? tds[3].text()) ??  ""
+                    let dateString = (try? tds[4].text()) ??  ""
+                    let magnet = try tds[2].select("a").map { (a) in try a.attr("href") }.filter { s in s.hasPrefix("magnet:?xt=urn:btih:") }.first ?? ""
                     let torrent = KittenTorrent(title: title, magnet: magnet, dateString: dateString, size: size, maxPage: page, source: source)
                     results.append(torrent)
                 }

@@ -20,7 +20,7 @@
 /* Initialize the library. */
 iconv_t initialize(const char *from_encoding, const char *to_encoding, _Bool allow_lossy) {
     iconv_t conv_desc = iconv_open(to_encoding, from_encoding);
-    if ((int) conv_desc == -1) {
+    if ((long) conv_desc == -1) {
         /* Initialization failure. */
         if (errno == EINVAL) {
             fprintf(stderr, "Conversion from '%s' to '%s' is not supported.\n", from_encoding, to_encoding);

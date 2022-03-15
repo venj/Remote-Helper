@@ -41,6 +41,7 @@
 		252DFA821753784400FF8199 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA811753784400FF8199 /* Foundation.framework */; };
 		252DFA841753784400FF8199 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA831753784400FF8199 /* CoreGraphics.framework */; };
 		252DFA8A1753784400FF8199 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 252DFA881753784400FF8199 /* InfoPlist.strings */; };
+		25302F1927DC9D690060BAA5 /* Lantern in Frameworks */ = {isa = PBXBuildFile; productRef = 25302F1827DC9D690060BAA5 /* Lantern */; };
 		2538A19D21789BD8000AA2C0 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2538A19C21789BD7000AA2C0 /* Launch Screen.xib */; };
 		254729F71DEBD28300787C20 /* KittenTorrent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254729F61DEBD28300787C20 /* KittenTorrent.swift */; };
 		254CBE401BE8481F0050A288 /* URLConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE3F1BE8481F0050A288 /* URLConverter.swift */; };
@@ -168,6 +169,7 @@
 				2575F5751E97B359004B4D1E /* libiconv.tbd in Frameworks */,
 				2515E1B523600EE1001E2BF2 /* InAppSettingsKit.xcframework in Frameworks */,
 				25B0AA7A1753A66C00141B0E /* SystemConfiguration.framework in Frameworks */,
+				25302F1927DC9D690060BAA5 /* Lantern in Frameworks */,
 				25B0AA7417537B2D00141B0E /* MediaPlayer.framework in Frameworks */,
 				2515C5C62355CC5F00BFD49D /* MediaBrowser in Frameworks */,
 				252DFA801753784400FF8199 /* UIKit.framework in Frameworks */,
@@ -367,6 +369,7 @@
 				25650A39235F0B5F00B314C3 /* SwiftEntryKit */,
 				25650A3C235F561800B314C3 /* Reachability */,
 				25650A3F235F568E00B314C3 /* PasscodeLock */,
+				25302F1827DC9D690060BAA5 /* Lantern */,
 			);
 			productName = "Video Player";
 			productReference = 252DFA7C1753784400FF8199 /* Remote Helper.app */;
@@ -420,6 +423,7 @@
 				25650A38235F0B5E00B314C3 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */,
 				25650A3B235F561800B314C3 /* XCRemoteSwiftPackageReference "Reachability" */,
 				25650A3E235F568E00B314C3 /* XCRemoteSwiftPackageReference "SwiftPasscodeLock" */,
+				25302F1727DC96C40060BAA5 /* XCRemoteSwiftPackageReference "Lantern" */,
 			);
 			productRefGroup = 252DFA7D1753784400FF8199 /* Products */;
 			projectDirPath = "";
@@ -749,6 +753,14 @@
 				minimumVersion = 2.2.1;
 			};
 		};
+		25302F1727DC96C40060BAA5 /* XCRemoteSwiftPackageReference "Lantern" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/imvenj/Lantern";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		25650A38235F0B5E00B314C3 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/huri000/SwiftEntryKit";
@@ -793,6 +805,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 251998432355BEB900DC080D /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
+		};
+		25302F1827DC9D690060BAA5 /* Lantern */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 25302F1727DC96C40060BAA5 /* XCRemoteSwiftPackageReference "Lantern" */;
+			productName = Lantern;
 		};
 		25650A39235F0B5F00B314C3 /* SwiftEntryKit */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -7,12 +7,12 @@
 //
 
 import UIKit
-import MediaBrowser
 import Alamofire
 import SwiftEntryKit
 import Kingfisher
+import Lantern
 
-class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate, UIPopoverPresentationControllerDelegate {
+class VPTorrentsListViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
     let CellIdentifier = "VPTorrentsListViewCell"
     let localizedStatusStrings: [String: String] = ["completed" : NSLocalizedString("completed", comment: "completed"),
         "waiting" : NSLocalizedString("waiting", comment:"waiting"),
@@ -39,15 +39,15 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     var countList: [Int] = []
     var filteredCountList: [Int] = []
 
-    var mwPhotos: [Media] {
-        return photos.compactMap { photo in
-            guard let url = URL(string: Configuration.shared.baseLink) else { return nil }
-            let fullURL = url.appendingPathComponent(photo)
-            let p = Media(url: fullURL)
-            p.caption = fullURL.lastPathComponent
-            return p
-        }
-    }
+//    var mwPhotos: [Media] {
+//        return photos.compactMap { photo in
+//            guard let url = URL(string: Configuration.shared.baseLink) else { return nil }
+//            let fullURL = url.appendingPathComponent(photo)
+//            let p = Media(url: fullURL)
+//            p.caption = fullURL.lastPathComponent
+//            return p
+//        }
+//    }
     var collapseDetailViewController: Bool = true
 
     var photos: [String] = []
@@ -116,8 +116,6 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         // Hide searchbar initially.
         tableView.contentOffset = CGPoint(x: 0.0, y: searchBar.frame.height)
 
-        NotificationCenter.default.addObserver(self, selector: #selector(photoPreloadFinished(_:)), name: MediaBrowser.mediaLoadingDidEndNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(showNoMorePhotosHUD(_:)), name: MediaBrowser.noMoreMediaNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(viewedTitlesDidChange(_:)), name: NSNotification.Name.viewedTitlesDidChangeNotification, object: nil)
     }
 
@@ -195,7 +193,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowTorrentsSegue" {
             if let nav = segue.destination as? UINavigationController,
-                let pb = nav.topViewController as? MediaBrowser,
+                let lantern = nav.topViewController as? Lantern,
                 let indexPath = tableView.indexPathForSelectedRow {
                 // Update currentSelectedTitle
                 let list = !searchController.isActive ? dateList : filteredDateList
@@ -206,17 +204,40 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
                     viewedTitles.insert(title)
                 }
 
-                pb.delegate = self
-                pb.displayActionButton = false
-                pb.displayMediaNavigationArrows = true
-                pb.zoomPhotosToFill = true
-                pb.hideControlsOnStartup = false
-                pb.delayToHideElements = TimeInterval(Int.max) // FIXME: do not hide controls.
-                pb.setCurrentIndex(at: mediaStartIndex)
+                lantern.numberOfItems = { [weak self] in
+                    guard let self = self else { return 0 }
+                    return self.photos.count
+                }
+                
+                lantern.reloadCellAtIndex = { [weak self] context in
+                    guard let self = self else { return }
+                    let lanternCell = context.cell as? LanternImageCell
+                    self.configureLanternCell(lanternCell, index: context.index)
+                }
+                
+                lantern.pageIndex = mediaStartIndex
             }
         }
     }
+    
+    @objc func imageTapped(_ sender: UITapGestureRecognizer) {
+        print("image tapped!")
+        if let cell = sender.view as? LanternImageCell, let nav = cell.lantern?.navigationController {
+            print("nav: \(nav)")
+        }
+    }
 
+    @objc func configureLanternCell(_ lanternCell: LanternImageCell?, index: Int) {
+        guard let url = URL(string: Configuration.shared.baseLink) else { return }
+        let fullURL = url.appendingPathComponent(self.photos[index])
+        lanternCell?.imageView.kf.setImage(with: fullURL, placeholder: nil, options: nil, progressBlock: nil) { _ in
+            lanternCell?.setNeedsLayout()
+        }
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
+        lanternCell?.onSingleTap(tap)
+    }
+    
     @objc func photoPreloadFinished(_ notification: Notification) {
         //print("Photo load fihished! \(notification.object)")
     }
@@ -251,43 +272,6 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
         present(alertController, animated: true, completion: nil)
-    }
-
-    //MARK: - MWPhotoBrowser delegate
-
-    func numberOfMedia(in mediaBrowser: MediaBrowser) -> Int {
-        return mwPhotos.count
-    }
-
-    func media(for mediaBrowser: MediaBrowser, at index: Int) -> Media {
-        if (index < mwPhotos.count) {
-            return mwPhotos[index]
-        }
-        else {
-            return index < 0 ? mwPhotos[0] : mwPhotos[mwPhotos.count - 1]
-        }
-    }
-
-    func thumbnail(for mediaBrowser: MediaBrowser, at index: Int) -> Media {
-        return media(for: mediaBrowser, at: index)
-    }
-
-    func didDisplayMedia(at index: Int, in mediaBrowser: MediaBrowser) {
-        currentPhotoIndex = index
-        if !mediaBrowser.view.subviews.contains(attachedProgressView) {
-            attachProgressView(to: mediaBrowser.view)
-        }
-        let progress = Float(index + 1) / Float(photos.count)
-        attachedProgressView.progress = progress
-        mediaBrowser.navigationItem.rightBarButtonItems  = [kittenItem, hashItem]
-
-        let modeItem = AppDelegate.shared.torrentsSplitViewController!.displayModeButtonItem
-        mediaBrowser.navigationItem.leftBarButtonItem = modeItem
-        mediaBrowser.navigationItem.leftItemsSupplementBackButton = true
-    }
-
-    func title(for mediaBrowser: MediaBrowser, at index: Int) -> String? {
-        return "\(currentSelectedTitle) (\(currentPhotoIndex + 1)/\(photos.count))"
     }
 
     //MARK: - Action
@@ -335,9 +319,6 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
                 guard let photos = response.result.value as? [String] else { return }
                 self.photos = photos
                 self.mediaStartIndex = index
-                self.mwPhotos.forEach {
-                    $0.loadUnderlyingImageAndNotify();
-                }
                 // FIXME: Prepare for segue not executed.
                 self.performSegue(withIdentifier: "ShowTorrentsSegue", sender: nil)
             }
@@ -466,10 +447,7 @@ extension VPTorrentsListViewController : UIViewControllerPreviewingDelegate {
         guard let date = list[indexPath.row].addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) else { return nil }
         // Reset photos
         photos = []
-        let pb = MediaBrowser(delegate: self)
-        pb.displayActionButton = false
-        pb.displayMediaNavigationArrows = true
-        pb.zoomPhotosToFill = true
+        let lantern = Lantern()
 
         let request = Alamofire.request(Configuration.shared.searchPath(withKeyword: date))
         request.responseJSON { [weak self] response in
@@ -477,15 +455,24 @@ extension VPTorrentsListViewController : UIViewControllerPreviewingDelegate {
             if response.result.isSuccess {
                 guard let photos = response.result.value as? [String] else { return }
                 self.photos = photos
-                self.mwPhotos.forEach {
-                    $0.loadUnderlyingImageAndNotify()
+                
+                lantern.numberOfItems = { [weak self] in
+                    guard let self = self else { return 0 }
+                    return self.photos.count
                 }
-                pb.reloadData()
+                
+                lantern.reloadCellAtIndex = { [weak self] context in
+                    guard let self = self else { return }
+                    let lanternCell = context.cell as? LanternImageCell
+                    self.configureLanternCell(lanternCell, index: context.index)
+                }
+
+                lantern.reloadData()
             }
         }
 
         previewingContext.sourceRect = cell.frame
-        return pb
+        return lantern
     }
 
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
@@ -502,6 +489,6 @@ extension VPTorrentsListViewController : UIViewControllerPreviewingDelegate {
             viewedTitles.insert(title)
         }
 
-        (viewControllerToCommit as? MediaBrowser)?.reloadData()
+        (viewControllerToCommit as? Lantern)?.reloadData()
     }
 }

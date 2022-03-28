@@ -102,11 +102,10 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
             navBarAppearance.configureWithOpaqueBackground()
             navBarAppearance.backgroundColor = Helper.shared.mainThemeColor()
             navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-            let buttonAppearance = UIBarButtonItemAppearance()
-            buttonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.white]
-            navBarAppearance.buttonAppearance = buttonAppearance
             UINavigationBar.appearance().standardAppearance = navBarAppearance
             UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
+            // Important: ButtonItems tint color.
+            UINavigationBar.appearance().tintColor = .white
         }
         else {
             let navBarAppearance = UINavigationBar.appearance()

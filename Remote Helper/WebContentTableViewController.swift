@@ -290,17 +290,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             guard let `self` = self else { return }
             self.present(settingsNavigationController, animated: true, completion: nil)
         }
-        // FIXME: This is a hack to tint Settings's done button.
-        DispatchQueue.global().after(0.1) { [weak self] in
-            guard let `self` = self else { return }
-            DispatchQueue.main.async {
-                if let item = self.settingsViewController.navigationItem.rightBarButtonItem {
-                    item.tintColor = .white
-                } else {
-                    print("no item")
-                }
-            }
-        }
     }
 
     func showTransmission() {

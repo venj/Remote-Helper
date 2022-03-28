@@ -36,7 +36,6 @@ class VPSearchResultController: UITableViewController {
 
     lazy var wikiItem: UIBarButtonItem = {
         let item = UIBarButtonItem(image: UIImage(named: "wiki"), style: .plain, target: self, action: #selector(showWiki))
-        item.tintColor = .white
         return item
     }()
 

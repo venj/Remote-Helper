@@ -96,12 +96,25 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
     func updateTheme() {
         // Global tint
         window?.tintColor = Helper.shared.mainThemeColor()
-
-        let navBarAppearance = UINavigationBar.appearance()
-        navBarAppearance.tintColor = .white
-        navBarAppearance.barTintColor = Helper.shared.mainThemeColor()
-        navBarAppearance.titleTextAttributes = [.foregroundColor : UIColor.white]
-
+        
+        if #available(iOS 15, *) {
+            let navBarAppearance = UINavigationBarAppearance()
+            navBarAppearance.configureWithOpaqueBackground()
+            navBarAppearance.backgroundColor = Helper.shared.mainThemeColor()
+            navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+            let buttonAppearance = UIBarButtonItemAppearance()
+            buttonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.white]
+            navBarAppearance.buttonAppearance = buttonAppearance
+            UINavigationBar.appearance().standardAppearance = navBarAppearance
+            UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
+        }
+        else {
+            let navBarAppearance = UINavigationBar.appearance()
+            navBarAppearance.tintColor = .white
+            navBarAppearance.barTintColor = Helper.shared.mainThemeColor()
+            navBarAppearance.titleTextAttributes = [.foregroundColor : UIColor.white]
+        }
+        
         let searchBarAppearance = UISearchBar.appearance()
         searchBarAppearance.barTintColor = Helper.shared.mainThemeColor()
         UIBarButtonItem.appearance(whenContainedInInstancesOf:[UISearchBar.self]).tintColor = UIColor.white

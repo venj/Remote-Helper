@@ -57,6 +57,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     var cloudItem: UIBarButtonItem!
     lazy var hashItem: UIBarButtonItem = {
         let item = UIBarButtonItem(image: UIImage(named:"magnet"), style: .plain, target: self, action: #selector(hashTorrent))
+        item.tintColor = .white
         return item
     }()
     lazy var kittenItem: UIBarButtonItem = {

@@ -108,8 +108,11 @@ class WebViewController: UIViewController {
 
     func configureBarButtonItems() {
         reloadStopBarButtonItem = UIBarButtonItem(image: UIImage.refreshButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(reloadOrStop(_:)))
+        reloadStopBarButtonItem.tintColor = .white
         navBackBarButtonItem = UIBarButtonItem(image: UIImage.backButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(navBack(_:)))
+        navBackBarButtonItem.tintColor = .white
         navForwardBarButtonItem = UIBarButtonItem(image: UIImage.forwardButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(navForward(_:)))
+        navForwardBarButtonItem.tintColor = .white
     }
 
     func reload() {

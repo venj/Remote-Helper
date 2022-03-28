@@ -13,6 +13,7 @@ class TransmissionWebViewController: WebViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let backItem = UIBarButtonItem(image: UIImage.backButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(goBack(_:)))
+        backItem.tintColor = .white
         navigationItem.leftBarButtonItem = backItem
     }
 

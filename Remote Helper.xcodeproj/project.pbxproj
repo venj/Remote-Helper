@@ -27,8 +27,6 @@
 		2506AA211E90F4710064EABB /* ResourcePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2506AA201E90F4710064EABB /* ResourcePageViewController.swift */; };
 		2506AA231E90F5D40064EABB /* BangumiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2506AA221E90F5D40064EABB /* BangumiViewController.swift */; };
 		2515C5C62355CC5F00BFD49D /* MediaBrowser in Frameworks */ = {isa = PBXBuildFile; productRef = 2515C5C52355CC5F00BFD49D /* MediaBrowser */; };
-		2515E1B523600EE1001E2BF2 /* InAppSettingsKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2515E1B323600EDB001E2BF2 /* InAppSettingsKit.xcframework */; };
-		2515E1B623600EE1001E2BF2 /* InAppSettingsKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2515E1B323600EDB001E2BF2 /* InAppSettingsKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		251998452355BEB900DC080D /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 251998442355BEB900DC080D /* SwiftSoup */; };
 		251B62B120FF7A080077FF2D /* Helper+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 251B62B020FF7A080077FF2D /* Helper+iOS.swift */; };
 		251C965121ABE94400DAD597 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 256EA4BD177D5F830081309B /* Localizable.strings */; };
@@ -69,6 +67,7 @@
 		25B91D0623752D75005AF0E8 /* TransmissionWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B91D0523752D75005AF0E8 /* TransmissionWebViewController.swift */; };
 		25B91D0723753F65005AF0E8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25B91D0923753F65005AF0E8 /* Main.storyboard */; };
 		25C478D11FDFA61400AA8958 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C478D01FDFA61400AA8958 /* Configuration.swift */; };
+		25C7BD3F27F1C6F60095A141 /* InAppSettingsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 25C7BD3E27F1C6F60095A141 /* InAppSettingsKit */; };
 		25C8BF151BF243AB00CAC32E /* UITabBarController+StatusBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C8BF141BF243AB00CAC32E /* UITabBarController+StatusBarStyle.swift */; };
 		25F2962E2350DDFE00AB782A /* UIImage+BarButtonItemIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F2962D2350DDFE00AB782A /* UIImage+BarButtonItemIcon.swift */; };
 		25F94A621BE5E9FF009C9195 /* Dictionary+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F94A611BE5E9FF009C9195 /* Dictionary+JSON.swift */; };
@@ -81,7 +80,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				2515E1B623600EE1001E2BF2 /* InAppSettingsKit.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -108,7 +106,6 @@
 		2506AA1E1E90EF010064EABB /* Page.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
 		2506AA201E90F4710064EABB /* ResourcePageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourcePageViewController.swift; sourceTree = "<group>"; };
 		2506AA221E90F5D40064EABB /* BangumiViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BangumiViewController.swift; sourceTree = "<group>"; };
-		2515E1B323600EDB001E2BF2 /* InAppSettingsKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = InAppSettingsKit.xcframework; sourceTree = "<group>"; };
 		251B62B020FF7A080077FF2D /* Helper+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Helper+iOS.swift"; sourceTree = "<group>"; };
 		251CD7DA236B16DB0023CD34 /* MySplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySplitViewController.swift; sourceTree = "<group>"; };
 		251E0BC8218D56860067B78F /* Kingfisher+size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Kingfisher+size.swift"; sourceTree = "<group>"; };
@@ -166,7 +163,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2575F5751E97B359004B4D1E /* libiconv.tbd in Frameworks */,
-				2515E1B523600EE1001E2BF2 /* InAppSettingsKit.xcframework in Frameworks */,
 				25B0AA7A1753A66C00141B0E /* SystemConfiguration.framework in Frameworks */,
 				25B0AA7417537B2D00141B0E /* MediaPlayer.framework in Frameworks */,
 				2515C5C62355CC5F00BFD49D /* MediaBrowser in Frameworks */,
@@ -178,6 +174,7 @@
 				251998452355BEB900DC080D /* SwiftSoup in Frameworks */,
 				25650A3D235F561800B314C3 /* Reachability in Frameworks */,
 				25B22FE52354A49400F9DFC6 /* Alamofire in Frameworks */,
+				25C7BD3F27F1C6F60095A141 /* InAppSettingsKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,7 +201,6 @@
 		252DFA7E1753784400FF8199 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				2515E1B323600EDB001E2BF2 /* InAppSettingsKit.xcframework */,
 				2575F5741E97B359004B4D1E /* libiconv.tbd */,
 				25B0AA7B1753A67300141B0E /* MobileCoreServices.framework */,
 				25B0AA791753A66C00141B0E /* SystemConfiguration.framework */,
@@ -367,6 +363,7 @@
 				25650A39235F0B5F00B314C3 /* SwiftEntryKit */,
 				25650A3C235F561800B314C3 /* Reachability */,
 				25650A3F235F568E00B314C3 /* PasscodeLock */,
+				25C7BD3E27F1C6F60095A141 /* InAppSettingsKit */,
 			);
 			productName = "Video Player";
 			productReference = 252DFA7C1753784400FF8199 /* Remote Helper.app */;
@@ -420,6 +417,7 @@
 				25650A38235F0B5E00B314C3 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */,
 				25650A3B235F561800B314C3 /* XCRemoteSwiftPackageReference "Reachability" */,
 				25650A3E235F568E00B314C3 /* XCRemoteSwiftPackageReference "SwiftPasscodeLock" */,
+				25C7BD3D27F1C6F60095A141 /* XCRemoteSwiftPackageReference "InAppSettingsKit" */,
 			);
 			productRefGroup = 252DFA7D1753784400FF8199 /* Products */;
 			projectDirPath = "";
@@ -781,6 +779,14 @@
 				minimumVersion = 4.9.0;
 			};
 		};
+		25C7BD3D27F1C6F60095A141 /* XCRemoteSwiftPackageReference "InAppSettingsKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/futuretap/InAppSettingsKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -813,6 +819,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 25B22FE32354A49400F9DFC6 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		25C7BD3E27F1C6F60095A141 /* InAppSettingsKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 25C7BD3D27F1C6F60095A141 /* XCRemoteSwiftPackageReference "InAppSettingsKit" */;
+			productName = InAppSettingsKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 

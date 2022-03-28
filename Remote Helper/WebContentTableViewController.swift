@@ -144,7 +144,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     }
 
     //MARK: - InAppSettingsKit Delegates
-    func settingsViewControllerDidEnd(_ sender: IASKAppSettingsViewController!) {
+    func settingsViewControllerDidEnd(_ sender: IASKAppSettingsViewController) {
         navigationController?.dismiss(animated: true) {
             let defaults = UserDefaults.standard
             defaults.set(true, forKey: ServerSetupDone)
@@ -152,8 +152,8 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         }
     }
 
-    func settingsViewController(_ sender: IASKAppSettingsViewController!, buttonTappedFor specifier: IASKSpecifier!) {
-        if specifier.key() == PasscodeLockConfig {
+    func settingsViewController(_ sender: IASKAppSettingsViewController, buttonTappedFor specifier: IASKSpecifier) {
+        if specifier.key == PasscodeLockConfig {
             let repository = UserDefaultsPasscodeRepository()
             let configuration = PasscodeLockConfiguration(repository: repository)
             if !repository.hasPasscode {
@@ -189,7 +189,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                 sender.present(alert, animated: true, completion: nil)
             }
         }
-        else if specifier.key() == ClearCacheNowKey {
+        else if specifier.key == ClearCacheNowKey {
             Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
             ImageCache.default.clearDiskCache() {
                 let defaults = UserDefaults.standard
@@ -281,6 +281,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         settingsViewController = IASKAppSettingsViewController(style: .grouped)
         settingsViewController.delegate = self
         settingsViewController.showCreditsFooter = false
+        settingsViewController.showDoneButton = true
         let settingsNavigationController = UINavigationController(rootViewController: settingsViewController)
         if view.traitCollection.horizontalSizeClass == .regular {
             settingsNavigationController.modalPresentationStyle = .pageSheet
@@ -288,6 +289,17 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         DispatchQueue.main.async { [weak self] in
             guard let `self` = self else { return }
             self.present(settingsNavigationController, animated: true, completion: nil)
+        }
+        // FIXME: This is a hack to tint Settings's done button.
+        DispatchQueue.global().after(0.1) { [weak self] in
+            guard let `self` = self else { return }
+            DispatchQueue.main.async {
+                if let item = self.settingsViewController.navigationItem.rightBarButtonItem {
+                    item.tintColor = .white
+                } else {
+                    print("no item")
+                }
+            }
         }
     }
 

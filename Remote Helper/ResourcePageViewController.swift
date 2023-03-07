@@ -24,7 +24,7 @@ class ResourcePageViewController: UITableViewController {
 
     var bangumiLinks: [[String: String]] = []
 
-    var spinner : UIActivityIndicatorView = UIActivityIndicatorView(style: .gray) {
+    var spinner : UIActivityIndicatorView = UIActivityIndicatorView(style: .medium) {
         didSet {
             spinner.hidesWhenStopped = true
         }

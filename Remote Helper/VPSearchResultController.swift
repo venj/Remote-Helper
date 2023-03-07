@@ -41,7 +41,7 @@ class VPSearchResultController: UITableViewController {
 
     var currentPage: Int = 1
 
-    var spinner : UIActivityIndicatorView = UIActivityIndicatorView(style: .gray) {
+    var spinner : UIActivityIndicatorView = UIActivityIndicatorView(style: .medium) {
         didSet {
             spinner.hidesWhenStopped = true
         }

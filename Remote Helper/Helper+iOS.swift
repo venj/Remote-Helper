@@ -51,7 +51,7 @@ extension Helper {
         let style = EKProperty.LabelStyle(font: UIFont.systemFont(ofSize: 14.0), color: .white, alignment: .center)
         let labelContent = EKProperty.LabelContent(text: message, style: style)
 
-        let contentView = EKProcessingNoteMessageView(with: labelContent, activityIndicator: .white)
+        let contentView = EKProcessingNoteMessageView(with: labelContent, activityIndicator: .medium)
         var attributes = EKAttributes.topNote
         attributes.displayDuration = .infinity
         attributes.scroll = .disabled

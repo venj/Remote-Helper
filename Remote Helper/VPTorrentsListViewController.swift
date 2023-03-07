@@ -335,9 +335,9 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
                 guard let photos = response.result.value as? [String] else { return }
                 self.photos = photos
                 self.mediaStartIndex = index
-                self.mwPhotos.forEach {
-                    $0.loadUnderlyingImageAndNotify();
-                }
+//                self.mwPhotos.forEach {
+//                    $0.loadUnderlyingImageAndNotify();
+//                }
                 // FIXME: Prepare for segue not executed.
                 self.performSegue(withIdentifier: "ShowTorrentsSegue", sender: nil)
             }

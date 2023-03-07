@@ -73,6 +73,7 @@ class WebViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         setupBarButtonItems()
+        navigationItem.setHidesBackButton(false, animated: animated)
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -82,6 +83,7 @@ class WebViewController: UIViewController {
     }
 
     func setupBarButtonItems() {
+        if navigationItem.rightBarButtonItems?.count ?? 0 > 0 { return }
         let flexspaceBarButtonItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 
         if view.traitCollection.horizontalSizeClass == .compact {
@@ -99,9 +101,11 @@ class WebViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         webView?.stopLoading()
-        navigationController?.setToolbarHidden(true, animated: false)
+        navigationController?.setToolbarHidden(true, animated: animated)
+        navigationItem.setHidesBackButton(true, animated: animated)
+        navigationItem.rightBarButtonItems = nil
     }
-
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }

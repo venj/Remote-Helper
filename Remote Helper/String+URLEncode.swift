@@ -25,7 +25,7 @@ public extension String {
 
     func percentEncodedString(_ encoding: String.Encoding = .utf8, toLowerCased: Bool = false) -> String? {
         if encoding == .utf8 {
-            let rfc3986ReservedCharacterSet = CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[]")
+            let rfc3986ReservedCharacterSet = CharacterSet(charactersIn: " !*'();:@&=+$,/?%#[]")
             guard let str = self.addingPercentEncoding(withAllowedCharacters: rfc3986ReservedCharacterSet.inverted) else { return self }
             return str
         }

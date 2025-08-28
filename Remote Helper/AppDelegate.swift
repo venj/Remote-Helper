@@ -202,6 +202,21 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
             Helper.shared.showTorrentSearchAlertInViewController(window?.rootViewController)
         }
     }
+    
+    // Save to paste board.
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        UIPasteboard.general.string = url.absoluteString
+        openAddMagnetAlert()
+        return true
+    }
+    
+    func openAddMagnetAlert() {
+        tabBarController?.selectedIndex = 0
+        let splitController = (tabBarController?.viewControllers?.first as? MySplitViewController)
+        splitController?.show(.primary)
+        let navController = (splitController?.viewControllers.first as? UINavigationController)
+        (navController?.topViewController as? WebContentTableViewController)?.addMagnet()
+    }
 
     //MARK: - Alamofire Manager
     func configureAlamofireManager() {

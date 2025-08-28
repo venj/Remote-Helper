@@ -105,10 +105,10 @@ open class Helper : NSObject {
         func addTorrentInfo(_ magnetOrMetaInfo: String) {
             var params = ["method" : "torrent-add"] as [String : Any]
             if magnetOrMetaInfo.prefix(6) == "magnet" {
-                params["arguments"] = ["paused" : false, "download-dir" : dir, "filename": magnetOrMetaInfo]
+                params["arguments"] = ["paused" : false, "download-dir" : dir, "filename": magnetOrMetaInfo] as [String : Any]
             }
             else {
-                params["arguments"] = ["paused" : false, "download-dir" : dir, "metainfo": magnetOrMetaInfo]
+                params["arguments"] = ["paused" : false, "download-dir" : dir, "metainfo": magnetOrMetaInfo] as [String : Any]
             }
             let HTTPHeaders = ["X-Transmission-Session-Id" : self.sessionHeader]
             let request = Alamofire.request(Configuration.shared.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)

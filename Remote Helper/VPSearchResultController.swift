@@ -13,22 +13,22 @@ class VPSearchResultController: UITableViewController {
     let CellIdentifier = "FileListTableViewCell"
 
     //var torrents: [[String:Any]] = []
-    var torrents: [Any] = []
-    var keyword: String = "" {
+    var torrents: [CatTorrent] = []
+    var currentPage: Int = 1 {
         didSet {
-            self.title = String(format: NSLocalizedString("%@: %@ (%lu)", comment: "%@: %@ (%lu)"), arguments: [NSLocalizedString("Search", comment:"Search"), keyword, torrents.count])
+            self.title = String(format: "%@: %@ (%@)", NSLocalizedString("Search", comment:"Search"), keyword, "\(currentPage)/\(total) " + NSLocalizedString("pages", comment:"pages"))
         }
     }
-    var isKitten: Bool {
-        return kittenTorrents != nil
+    var total: Int = 0 {
+        didSet {
+            self.title = String(format: "%@: %@ (%@)", NSLocalizedString("Search", comment:"Search"), keyword, "\(currentPage)/\(total) " + NSLocalizedString("pages", comment:"pages"))
+        }
     }
-    var kittenTorrents: [KittenTorrent]? {
-        return torrents as? [KittenTorrent]
+    var keyword: String = "" {
+        didSet {
+            self.title = String(format: "%@: %@ (%@)", NSLocalizedString("Search", comment:"Search"), keyword, "\(currentPage)/\(total) " + NSLocalizedString("pages", comment:"pages"))
+        }
     }
-    var normalTorrents: [[String:Any]]? {
-        return torrents as? [[String:Any]]
-    }
-
     lazy var kittenItem: UIBarButtonItem = {
         let item = UIBarButtonItem(title: "🐱", style: .plain, target: self, action: #selector(showKitten))
         return item
@@ -39,8 +39,6 @@ class VPSearchResultController: UITableViewController {
         return item
     }()
 
-    var currentPage: Int = 1
-
     var spinner : UIActivityIndicatorView = UIActivityIndicatorView(style: .medium) {
         didSet {
             spinner.hidesWhenStopped = true
@@ -49,13 +47,6 @@ class VPSearchResultController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = String(format: NSLocalizedString("%@: %@ (%lu)", comment: "%@: %@ (%lu)"), arguments: [NSLocalizedString("Search", comment:"Search"), keyword, torrents.count])
-
-        if isKitten {
-            guard let torrents = torrents as? [KittenTorrent] else { return }
-            guard let maxPage = torrents.first?.maxPage else { return }
-            title = String(format: "%@: %@ (%@)", NSLocalizedString("Search", comment:"Search"), keyword, "\(maxPage) " + NSLocalizedString("pages", comment:"pages"))
-        }
 
         if keyword.matches("^[A-Za-z]{2,6}-\\d{2,6}$", regularExpressionOptions: [.caseInsensitive], matchingOptions:[.anchored]) {
             navigationItem.rightBarButtonItems = [wikiItem, kittenItem]
@@ -65,9 +56,7 @@ class VPSearchResultController: UITableViewController {
         }
 
         // Revert back to old UITableView behavior
-        if #available(iOS 9.0, *) {
-            tableView.cellLayoutMarginsFollowReadableWidth = false
-        }
+        tableView.cellLayoutMarginsFollowReadableWidth = false
 
         // Apply themimg for kitten search.
         navigationController?.navigationBar.tintColor = .white
@@ -107,26 +96,15 @@ class VPSearchResultController: UITableViewController {
 
         // Configure the cell...
         let torrent = torrents[indexPath.row]
-        if let torrent = torrent as? [String:Any] { // normal torrent
-            cell.textLabel?.text = torrent["name"] as? String
-            cell.accessoryType = .detailDisclosureButton
-
-            let size = convertSizeToString(torrent["size"])
-            let dateString = formattedDateString(torrent["upload_date"] as? Int)
-            let seeders = torrent["seeders"] as? Int
-            cell.detailTextLabel?.text = "\(size), \(seeders == nil ? 0 : seeders!)\(NSLocalizedString("seeders", comment:"seeders")), \(dateString)"
-        }
-        else if let torrent = torrent as? KittenTorrent { // kitten
-            cell.textLabel?.text = torrent.title
-            cell.accessoryType = .detailDisclosureButton
-            cell.detailTextLabel?.text = String(format: NSLocalizedString("Tr size: %@, Up date: %@", comment: "Tr size: %@, Up date: %@"), torrent.size, torrent.dateString)
-        }
+        cell.textLabel?.text = torrent.title
+        cell.accessoryType = .detailDisclosureButton
+        cell.detailTextLabel?.text = String(format: NSLocalizedString("Tr size: %@, Up date: %@", comment: "Tr size: %@, Up date: %@"), torrent.size, torrent.date)
 
         return cell
     }
 
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        let torrent = torrents[indexPath.row]
+        let torrent = torrents[indexPath.row] as CatTorrent
         let link = getMagnet(for: torrent)
         Helper.shared.transmissionDownload(for: link)
     }
@@ -135,6 +113,8 @@ class VPSearchResultController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         let torrent = torrents[indexPath.row]
         let link = getMagnet(for: torrent)
+        // Save to paste board.
+        UIPasteboard.general.string = link
         let alertController = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: describe(torrent), preferredStyle: .alert)
 
         let miAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi") , style: .default) { _ in
@@ -154,9 +134,8 @@ class VPSearchResultController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if isKitten && indexPath.row == (torrents.count - 1) { // when showing last item
-            guard let maxPage = kittenTorrents?.first?.maxPage else { return }
-            if currentPage < maxPage {
+        if indexPath.row == (torrents.count - 1) { // when showing last item
+            if currentPage < total {
                 loadNextPage()
             }
         }
@@ -167,10 +146,7 @@ class VPSearchResultController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if isKitten { // when showing last item
-            return spinner
-        }
-        return nil
+        return spinner
     }
 
     func loadNextPage() {
@@ -179,29 +155,40 @@ class VPSearchResultController: UITableViewController {
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let `self` = self else { return }
-            let url = URL(string: Helper.shared.kittenSearchPath(withKeyword: self.keyword, page: nextPage))!
-
-            let request = Alamofire.request(url)
+            let headers: HTTPHeaders = Configuration.shared.headers
+            let source = Configuration.shared.catTorrentSource
+            let link = Configuration.shared.catSearchPath(withKeyword: keyword, source: source, page: nextPage)
+            let url = URL(string: link)!
+            let request = Alamofire.request(url, headers: headers)
+            let decoder = JSONDecoder()
             request.responseData { [weak self] response in
-                guard let `self` = self else { return }
-                if let data = response.result.value {
-                    let trs = KittenTorrent.parse(data: data, source: Configuration.shared.torrentKittenSource)
-                    DispatchQueue.main.async {
-                        self.spinner.stopAnimating()
-                        let torrentsCount = self.torrents.count
-                        self.torrents.append(contentsOf: (trs as [Any]))
-                        let indexPaths = (torrentsCount..<torrentsCount + trs.count).map { IndexPath(row: $0, section: 0) }
-                        self.tableView.insertRows(at: indexPaths, with: UITableView.RowAnimation.top)
-                        self.currentPage = nextPage
-                    }
-                }
+                guard let `self` = self,
+                      response.result.isSuccess,
+                      let jsonData = response.result.value,
+                      let json = try? decoder.decode(CatResponse.self, from: jsonData)
                 else {
                     DispatchQueue.main.async {
-                        //hud.hide()
-                        self.spinner.stopAnimating()
+                        Helper.shared.showNote(withMessage: NSLocalizedString("Connection failed.", comment: "Connection failed."), type: .error)
                     }
+                    
+                    DispatchQueue.main.async { [weak self] in
+                        self?.spinner.stopAnimating()
+                    }
+                    return
                 }
-            }
+
+                let nextPageTorrents = json.data.contents
+                self.total = json.data.total
+                
+                DispatchQueue.main.async {
+                    self.spinner.stopAnimating()
+                    let torrentsCount = self.torrents.count
+                    self.torrents.append(contentsOf: nextPageTorrents)
+                    let indexPaths = (torrentsCount..<torrentsCount + nextPageTorrents.count).map { IndexPath(row: $0, section: 0) }
+                    self.tableView.insertRows(at: indexPaths, with: UITableView.RowAnimation.top)
+                    self.currentPage = nextPage
+                }
+            }            
         }
     }
 
@@ -228,6 +215,8 @@ class VPSearchResultController: UITableViewController {
         }
         else if let torrent = torrent as? KittenTorrent {
             description = "\(torrent.title), \(torrent.size), \(torrent.dateString), \(torrent.magnet.components(separatedBy: "&").first!)"
+        } else if let torrent = torrent as? CatTorrent {
+            description = "\(torrent.title), \(torrent.size), \(torrent.date), \(torrent.magnet.components(separatedBy: "&").first!)"
         }
 
         return description
@@ -248,14 +237,7 @@ class VPSearchResultController: UITableViewController {
         return number.int64Value.fileSizeString
     }
 
-    func getMagnet(for torrent: Any) -> String {
-        var magnet: String = ""
-        if let torrent = torrent as? [String:Any] {
-            magnet = torrent["magnet"] as? String ?? ""
-        }
-        else if let torrent = torrent as? KittenTorrent {
-            magnet = torrent.magnet
-        }
-        return magnet
+    func getMagnet(for torrent: CatTorrent) -> String {
+        return torrent.magnet
     }
 }

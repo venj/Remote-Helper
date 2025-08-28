@@ -305,15 +305,18 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         }
     }
 
-    func addMagnet() {
+    public func addMagnet() {
         let alert = UIAlertController(title: NSLocalizedString("Download magnet", comment: "Download magnet"), message: NSLocalizedString("Please paste in a magnet address:", comment: "Please paste in a magnet address:"), preferredStyle: .alert)
         alert.addTextField { (textField) in
             textField.keyboardType = .URL
             textField.clearButtonMode = .whileEditing
-            // TODO: Read pastboard.
+            if UIPasteboard.general.hasStrings {
+                textField.text = UIPasteboard.general.string
+            }
         }
         let saveAction = UIAlertAction(title: NSLocalizedString("Download", comment:"Download"), style: .default) { _ in
             let address = alert.textFields![0].text!
+            UIPasteboard.general.string = nil // Clear pasteboard
             Helper.shared.transmissionDownload(for: address)
         }
         alert.addAction(saveAction)

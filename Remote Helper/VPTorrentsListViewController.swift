@@ -22,7 +22,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     var datesDict: [String: [Any]] = [:] {
         didSet {
             dateList = datesDict.count == 0 ? [] : datesDict["items"] as! [String]
-            countList = datesDict.count == 0 ? [] : datesDict["count"] as! [Int]
+            countList = datesDict.count == 0 ? [] : datesDict["counts"] as! [Int]
             titles = dateList.enumerated().map { "\($1) (\(countList[$0]))"}
         }
     }
@@ -63,6 +63,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         let item = UIBarButtonItem(title: "🐱", style: .plain, target: self, action: #selector(showKitten))
         return item
     }()
+    var headers: HTTPHeaders = Configuration.shared.headers
     var currentSelectedTitle: String = ""
     var previewingIndexPath: IndexPath?
 
@@ -298,12 +299,13 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     @objc func hashTorrent() {
         guard let base64FileName = photos[currentPhotoIndex].base64String() else { return }
         Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
-        let request = Alamofire.request(Configuration.shared.hashTorrent(withName: base64FileName))
+        let request = Alamofire.request(Configuration.shared.hashTorrent(withName: base64FileName), headers: headers)
         request.responseJSON { [weak self] response in
             guard let self = self else { return }
             if response.result.isSuccess {
                 SwiftEntryKit.dismiss()
-                guard let responseObject = response.result.value as? [String: Any] else { return }
+                guard let json = response.result.value as? [String: Any] else { return }
+                guard let responseObject = json["data"] as? [String: Any] else { return }
                 guard let hash = responseObject["hash"] as? String, let torrent = responseObject["torrent"] as? String else { return }
                 let message = "magnet:?xt=urn:btih:\(hash.uppercased())"
                 Helper.shared.selectDownloadMethod(for: message, andTorrent: torrent, showIn: self)
@@ -327,12 +329,13 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         if Helper.shared.showCellularHUD() { return }
         guard let date = list[indexPath.row].addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) else { return }
         Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
-        let request = Alamofire.request(Configuration.shared.searchPath(withKeyword: date))
+        let request = Alamofire.request(Configuration.shared.searchPath(withKeyword: date), headers: headers)
         request.responseJSON { [weak self] response in
             guard let `self` = self else { return }
             SwiftEntryKit.dismiss()
             if response.result.isSuccess {
-                guard let photos = response.result.value as? [String] else { return }
+                guard let json = response.result.value as? [String: Any] else { return }
+                guard let photos = json["data"] as? [String] else { return }
                 self.photos = photos
                 self.mediaStartIndex = index
 //                self.mwPhotos.forEach {
@@ -355,11 +358,12 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         if Helper.shared.showCellularHUD() { return }
         Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
         navigationItem.rightBarButtonItem?.isEnabled = false
-        let request = Alamofire.request(Configuration.shared.torrentsListPath)
+        let request = Alamofire.request(Configuration.shared.torrentsListPath, headers: headers)
         request.responseJSON { [weak self] response in
             guard let `self` = self else { return }
             if response.result.isSuccess {
-                self.datesDict = response.result.value as! [String: [Any]]
+                let json = response.result.value as! [String: Any]
+                self.datesDict = json["data"] as! [String: [Any]]
                 DispatchQueue.global(qos: .background).async { [weak self] in
                     guard let `self` = self else { return }
                     self.cleanupUselessViewedTitles()
@@ -471,11 +475,12 @@ extension VPTorrentsListViewController : UIViewControllerPreviewingDelegate {
         pb.displayMediaNavigationArrows = true
         pb.zoomPhotosToFill = true
 
-        let request = Alamofire.request(Configuration.shared.searchPath(withKeyword: date))
+        let request = Alamofire.request(Configuration.shared.searchPath(withKeyword: date), headers: headers)
         request.responseJSON { [weak self] response in
             guard let `self` = self else { return }
             if response.result.isSuccess {
-                guard let photos = response.result.value as? [String] else { return }
+                guard let json = response.result.value as? [String: Any] else { return }
+                guard let photos = json["data"] as? [String] else { return }
                 self.photos = photos
                 self.mwPhotos.forEach {
                     $0.loadUnderlyingImageAndNotify()

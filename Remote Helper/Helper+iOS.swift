@@ -106,11 +106,10 @@ extension Helper {
         AppDelegate.shared.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }
 
-    // Nasty method naming, just for minimum code change
     func showTorrentSearchAlertInViewController(_ viewController:UIViewController?) {
         guard let viewController = viewController else { return } // Just do nothing...
         if (self.showCellularHUD()) { return }
-        let source = Configuration.shared.torrentKittenSource
+        let source = Configuration.shared.catTorrentSource
         let title = NSLocalizedString("Search Torrent Kitten", comment: "Search Torrent Kitten")
         let message = NSLocalizedString("Please enter video serial (or anything).\nUsing mirror: ", comment: "Please enter video serial (or anything).\nUsing mirror: ") + source.description
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -126,12 +125,23 @@ extension Helper {
                 self.showProcessingNote(withMessage: NSLocalizedString("Searching...", comment: "Searching..."))
             }
 
-            let link = self.kittenSearchPath(withKeyword: keyword)
+            let link = Configuration.shared.catSearchPath(withKeyword: keyword, source: source)
+            let headers: HTTPHeaders = Configuration.shared.headers
             let url = URL(string: link)!
-            let request = Alamofire.request(url)
+            let request = Alamofire.request(url, headers: headers)
+            let decoder = JSONDecoder()
             request.responseData { [weak self] response in
-                guard let `self` = self else { return }
-                guard response.result.isSuccess, let data = response.result.value else {
+                guard let `self` = self,
+                      let jsonData = response.result.value,
+                      let json = try? decoder.decode(CatResponse.self, from: jsonData)
+                    else {
+                    DispatchQueue.main.async { [weak self] in
+                        guard let `self` = self else { return }
+                        self.showNote(withMessage: NSLocalizedString("Connection failed.", comment: "Connection failed."), type: .error)
+                    }
+                    return
+                }
+                guard response.result.isSuccess else {
                     DispatchQueue.main.async { [weak self] in
                         guard let `self` = self else { return }
                         self.showNote(withMessage: NSLocalizedString("Connection failed.", comment: "Connection failed."), type: .error)
@@ -139,8 +149,8 @@ extension Helper {
                     return
                 }
 
-                let source = Configuration.shared.torrentKittenSource
-                let torrents = KittenTorrent.parse(data: data, source: source)
+                let torrents = json.data.contents
+                let total = json.data.total
                 if torrents.count == 0 {
                     DispatchQueue.main.async { [weak self] in
                         guard let `self` = self else { return }
@@ -153,7 +163,7 @@ extension Helper {
                 if Configuration.shared.isIntelligentTorrentDownloadEnabled {
                     let selectedTorrents = torrents.filter { torrent in
                         let lowercasedTitle = torrent.title.lowercased()
-                        if torrent.date.timeIntervalSinceNow < 3153600, // torrent older than 1 year
+                        if torrent.dateObject.timeIntervalSinceNow < 3153600, // torrent older than 1 year
                             lowercasedTitle.contains("mp4"), // MP4 Prefered
                             lowercasedTitle.matches("\\w+-?\\d+"), // Bango pattern
                             (lowercasedTitle.contains(keyword.lowercased()) ||
@@ -178,6 +188,8 @@ extension Helper {
                     if let tabControl =  UIApplication.shared.keyWindow?.rootViewController as? UITabBarController, let navControl = tabControl.selectedViewController as? UINavigationController, let searchControl = navControl.topViewController as? VPSearchResultController {
                         searchControl.torrents = torrents
                         searchControl.keyword = keyword
+                        print("total in search: ", total)
+                        searchControl.total = total
                         searchControl.tableView.reloadData()
                         SwiftEntryKit.dismiss()
                         return
@@ -185,6 +197,7 @@ extension Helper {
                     let searchResultController = VPSearchResultController()
                     searchResultController.torrents = torrents
                     searchResultController.keyword = keyword
+                    searchResultController.total = total
                     if let navigationController = viewController as? UINavigationController {
                         navigationController.pushViewController(searchResultController, animated: true)
                     }
@@ -205,7 +218,6 @@ extension Helper {
         alertController.addAction(cancelAction)
         viewController.present(alertController, animated: true, completion: nil)
     }
-
 
     func transmissionDownload(for link: String) {
         if !Configuration.shared.isIntelligentTorrentDownloadEnabled {

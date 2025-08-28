@@ -159,8 +159,8 @@
 			<string>Magnet Source</string>
 			<key>Titles</key>
 			<array>
-				<string>NY S</string>
-				<string>NY N</string>
+				<string>NYN</string>
+				<string>NYS</string>
 			</array>
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>

@@ -7,12 +7,13 @@
 //
 
 import Foundation
+import Alamofire
 
 open class Configuration {
 
     public static let shared = Configuration()
     private let defaults = UserDefaults.standard
-    private let defaultValues: [String: Any] = [ViewedResources: [],
+    private let defaultValues: [String: Any] = [ViewedResources: [String](),
                                  RequestUseSSL: true,
                                  TransmissionUserNameKey: "username",
                                  TransmissionPasswordKey: "password",
@@ -165,6 +166,17 @@ open class Configuration {
             defaults.synchronize()
         }
     }
+    
+    // Use the Same key as old torrent kitten, because this will replace torrent kitten.
+    open var catTorrentSource: CatSource {
+        get {
+            return CatSource(rawValue: defaults.integer(forKey: TorrentKittenSource)) ?? .main
+        }
+        set {
+            defaults.set(newValue.rawValue, forKey: TorrentKittenSource)
+            defaults.synchronize()
+        }
+    }
 
     open var customUserAgent: String? {
         get {
@@ -221,21 +233,26 @@ open class Configuration {
     }
 
     var torrentsListPath: String {
-        return baseLink + "/torrents?stats=true"
+        return baseLink + "/torrents"
     }
+    
+    lazy var headers: HTTPHeaders = {
+        return [
+            "User-Agent": Configuration.shared.customUserAgent ?? "iOS Example/1.0 (com.alamofire.iOS-Example; build:1; iOS 13.0.0) Alamofire/5.0.0",
+            "Accept": "application/json"
+        ]
+    }()
 
     func torrentPath(withInfoHash infoHash: String) -> String {
         return baseLink + "/torrent/\(infoHash)"
     }
 
-    func dbSearchPath(withKeyword keyword: String) -> String {
-        let kw = keyword.addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics)
-        let escapedKeyword = kw == nil ? "" : kw!
-        return baseLink + "/db_search?keyword=\(escapedKeyword)"
-    }
-
     func searchPath(withKeyword keyword: String) -> String {
         return baseLink + "/search/\(keyword)"
+    }
+    
+    func catSearchPath(withKeyword keyword: String, source: CatSource, page: Int = 1) -> String {
+        return baseLink + "/nyaa?search=\(keyword.percentEncodedString)&sukebei=\(source.rawValue)&page=\(page)"
     }
 
     func hashTorrent(withName name: String) -> String{

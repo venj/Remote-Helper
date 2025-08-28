@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="B4O-Zl-KdQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="B4O-Zl-KdQ">
     <device id="ipad9_7" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -55,10 +55,10 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ResourceSiteCatagoriesTableCell" id="djk-eK-adk">
-                                <rect key="frame" x="0.0" y="44.5" width="320" height="43.5"/>
+                                <rect key="frame" x="0.0" y="50" width="320" height="44.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="djk-eK-adk" id="Smj-gk-5cx">
-                                    <rect key="frame" x="0.0" y="0.0" width="295.5" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="293.5" height="44.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
@@ -87,10 +87,10 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ResourcePageTableCell" id="S5d-HA-BsY">
-                                <rect key="frame" x="0.0" y="44.5" width="320" height="43.5"/>
+                                <rect key="frame" x="0.0" y="50" width="320" height="44.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="S5d-HA-BsY" id="WV9-zZ-5m9">
-                                    <rect key="frame" x="0.0" y="0.0" width="295.5" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="293.5" height="44.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
@@ -128,7 +128,7 @@
         <!--DYTT-->
         <scene sceneID="5vt-hf-q3P">
             <objects>
-                <splitViewController storyboardIdentifier="DYTTSplitViewController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="SLF-uC-ize" customClass="MySplitViewController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
+                <splitViewController storyboardIdentifier="DYTTSplitViewController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" allowDoubleColumnStyle="YES" id="SLF-uC-ize" customClass="MySplitViewController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="DYTT" image="tab_dytt" id="vpO-Bt-1WM"/>
                     <connections>
                         <segue destination="TDL-qg-ySQ" kind="relationship" relationship="masterViewController" id="ria-FU-YoN"/>
@@ -144,15 +144,15 @@
             <objects>
                 <tableViewController hidesBottomBarWhenPushed="YES" clearsSelectionOnViewWillAppear="NO" id="eHC-md-X3U" customClass="VPTorrentsListViewController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="md5-37-rO9">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="1024"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="VPTorrentsListViewCell" id="BAh-r7-Fis">
-                                <rect key="frame" x="0.0" y="44.5" width="320" height="43.5"/>
+                                <rect key="frame" x="0.0" y="50" width="768" height="44.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="BAh-r7-Fis" id="Y7B-iw-t56">
-                                    <rect key="frame" x="0.0" y="0.0" width="267" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="705.5" height="44.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
@@ -182,7 +182,7 @@
             <objects>
                 <navigationController hidesBottomBarWhenPushed="YES" id="QJ3-BQ-XxV" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="r80-0g-pZA">
-                        <rect key="frame" x="0.0" y="20" width="320" height="50"/>
+                        <rect key="frame" x="0.0" y="20" width="768" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -196,7 +196,7 @@
         <!--Torrents-->
         <scene sceneID="0z5-D3-kaa">
             <objects>
-                <splitViewController storyboardIdentifier="TorrentsSplitViewController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="OrK-bK-XHo" customClass="MySplitViewController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
+                <splitViewController storyboardIdentifier="TorrentsSplitViewController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" allowDoubleColumnStyle="YES" id="OrK-bK-XHo" customClass="MySplitViewController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Torrents" image="tab_torrents" id="gvi-kb-4Wa"/>
                     <connections>
                         <segue destination="QJ3-BQ-XxV" kind="relationship" relationship="masterViewController" id="LDd-OH-eRv"/>
@@ -231,15 +231,15 @@
             <objects>
                 <tableViewController hidesBottomBarWhenPushed="YES" clearsSelectionOnViewWillAppear="NO" id="nE0-od-afI" customClass="WebContentTableViewController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="n8b-yG-5Yc">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="1024"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="WebContentTableViewCell" id="bAp-Xv-Y6t">
-                                <rect key="frame" x="0.0" y="44.5" width="320" height="43.5"/>
+                                <rect key="frame" x="0.0" y="50" width="768" height="44.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bAp-Xv-Y6t" id="aIR-M5-mhk">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="768" height="44.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
@@ -274,7 +274,7 @@
             <objects>
                 <navigationController hidesBottomBarWhenPushed="YES" id="VcP-dH-YOt" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="EWo-7W-Trj">
-                        <rect key="frame" x="0.0" y="20" width="320" height="50"/>
+                        <rect key="frame" x="0.0" y="20" width="768" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -288,7 +288,7 @@
         <!--Addresses-->
         <scene sceneID="fvm-wf-bid">
             <objects>
-                <splitViewController storyboardIdentifier="AddressesSplitViewController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="POv-ad-GRv" customClass="MySplitViewController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
+                <splitViewController storyboardIdentifier="AddressesSplitViewController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" allowDoubleColumnStyle="YES" id="POv-ad-GRv" customClass="MySplitViewController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Addresses" image="tab_cloud" id="C60-9n-TUA"/>
                     <connections>
                         <segue destination="VcP-dH-YOt" kind="relationship" relationship="masterViewController" id="8gk-vi-6j7"/>
@@ -363,10 +363,10 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="BangumiTableCell" id="HT7-dJ-HuZ">
-                                <rect key="frame" x="0.0" y="44.5" width="768" height="43.5"/>
+                                <rect key="frame" x="0.0" y="50" width="768" height="44.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="HT7-dJ-HuZ" id="2fP-hq-cqJ">
-                                    <rect key="frame" x="0.0" y="0.0" width="739.5" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="737.5" height="44.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -392,10 +392,10 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="BangumiTableCell" id="jJ9-Li-BKq">
-                                <rect key="frame" x="0.0" y="44.5" width="768" height="43.5"/>
+                                <rect key="frame" x="0.0" y="50" width="768" height="44.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="jJ9-Li-BKq" id="chi-dI-fmE">
-                                    <rect key="frame" x="0.0" y="0.0" width="739.5" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="737.5" height="44.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -415,7 +415,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="87O-sE-POn"/>
         <segue reference="08t-F3-UJX"/>
-        <segue reference="eQY-Bb-Xiv"/>
+        <segue reference="qYs-Vh-AK0"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="tab_cloud" width="30" height="30"/>

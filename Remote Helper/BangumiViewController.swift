@@ -58,7 +58,7 @@ class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopo
             navigationItem.rightBarButtonItem = editButtonItem
         }
 
-        let modeItem = AppDelegate.shared.dyttSplitViewController!.displayModeButtonItem
+        let modeItem = AppDelegate.shared.dyttSplitViewController?.displayModeButtonItem
         navigationItem.leftBarButtonItem = modeItem
         navigationItem.leftItemsSupplementBackButton = true
     }

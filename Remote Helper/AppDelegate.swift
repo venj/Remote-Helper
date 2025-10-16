@@ -88,6 +88,15 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
         rootViewController?.tabBar.isHidden = true
         #endif
 
+        // FIXME: window is nil, how to fix?
+        if let tabBarController {
+            tabBarController.viewControllers?.forEach { (vc) in
+                if let vc = vc as? MySplitViewController {
+                    vc.delegate = vc
+                }
+            }
+        }
+        
         // Window
         self.window?.makeKeyAndVisible()
         return true
@@ -307,7 +316,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
 
 // Helper function inserted by Swift 4.2 migrator.
 fileprivate func convertToUIBackgroundTaskIdentifier(_ input: Int) -> UIBackgroundTaskIdentifier {
-	return UIBackgroundTaskIdentifier(rawValue: input)
+    return UIBackgroundTaskIdentifier(rawValue: input)
 }
 
 #if targetEnvironment(macCatalyst)

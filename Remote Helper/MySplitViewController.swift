@@ -15,12 +15,18 @@ class MySplitViewController: UISplitViewController, UISplitViewControllerDelegat
         self.delegate = self
         self.preferredDisplayMode = .oneBesideSecondary
     }
-
+    
     #if !targetEnvironment(macCatalyst)
     func splitViewController(
              _ splitViewController: UISplitViewController,
              collapseSecondary secondaryViewController: UIViewController,
-             onto primaryViewController: UIViewController) -> Bool {
+             onto primaryViewController: UIViewController) -> Bool
+    {
+//        if (secondaryViewController.isKind(of: UINavigationController.self)) {
+//            return true
+//        } else {
+//            return false
+//        }
         return true
     }
     #endif

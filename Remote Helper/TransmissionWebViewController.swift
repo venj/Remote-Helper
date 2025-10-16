@@ -22,8 +22,8 @@ class TransmissionWebViewController: WebViewController {
             webView.goBack()
         }
         else {
-            if let _ = presentingViewController {
-                Helper.shared.dismissMe(sender)
+            if let p = presentingViewController {
+                p.dismiss(animated: true)
             }
             else {
                 navigationController?.popViewController(animated: true)

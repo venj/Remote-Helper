@@ -17,7 +17,7 @@ class ResourceWebViewController: WebViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        let modeItem = AppDelegate.shared.addressesSplitViewController!.displayModeButtonItem
+        let modeItem = AppDelegate.shared.addressesSplitViewController?.displayModeButtonItem
         navigationItem.leftBarButtonItem = modeItem
         navigationItem.leftItemsSupplementBackButton = true
 

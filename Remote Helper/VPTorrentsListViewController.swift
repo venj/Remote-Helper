@@ -44,7 +44,7 @@ class VPTorrentsListViewController: UITableViewController, UIPopoverPresentation
         return photos.compactMap { photo in
             let url = URL(string: Configuration.shared.baseLink)!
             let fullURL = url.appendingPathComponent(photo)
-            return RemoteMedia(source: .remoteImage(imageURL: fullURL, thumbnailURL: fullURL))
+            return RemoteMedia(source: .remoteImage(imageURL: fullURL, thumbnailURL: nil))
         }
     }
     var collapseDetailViewController: Bool = true

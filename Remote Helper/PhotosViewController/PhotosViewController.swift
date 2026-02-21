@@ -15,6 +15,7 @@ import Kingfisher
 
 // MARK: - ViewController
 class PhotosViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
+    private static let browserProgressViewTag = 99_001
     
     private var collectionView: UICollectionView!
     
@@ -42,6 +43,7 @@ class PhotosViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     private weak var photoBrowser: JXPhotoBrowserViewController?
     private var hasAutoPresentedBrowser = false
+    private var failedThumbnailIndexes: Set<Int> = []
     
     /// 是否允许自动旋转
     open override var shouldAutorotate: Bool {
@@ -55,6 +57,7 @@ class PhotosViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureLocalImageCache()
 //        setupDefaultDataIfNeeded()
         setupNetworkMonitoring()
         setupCollectionView()
@@ -125,6 +128,19 @@ class PhotosViewController: UIViewController, UICollectionViewDataSource, UIColl
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaThumbnailCell.reuseIdentifier, for: indexPath) as! MediaThumbnailCell
         cell.configure(with: items[indexPath.item])
+        switch items[indexPath.item].source {
+        case .remoteImage:
+            cell.onImageLoadResult = { [weak self] success in
+                guard let self = self else { return }
+                if success {
+                    self.failedThumbnailIndexes.remove(indexPath.item)
+                } else {
+                    self.failedThumbnailIndexes.insert(indexPath.item)
+                }
+            }
+        case .remoteVideo:
+            cell.onImageLoadResult = nil
+        }
         if let browser = photoBrowser, browser.pageIndex == indexPath.item {
             cell.imageView.isHidden = true
         } else {
@@ -225,11 +241,57 @@ extension PhotosViewController: JXPhotoBrowserDelegate {
         case let .remoteImage(imageURL, thumbnailURL):
             guard let photoCell = cell as? JXZoomImageCell else { return }
             print("[willDisplay] index: \(index), imageURL: \(imageURL)")
-            // 同步取出缓存的缩略图作为占位图，然后加载原图
             let placeholder = thumbnailURL.flatMap { ImageCache.default.retrieveImageInMemoryCache(forKey: $0.absoluteString) }
-            photoCell.imageView.kf.setImage(with: imageURL, placeholder: placeholder) { [weak photoCell] _ in
-                photoCell?.setNeedsLayout()
+            let progressView = browserProgressView(in: photoCell)
+            progressView.progress = 0
+            progressView.isHidden = false
+
+            var options = localCacheOptions
+            if failedThumbnailIndexes.contains(index) {
+                options.append(.forceRefresh)
             }
+
+            photoCell.imageView.kf.setImage(
+                with: imageURL,
+                placeholder: placeholder,
+                options: options,
+                progressBlock: { receivedSize, totalSize in
+                    let progress: CGFloat
+                    if totalSize > 0 {
+                        progress = min(max(CGFloat(receivedSize) / CGFloat(totalSize), 0), 1)
+                    } else {
+                        progress = 0
+                    }
+                    DispatchQueue.main.async {
+                        progressView.progress = progress
+                        progressView.isHidden = false
+                    }
+                },
+                completionHandler: { [weak self, weak photoCell] result in
+                    DispatchQueue.main.async {
+                        progressView.progress = 1
+                        progressView.isHidden = true
+                        photoCell?.setNeedsLayout()
+                    }
+                    switch result {
+                    case .success:
+                        DispatchQueue.main.async {
+                            guard let self = self else { return }
+                            self.failedThumbnailIndexes.remove(index)
+                            let indexPath = IndexPath(item: index, section: 0)
+                            if let thumbCell = self.collectionView.cellForItem(at: indexPath) as? MediaThumbnailCell {
+                                thumbCell.applyLoadedPreviewImage(photoCell?.imageView.image)
+                            } else {
+                                self.collectionView.reloadItems(at: [indexPath])
+                            }
+                        }
+                    case .failure:
+                        DispatchQueue.main.async {
+                            self?.failedThumbnailIndexes.insert(index)
+                        }
+                    }
+                }
+            )
         case let .remoteVideo(videoURL, thumbnailURL):
             guard let videoCell = cell as? VideoPlayerCell else { return }
             print("[willDisplay] index: \(index), videoURL: \(videoURL)")
@@ -239,7 +301,7 @@ extension PhotosViewController: JXPhotoBrowserDelegate {
             
             // 内存缓存为空时（如 App 从后台恢复后缓存被清理），异步从磁盘/网络加载封面图
             if memoryImage == nil {
-                videoCell.imageView.kf.setImage(with: thumbnailURL) { [weak videoCell] _ in
+                videoCell.imageView.kf.setImage(with: thumbnailURL, options: localCacheOptions) { [weak videoCell] _ in
                     videoCell?.setNeedsLayout()
                 }
             }
@@ -247,6 +309,14 @@ extension PhotosViewController: JXPhotoBrowserDelegate {
     }
     
     func photoBrowser(_ browser: JXPhotoBrowserViewController, didEndDisplaying cell: JXPhotoBrowserAnyCell, at index: Int) {
+        if let photoCell = cell as? JXZoomImageCell {
+            photoCell.imageView.kf.cancelDownloadTask()
+            if let progressView = photoCell.contentView.viewWithTag(Self.browserProgressViewTag) as? CircularProgressView {
+                progressView.progress = 0
+                progressView.isHidden = true
+            }
+        }
+
         // 停止视频播放
         if let videoCell = cell as? VideoPlayerCell {
             videoCell.stopVideo()
@@ -315,8 +385,49 @@ extension PhotosViewController {
     }
 }
 
+private extension PhotosViewController {
+    func browserProgressView(in cell: JXZoomImageCell) -> CircularProgressView {
+        if let existing = cell.contentView.viewWithTag(Self.browserProgressViewTag) as? CircularProgressView {
+            return existing
+        }
+
+        let progressView = CircularProgressView()
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        progressView.tag = Self.browserProgressViewTag
+        progressView.isHidden = true
+        progressView.progress = 0
+        cell.contentView.addSubview(progressView)
+        NSLayoutConstraint.activate([
+            progressView.centerXAnchor.constraint(equalTo: cell.contentView.centerXAnchor),
+            progressView.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor),
+            progressView.widthAnchor.constraint(equalToConstant: 32),
+            progressView.heightAnchor.constraint(equalToConstant: 32)
+        ])
+        return progressView
+    }
+}
+
 // MARK: - Network Monitoring
 private extension PhotosViewController {
+    var localCacheOptions: KingfisherOptionsInfo {
+        [
+            .cacheOriginalImage,
+            .diskCacheExpiration(.days(30)),
+            .memoryCacheExpiration(.days(1)),
+            .loadDiskFileSynchronously
+        ]
+    }
+
+    func configureLocalImageCache() {
+        ImageCache.default.diskStorage.config.expiration = .days(30)
+        ImageCache.default.diskStorage.config.sizeLimit = 500 * 1024 * 1024
+        #if KINGFISHER_V6
+        ImageCache.default.diskStorage.config.autoExtAfterHashedFileName = true
+        #endif
+        ImageCache.default.memoryStorage.config.expiration = .days(1)
+        ImageCache.default.memoryStorage.config.totalCostLimit = 100 * 1024 * 1024
+    }
+
     /// 启动网络权限/连通性监控，连通后刷新列表以触发加载
     func setupNetworkMonitoring() {
         networkMonitor.pathUpdateHandler = { [weak self] path in

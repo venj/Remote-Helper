@@ -192,6 +192,7 @@ class VPTorrentsListViewController: UITableViewController, UIPopoverPresentation
                 if let cell = tableView.cellForRow(at: indexPath), let title = cell.textLabel?.text {
                     cell.textLabel?.textColor = UIColor.gray
                     viewedTitles.insert(title)
+                    pb.title = title
                 }
                 pb.items = remotePhotos
                 pb.overlayActionButtons = [

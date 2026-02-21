@@ -41,6 +41,7 @@ class PhotosViewController: UIViewController, UICollectionViewDataSource, UIColl
     }
     
     private weak var photoBrowser: JXPhotoBrowserViewController?
+    private var hasAutoPresentedBrowser = false
     
     /// 是否允许自动旋转
     open override var shouldAutorotate: Bool {
@@ -57,6 +58,14 @@ class PhotosViewController: UIViewController, UICollectionViewDataSource, UIColl
 //        setupDefaultDataIfNeeded()
         setupNetworkMonitoring()
         setupCollectionView()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        guard !hasAutoPresentedBrowser else { return }
+        guard !items.isEmpty else { return }
+        hasAutoPresentedBrowser = true
+        presentPhotoBrowser(at: 0)
     }
     
     private func setupDefaultDataIfNeeded() {
@@ -141,10 +150,15 @@ class PhotosViewController: UIViewController, UICollectionViewDataSource, UIColl
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        presentPhotoBrowser(at: indexPath.item)
+    }
+    
+    private func presentPhotoBrowser(at index: Int) {
+        guard items.indices.contains(index) else { return }
         let browser = JXPhotoBrowserViewController()
         browser.register(VideoPlayerCell.self, forReuseIdentifier: VideoPlayerCell.videoReuseIdentifier)
         browser.delegate = self
-        browser.initialIndex = indexPath.item
+        browser.initialIndex = index
         
         // 默认配置
         browser.scrollDirection = .horizontal

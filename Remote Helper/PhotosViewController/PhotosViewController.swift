@@ -18,8 +18,8 @@ class PhotosViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     private var collectionView: UICollectionView!
     
-    /// 可由外部替换的浏览器 Overlay（类型保持为协议，外部可按需 cast 到具体子类配置）
-    var browserOverlay: JXPhotoBrowserOverlay = PageNumberActionOverlay()
+    /// 可由外部替换的浏览器 Overlay 工厂（每次展示创建新实例，避免复用状态残留）
+    var makeBrowserOverlay: () -> JXPhotoBrowserOverlay = { PageNumberActionOverlay() }
     
     /// 可由外部配置的大图 Overlay 按钮（支持 0~2 个）
     /// 建议在 .init 时直接通过 onTap 绑定事件，无需依赖 index 分发。
@@ -153,7 +153,9 @@ class PhotosViewController: UIViewController, UICollectionViewDataSource, UIColl
         
         self.photoBrowser = browser
         
-        if let overlay = browserOverlay as? PageNumberActionOverlay {
+        let overlay = makeBrowserOverlay()
+        
+        if let overlay = overlay as? PageNumberActionOverlay {
             if overlayActionButtons.isEmpty {
                 overlay.actionButtons = makeDefaultOverlayButtons()
             } else {
@@ -171,7 +173,7 @@ class PhotosViewController: UIViewController, UICollectionViewDataSource, UIColl
             }
         }
         
-        browser.addOverlay(browserOverlay)
+        browser.addOverlay(overlay)
         browser.present(from: self)
     }
     

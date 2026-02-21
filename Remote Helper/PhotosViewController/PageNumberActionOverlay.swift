@@ -92,7 +92,8 @@ final class PageNumberActionOverlay: UIView, JXPhotoBrowserOverlay, UIGestureRec
     }()
 
     private var actionUIButtons: [UIButton] = []
-    private var pinnedToContainer = false
+    private weak var installedContainer: UIView?
+    private var containerConstraints: [NSLayoutConstraint] = []
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -106,7 +107,8 @@ final class PageNumberActionOverlay: UIView, JXPhotoBrowserOverlay, UIGestureRec
 
     func setup(with browser: JXPhotoBrowserViewController) {
         self.browser = browser
-        if overlayTapGesture.view == nil {
+        if overlayTapGesture.view !== browser.view {
+            overlayTapGesture.view?.removeGestureRecognizer(overlayTapGesture)
             browser.view.addGestureRecognizer(overlayTapGesture)
         }
         disableVisibleCellSingleTap()
@@ -115,15 +117,20 @@ final class PageNumberActionOverlay: UIView, JXPhotoBrowserOverlay, UIGestureRec
             self?.disableVisibleCellSingleTap()
             self?.bindVisibleCellDoubleTap()
         }
-        guard let container = superview, !pinnedToContainer else { return }
-
-        NSLayoutConstraint.activate([
+        setOverlayContentHidden(false, animated: false)
+        
+        guard let container = superview else { return }
+        guard installedContainer !== container || containerConstraints.isEmpty else { return }
+        
+        NSLayoutConstraint.deactivate(containerConstraints)
+        containerConstraints = [
             topAnchor.constraint(equalTo: container.topAnchor),
             leadingAnchor.constraint(equalTo: container.leadingAnchor),
             trailingAnchor.constraint(equalTo: container.trailingAnchor),
             bottomAnchor.constraint(equalTo: container.bottomAnchor)
-        ])
-        pinnedToContainer = true
+        ]
+        NSLayoutConstraint.activate(containerConstraints)
+        installedContainer = container
     }
 
     func reloadData(numberOfItems: Int, pageIndex: Int) {

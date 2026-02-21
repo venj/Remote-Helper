@@ -378,7 +378,7 @@ extension Helper {
             abort()
         }
         DispatchQueue.main.async {
-            viewController.navigationController?.topViewController?.present(alert, animated: true) {
+            (viewController.presentedViewController ?? viewController.navigationController?.topViewController)?.present(alert, animated: true) {
                 alert.popoverPresentationController?.passthroughViews = nil
             }
         }

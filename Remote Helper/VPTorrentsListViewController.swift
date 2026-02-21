@@ -12,7 +12,7 @@ import Alamofire
 import SwiftEntryKit
 import Kingfisher
 
-class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate, UIPopoverPresentationControllerDelegate {
+class VPTorrentsListViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
     let CellIdentifier = "VPTorrentsListViewCell"
     let localizedStatusStrings: [String: String] = ["completed" : NSLocalizedString("completed", comment: "completed"),
         "waiting" : NSLocalizedString("waiting", comment:"waiting"),
@@ -39,18 +39,15 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     var countList: [Int] = []
     var filteredCountList: [Int] = []
 
-    var mwPhotos: [Media] {
+    var photos: [String] = []
+    var remotePhotos: [RemoteMedia] {
         return photos.compactMap { photo in
-            guard let url = URL(string: Configuration.shared.baseLink) else { return nil }
+            let url = URL(string: Configuration.shared.baseLink)!
             let fullURL = url.appendingPathComponent(photo)
-            let p = Media(url: fullURL)
-            p.caption = fullURL.lastPathComponent
-            return p
+            return RemoteMedia(source: .remoteImage(imageURL: fullURL, thumbnailURL: fullURL))
         }
     }
     var collapseDetailViewController: Bool = true
-
-    var photos: [String] = []
 
     var currentPhotoIndex: Int = 0
     lazy var searchController: UISearchController = UISearchController(searchResultsController: nil)
@@ -110,15 +107,15 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
         }
 
         // Peek
-        if #available(iOS 9.0, *), traitCollection.forceTouchCapability == .available {
-            registerForPreviewing(with: self, sourceView: tableView)
-        }
+//        if #available(iOS 9.0, *), traitCollection.forceTouchCapability == .available {
+//            registerForPreviewing(with: self, sourceView: tableView)
+//        }
 
         // Hide searchbar initially.
         tableView.contentOffset = CGPoint(x: 0.0, y: searchBar.frame.height)
 
-        NotificationCenter.default.addObserver(self, selector: #selector(photoPreloadFinished(_:)), name: MediaBrowser.mediaLoadingDidEndNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(showNoMorePhotosHUD(_:)), name: MediaBrowser.noMoreMediaNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(photoPreloadFinished(_:)), name: MediaBrowser.mediaLoadingDidEndNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(showNoMorePhotosHUD(_:)), name: MediaBrowser.noMoreMediaNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(viewedTitlesDidChange(_:)), name: NSNotification.Name.viewedTitlesDidChangeNotification, object: nil)
     }
 
@@ -191,12 +188,12 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
     }
 
 
-    var mediaStartIndex = 0
-
+//    var mediaStartIndex = 0
+    // TODO: 修改此处，初始化 PhotosViewController。
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowTorrentsSegue" {
             if let nav = segue.destination as? UINavigationController,
-                let pb = nav.topViewController as? MediaBrowser,
+                let pb = nav.topViewController as? PhotosViewController,
                 let indexPath = tableView.indexPathForSelectedRow {
                 // Update currentSelectedTitle
                 let list = !searchController.isActive ? dateList : filteredDateList
@@ -206,90 +203,107 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
                     cell.textLabel?.textColor = UIColor.gray
                     viewedTitles.insert(title)
                 }
+                pb.items = remotePhotos
+                pb.overlayActionButtons = [
+                    .init(
+                        title: "🧲",
+                        style: .default,
+                        onTap: { [weak self] _ in
+                            self?.hashTorrent()
+                        }
+                    ),
+                    .init(
+                        title: "🐱",
+                        style: .default,
+                        onTap: { [weak self] overlay in
+                            self?.showKitten()
+                        }
+                    )
+                ]
 
-                pb.delegate = self
-                pb.displayActionButton = false
-                pb.displayMediaNavigationArrows = true
-                pb.zoomPhotosToFill = true
-                pb.hideControlsOnStartup = false
-                pb.delayToHideElements = TimeInterval(Int.max) // FIXME: do not hide controls.
-                pb.setCurrentIndex(at: mediaStartIndex)
+//                pb.delegate = self
+//                pb.displayActionButton = false
+//                pb.displayMediaNavigationArrows = true
+//                pb.zoomPhotosToFill = true
+//                pb.hideControlsOnStartup = false
+//                pb.delayToHideElements = TimeInterval(Int.max) // FIXME: do not hide controls.
+//                pb.setCurrentIndex(at: 0)
             }
         }
     }
 
-    @objc func photoPreloadFinished(_ notification: Notification) {
-        //print("Photo load fihished! \(notification.object)")
-    }
+//    @objc func photoPreloadFinished(_ notification: Notification) {
+//        //print("Photo load fihished! \(notification.object)")
+//    }
 
-    @objc func showNoMorePhotosHUD(_ notification: Notification) {
-        Helper.shared.showNote(withMessage: NSLocalizedString("No more photos.", comment: "No more photos."), type: .warning)
-    }
+//    @objc func showNoMorePhotosHUD(_ notification: Notification) {
+//        Helper.shared.showNote(withMessage: NSLocalizedString("No more photos.", comment: "No more photos."), type: .warning)
+//    }
 
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        let list = !searchController.isActive ? dateList : filteredDateList
-        currentSelectedTitle = list[(indexPath as NSIndexPath).row]
-        if Helper.shared.showCellularHUD() { return }
-        let alertController = UIAlertController(title: NSLocalizedString("Initial Index", comment: "Initial Index"), message: NSLocalizedString("Please enter a number for photo index(from 1).", comment: "Please enter a number for photo index(from 1)."), preferredStyle: .alert)
-        alertController.addTextField { (textField) in
-            textField.placeholder = "1"
-            textField.keyboardType = .numberPad
-        }
-        let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK") , style: .default) { [weak self] _ in
-            guard let `self` = self else { return }
-            var index = 1
-            if let i = Int((alertController.textFields?[0].text)!) { index = i }
-            if index < 1 { index = 1 }
-            if index > self.photos.count { index = self.photos.count }
-            if let cell = tableView.cellForRow(at: indexPath), let title = cell.textLabel?.text {
-                cell.textLabel?.textColor = UIColor.gray
-                self.viewedTitles.insert(title)
-            }
-            // self.tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
-            self.showPhotoBrowser(forIndexPath: indexPath, initialPhotoIndex: index - 1)
-        }
-        alertController.addAction(okAction)
-        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
-        alertController.addAction(cancelAction)
-        present(alertController, animated: true, completion: nil)
+//        let list = !searchController.isActive ? dateList : filteredDateList
+//        currentSelectedTitle = list[(indexPath as NSIndexPath).row]
+//        if Helper.shared.showCellularHUD() { return }
+//        let alertController = UIAlertController(title: NSLocalizedString("Initial Index", comment: "Initial Index"), message: NSLocalizedString("Please enter a number for photo index(from 1).", comment: "Please enter a number for photo index(from 1)."), preferredStyle: .alert)
+//        alertController.addTextField { (textField) in
+//            textField.placeholder = "1"
+//            textField.keyboardType = .numberPad
+//        }
+//        let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK") , style: .default) { [weak self] _ in
+//            guard let `self` = self else { return }
+//            var index = 1
+//            if let i = Int((alertController.textFields?[0].text)!) { index = i }
+//            if index < 1 { index = 1 }
+//            if index > self.photos.count { index = self.photos.count }
+//            if let cell = tableView.cellForRow(at: indexPath), let title = cell.textLabel?.text {
+//                cell.textLabel?.textColor = UIColor.gray
+//                self.viewedTitles.insert(title)
+//            }
+//            // self.tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+//            self.showPhotoBrowser(forIndexPath: indexPath, initialPhotoIndex: index - 1)
+//        }
+//        alertController.addAction(okAction)
+//        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
+//        alertController.addAction(cancelAction)
+//        present(alertController, animated: true, completion: nil)
     }
 
-    //MARK: - MWPhotoBrowser delegate
-
-    func numberOfMedia(in mediaBrowser: MediaBrowser) -> Int {
-        return mwPhotos.count
-    }
-
-    func media(for mediaBrowser: MediaBrowser, at index: Int) -> Media {
-        if (index < mwPhotos.count) {
-            return mwPhotos[index]
-        }
-        else {
-            return index < 0 ? mwPhotos[0] : mwPhotos[mwPhotos.count - 1]
-        }
-    }
-
-    func thumbnail(for mediaBrowser: MediaBrowser, at index: Int) -> Media {
-        return media(for: mediaBrowser, at: index)
-    }
-
-    func didDisplayMedia(at index: Int, in mediaBrowser: MediaBrowser) {
-        currentPhotoIndex = index
-        if !mediaBrowser.view.subviews.contains(attachedProgressView) {
-            attachProgressView(to: mediaBrowser.view)
-        }
-        let progress = Float(index + 1) / Float(photos.count)
-        attachedProgressView.progress = progress
-        mediaBrowser.navigationItem.rightBarButtonItems  = [kittenItem, hashItem]
-
-        let modeItem = AppDelegate.shared.torrentsSplitViewController?.displayModeButtonItem
-        mediaBrowser.navigationItem.leftBarButtonItem = modeItem
-        mediaBrowser.navigationItem.leftItemsSupplementBackButton = true
-    }
-
-    func title(for mediaBrowser: MediaBrowser, at index: Int) -> String? {
-        return "\(currentSelectedTitle) (\(currentPhotoIndex + 1)/\(photos.count))"
-    }
+//    //MARK: - MWPhotoBrowser delegate
+//
+//    func numberOfMedia(in mediaBrowser: MediaBrowser) -> Int {
+//        return mwPhotos.count
+//    }
+//
+//    func media(for mediaBrowser: MediaBrowser, at index: Int) -> Media {
+//        if (index < mwPhotos.count) {
+//            return mwPhotos[index]
+//        }
+//        else {
+//            return index < 0 ? mwPhotos[0] : mwPhotos[mwPhotos.count - 1]
+//        }
+//    }
+//
+//    func thumbnail(for mediaBrowser: MediaBrowser, at index: Int) -> Media {
+//        return media(for: mediaBrowser, at: index)
+//    }
+//
+//    func didDisplayMedia(at index: Int, in mediaBrowser: MediaBrowser) {
+//        currentPhotoIndex = index
+//        if !mediaBrowser.view.subviews.contains(attachedProgressView) {
+//            attachProgressView(to: mediaBrowser.view)
+//        }
+//        let progress = Float(index + 1) / Float(photos.count)
+//        attachedProgressView.progress = progress
+//        mediaBrowser.navigationItem.rightBarButtonItems  = [kittenItem, hashItem]
+//
+//        let modeItem = AppDelegate.shared.torrentsSplitViewController?.displayModeButtonItem
+//        mediaBrowser.navigationItem.leftBarButtonItem = modeItem
+//        mediaBrowser.navigationItem.leftItemsSupplementBackButton = true
+//    }
+//
+//    func title(for mediaBrowser: MediaBrowser, at index: Int) -> String? {
+//        return "\(currentSelectedTitle) (\(currentPhotoIndex + 1)/\(photos.count))"
+//    }
 
     //MARK: - Action
     @objc func showKitten() {
@@ -337,7 +351,7 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
                 guard let json = response.result.value as? [String: Any] else { return }
                 guard let photos = json["data"] as? [String] else { return }
                 self.photos = photos
-                self.mediaStartIndex = index
+//                self.mediaStartIndex = index
 //                self.mwPhotos.forEach {
 //                    $0.loadUnderlyingImageAndNotify();
 //                }
@@ -396,41 +410,41 @@ class VPTorrentsListViewController: UITableViewController, MediaBrowserDelegate,
 
     // Attach Progress View to a view (PhotoBrowser)
     // Works well on iOS 11, but not old iOS versions.
-    func attachProgressView(to aView: UIView) {
-        self.edgesForExtendedLayout = []
-        let newView = attachedProgressView
-        newView.removeFromSuperview()
-        aView.addSubview(newView)
-        newView.translatesAutoresizingMaskIntoConstraints = false
-        let height: CGFloat = 2.0
-        if #available(iOS 11.0, *) {
-            let guide = aView.safeAreaLayoutGuide
-            newView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
-            newView.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
-            newView.bottomAnchor.constraint(equalTo: guide.bottomAnchor).isActive = true
-            newView.heightAnchor.constraint(equalToConstant: height).isActive = true
-        } else {
-            NSLayoutConstraint(item: newView,
-                               attribute: .bottom,
-                               relatedBy: .equal,
-                               toItem: view, attribute: .bottom,
-                               multiplier: 1.0, constant: 0).isActive = true
-            NSLayoutConstraint(item: newView,
-                               attribute: .leading,
-                               relatedBy: .equal, toItem: view,
-                               attribute: .leading,
-                               multiplier: 1.0,
-                               constant: 0).isActive = true
-            NSLayoutConstraint(item: newView, attribute: .trailing,
-                               relatedBy: .equal,
-                               toItem: view,
-                               attribute: .trailing,
-                               multiplier: 1.0,
-                               constant: 0).isActive = true
-
-            newView.heightAnchor.constraint(equalToConstant: height).isActive = true
-        }
-    }
+//    func attachProgressView(to aView: UIView) {
+//        self.edgesForExtendedLayout = []
+//        let newView = attachedProgressView
+//        newView.removeFromSuperview()
+//        aView.addSubview(newView)
+//        newView.translatesAutoresizingMaskIntoConstraints = false
+//        let height: CGFloat = 2.0
+//        if #available(iOS 11.0, *) {
+//            let guide = aView.safeAreaLayoutGuide
+//            newView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
+//            newView.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
+//            newView.bottomAnchor.constraint(equalTo: guide.bottomAnchor).isActive = true
+//            newView.heightAnchor.constraint(equalToConstant: height).isActive = true
+//        } else {
+//            NSLayoutConstraint(item: newView,
+//                               attribute: .bottom,
+//                               relatedBy: .equal,
+//                               toItem: view, attribute: .bottom,
+//                               multiplier: 1.0, constant: 0).isActive = true
+//            NSLayoutConstraint(item: newView,
+//                               attribute: .leading,
+//                               relatedBy: .equal, toItem: view,
+//                               attribute: .leading,
+//                               multiplier: 1.0,
+//                               constant: 0).isActive = true
+//            NSLayoutConstraint(item: newView, attribute: .trailing,
+//                               relatedBy: .equal,
+//                               toItem: view,
+//                               attribute: .trailing,
+//                               multiplier: 1.0,
+//                               constant: 0).isActive = true
+//
+//            newView.heightAnchor.constraint(equalToConstant: height).isActive = true
+//        }
+//    }
 }
 
 extension VPTorrentsListViewController : UISearchResultsUpdating {
@@ -451,62 +465,62 @@ extension VPTorrentsListViewController : UISearchResultsUpdating {
     
 }
 
-@available(iOS 9.0, *)
-extension VPTorrentsListViewController : UIViewControllerPreviewingDelegate {
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        guard let indexPath = tableView.indexPathForRow(at: location) ,
-            let cell = tableView.cellForRow(at: indexPath) else { return nil }
-        previewingIndexPath = indexPath
-        if let title = cell.textLabel?.text {
-            if #available(iOS 13.0, *) {
-                cell.textLabel?.textColor = .secondaryLabel
-            } else {
-                cell.textLabel?.textColor = .gray
-            }
-            viewedTitles.insert(title)
-        }
-        let list = !searchController.isActive ? dateList : filteredDateList
-        currentSelectedTitle = list[(indexPath as NSIndexPath).row]
-        guard let date = list[indexPath.row].addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) else { return nil }
-        // Reset photos
-        photos = []
-        let pb = MediaBrowser(delegate: self)
-        pb.displayActionButton = false
-        pb.displayMediaNavigationArrows = true
-        pb.zoomPhotosToFill = true
-
-        let request = Alamofire.request(Configuration.shared.searchPath(withKeyword: date), headers: headers)
-        request.responseJSON { [weak self] response in
-            guard let `self` = self else { return }
-            if response.result.isSuccess {
-                guard let json = response.result.value as? [String: Any] else { return }
-                guard let photos = json["data"] as? [String] else { return }
-                self.photos = photos
-                self.mwPhotos.forEach {
-                    $0.loadUnderlyingImageAndNotify()
-                }
-                pb.reloadData()
-            }
-        }
-
-        previewingContext.sourceRect = cell.frame
-        return pb
-    }
-
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
-        navigationController?.pushViewController(viewControllerToCommit, animated: false)
-
-        if let indexPath = previewingIndexPath,
-            let cell = tableView.cellForRow(at: indexPath),
-            let title = cell.textLabel?.text {
-            if #available(iOS 13.0, *) {
-                cell.textLabel?.textColor = .secondaryLabel
-            } else {
-                cell.textLabel?.textColor = .gray
-            }
-            viewedTitles.insert(title)
-        }
-
-        (viewControllerToCommit as? MediaBrowser)?.reloadData()
-    }
-}
+//@available(iOS 9.0, *)
+//extension VPTorrentsListViewController : UIViewControllerPreviewingDelegate {
+//    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+//        guard let indexPath = tableView.indexPathForRow(at: location) ,
+//            let cell = tableView.cellForRow(at: indexPath) else { return nil }
+//        previewingIndexPath = indexPath
+//        if let title = cell.textLabel?.text {
+//            if #available(iOS 13.0, *) {
+//                cell.textLabel?.textColor = .secondaryLabel
+//            } else {
+//                cell.textLabel?.textColor = .gray
+//            }
+//            viewedTitles.insert(title)
+//        }
+//        let list = !searchController.isActive ? dateList : filteredDateList
+//        currentSelectedTitle = list[(indexPath as NSIndexPath).row]
+//        guard let date = list[indexPath.row].addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) else { return nil }
+//        // Reset photos
+//        photos = []
+//        let pb = MediaBrowser(delegate: self)
+//        pb.displayActionButton = false
+//        pb.displayMediaNavigationArrows = true
+//        pb.zoomPhotosToFill = true
+//
+//        let request = Alamofire.request(Configuration.shared.searchPath(withKeyword: date), headers: headers)
+//        request.responseJSON { [weak self] response in
+//            guard let `self` = self else { return }
+//            if response.result.isSuccess {
+//                guard let json = response.result.value as? [String: Any] else { return }
+//                guard let photos = json["data"] as? [String] else { return }
+//                self.photos = photos
+//                self.mwPhotos.forEach {
+//                    $0.loadUnderlyingImageAndNotify()
+//                }
+//                pb.reloadData()
+//            }
+//        }
+//
+//        previewingContext.sourceRect = cell.frame
+//        return pb
+//    }
+//
+//    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+//        navigationController?.pushViewController(viewControllerToCommit, animated: false)
+//
+//        if let indexPath = previewingIndexPath,
+//            let cell = tableView.cellForRow(at: indexPath),
+//            let title = cell.textLabel?.text {
+//            if #available(iOS 13.0, *) {
+//                cell.textLabel?.textColor = .secondaryLabel
+//            } else {
+//                cell.textLabel?.textColor = .gray
+//            }
+//            viewedTitles.insert(title)
+//        }
+//
+//        (viewControllerToCommit as? MediaBrowser)?.reloadData()
+//    }
+//}

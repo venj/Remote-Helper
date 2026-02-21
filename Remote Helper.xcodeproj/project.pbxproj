@@ -39,6 +39,12 @@
 		252DFA821753784400FF8199 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA811753784400FF8199 /* Foundation.framework */; };
 		252DFA841753784400FF8199 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252DFA831753784400FF8199 /* CoreGraphics.framework */; };
 		252DFA8A1753784400FF8199 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 252DFA881753784400FF8199 /* InfoPlist.strings */; };
+		253262AE2F48AE1E005EAEC8 /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 253262AB2F48AE1E005EAEC8 /* PhotosViewController.swift */; };
+		253262AF2F48AE1E005EAEC8 /* VideoPlayerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 253262AD2F48AE1E005EAEC8 /* VideoPlayerCell.swift */; };
+		253262B02F48AE1E005EAEC8 /* MediaThumbnailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 253262A92F48AE1E005EAEC8 /* MediaThumbnailCell.swift */; };
+		253262B12F48AE1E005EAEC8 /* RemoteMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 253262AC2F48AE1E005EAEC8 /* RemoteMedia.swift */; };
+		253262B22F48AE1E005EAEC8 /* PageNumberActionOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 253262AA2F48AE1E005EAEC8 /* PageNumberActionOverlay.swift */; };
+		253262B72F494DA6005EAEC8 /* JXPhotoBrowser in Frameworks */ = {isa = PBXBuildFile; productRef = 253262B62F494DA6005EAEC8 /* JXPhotoBrowser */; };
 		2538A19D21789BD8000AA2C0 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2538A19C21789BD7000AA2C0 /* Launch Screen.xib */; };
 		254729F71DEBD28300787C20 /* KittenTorrent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254729F61DEBD28300787C20 /* KittenTorrent.swift */; };
 		254CBE401BE8481F0050A288 /* URLConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CBE3F1BE8481F0050A288 /* URLConverter.swift */; };
@@ -122,6 +128,11 @@
 		252DFA831753784400FF8199 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		252DFA871753784400FF8199 /* Remote Helper-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Remote Helper-Info.plist"; sourceTree = "<group>"; };
 		252DFA891753784400FF8199 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		253262A92F48AE1E005EAEC8 /* MediaThumbnailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaThumbnailCell.swift; sourceTree = "<group>"; };
+		253262AA2F48AE1E005EAEC8 /* PageNumberActionOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageNumberActionOverlay.swift; sourceTree = "<group>"; };
+		253262AB2F48AE1E005EAEC8 /* PhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
+		253262AC2F48AE1E005EAEC8 /* RemoteMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMedia.swift; sourceTree = "<group>"; };
+		253262AD2F48AE1E005EAEC8 /* VideoPlayerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerCell.swift; sourceTree = "<group>"; };
 		2538A19C21789BD7000AA2C0 /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
 		254729F61DEBD28300787C20 /* KittenTorrent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KittenTorrent.swift; sourceTree = "<group>"; };
 		254CBE3F1BE8481F0050A288 /* URLConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLConverter.swift; sourceTree = "<group>"; };
@@ -180,6 +191,7 @@
 				25650A40235F568E00B314C3 /* PasscodeLock in Frameworks */,
 				252DFA821753784400FF8199 /* Foundation.framework in Frameworks */,
 				252DFA841753784400FF8199 /* CoreGraphics.framework in Frameworks */,
+				253262B72F494DA6005EAEC8 /* JXPhotoBrowser in Frameworks */,
 				25650A3A235F0B5F00B314C3 /* SwiftEntryKit in Frameworks */,
 				251998452355BEB900DC080D /* SwiftSoup in Frameworks */,
 				25650A3D235F561800B314C3 /* Reachability in Frameworks */,
@@ -260,10 +272,23 @@
 		25310E40177ACB1600D4A212 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				253262B42F48AE4D005EAEC8 /* PhotosViewController */,
 				255A7D261BEB8DCD00E6012B /* PasscodeLock */,
 				256D28F71B788B5A000A324B /* Extensions */,
 			);
 			name = Libraries;
+			sourceTree = "<group>";
+		};
+		253262B42F48AE4D005EAEC8 /* PhotosViewController */ = {
+			isa = PBXGroup;
+			children = (
+				253262A92F48AE1E005EAEC8 /* MediaThumbnailCell.swift */,
+				253262AA2F48AE1E005EAEC8 /* PageNumberActionOverlay.swift */,
+				253262AB2F48AE1E005EAEC8 /* PhotosViewController.swift */,
+				253262AC2F48AE1E005EAEC8 /* RemoteMedia.swift */,
+				253262AD2F48AE1E005EAEC8 /* VideoPlayerCell.swift */,
+			);
+			path = PhotosViewController;
 			sourceTree = "<group>";
 		};
 		255A7D261BEB8DCD00E6012B /* PasscodeLock */ = {
@@ -387,6 +412,7 @@
 				25650A3C235F561800B314C3 /* Reachability */,
 				25650A3F235F568E00B314C3 /* PasscodeLock */,
 				25C7BD3E27F1C6F60095A141 /* InAppSettingsKit */,
+				253262B62F494DA6005EAEC8 /* JXPhotoBrowser */,
 			);
 			productName = "Video Player";
 			productReference = 252DFA7C1753784400FF8199 /* Remote Helper.app */;
@@ -442,6 +468,7 @@
 				25650A3B235F561800B314C3 /* XCRemoteSwiftPackageReference "Reachability" */,
 				25650A3E235F568E00B314C3 /* XCRemoteSwiftPackageReference "SwiftPasscodeLock" */,
 				25C7BD3D27F1C6F60095A141 /* XCRemoteSwiftPackageReference "InAppSettingsKit" */,
+				253262B52F494DA6005EAEC8 /* XCRemoteSwiftPackageReference "PhotoBrowser" */,
 			);
 			productRefGroup = 252DFA7D1753784400FF8199 /* Products */;
 			projectDirPath = "";
@@ -509,6 +536,11 @@
 				2506AA1D1E90E4070064EABB /* Bangumi.swift in Sources */,
 				2502ABE11BE6FE78004882FE /* Data+Base64.swift in Sources */,
 				2506AA191E90DD190064EABB /* ResourceSiteCatagoriesViewController.swift in Sources */,
+				253262AE2F48AE1E005EAEC8 /* PhotosViewController.swift in Sources */,
+				253262AF2F48AE1E005EAEC8 /* VideoPlayerCell.swift in Sources */,
+				253262B02F48AE1E005EAEC8 /* MediaThumbnailCell.swift in Sources */,
+				253262B12F48AE1E005EAEC8 /* RemoteMedia.swift in Sources */,
+				253262B22F48AE1E005EAEC8 /* PageNumberActionOverlay.swift in Sources */,
 				251CD7DB236B16DB0023CD34 /* MySplitViewController.swift in Sources */,
 				25F94A621BE5E9FF009C9195 /* Dictionary+JSON.swift in Sources */,
 				2506AA231E90F5D40064EABB /* BangumiViewController.swift in Sources */,
@@ -681,7 +713,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 434;
+				CURRENT_PROJECT_VERSION = 435;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 32Y52676KN;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 32Y52676KN;
@@ -721,7 +753,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 434;
+				CURRENT_PROJECT_VERSION = 435;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 32Y52676KN;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 32Y52676KN;
@@ -790,6 +822,14 @@
 				minimumVersion = 2.2.1;
 			};
 		};
+		253262B52F494DA6005EAEC8 /* XCRemoteSwiftPackageReference "PhotoBrowser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JiongXing/PhotoBrowser";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.2;
+			};
+		};
 		25650A38235F0B5E00B314C3 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/huri000/SwiftEntryKit";
@@ -842,6 +882,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 251998432355BEB900DC080D /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
+		};
+		253262B62F494DA6005EAEC8 /* JXPhotoBrowser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 253262B52F494DA6005EAEC8 /* XCRemoteSwiftPackageReference "PhotoBrowser" */;
+			productName = JXPhotoBrowser;
 		};
 		25650A39235F0B5F00B314C3 /* SwiftEntryKit */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -30,21 +30,42 @@ struct Bangumi {
     }
 
     static func parse(data: Data, isGBK: Bool = false) -> Bangumi? {
-        guard let html = isGBK ? (data as NSData).convertToUTF8String(fromEncoding: "GBK", allowLoosy: true) : String(data: data, encoding: .utf8) else { return nil }
+        let html: String?
+        if isGBK {
+            html = (data as NSData).convertToUTF8String(fromEncoding: "gb2312", allowLoosy: true)
+                ?? (data as NSData).convertToUTF8String(fromEncoding: "GBK", allowLoosy: true)
+                ?? String(data: data, encoding: .utf8)
+        } else {
+            html = String(data: data, encoding: .utf8)
+                ?? (data as NSData).convertToUTF8String(fromEncoding: "gb2312", allowLoosy: true)
+                ?? (data as NSData).convertToUTF8String(fromEncoding: "GBK", allowLoosy: true)
+        }
+        guard let html else { return nil }
+
         do {
             let replaced = html.replacingOccurrences(of: "charset=gb2312", with: "charset=utf-8")
             let doc = try SwiftSoup.parse(replaced)
             let title = try doc.select("div.title_all h1").first?.text() ?? NSLocalizedString("Unknown Title", comment: "Unknown Title")
             var links: [Link] = []
-            try doc.select("div.co_content8 #Zoom table td a").forEach({ (element) in
-                let link = try element.attr("href")
-                links.append(Link(link))
-            })
+            var magnetSet = Set<String>()
+            try doc.select("div.co_content8 #Zoom a[href]").forEach { element in
+                let href = try element.attr("href").trimmingCharacters(in: .whitespacesAndNewlines)
+                guard href.lowercased().hasPrefix("magnet:?") else { return }
+                guard !magnetSet.contains(href) else { return }
+                magnetSet.insert(href)
+                links.append(Link(href))
+            }
 
             var images: [String] = []
-            try doc.select("div.co_content8 #Zoom img").forEach { element in
-                let src = try element.attr("src")
+            var imageSet = Set<String>()
+            let zoom = try doc.select("div.co_content8 #Zoom")
+            try zoom.select("img[src]").forEach { element in
+                let src = try element.attr("src").trimmingCharacters(in: .whitespacesAndNewlines)
+                if src.isEmpty { return }
+                if imageSet.contains(src) { return }
+                imageSet.insert(src)
                 images.append(src)
+                print(src)
             }
 
             let info = try doc.select("div.co_content8 #Zoom")

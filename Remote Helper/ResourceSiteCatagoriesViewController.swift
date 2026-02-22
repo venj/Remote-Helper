@@ -15,17 +15,17 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
 
     var siteName: String = "电影天堂"
     /*
-    var catagoryLinks: [[String: String]] = [["name": "国内电影", "link": "http://www.dygod.net/html/gndy/china/index.html"],
-                                             ["name": "欧美电影", "link": "http://www.dygod.net/html/gndy/oumei/index.html"],
-                                             ["name": "日韩电影", "link": "http://www.dygod.net/html/gndy/rihan/index.html"],
-                                             ["name": "华语电视", "link": "http://www.dygod.net/html/tv/hytv/index.html"],
-                                             ["name": "日韩电视", "link": "http://www.dygod.net/html/tv/rihantv/index.html"],
-                                             ["name": "欧美电视", "link": "http://www.dygod.net/html/tv/oumeitv/index.html"],
-                                             ["name": "最新综艺", "link": "http://www.dygod.net/html/zongyi2013/index.html"],
-                                             //["name": "旧版综艺", "link": "http://www.dygod.net/html/zongyijiemu2009/index.html"],
-                                             ["name": "动漫资源", "link": "http://www.dygod.net/html/dongman/index.html"],
-                                             ["name": "游戏下载", "link": "http://www.dygod.net/html/game/index.html"],
-                                             ["name": "手机电影", "link": "http://www.dygod.net/html/3gp/3gpmovie/index.html"]]
+    var catagoryLinks: [[String: String]] = [["name": "国内电影", "link": "https://www.dygod.net/html/gndy/china/index.html"],
+                                             ["name": "欧美电影", "link": "https://www.dygod.net/html/gndy/oumei/index.html"],
+                                             ["name": "日韩电影", "link": "https://www.dygod.net/html/gndy/rihan/index.html"],
+                                             ["name": "华语电视", "link": "https://www.dygod.net/html/tv/hytv/index.html"],
+                                             ["name": "日韩电视", "link": "https://www.dygod.net/html/tv/rihantv/index.html"],
+                                             ["name": "欧美电视", "link": "https://www.dygod.net/html/tv/oumeitv/index.html"],
+                                             ["name": "最新综艺", "link": "https://www.dygod.net/html/zongyi2013/index.html"],
+                                             //["name": "旧版综艺", "link": "https://www.dygod.net/html/zongyijiemu2009/index.html"],
+                                             ["name": "动漫资源", "link": "https://www.dygod.net/html/dongman/index.html"],
+                                             ["name": "游戏下载", "link": "https://www.dygod.net/html/game/index.html"],
+                                             ["name": "手机电影", "link": "https://www.dygod.net/html/3gp/3gpmovie/index.html"]]
  */
 
     var catagoryLinks: [[String: String]] = [["name": "最新电影", "link": "http://dytt8.net/html/gndy/dyzz/index.html"],

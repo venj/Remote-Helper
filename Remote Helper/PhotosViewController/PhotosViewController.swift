@@ -22,9 +22,9 @@ class PhotosViewController: UIViewController, UICollectionViewDataSource, UIColl
     /// 可由外部替换的浏览器 Overlay 工厂（每次展示创建新实例，避免复用状态残留）
     var makeBrowserOverlay: () -> JXPhotoBrowserOverlay = { PageNumberActionOverlay() }
     
-    /// 可由外部配置的大图 Overlay 按钮（支持 0~2 个）
-    /// 建议在 .init 时直接通过 onTap 绑定事件，无需依赖 index 分发。
-    var overlayActionButtons: [PageNumberActionOverlay.ActionButton] = []
+    /// 可由外部配置的大图 Overlay 按钮（支持 0~2 个）。
+    /// 传 nil 或 [] 都表示不显示按钮。
+    var overlayActionButtons: [PageNumberActionOverlay.ActionButton]? = nil
     
     /// 网络状态监视器（监听网络连通性变化）
     private let networkMonitor = NWPathMonitor()
@@ -186,11 +186,7 @@ class PhotosViewController: UIViewController, UICollectionViewDataSource, UIColl
         let overlay = makeBrowserOverlay()
         
         if let overlay = overlay as? PageNumberActionOverlay {
-            if overlayActionButtons.isEmpty {
-                overlay.actionButtons = makeDefaultOverlayButtons()
-            } else {
-                overlay.actionButtons = overlayActionButtons
-            }
+            overlay.actionButtons = overlayActionButtons ?? []
             overlay.pageTitleProvider = { [weak self] index in
                 guard let self = self, items.indices.contains(index) else { return nil }
                 let media = items[index]
@@ -253,6 +249,7 @@ extension PhotosViewController: JXPhotoBrowserDelegate {
             if failedThumbnailIndexes.contains(index) {
                 options.append(.forceRefresh)
             }
+            options.append(contentsOf: refererOption(for: media.referer))
 
             photoCell.imageView.kf.setImage(
                 with: imageURL,
@@ -309,7 +306,8 @@ extension PhotosViewController: JXPhotoBrowserDelegate {
             
             // 内存缓存为空时（如 App 从后台恢复后缓存被清理），异步从磁盘/网络加载封面图
             if memoryImage == nil {
-                videoCell.imageView.kf.setImage(with: thumbnailURL, options: localCacheOptions, completionHandler: { [weak videoCell] _ in
+                let options = localCacheOptions + refererOption(for: media.referer)
+                videoCell.imageView.kf.setImage(with: thumbnailURL, options: options, completionHandler: { [weak videoCell] _ in
                     videoCell?.setNeedsLayout()
                 })
             }
@@ -347,52 +345,6 @@ extension PhotosViewController: JXPhotoBrowserDelegate {
     }
 }
 
-extension PhotosViewController {
-    func makeDefaultOverlayButtons() -> [PageNumberActionOverlay.ActionButton] {
-        let close = PageNumberActionOverlay.ActionButton(title: "关闭") { [weak self] _ in
-            self?.photoBrowser?.dismiss(animated: true)
-        }
-        let info = PageNumberActionOverlay.ActionButton(
-            title: "信息",
-            style: .init(
-                titleColor: .white,
-                backgroundColor: UIColor.systemBlue.withAlphaComponent(0.75),
-                font: UIFont.systemFont(ofSize: 13, weight: .semibold),
-                contentInsets: UIEdgeInsets(top: 6, left: 12, bottom: 6, right: 12),
-                cornerRadius: 8
-            )
-        ) { [weak self] overlay in
-            self?.presentOverlayInfoAlert(overlay)
-        }
-        return [close, info]
-    }
-    
-    func presentOverlayInfoAlert(_ overlay: PageNumberActionOverlay) {
-        let currentIndex = max(overlay.currentPage - 1, 0)
-        let fileName: String
-        if items.indices.contains(currentIndex) {
-            let media = items[currentIndex]
-            switch media.source {
-            case let .remoteImage(imageURL, _):
-                fileName = imageURL.lastPathComponent
-            case let .remoteVideo(url, _):
-                fileName = url.lastPathComponent
-            }
-        } else {
-            fileName = "-"
-        }
-        
-        let message = "当前页：\(overlay.currentPage)/\(overlay.totalPages)\n文件名：\(fileName)"
-        let alert = UIAlertController(title: "图片信息", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "确定", style: .default))
-        if let presenter = photoBrowser {
-            presenter.present(alert, animated: true)
-        } else {
-            present(alert, animated: true)
-        }
-    }
-}
-
 private extension PhotosViewController {
     func browserProgressView(in cell: JXZoomImageCell) -> CircularProgressView {
         if let existing = cell.contentView.viewWithTag(Self.browserProgressViewTag) as? CircularProgressView {
@@ -417,6 +369,15 @@ private extension PhotosViewController {
 
 // MARK: - Network Monitoring
 private extension PhotosViewController {
+    func refererOption(for referer: String?) -> KingfisherOptionsInfo {
+        guard let referer, !referer.isEmpty else { return [] }
+        return [.requestModifier(AnyModifier { request in
+            var req = request
+            req.setValue(referer, forHTTPHeaderField: "Referer")
+            return req
+        })]
+    }
+    
     var localCacheOptions: KingfisherOptionsInfo {
         [
             .cacheOriginalImage,

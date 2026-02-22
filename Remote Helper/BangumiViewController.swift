@@ -23,7 +23,10 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
     var remotePhotos: [RemoteMedia] {
         return bangumi?.images.compactMap { image in
             guard let url = URL(string: image) else { return nil }
-            return RemoteMedia(source: .remoteImage(imageURL: url, thumbnailURL: nil))
+            return RemoteMedia(
+                source: .remoteImage(imageURL: url, thumbnailURL: nil),
+                referer: "http://www.dytt8.net/"
+            )
         } ?? []
     }
 
@@ -244,6 +247,7 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
         let photosViewController = PhotosViewController()
         photosViewController.title = bangumi?.title
         photosViewController.items = remotePhotos
+        photosViewController.overlayActionButtons = []
         navigationController?.pushViewController(photosViewController, animated: true)
     }
 

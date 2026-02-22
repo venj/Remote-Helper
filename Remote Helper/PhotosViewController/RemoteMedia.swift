@@ -8,8 +8,15 @@
 import Foundation
 
 struct RemoteMedia {
-    let id = UUID()
+    let id: UUID
     let source: SourceType
+    let referer: String?
+
+    init(source: SourceType, referer: String? = nil) {
+        self.id = UUID()
+        self.source = source
+        self.referer = referer
+    }
 
     enum SourceType {
         case remoteImage(imageURL: URL, thumbnailURL: URL?)

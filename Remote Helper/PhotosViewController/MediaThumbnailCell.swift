@@ -126,6 +126,17 @@ final class MediaThumbnailCell: UICollectionViewCell {
             .loadDiskFileSynchronously
         ]
     }
+    
+    private func options(withReferer referer: String?) -> KingfisherOptionsInfo {
+        var options = localCacheOptions
+        guard let referer, !referer.isEmpty else { return options }
+        options.append(.requestModifier(AnyModifier { request in
+            var req = request
+            req.setValue(referer, forHTTPHeaderField: "Referer")
+            return req
+        }))
+        return options
+    }
 
     /// 配置 Cell 内容
     func configure(with media: RemoteMedia) {
@@ -181,7 +192,7 @@ final class MediaThumbnailCell: UICollectionViewCell {
             let url = thumbnailURL ?? imageURL
             imageView.kf.setImage(
                 with: url,
-                options: localCacheOptions,
+                options: options(withReferer: media.referer),
                 progressBlock: progressHandler,
                 completionHandler: completionHandler
             )
@@ -190,7 +201,7 @@ final class MediaThumbnailCell: UICollectionViewCell {
             playOverlay.isHidden = false
             imageView.kf.setImage(
                 with: thumbnailURL,
-                options: localCacheOptions,
+                options: options(withReferer: media.referer),
                 progressBlock: progressHandler,
                 completionHandler: completionHandler
             )

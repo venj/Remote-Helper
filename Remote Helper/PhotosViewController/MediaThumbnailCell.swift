@@ -138,28 +138,26 @@ final class MediaThumbnailCell: UICollectionViewCell {
         progressView.isHidden = false
         setLoadingBorderVisible(true)
 
-        let completionHandler: ((Result<RetrieveImageResult, KingfisherError>) -> Void) = { [weak self] result in
+        let completionHandler: @MainActor @Sendable (Result<RetrieveImageResult, KingfisherError>) -> Void = { [weak self] result in
             guard let self = self else { return }
             guard self.loadToken == token else { return }
             // 完成后立即失效当前 token，避免少数情况下进度回调晚到又把进度圈显示出来。
             self.loadToken = UUID()
-            DispatchQueue.main.async {
-                self.progressView.progress = 1
-                self.progressView.isHidden = true
-                switch result {
-                case .success:
-                    self.failureOverlay.isHidden = true
-                    self.setLoadingBorderVisible(false)
-                    self.onImageLoadResult?(true)
-                case let .failure(error):
-                    if error.isTaskCancelled || error.isNotCurrentTask {
-                        return
-                    }
-                    self.failureOverlay.isHidden = false
-                    self.playOverlay.isHidden = true
-                    self.setLoadingBorderVisible(true)
-                    self.onImageLoadResult?(false)
+            self.progressView.progress = 1
+            self.progressView.isHidden = true
+            switch result {
+            case .success:
+                self.failureOverlay.isHidden = true
+                self.setLoadingBorderVisible(false)
+                self.onImageLoadResult?(true)
+            case let .failure(error):
+                if error.isTaskCancelled || error.isNotCurrentTask {
+                    return
                 }
+                self.failureOverlay.isHidden = false
+                self.playOverlay.isHidden = true
+                self.setLoadingBorderVisible(true)
+                self.onImageLoadResult?(false)
             }
         }
         

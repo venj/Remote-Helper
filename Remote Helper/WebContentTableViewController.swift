@@ -185,7 +185,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
             ImageCache.default.clearDiskCache() {
                 DispatchQueue.global(qos: .userInitiated).async {
-                    let defaults = UserDefaults.standard
                     let localFileSize = Helper.shared.fileSizeString(withInteger: Helper.shared.localFileSize())
 
                     ImageCache.default.calculateDiskStorageSize { result in
@@ -193,9 +192,9 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                         let cacheSize = Helper.shared.fileSizeString(withInteger: cacheSizeInBytes)
 
                         DispatchQueue.main.async {
-                            defaults.set(cacheSize, forKey: ImageCacheSizeKey)
-                            defaults.set(localFileSize, forKey: LocalFileSize)
-                            defaults.synchronize()
+                            UserDefaults.standard.set(cacheSize, forKey: ImageCacheSizeKey)
+                            UserDefaults.standard.set(localFileSize, forKey: LocalFileSize)
+                            UserDefaults.standard.synchronize()
                             sender.synchronizeSettings()
                             Helper.shared.showNote(withMessage: NSLocalizedString("Cache Cleared!", comment: "Cache Cleared!"))
                             sender.tableView.reloadData()
@@ -265,7 +264,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     }
 
     func showSettings() {
-        let defaults = UserDefaults.standard
         let passcodeRepo = UserDefaultsPasscodeRepository()
         let status = passcodeRepo.hasPasscode ? NSLocalizedString("On", comment: "打开") : NSLocalizedString("Off", comment: "关闭")
 
@@ -283,12 +281,12 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
                 DispatchQueue.main.async {
                     guard let self else { return }
-                    defaults.set(cacheSize, forKey: ImageCacheSizeKey)
-                    defaults.set(status, forKey: PasscodeLockStatus)
-                    defaults.set(localFileSize, forKey: LocalFileSize)
-                    defaults.set(deviceFreeSpace, forKey: DeviceFreeSpace)
-                    defaults.set(appVersion, forKey: CurrentVersionKey)
-                    defaults.synchronize()
+                    UserDefaults.standard.set(cacheSize, forKey: ImageCacheSizeKey)
+                    UserDefaults.standard.set(status, forKey: PasscodeLockStatus)
+                    UserDefaults.standard.set(localFileSize, forKey: LocalFileSize)
+                    UserDefaults.standard.set(deviceFreeSpace, forKey: DeviceFreeSpace)
+                    UserDefaults.standard.set(appVersion, forKey: CurrentVersionKey)
+                    UserDefaults.standard.synchronize()
 
                     self.settingsViewController = IASKAppSettingsViewController(style: .grouped)
                     self.settingsViewController.delegate = self

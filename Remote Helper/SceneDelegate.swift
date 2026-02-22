@@ -95,14 +95,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if UserDefaults.standard.bool(forKey: ClearCacheOnExitKey) {
             let app = UIApplication.shared
-            var identifier: UIBackgroundTaskIdentifier = .invalid
-            identifier = app.beginBackgroundTask {
-                app.endBackgroundTask(identifier)
-                identifier = .invalid
-            }
+            let identifier = app.beginBackgroundTask(withName: "ClearDiskCache", expirationHandler: nil)
             ImageCache.default.clearDiskCache {
                 app.endBackgroundTask(identifier)
-                identifier = .invalid
             }
         }
     }

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import MediaBrowser
 import Alamofire
 import SwiftEntryKit
 import Kingfisher

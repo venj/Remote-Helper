@@ -197,12 +197,22 @@ final class PageNumberActionOverlay: UIView, JXPhotoBrowserOverlay, UIGestureRec
             let button = UIButton(type: .system)
             button.translatesAutoresizingMaskIntoConstraints = false
             button.tag = index
-            button.setTitle(model.title, for: .normal)
-            button.setTitleColor(model.style.titleColor, for: .normal)
-            button.titleLabel?.font = model.style.font
             button.backgroundColor = model.style.backgroundColor
             button.layer.cornerRadius = model.style.cornerRadius
-            button.contentEdgeInsets = model.style.contentInsets
+
+            var configuration = UIButton.Configuration.plain()
+            var titleAttributes = AttributeContainer()
+            titleAttributes.font = model.style.font
+            configuration.attributedTitle = AttributedString(model.title, attributes: titleAttributes)
+            configuration.baseForegroundColor = model.style.titleColor
+            configuration.contentInsets = NSDirectionalEdgeInsets(
+                top: model.style.contentInsets.top,
+                leading: model.style.contentInsets.left,
+                bottom: model.style.contentInsets.bottom,
+                trailing: model.style.contentInsets.right
+            )
+            button.configuration = configuration
+
             button.addTarget(self, action: #selector(handleActionButtonTap(_:)), for: .touchUpInside)
             buttonStack.addArrangedSubview(button)
             actionUIButtons.append(button)

@@ -46,10 +46,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         // Revert back to old UITableView behavior
         tableView.cellLayoutMarginsFollowReadableWidth = false
 
-        // Peek
-        if traitCollection.forceTouchCapability == .available {
-            registerForPreviewing(with: self, sourceView: tableView)
-        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -358,6 +354,18 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             deleteCell(at: previewingIndexPath)
         }
     }
+
+    private func makeWebPreviewController(for indexPath: IndexPath, peeking: Bool) -> WebViewController? {
+        guard addresses.indices.contains(indexPath.row),
+              let urlString = addresses[indexPath.row].link,
+              let webViewController = storyboard?.instantiateViewController(withIdentifier: "WebViewController") as? WebViewController else {
+            return nil
+        }
+        webViewController.urlString = urlString
+        webViewController.isPeeking = peeking
+        self.webViewController = webViewController
+        return webViewController
+    }
 }
 
 extension WebContentTableViewController : UITableViewDropDelegate {
@@ -414,22 +422,31 @@ extension WebContentTableViewController : UITableViewDragDelegate {
     }
 }
 
-extension WebContentTableViewController : UIViewControllerPreviewingDelegate {
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        guard let indexPath = tableView.indexPathForRow(at: location),
-            let cell = tableView.cellForRow(at: indexPath),
-            let webViewController = storyboard?.instantiateViewController(withIdentifier: "WebViewController") as? WebViewController,
-            let urlString = addresses[indexPath.row].link else { return nil }
-        webViewController.urlString = urlString
-        webViewController.isPeeking = true
-        previewingContext.sourceRect = cell.frame
+extension WebContentTableViewController {
+    override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard addresses.indices.contains(indexPath.row), addresses[indexPath.row].link != nil else { return nil }
         previewingIndexPath = indexPath
-        self.webViewController = webViewController
-        return webViewController
+
+        return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath, previewProvider: { [weak self] in
+            self?.makeWebPreviewController(for: indexPath, peeking: true)
+        }, actionProvider: { [weak self] _ in
+            let deleteAction = UIAction(
+                title: NSLocalizedString("Delete", comment: "Delete"),
+                image: UIImage(systemName: "trash"),
+                attributes: .destructive
+            ) { _ in
+                self?.deleteCell(at: indexPath)
+            }
+            return UIMenu(title: "", children: [deleteAction])
+        })
     }
 
-    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
-        navigationController?.pushViewController(viewControllerToCommit, animated: false)
-        (viewControllerToCommit as? WebViewController)?.isPeeking = false
+    override func tableView(_ tableView: UITableView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
+        guard let indexPath = configuration.identifier as? NSIndexPath else { return }
+        animator.addCompletion { [weak self] in
+            guard let self,
+                  let webViewController = self.makeWebPreviewController(for: indexPath as IndexPath, peeking: false) else { return }
+            self.navigationController?.pushViewController(webViewController, animated: false)
+        }
     }
 }

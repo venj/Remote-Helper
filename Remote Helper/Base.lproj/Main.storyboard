@@ -212,7 +212,7 @@
             <objects>
                 <viewController storyboardIdentifier="WebViewController" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="07M-kM-gi5" customClass="ResourceWebViewController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="mrm-RR-Kn6">
-                        <rect key="frame" x="0.0" y="0.0" width="464" height="1024"/>
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="610"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="mgi-Tn-37Z"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -305,7 +305,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="88J-Pz-mLq" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="25C-Cc-aWq">
-                        <rect key="frame" x="0.0" y="74" width="464" height="54"/>
+                        <rect key="frame" x="0.0" y="10" width="540" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -387,15 +387,15 @@
             <objects>
                 <tableViewController hidesBottomBarWhenPushed="YES" id="B3D-SW-1eh" customClass="BangumiViewController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="5Am-S1-t8j">
-                        <rect key="frame" x="0.0" y="0.0" width="464" height="1024"/>
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="610"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="BangumiTableCell" id="jJ9-Li-BKq">
-                                <rect key="frame" x="0.0" y="50.5" width="464" height="52"/>
+                                <rect key="frame" x="0.0" y="50.5" width="540" height="52"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="jJ9-Li-BKq" id="chi-dI-fmE">
-                                    <rect key="frame" x="0.0" y="0.0" width="433.5" height="52"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="509.5" height="52"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -415,7 +415,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="87O-sE-POn"/>
         <segue reference="08t-F3-UJX"/>
-        <segue reference="qYs-Vh-AK0"/>
+        <segue reference="eQY-Bb-Xiv"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="tab_cloud" width="30" height="30"/>

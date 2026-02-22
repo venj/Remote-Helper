@@ -184,40 +184,52 @@ class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopo
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) { }
 
-    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard let link = bangumi?.links[indexPath.row] else { return nil }
-        // Copy Link
-        let copyAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("Copy", comment: "Copy")) { [weak self] (_, _) in
-            guard let `self` = self else { return }
+
+        let copyAction = UIContextualAction(style: .normal, title: NSLocalizedString("Copy", comment: "Copy")) { [weak self] _, _, completion in
+            guard let self = self else {
+                completion(false)
+                return
+            }
             if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
             UIPasteboard.general.string = link.target
             Helper.shared.showNote(withMessage: NSLocalizedString("Copied", comment: "Copied"))
+            completion(true)
         }
         copyAction.backgroundColor = UIColor(red:0.42, green:0.44, blue:0.87, alpha:1.00)
 
-        // Mi Download
-        let miAction = UITableViewRowAction(style: .default, title: NSLocalizedString("Mi", comment: "Mi")) { [weak self] (_, _) in
-            guard let `self` = self else { return }
+        let miAction = UIContextualAction(style: .normal, title: NSLocalizedString("Mi", comment: "Mi")) { [weak self] _, _, completion in
+            guard let self = self else {
+                completion(false)
+                return
+            }
             if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
             Helper.shared.miDownloadForLink(link.target, fallbackIn: self)
+            completion(true)
         }
-
         miAction.backgroundColor = UIColor(red:0.34, green:0.86, blue:0.47, alpha:1.00)
 
-        // Download Link
         if link.isMagnet {
-            let downloadAction = UITableViewRowAction(style: .default, title: "Transmission") { [weak self] (_, _) in
-                guard let `self` = self else { return }
+            let downloadAction = UIContextualAction(style: .normal, title: "Transmission") { [weak self] _, _, completion in
+                guard let self = self else {
+                    completion(false)
+                    return
+                }
                 if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
                 Helper.shared.transmissionDownload(for: link.target)
+                completion(true)
             }
             downloadAction.backgroundColor = UIColor(red:1.00, green:0.33, blue:0.24, alpha:1.00)
-            
-            return [miAction, downloadAction, copyAction]
+
+            let configuration = UISwipeActionsConfiguration(actions: [miAction, downloadAction, copyAction])
+            configuration.performsFirstActionWithFullSwipe = false
+            return configuration
         }
-        else {
-            return [miAction, copyAction]
-        }
+
+        let configuration = UISwipeActionsConfiguration(actions: [miAction, copyAction])
+        configuration.performsFirstActionWithFullSwipe = false
+        return configuration
     }
 
     // MARK: - Actions

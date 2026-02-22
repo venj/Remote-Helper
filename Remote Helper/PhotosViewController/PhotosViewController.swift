@@ -309,9 +309,9 @@ extension PhotosViewController: JXPhotoBrowserDelegate {
             
             // 内存缓存为空时（如 App 从后台恢复后缓存被清理），异步从磁盘/网络加载封面图
             if memoryImage == nil {
-                videoCell.imageView.kf.setImage(with: thumbnailURL, options: localCacheOptions) { [weak videoCell] _ in
+                videoCell.imageView.kf.setImage(with: thumbnailURL, options: localCacheOptions, completionHandler: { [weak videoCell] _ in
                     videoCell?.setNeedsLayout()
-                }
+                })
             }
         }
     }

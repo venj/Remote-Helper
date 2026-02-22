@@ -24,19 +24,6 @@ class ResourceWebViewController: WebViewController {
     }
 }
 
-extension ResourceWebViewController {
-    override open var previewActionItems: [UIPreviewActionItem] {
-        get {
-            let deleteItem = UIPreviewAction(title: NSLocalizedString("Delete", comment: "Delete"), style: .destructive, handler: { (action, vc)  in
-                if let webContentViewController = SceneDelegate.active?.fileListViewController {
-                    webContentViewController.deletePreviewingCell()
-                }
-            })
-            return [deleteItem]
-        }
-    }
-}
-
 //MARK: - UIPopoverPresentationControllerDelegate
 extension ResourceWebViewController: UIPopoverPresentationControllerDelegate {
     func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {

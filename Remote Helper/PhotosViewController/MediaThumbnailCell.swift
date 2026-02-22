@@ -152,7 +152,10 @@ final class MediaThumbnailCell: UICollectionViewCell {
                     self.failureOverlay.isHidden = true
                     self.setLoadingBorderVisible(false)
                     self.onImageLoadResult?(true)
-                case .failure:
+                case let .failure(error):
+                    if error.isTaskCancelled || error.isNotCurrentTask {
+                        return
+                    }
                     self.failureOverlay.isHidden = false
                     self.playOverlay.isHidden = true
                     self.setLoadingBorderVisible(true)

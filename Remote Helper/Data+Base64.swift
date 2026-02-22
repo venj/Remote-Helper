@@ -8,7 +8,6 @@
 
 import Foundation
 
-@available(iOS 7.0, OSX 10.9, *)
 public extension Data {
     static func dataWithBase64EncodedString(_ string: String) -> Data? {
         return self.init(base64Encoded: string, options: [])

@@ -38,9 +38,7 @@ class ResourcePageViewController: UITableViewController {
         super.viewDidLoad()
 
         // Revert back to old UITableView behavior
-        if #available(iOS 9.0, *) {
-            tableView.cellLayoutMarginsFollowReadableWidth = false
-        }
+        tableView.cellLayoutMarginsFollowReadableWidth = false
     }
 
     override func didReceiveMemoryWarning() {
@@ -69,18 +67,10 @@ class ResourcePageViewController: UITableViewController {
         cell.textLabel?.text = bangumi["title"]
         let link = fullLink(withHref: bangumi["link"]!)
         if Configuration.shared.viewedResources.contains(link.md5) {
-            if #available(iOS 13.0, *) {
-                cell.textLabel?.textColor = .secondaryLabel
-            } else {
-                cell.textLabel?.textColor = .gray
-            }
+            cell.textLabel?.textColor = .secondaryLabel
         }
         else {
-            if #available(iOS 13.0, *) {
-                cell.textLabel?.textColor = .label
-            } else {
-                cell.textLabel?.textColor = .black
-            }
+            cell.textLabel?.textColor = .label
         }
         return cell
     }
@@ -106,11 +96,7 @@ class ResourcePageViewController: UITableViewController {
                 let bangumi = bangumiLinks[index]
                 let link = fullLink(withHref: bangumi["link"]!)
                 let cell = tableView.cellForRow(at: indexPath)
-                if #available(iOS 13.0, *) {
-                    cell?.textLabel?.textColor = .secondaryLabel
-                } else {
-                    cell?.textLabel?.textColor = .gray
-                }
+                cell?.textLabel?.textColor = .secondaryLabel
                 process(link)
             }
             return false
@@ -171,11 +157,7 @@ class ResourcePageViewController: UITableViewController {
             else {
                 if let indexPath = self.tableView.indexPathForSelectedRow, let cell = self.tableView.cellForRow(at: indexPath) {
                     Configuration.shared.viewedResources.append(link.md5)
-                    if #available(iOS 13.0, *) {
-                        cell.textLabel?.textColor = .secondaryLabel
-                    } else {
-                        cell.textLabel?.textColor = .gray
-                    }
+                    cell.textLabel?.textColor = .secondaryLabel
                 }
                 self.bangumi = bangumi
                 self.performSegue(withIdentifier: "ShowBangumiSegue", sender: nil)

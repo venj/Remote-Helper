@@ -23,7 +23,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                 let (index, site) = args
                 site.displayOrder = Int64(index)
             })
-            AppDelegate.shared.saveContext()
+            PersistenceController.shared.saveContext()
         }
     }
 
@@ -40,18 +40,14 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             self.showSettings()
         }
 
-        if #available(iOS 11.0, *) {
-            tableView.dropDelegate = self
-            tableView.dragDelegate = self
-        }
+        tableView.dropDelegate = self
+        tableView.dragDelegate = self
 
         // Revert back to old UITableView behavior
-        if #available(iOS 9.0, *) {
-            tableView.cellLayoutMarginsFollowReadableWidth = false
-        }
+        tableView.cellLayoutMarginsFollowReadableWidth = false
 
         // Peek
-        if #available(iOS 9.0, *), traitCollection.forceTouchCapability == .available {
+        if traitCollection.forceTouchCapability == .available {
             registerForPreviewing(with: self, sourceView: tableView)
         }
     }
@@ -76,7 +72,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         guard let links = defaults.array(forKey: key) as? [String] else { return }
         links.forEach {
             guard let _ = URL(string: $0) else { return }
-            let site = NSEntityDescription.insertNewObject(forEntityName: "ResourceSite", into: AppDelegate.shared.managedObjectContext) as! ResourceSite
+            let site = NSEntityDescription.insertNewObject(forEntityName: "ResourceSite", into: PersistenceController.shared.viewContext) as! ResourceSite
             site.link = $0
             self.addresses.append(site)
         }
@@ -85,7 +81,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     }
 
     func readAddresses() {
-        let context = AppDelegate.shared.managedObjectContext
+        let context = PersistenceController.shared.viewContext
         let fetchRequest = NSFetchRequest<ResourceSite>(entityName: "ResourceSite")
         let displayOrderDescriptor = NSSortDescriptor(key: "displayOrder", ascending: true)
         fetchRequest.sortDescriptors = [displayOrderDescriptor]
@@ -221,7 +217,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             guard let `self` = self else { return }
             let address = alertController.textFields![0].text!
             guard let _ = URL(string: address) else { return }
-            let site = NSEntityDescription.insertNewObject(forEntityName: "ResourceSite", into: AppDelegate.shared.managedObjectContext) as! ResourceSite
+            let site = NSEntityDescription.insertNewObject(forEntityName: "ResourceSite", into: PersistenceController.shared.viewContext) as! ResourceSite
             site.link = address
             self.addresses.append(site)
             let indexPath = IndexPath(row: self.addresses.count - 1, section: 0)
@@ -328,7 +324,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     //MARK: - Helper
     func deleteCell(at indexPath: IndexPath) {
         let site = addresses[indexPath.row]
-        AppDelegate.shared.managedObjectContext.delete(site)
+        PersistenceController.shared.viewContext.delete(site)
         addresses.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .fade)
     }
@@ -344,7 +340,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     }
 }
 
-@available(iOS 11.0, *)
 extension WebContentTableViewController : UITableViewDropDelegate {
     func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
         if coordinator.session.localDragSession != nil { return } // Skip drop-in to prevent copy existing value.
@@ -364,7 +359,7 @@ extension WebContentTableViewController : UITableViewDropDelegate {
             .enumerated()
             .forEach({ (args) in
                 let (index, link) = args
-                let site = NSEntityDescription.insertNewObject(forEntityName: "ResourceSite", into: AppDelegate.shared.managedObjectContext) as! ResourceSite
+                let site = NSEntityDescription.insertNewObject(forEntityName: "ResourceSite", into: PersistenceController.shared.viewContext) as! ResourceSite
                 site.link = link
                 self.addresses.insert(site, at: destinationIndexPath.row + index)
             })
@@ -383,7 +378,6 @@ extension WebContentTableViewController : UITableViewDropDelegate {
     }
 }
 
-@available(iOS 11.0, *)
 extension WebContentTableViewController : UITableViewDragDelegate {
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         guard let urlString = addresses[indexPath.row].link else { return [] }
@@ -400,7 +394,6 @@ extension WebContentTableViewController : UITableViewDragDelegate {
     }
 }
 
-@available(iOS 9.0, *)
 extension WebContentTableViewController : UIViewControllerPreviewingDelegate {
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let indexPath = tableView.indexPathForRow(at: location),

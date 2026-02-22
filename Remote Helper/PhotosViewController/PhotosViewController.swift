@@ -243,8 +243,11 @@ extension PhotosViewController: JXPhotoBrowserDelegate {
             print("[willDisplay] index: \(index), imageURL: \(imageURL)")
             let placeholder = thumbnailURL.flatMap { ImageCache.default.retrieveImageInMemoryCache(forKey: $0.absoluteString) }
             let progressView = browserProgressView(in: photoCell)
+            let requestID = UUID().uuidString
+            progressView.accessibilityIdentifier = requestID
             progressView.progress = 0
             progressView.isHidden = false
+            photoCell.imageView.kf.cancelDownloadTask()
 
             var options = localCacheOptions
             if failedThumbnailIndexes.contains(index) {
@@ -256,6 +259,7 @@ extension PhotosViewController: JXPhotoBrowserDelegate {
                 placeholder: placeholder,
                 options: options,
                 progressBlock: { receivedSize, totalSize in
+                    guard progressView.accessibilityIdentifier == requestID else { return }
                     let progress: CGFloat
                     if totalSize > 0 {
                         progress = min(max(CGFloat(receivedSize) / CGFloat(totalSize), 0), 1)
@@ -268,6 +272,7 @@ extension PhotosViewController: JXPhotoBrowserDelegate {
                     }
                 },
                 completionHandler: { [weak self, weak photoCell] result in
+                    guard progressView.accessibilityIdentifier == requestID else { return }
                     DispatchQueue.main.async {
                         progressView.progress = 1
                         progressView.isHidden = true
@@ -285,7 +290,10 @@ extension PhotosViewController: JXPhotoBrowserDelegate {
                                 self.collectionView.reloadItems(at: [indexPath])
                             }
                         }
-                    case .failure:
+                    case let .failure(error):
+                        if error.isTaskCancelled || error.isNotCurrentTask {
+                            return
+                        }
                         DispatchQueue.main.async {
                             self?.failedThumbnailIndexes.insert(index)
                         }

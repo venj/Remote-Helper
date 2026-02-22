@@ -25,9 +25,7 @@ class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopo
         super.viewDidLoad()
 
         // Revert back to old UITableView behavior
-        if #available(iOS 9.0, *) {
-            tableView.cellLayoutMarginsFollowReadableWidth = false
-        }
+        tableView.cellLayoutMarginsFollowReadableWidth = false
 
         if let title = bangumi?.title {
             self.title = title
@@ -58,9 +56,8 @@ class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopo
             navigationItem.rightBarButtonItem = editButtonItem
         }
 
-        let modeItem = AppDelegate.shared.dyttSplitViewController?.displayModeButtonItem
-        navigationItem.leftBarButtonItem = modeItem
-        navigationItem.leftItemsSupplementBackButton = true
+        navigationItem.leftBarButtonItem = nil
+        navigationItem.leftItemsSupplementBackButton = false
     }
 
     override func didReceiveMemoryWarning() {

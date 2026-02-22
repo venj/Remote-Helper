@@ -40,11 +40,7 @@ extension Helper {
 
     //MARK: - UI Related Helpers
     func mainThemeColor() -> UIColor {
-        if #available(iOS 11.0, *) {
-            return UIColor(named: "mainThemeColor")!
-        } else {
-            return UIColor(red:0.94, green:0.44, blue:0.19, alpha:1)
-        }
+        return UIColor(named: "mainThemeColor")!
     }
 
     func showProcessingNote(withMessage message: String) {
@@ -103,7 +99,7 @@ extension Helper {
     }
 
     @objc func dismissMe(_ sender: Any?) {
-        AppDelegate.shared.window?.rootViewController?.dismiss(animated: true, completion: nil)
+        SceneDelegate.activeWindow?.rootViewController?.dismiss(animated: true, completion: nil)
     }
 
     func showTorrentSearchAlertInViewController(_ viewController:UIViewController?) {
@@ -185,7 +181,9 @@ extension Helper {
 
                 // Show results
                 DispatchQueue.main.async {
-                    if let tabControl =  UIApplication.shared.keyWindow?.rootViewController as? UITabBarController, let navControl = tabControl.selectedViewController as? UINavigationController, let searchControl = navControl.topViewController as? VPSearchResultController {
+                    if let tabControl = SceneDelegate.activeWindow?.rootViewController as? UITabBarController,
+                       let navControl = tabControl.selectedViewController as? UINavigationController,
+                       let searchControl = navControl.topViewController as? VPSearchResultController {
                         searchControl.torrents = torrents
                         searchControl.keyword = keyword
                         print("total in search: ", total)
@@ -201,7 +199,8 @@ extension Helper {
                     if let navigationController = viewController as? UINavigationController {
                         navigationController.pushViewController(searchResultController, animated: true)
                     }
-                    else if let tabbarController = (UIApplication.shared.delegate as! AppDelegate).window?.rootViewController as? UITabBarController, let navigationController = tabbarController.selectedViewController as? UINavigationController {
+                    else if let tabbarController = SceneDelegate.activeWindow?.rootViewController as? UITabBarController,
+                            let navigationController = tabbarController.selectedViewController as? UINavigationController {
                         navigationController.pushViewController(searchResultController, animated: true)
                     }
                     else {
@@ -322,7 +321,7 @@ extension Helper {
                             let alertController = UIAlertController(title: NSLocalizedString("Error", comment:"Error"), message: NSLocalizedString("Unkown error.", comment: "Unknow error."), preferredStyle: .alert)
                             let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
                             alertController.addAction(cancelAction)
-                            AppDelegate.shared.window?.rootViewController?.present(alertController, animated: true, completion: nil)
+                            SceneDelegate.activeWindow?.rootViewController?.present(alertController, animated: true, completion: nil)
                         }
                     }
                 }
@@ -335,20 +334,11 @@ extension Helper {
 
     func showMiDownload(for link: String, inViewController viewController: UIViewController) {
         guard let miURL = URL(string:(link)) else { return }
-        if #available(iOS 9.0, *) {
-            let sfVC = SFSafariViewController(url: miURL)
-            sfVC.title = NSLocalizedString("Mi Remote", comment: "Mi Remote")
-            sfVC.modalPresentationStyle = .formSheet
-            sfVC.modalTransitionStyle = .coverVertical
-            viewController.navigationController?.present(sfVC, animated: true, completion: nil)
-        } else {
-            // Fallback on earlier versions
-            let webView = WebViewController(url: miURL)
-            webView.title = NSLocalizedString("Mi Remote", comment: "Mi Remote")
-            webView.modalPresentationStyle = .formSheet
-            webView.modalTransitionStyle = .coverVertical
-            viewController.navigationController?.present(webView, animated: true, completion: nil)
-        }
+        let sfVC = SFSafariViewController(url: miURL)
+        sfVC.title = NSLocalizedString("Mi Remote", comment: "Mi Remote")
+        sfVC.modalPresentationStyle = .formSheet
+        sfVC.modalTransitionStyle = .coverVertical
+        viewController.navigationController?.present(sfVC, animated: true, completion: nil)
     }
 
     func selectDownloadMethod(for magnet: String, andTorrent torrent: String, showIn viewController: UIViewController) {

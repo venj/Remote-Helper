@@ -8,7 +8,6 @@
 
 import Foundation
 
-@available(iOS 7.0, OSX 10.9, *)
 public extension String {
     func base64String() -> String? {
         guard let data = self.data(using: String.Encoding.utf8) else { return nil }

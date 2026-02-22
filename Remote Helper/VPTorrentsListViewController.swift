@@ -102,9 +102,7 @@ class VPTorrentsListViewController: UITableViewController, UIPopoverPresentation
         loadTorrentList(nil)
 
         // Revert back to old UITableView behavior
-        if #available(iOS 9.0, *) {
-            tableView.cellLayoutMarginsFollowReadableWidth = false
-        }
+        tableView.cellLayoutMarginsFollowReadableWidth = false
 
         // Hide searchbar initially.
         tableView.contentOffset = CGPoint(x: 0.0, y: searchBar.frame.height)
@@ -152,18 +150,10 @@ class VPTorrentsListViewController: UITableViewController, UIPopoverPresentation
         let title = currentTitles[indexPath.row]
         cell.textLabel?.text = title
         if viewedTitles.contains(title) {
-            if #available(iOS 13.0, *) {
-                cell.textLabel?.textColor = .secondaryLabel
-            } else {
-                cell.textLabel?.textColor = .gray
-            }
+            cell.textLabel?.textColor = .secondaryLabel
         }
         else {
-            if #available(iOS 13.0, *) {
-                cell.textLabel?.textColor = .label
-            } else {
-                cell.textLabel?.textColor = .black
-            }
+            cell.textLabel?.textColor = .label
         }
 
         return cell

@@ -81,6 +81,7 @@
 		25D107EF2A2E035600372B1C /* CatGenre.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D107EE2A2E035600372B1C /* CatGenre.swift */; };
 		25D107F12A2E03C900372B1C /* CatResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D107F02A2E03C900372B1C /* CatResponse.swift */; };
 		25D107F32A2E042400372B1C /* CatResponseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D107F22A2E042400372B1C /* CatResponseData.swift */; };
+		25E4E0012F4B111100A1B2C3 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E4E0002F4B111100A1B2C3 /* PersistenceController.swift */; };
 		25F2962E2350DDFE00AB782A /* UIImage+BarButtonItemIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F2962D2350DDFE00AB782A /* UIImage+BarButtonItemIcon.swift */; };
 		25F94A621BE5E9FF009C9195 /* Dictionary+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F94A611BE5E9FF009C9195 /* Dictionary+JSON.swift */; };
 /* End PBXBuildFile section */
@@ -175,6 +176,7 @@
 		25D107EE2A2E035600372B1C /* CatGenre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatGenre.swift; sourceTree = "<group>"; };
 		25D107F02A2E03C900372B1C /* CatResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatResponse.swift; sourceTree = "<group>"; };
 		25D107F22A2E042400372B1C /* CatResponseData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatResponseData.swift; sourceTree = "<group>"; };
+		25E4E0002F4B111100A1B2C3 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		25F2962D2350DDFE00AB782A /* UIImage+BarButtonItemIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+BarButtonItemIcon.swift"; sourceTree = "<group>"; };
 		25F94A601BE5E9FE009C9195 /* Remote Helper-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Remote Helper-Bridging-Header.h"; sourceTree = "<group>"; };
 		25F94A611BE5E9FF009C9195 /* Dictionary+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+JSON.swift"; sourceTree = "<group>"; };
@@ -248,6 +250,7 @@
 				25B09BF31FEB66EB00AE514E /* ViewControllers */,
 				250354D41BE9BEC900E9F93A /* AppDelegate.swift */,
 				257697822E60328E007EF38D /* SceneDelegate.swift */,
+				25E4E0002F4B111100A1B2C3 /* PersistenceController.swift */,
 				252DFA861753784400FF8199 /* Supporting Files */,
 			);
 			path = "Remote Helper";
@@ -429,7 +432,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 0940;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 2610;
 				ORGANIZATIONNAME = Home;
 				TargetAttributes = {
 					252DFA7B1753784400FF8199 = {
@@ -506,6 +509,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				250354D51BE9BEC900E9F93A /* AppDelegate.swift in Sources */,
+				25E4E0012F4B111100A1B2C3 /* PersistenceController.swift in Sources */,
 				2502ABE71BE723A2004882FE /* String+URLEncode.swift in Sources */,
 				2502ABDD1BE6F84B004882FE /* String+JSON.swift in Sources */,
 				25C8BF151BF243AB00CAC32E /* UITabBarController+StatusBarStyle.swift in Sources */,
@@ -633,6 +637,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 32Y52676KN;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -651,9 +656,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -687,6 +693,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 32Y52676KN;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -697,9 +704,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -717,18 +725,19 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 440;
+				CURRENT_PROJECT_VERSION = 444;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 32Y52676KN;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 32Y52676KN;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 32Y52676KN;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = "Remote Helper/Remote Helper-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.3;
+				MARKETING_VERSION = 4.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.Video-Player";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "c649645a-2275-429b-831d-84429caabd7e";
@@ -757,18 +766,19 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 440;
+				CURRENT_PROJECT_VERSION = 444;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 32Y52676KN;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 32Y52676KN;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = 32Y52676KN;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = "Remote Helper/Remote Helper-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.3;
+				MARKETING_VERSION = 4.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "me.venj.Video-Player";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "d29dfa3c-208e-4aab-ac00-6abda19ad156";

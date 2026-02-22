@@ -52,9 +52,7 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
         navigationController?.title = siteName
 
         // Revert back to old UITableView behavior
-        if #available(iOS 9.0, *) {
-            tableView.cellLayoutMarginsFollowReadableWidth = false
-        }
+        tableView.cellLayoutMarginsFollowReadableWidth = false
 
         let searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(search(_:)))
         navigationItem.rightBarButtonItem = searchItem

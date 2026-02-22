@@ -8,7 +8,6 @@
 
 import Foundation
 
-@available(iOS 4.0, OSX 10.6, *)
 public extension String {
     func matches(_ pattern: String, regularExpressionOptions:NSRegularExpression.Options = [.caseInsensitive], matchingOptions:NSRegularExpression.MatchingOptions = []) -> Bool {
         guard let regex = try? NSRegularExpression(pattern: pattern, options: regularExpressionOptions) else { return false }

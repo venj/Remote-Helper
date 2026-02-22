@@ -16,10 +16,8 @@ class ResourceWebViewController: WebViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        
-        let modeItem = AppDelegate.shared.addressesSplitViewController?.displayModeButtonItem
-        navigationItem.leftBarButtonItem = modeItem
-        navigationItem.leftItemsSupplementBackButton = true
+        navigationItem.leftBarButtonItem = nil
+        navigationItem.leftItemsSupplementBackButton = false
 
         let parseHTMLBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(fetchHTMLAndParse(_:)))
         additionalBarButtonItems = [parseHTMLBarButtonItem]
@@ -30,7 +28,7 @@ extension ResourceWebViewController {
     override open var previewActionItems: [UIPreviewActionItem] {
         get {
             let deleteItem = UIPreviewAction(title: NSLocalizedString("Delete", comment: "Delete"), style: .destructive, handler: { (action, vc)  in
-                if let webContentViewController = AppDelegate.shared.fileListViewController {
+                if let webContentViewController = SceneDelegate.active?.fileListViewController {
                     webContentViewController.deletePreviewingCell()
                 }
             })

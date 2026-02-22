@@ -11,7 +11,15 @@ import WebKit
 
 class WebViewController: UIViewController {
 
+    var containerView: UIView!
     var webView: WKWebView!
+    var bottomToolbarEffectView: UIVisualEffectView!
+    var bottomToolbarContentView: UIView!
+    var bottomButtonsStackView: UIStackView!
+    var compactBackButton: UIButton!
+    var compactForwardButton: UIButton!
+    var compactReloadStopButton: UIButton!
+    var bottomToolbarHeightConstraint: NSLayoutConstraint!
     var urlString: String? {
         didSet {
             url = URL(string: urlString ?? "")
@@ -51,11 +59,66 @@ class WebViewController: UIViewController {
     }
 
     override func loadView() {
+        containerView = UIView(frame: .zero)
+        containerView.backgroundColor = .systemBackground
+
         let webConfiguration = WKWebViewConfiguration()
         webView = WKWebView(frame: .zero, configuration: webConfiguration)
         webView.uiDelegate = self
         webView.navigationDelegate = self
-        view = webView
+        webView.translatesAutoresizingMaskIntoConstraints = false
+
+        bottomToolbarEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemChromeMaterial))
+        bottomToolbarEffectView.translatesAutoresizingMaskIntoConstraints = false
+        bottomToolbarEffectView.isHidden = true
+
+        bottomToolbarContentView = UIView(frame: .zero)
+        bottomToolbarContentView.translatesAutoresizingMaskIntoConstraints = false
+        bottomToolbarContentView.backgroundColor = .clear
+
+        compactBackButton = makeCompactToolbarButton(systemImage: "chevron.backward")
+        compactForwardButton = makeCompactToolbarButton(systemImage: "chevron.forward")
+        compactReloadStopButton = makeCompactToolbarButton(systemImage: "arrow.clockwise")
+
+        compactBackButton.addTarget(self, action: #selector(navBack(_:)), for: .touchUpInside)
+        compactForwardButton.addTarget(self, action: #selector(navForward(_:)), for: .touchUpInside)
+        compactReloadStopButton.addTarget(self, action: #selector(reloadOrStop(_:)), for: .touchUpInside)
+
+        bottomButtonsStackView = UIStackView(arrangedSubviews: [compactBackButton, compactForwardButton, compactReloadStopButton])
+        bottomButtonsStackView.translatesAutoresizingMaskIntoConstraints = false
+        bottomButtonsStackView.axis = .horizontal
+        bottomButtonsStackView.alignment = .center
+        bottomButtonsStackView.distribution = .fillEqually
+        bottomButtonsStackView.spacing = 12.0
+
+        containerView.addSubview(webView)
+        containerView.addSubview(bottomToolbarEffectView)
+        bottomToolbarEffectView.contentView.addSubview(bottomToolbarContentView)
+        bottomToolbarContentView.addSubview(bottomButtonsStackView)
+
+        bottomToolbarHeightConstraint = bottomToolbarEffectView.heightAnchor.constraint(equalToConstant: 0.0)
+        NSLayoutConstraint.activate([
+            webView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            webView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            webView.bottomAnchor.constraint(equalTo: bottomToolbarEffectView.topAnchor),
+
+            bottomToolbarEffectView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            bottomToolbarEffectView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            bottomToolbarEffectView.bottomAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.bottomAnchor),
+            bottomToolbarHeightConstraint,
+
+            bottomToolbarContentView.leadingAnchor.constraint(equalTo: bottomToolbarEffectView.contentView.leadingAnchor),
+            bottomToolbarContentView.trailingAnchor.constraint(equalTo: bottomToolbarEffectView.contentView.trailingAnchor),
+            bottomToolbarContentView.topAnchor.constraint(equalTo: bottomToolbarEffectView.contentView.topAnchor),
+            bottomToolbarContentView.bottomAnchor.constraint(equalTo: bottomToolbarEffectView.contentView.bottomAnchor),
+
+            bottomButtonsStackView.centerXAnchor.constraint(equalTo: bottomToolbarContentView.centerXAnchor),
+            bottomButtonsStackView.centerYAnchor.constraint(equalTo: bottomToolbarContentView.centerYAnchor),
+            bottomButtonsStackView.heightAnchor.constraint(equalToConstant: 36.0)
+        ])
+
+        view = containerView
     }
 
     override func viewDidLoad() {
@@ -83,17 +146,17 @@ class WebViewController: UIViewController {
     }
 
     func setupBarButtonItems() {
-        if navigationItem.rightBarButtonItems?.count ?? 0 > 0 { return }
-        let flexspaceBarButtonItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        navigationController?.setToolbarHidden(true, animated: false)
 
         if view.traitCollection.horizontalSizeClass == .compact {
-            navigationController?.setToolbarHidden(false, animated: false)
-            navigationController?.toolbar.setItems([flexspaceBarButtonItem, navBackBarButtonItem, flexspaceBarButtonItem, navForwardBarButtonItem, flexspaceBarButtonItem, reloadStopBarButtonItem, flexspaceBarButtonItem], animated: false)
+            bottomToolbarHeightConstraint.constant = 56.0
+            bottomToolbarEffectView.isHidden = false
+            updateCompactToolbarButtonStates()
             navigationItem.rightBarButtonItems = additionalBarButtonItems
         }
         else {
-            navigationController?.toolbar.setItems([], animated: false)
-            navigationController?.setToolbarHidden(true, animated: false)
+            bottomToolbarHeightConstraint.constant = 0.0
+            bottomToolbarEffectView.isHidden = true
             navigationItem.rightBarButtonItems = additionalBarButtonItems + [reloadStopBarButtonItem, navForwardBarButtonItem, navBackBarButtonItem]
         }
     }
@@ -101,7 +164,8 @@ class WebViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         webView?.stopLoading()
-        navigationController?.setToolbarHidden(true, animated: animated)
+        bottomToolbarHeightConstraint.constant = 0.0
+        bottomToolbarEffectView.isHidden = true
         navigationItem.setHidesBackButton(true, animated: animated)
         navigationItem.rightBarButtonItems = nil
     }
@@ -111,9 +175,40 @@ class WebViewController: UIViewController {
     }
 
     func configureBarButtonItems() {
-        reloadStopBarButtonItem = UIBarButtonItem(image: UIImage.refreshButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(reloadOrStop(_:)))
-        navBackBarButtonItem = UIBarButtonItem(image: UIImage.backButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(navBack(_:)))
-        navForwardBarButtonItem = UIBarButtonItem(image: UIImage.forwardButtonIcon(), style: UIBarButtonItem.Style.plain, target: self, action: #selector(navForward(_:)))
+        reloadStopBarButtonItem = UIBarButtonItem(image: navigationBarSymbol(named: "arrow.clockwise"), style: .plain, target: self, action: #selector(reloadOrStop(_:)))
+        navBackBarButtonItem = UIBarButtonItem(image: navigationBarSymbol(named: "chevron.backward"), style: .plain, target: self, action: #selector(navBack(_:)))
+        navForwardBarButtonItem = UIBarButtonItem(image: navigationBarSymbol(named: "chevron.forward"), style: .plain, target: self, action: #selector(navForward(_:)))
+        navBackBarButtonItem.isEnabled = false
+        navForwardBarButtonItem.isEnabled = false
+        updateCompactToolbarButtonStates()
+    }
+
+    private func navigationBarSymbol(named name: String) -> UIImage? {
+        let configuration = UIImage.SymbolConfiguration(pointSize: 17.0, weight: .semibold, scale: .medium)
+        return UIImage(systemName: name, withConfiguration: configuration)
+    }
+
+    private func makeCompactToolbarButton(systemImage: String) -> UIButton {
+        var configuration = UIButton.Configuration.tinted()
+        configuration.baseBackgroundColor = UIColor.tertiarySystemBackground
+        configuration.baseForegroundColor = .label
+        configuration.cornerStyle = .capsule
+        configuration.image = UIImage(systemName: systemImage)
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12)
+        let button = UIButton(type: .system)
+        button.configuration = configuration
+        return button
+    }
+
+    private func updateCompactReloadStopIcon() {
+        let symbolName = webView?.isLoading == true ? "xmark" : "arrow.clockwise"
+        compactReloadStopButton.configuration?.image = UIImage(systemName: symbolName)
+    }
+
+    private func updateCompactToolbarButtonStates() {
+        compactBackButton.isEnabled = webView?.canGoBack == true
+        compactForwardButton.isEnabled = webView?.canGoForward == true
+        updateCompactReloadStopIcon()
     }
 
     func reload() {
@@ -140,6 +235,8 @@ class WebViewController: UIViewController {
     func reloadOrStop(_ sender: Any?) {
         if (webView.isLoading) {
             webView.stopLoading()
+            reloadStopBarButtonItem.image = navigationBarSymbol(named: "arrow.clockwise")
+            updateCompactToolbarButtonStates()
         }
         else {
             reload()
@@ -157,9 +254,10 @@ extension WebViewController : WKNavigationDelegate {
             if (self.webView.title?.count ?? 0) > 0 {
                 self.title = self.webView.title
             }
-            self.reloadStopBarButtonItem.image = UIImage.refreshButtonIcon()
+            self.reloadStopBarButtonItem.image = self.navigationBarSymbol(named: "arrow.clockwise")
             self.navBackBarButtonItem.isEnabled = webView.canGoBack
             self.navForwardBarButtonItem.isEnabled = webView.canGoForward
+            self.updateCompactToolbarButtonStates()
             DispatchQueue.main.after(0.05) { [weak self] in
                 self?.webView.layoutSubviews()
             }
@@ -178,9 +276,10 @@ extension WebViewController : WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         DispatchQueue.main.async {
-            self.reloadStopBarButtonItem.image = UIImage.stopButtonIcon()
+            self.reloadStopBarButtonItem.image = self.navigationBarSymbol(named: "xmark")
             self.navBackBarButtonItem.isEnabled = webView.canGoBack
             self.navForwardBarButtonItem.isEnabled = webView.canGoForward
+            self.updateCompactToolbarButtonStates()
         }
     }
 }

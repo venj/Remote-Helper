@@ -7,9 +7,8 @@
 //
 
 import UIKit
-import MediaBrowser
 
-class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopoverPresentationControllerDelegate {
+class BangumiViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
     let CellIdentifier = "BangumiTableCell"
     var bangumi: Bangumi? = nil
 
@@ -19,6 +18,13 @@ class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopo
 
     var shouldAddInfomationButtons: Bool {
         return bangumi?.images.count != 0 && bangumi?.info.count != 0
+    }
+    
+    var remotePhotos: [RemoteMedia] {
+        return bangumi?.images.compactMap { image in
+            guard let url = URL(string: image) else { return nil }
+            return RemoteMedia(source: .remoteImage(imageURL: url, thumbnailURL: nil))
+        } ?? []
     }
 
     override func viewDidLoad() {
@@ -234,13 +240,11 @@ class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopo
 
     // MARK: - Actions
     @objc func showImages(_ sender: Any?) {
-        if bangumi == nil || bangumi!.images.count == 0 { return }
-        let photoBrowser = MediaBrowser(delegate: self)
-        photoBrowser.displayActionButton = false
-        photoBrowser.displayMediaNavigationArrows = true
-        photoBrowser.zoomPhotosToFill = false
-        photoBrowser.enableGrid = false
-        self.navigationController?.pushViewController(photoBrowser, animated: true)
+        guard !remotePhotos.isEmpty else { return }
+        let photosViewController = PhotosViewController()
+        photosViewController.title = bangumi?.title
+        photosViewController.items = remotePhotos
+        navigationController?.pushViewController(photosViewController, animated: true)
     }
 
     @objc func showInfo(_ sender: Any?) {
@@ -267,16 +271,4 @@ class BangumiViewController: UITableViewController, MediaBrowserDelegate, UIPopo
         popoverPresentationController.barButtonItem = infoButton
     }
 
-    // MARK: - MWPhotoBrowserDelegate
-
-    func numberOfMedia(in mediaBrowser: MediaBrowser) -> Int {
-        return bangumi?.images.count ?? 0
-    }
-
-    func media(for mediaBrowser: MediaBrowser, at index: Int) -> Media {
-        // FIXME: Guard nil 
-        let imageLink = bangumi!.images[Int(index)]
-        let mwPhoto = Media(url: URL(string: imageLink)!)
-        return mwPhoto
-    }
 }

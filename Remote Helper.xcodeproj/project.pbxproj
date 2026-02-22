@@ -26,7 +26,6 @@
 		2506AA1F1E90EF010064EABB /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2506AA1E1E90EF010064EABB /* Page.swift */; };
 		2506AA211E90F4710064EABB /* ResourcePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2506AA201E90F4710064EABB /* ResourcePageViewController.swift */; };
 		2506AA231E90F5D40064EABB /* BangumiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2506AA221E90F5D40064EABB /* BangumiViewController.swift */; };
-		2515C5C62355CC5F00BFD49D /* MediaBrowser in Frameworks */ = {isa = PBXBuildFile; productRef = 2515C5C52355CC5F00BFD49D /* MediaBrowser */; };
 		251998452355BEB900DC080D /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 251998442355BEB900DC080D /* SwiftSoup */; };
 		251B62B120FF7A080077FF2D /* Helper+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 251B62B020FF7A080077FF2D /* Helper+iOS.swift */; };
 		251C965121ABE94400DAD597 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 256EA4BD177D5F830081309B /* Localizable.strings */; };
@@ -54,6 +53,7 @@
 		255A7D251BEB8DC700E6012B /* PasscodeLockConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255A7D231BEB8DC700E6012B /* PasscodeLockConfiguration.swift */; };
 		255A7D301BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255A7D2F1BEC4A5700E6012B /* UINavigationController+StatusBarStyle.swift */; };
 		256152712F49CA9000D50611 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 256152702F49CA8F00D50611 /* CircularProgressView.swift */; };
+		256152952F4B323900D50611 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 256152942F4B323900D50611 /* Kingfisher */; };
 		25650A3A235F0B5F00B314C3 /* SwiftEntryKit in Frameworks */ = {isa = PBXBuildFile; productRef = 25650A39235F0B5F00B314C3 /* SwiftEntryKit */; };
 		25650A3D235F561800B314C3 /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = 25650A3C235F561800B314C3 /* Reachability */; };
 		25650A40235F568E00B314C3 /* PasscodeLock in Frameworks */ = {isa = PBXBuildFile; productRef = 25650A3F235F568E00B314C3 /* PasscodeLock */; };
@@ -189,8 +189,8 @@
 			files = (
 				2575F5751E97B359004B4D1E /* libiconv.tbd in Frameworks */,
 				25B0AA7A1753A66C00141B0E /* SystemConfiguration.framework in Frameworks */,
+				256152952F4B323900D50611 /* Kingfisher in Frameworks */,
 				25B0AA7417537B2D00141B0E /* MediaPlayer.framework in Frameworks */,
-				2515C5C62355CC5F00BFD49D /* MediaBrowser in Frameworks */,
 				252DFA801753784400FF8199 /* UIKit.framework in Frameworks */,
 				25650A40235F568E00B314C3 /* PasscodeLock in Frameworks */,
 				252DFA821753784400FF8199 /* Foundation.framework in Frameworks */,
@@ -413,12 +413,12 @@
 			packageProductDependencies = (
 				25B22FE42354A49400F9DFC6 /* Alamofire */,
 				251998442355BEB900DC080D /* SwiftSoup */,
-				2515C5C52355CC5F00BFD49D /* MediaBrowser */,
 				25650A39235F0B5F00B314C3 /* SwiftEntryKit */,
 				25650A3C235F561800B314C3 /* Reachability */,
 				25650A3F235F568E00B314C3 /* PasscodeLock */,
 				25C7BD3E27F1C6F60095A141 /* InAppSettingsKit */,
 				253262B62F494DA6005EAEC8 /* JXPhotoBrowser */,
+				256152942F4B323900D50611 /* Kingfisher */,
 			);
 			productName = "Video Player";
 			productReference = 252DFA7C1753784400FF8199 /* Remote Helper.app */;
@@ -469,12 +469,12 @@
 			packageReferences = (
 				25B22FE32354A49400F9DFC6 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				251998432355BEB900DC080D /* XCRemoteSwiftPackageReference "SwiftSoup" */,
-				2515C5C42355CC5F00BFD49D /* XCRemoteSwiftPackageReference "MediaBrowser" */,
 				25650A38235F0B5E00B314C3 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */,
 				25650A3B235F561800B314C3 /* XCRemoteSwiftPackageReference "Reachability" */,
 				25650A3E235F568E00B314C3 /* XCRemoteSwiftPackageReference "SwiftPasscodeLock" */,
 				25C7BD3D27F1C6F60095A141 /* XCRemoteSwiftPackageReference "InAppSettingsKit" */,
 				253262B52F494DA6005EAEC8 /* XCRemoteSwiftPackageReference "PhotoBrowser" */,
+				256152932F4B323900D50611 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 252DFA7D1753784400FF8199 /* Products */;
 			projectDirPath = "";
@@ -820,14 +820,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		2515C5C42355CC5F00BFD49D /* XCRemoteSwiftPackageReference "MediaBrowser" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/imvenj/MediaBrowser";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.0.6;
-			};
-		};
 		251998432355BEB900DC080D /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/scinfu/SwiftSoup";
@@ -842,6 +834,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 4.0.2;
+			};
+		};
+		256152932F4B323900D50611 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.7.0;
 			};
 		};
 		25650A38235F0B5E00B314C3 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */ = {
@@ -887,11 +887,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2515C5C52355CC5F00BFD49D /* MediaBrowser */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2515C5C42355CC5F00BFD49D /* XCRemoteSwiftPackageReference "MediaBrowser" */;
-			productName = MediaBrowser;
-		};
 		251998442355BEB900DC080D /* SwiftSoup */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 251998432355BEB900DC080D /* XCRemoteSwiftPackageReference "SwiftSoup" */;
@@ -901,6 +896,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 253262B52F494DA6005EAEC8 /* XCRemoteSwiftPackageReference "PhotoBrowser" */;
 			productName = JXPhotoBrowser;
+		};
+		256152942F4B323900D50611 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 256152932F4B323900D50611 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 		25650A39235F0B5F00B314C3 /* SwiftEntryKit */ = {
 			isa = XCSwiftPackageProductDependency;

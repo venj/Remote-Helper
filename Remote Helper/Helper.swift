@@ -32,25 +32,48 @@ open class Helper : NSObject {
 
     //MARK: - Local Files and ImageCache Helpers
     func documentsDirectory() -> String {
-        return NSSearchPathForDirectoriesInDomains(.documentationDirectory, .userDomainMask, true).first!
+        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.path
     }
     
     func freeDiskSpace() -> Int {
-        guard let dictionary = try? FileManager.default.attributesOfFileSystem(forPath: self.documentsDirectory()) else { return 0 }
-        let freeFileSystemSizeInBytes = dictionary[FileAttributeKey.systemFreeSize] as! Int
-        return freeFileSystemSizeInBytes
+        let documentsURL = URL(fileURLWithPath: documentsDirectory(), isDirectory: true)
+
+        if let values = try? documentsURL.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey]),
+           let capacity = values.volumeAvailableCapacityForImportantUsage {
+            return min(Int.max, Int(capacity))
+        }
+
+        if let values = try? documentsURL.resourceValues(forKeys: [.volumeAvailableCapacityKey]),
+           let capacity = values.volumeAvailableCapacity {
+            return min(Int.max, Int(capacity))
+        }
+
+        return 0
     }
 
     func localFileSize() -> Int {
-        var size = 0
-        let documentsDirectory = self.documentsDirectory()
-        guard let fileEnumerator = FileManager.default.enumerator(atPath: documentsDirectory) else { return 0 }
-        for fileName in fileEnumerator {
-            let filePath = documentsDirectory.vc_stringByAppendingPathComponent(fileName as! String)
-            guard let attrs = try? FileManager.default.attributesOfFileSystem(forPath: filePath) else { continue }
-            size += (attrs[FileAttributeKey.size] as! Int)
+        let documentsURL = URL(fileURLWithPath: documentsDirectory(), isDirectory: true)
+        guard let enumerator = FileManager.default.enumerator(
+            at: documentsURL,
+            includingPropertiesForKeys: [.isRegularFileKey, .totalFileAllocatedSizeKey, .fileAllocatedSizeKey, .fileSizeKey],
+            options: [.skipsHiddenFiles]
+        ) else { return 0 }
+
+        var totalSize: Int64 = 0
+        for case let fileURL as URL in enumerator {
+            guard let values = try? fileURL.resourceValues(forKeys: [.isRegularFileKey, .totalFileAllocatedSizeKey, .fileAllocatedSizeKey, .fileSizeKey]),
+                  values.isRegularFile == true else { continue }
+
+            if let allocated = values.totalFileAllocatedSize ?? values.fileAllocatedSize {
+                totalSize += Int64(allocated)
+            } else if let fileSize = values.fileSize {
+                totalSize += Int64(fileSize)
+            }
         }
-        return size
+
+        if totalSize <= 0 { return 0 }
+        if totalSize > Int64(Int.max) { return Int.max }
+        return Int(totalSize)
     }
 
     func fileToDownload(withPath path: String) -> String {
@@ -139,5 +162,4 @@ open class Helper : NSObject {
         }
     }
 }
-
 

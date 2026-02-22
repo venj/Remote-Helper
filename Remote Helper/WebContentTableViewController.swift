@@ -188,14 +188,23 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         else if specifier.key == ClearCacheNowKey {
             Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
             ImageCache.default.clearDiskCache() {
-                let defaults = UserDefaults.standard
-                let localFileSize = Helper.shared.fileSizeString(withInteger: Helper.shared.localFileSize())
-                defaults.set(localFileSize, forKey: LocalFileSize)
-                defaults.synchronize()
-                sender.synchronizeSettings()
-                DispatchQueue.main.async {
-                    Helper.shared.showNote(withMessage: NSLocalizedString("Cache Cleared!", comment: "Cache Cleared!"))
-                    sender.tableView.reloadData()
+                DispatchQueue.global(qos: .userInitiated).async {
+                    let defaults = UserDefaults.standard
+                    let localFileSize = Helper.shared.fileSizeString(withInteger: Helper.shared.localFileSize())
+
+                    ImageCache.default.calculateDiskStorageSize { result in
+                        let cacheSizeInBytes = Int((try? result.get()) ?? 0)
+                        let cacheSize = Helper.shared.fileSizeString(withInteger: cacheSizeInBytes)
+
+                        DispatchQueue.main.async {
+                            defaults.set(cacheSize, forKey: ImageCacheSizeKey)
+                            defaults.set(localFileSize, forKey: LocalFileSize)
+                            defaults.synchronize()
+                            sender.synchronizeSettings()
+                            Helper.shared.showNote(withMessage: NSLocalizedString("Cache Cleared!", comment: "Cache Cleared!"))
+                            sender.tableView.reloadData()
+                        }
+                    }
                 }
             }
         }
@@ -261,30 +270,41 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     func showSettings() {
         let defaults = UserDefaults.standard
-        let cacheSizeInBytes = ImageCache.default.usedSize
-        let cacheSize = Helper.shared.fileSizeString(withInteger: Int(cacheSizeInBytes)) // Maybe problematic on 32-bit system
-        defaults.set(cacheSize, forKey: ImageCacheSizeKey)
         let passcodeRepo = UserDefaultsPasscodeRepository()
         let status = passcodeRepo.hasPasscode ? NSLocalizedString("On", comment: "打开") : NSLocalizedString("Off", comment: "关闭")
-        defaults.set(status, forKey: PasscodeLockStatus)
-        let localFileSize = Helper.shared.fileSizeString(withInteger: Helper.shared.localFileSize())
-        defaults.set(localFileSize, forKey: LocalFileSize)
-        let deviceFreeSpace = Helper.shared.fileSizeString(withInteger: Helper.shared.freeDiskSpace())
-        defaults.set(deviceFreeSpace, forKey: DeviceFreeSpace)
-        defaults.set(Helper.shared.appVersionString(), forKey: CurrentVersionKey)
-        defaults.synchronize()
 
-        settingsViewController = IASKAppSettingsViewController(style: .grouped)
-        settingsViewController.delegate = self
-        settingsViewController.showCreditsFooter = false
-        settingsViewController.showDoneButton = true
-        let settingsNavigationController = UINavigationController(rootViewController: settingsViewController)
-        if view.traitCollection.horizontalSizeClass == .regular {
-            settingsNavigationController.modalPresentationStyle = .pageSheet
-        }
-        DispatchQueue.main.async { [weak self] in
-            guard let `self` = self else { return }
-            self.present(settingsNavigationController, animated: true, completion: nil)
+        ImageCache.default.calculateDiskStorageSize { [weak self] result in
+            let cacheSizeInBytes = Int((try? result.get()) ?? 0)
+
+            DispatchQueue.global(qos: .userInitiated).async {
+                let localFileSizeInBytes = Helper.shared.localFileSize()
+                let deviceFreeSpaceInBytes = Helper.shared.freeDiskSpace()
+
+                let cacheSize = Helper.shared.fileSizeString(withInteger: cacheSizeInBytes)
+                let localFileSize = Helper.shared.fileSizeString(withInteger: localFileSizeInBytes)
+                let deviceFreeSpace = Helper.shared.fileSizeString(withInteger: deviceFreeSpaceInBytes)
+                let appVersion = Helper.shared.appVersionString()
+
+                DispatchQueue.main.async {
+                    guard let self else { return }
+                    defaults.set(cacheSize, forKey: ImageCacheSizeKey)
+                    defaults.set(status, forKey: PasscodeLockStatus)
+                    defaults.set(localFileSize, forKey: LocalFileSize)
+                    defaults.set(deviceFreeSpace, forKey: DeviceFreeSpace)
+                    defaults.set(appVersion, forKey: CurrentVersionKey)
+                    defaults.synchronize()
+
+                    self.settingsViewController = IASKAppSettingsViewController(style: .grouped)
+                    self.settingsViewController.delegate = self
+                    self.settingsViewController.showCreditsFooter = false
+                    self.settingsViewController.showDoneButton = true
+                    let settingsNavigationController = UINavigationController(rootViewController: self.settingsViewController)
+                    if self.view.traitCollection.horizontalSizeClass == .regular {
+                        settingsNavigationController.modalPresentationStyle = .pageSheet
+                    }
+                    self.present(settingsNavigationController, animated: true, completion: nil)
+                }
+            }
         }
     }
 

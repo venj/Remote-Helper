@@ -122,7 +122,6 @@ final class MediaThumbnailCell: UICollectionViewCell {
     private var localCacheOptions: KingfisherOptionsInfo {
         [
             .cacheOriginalImage,
-            .diskCacheExpiration(.days(30)),
             .memoryCacheExpiration(.days(1)),
             .loadDiskFileSynchronously
         ]

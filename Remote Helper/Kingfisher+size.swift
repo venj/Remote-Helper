@@ -11,8 +11,8 @@ import Kingfisher
 extension ImageCache {
     var usedSize: UInt {
         var result: UInt = 0
-        let sema = DispatchSemaphore(value: 1)
-        ImageCache.default.calculateDiskStorageSize { (r) in
+        let sema = DispatchSemaphore(value: 0)
+        calculateDiskStorageSize { r in
             result = (try? r.get()) ?? 0
             sema.signal()
         }

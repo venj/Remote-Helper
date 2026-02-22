@@ -420,15 +420,14 @@ private extension PhotosViewController {
     var localCacheOptions: KingfisherOptionsInfo {
         [
             .cacheOriginalImage,
-            .diskCacheExpiration(.days(30)),
             .memoryCacheExpiration(.days(1)),
             .loadDiskFileSynchronously
         ]
     }
 
     func configureLocalImageCache() {
-        ImageCache.default.diskStorage.config.expiration = .days(30)
-        ImageCache.default.diskStorage.config.sizeLimit = 500 * 1024 * 1024
+        ImageCache.default.diskStorage.config.expiration = .never
+        ImageCache.default.diskStorage.config.sizeLimit = 0
         #if KINGFISHER_V6
         ImageCache.default.diskStorage.config.autoExtAfterHashedFileName = true
         #endif

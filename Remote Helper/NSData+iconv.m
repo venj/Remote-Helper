@@ -12,7 +12,15 @@
 @implementation NSData (iconv)
 
 - (NSString  * _Nullable)convertToUTF8StringFromEncoding:(NSString  * _Nonnull)from allowLoosy: (Boolean)lossy {
+    if (self.length == 0) {
+        return nil;
+    }
+
     char *inString = (char *)([self bytes]);
+    if (inString == NULL) {
+        return nil;
+    }
+
     char *outString;
     iconv_t conv_desc;
     const char *from_encoding = [from cStringUsingEncoding:NSASCIIStringEncoding];

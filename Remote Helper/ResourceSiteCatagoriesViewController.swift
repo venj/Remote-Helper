@@ -28,21 +28,21 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
                                              ["name": "手机电影", "link": "https://www.dygod.net/html/3gp/3gpmovie/index.html"]]
  */
 
-    var catagoryLinks: [[String: String]] = [["name": "最新电影", "link": "http://dytt8.net/html/gndy/dyzz/index.html"],
-                                             ["name": "国内电影", "link": "http://dytt8.net/html/gndy/china/index.html"],
-                                             ["name": "欧美电影", "link": "http://dytt8.net/html/gndy/oumei/index.html"],
-                                             ["name": "日韩电影", "link": "http://dytt8.net/html/gndy/rihan/index.html"],
-                                             ["name": "综合电影", "link": "http://dytt8.net/html/gndy/jddy/index.html"],
-                                             ["name": "华语电视", "link": "http://dytt8.net/html/tv/hytv/index.html"],
-                                             ["name": "日韩电视", "link": "http://dytt8.net/html/tv/rihantv/index.html"],
-                                             ["name": "欧美电视", "link": "http://dytt8.net/html/tv/oumeitv/index.html"],
-                                             ["name": "最新综艺", "link": "http://dytt8.net/html/zongyi2013/index.html"],
-                                             ["name": "旧版综艺", "link": "http://dytt8.net/html/2009zongyi/index.html"],
-                                             ["name": "动漫资源", "link": "http://dytt8.net/html/dongman/index.html"],
-                                             ["name": "游戏下载", "link": "http://dytt8.net/html/game/index.html"],
-                                             ["name": "高分经典", "link": "http://dytt8.net/html/gndy/jddy/20160320/50510.html"]]
+    var catagoryLinks: [[String: String]] = [["name": "最新电影", "link": "https://dydytt.net/html/gndy/dyzz/index.html"],
+                                             ["name": "国内电影", "link": "https://dydytt.net/html/gndy/china/index.html"],
+                                             ["name": "欧美电影", "link": "https://dydytt.net/html/gndy/oumei/index.html"],
+                                             ["name": "日韩电影", "link": "https://dydytt.net/html/gndy/rihan/index.html"],
+                                             ["name": "综合电影", "link": "https://dydytt.net/html/gndy/jddy/index.html"],
+                                             ["name": "华语电视", "link": "https://dydytt.net/html/tv/hytv/index.html"],
+                                             ["name": "日韩电视", "link": "https://dydytt.net/html/tv/rihantv/index.html"],
+                                             ["name": "欧美电视", "link": "https://dydytt.net/html/tv/oumeitv/index.html"],
+                                             ["name": "最新综艺", "link": "https://dydytt.net/html/zongyi2013/index.html"],
+                                             ["name": "旧版综艺", "link": "https://dydytt.net/html/2009zongyi/index.html"],
+                                             ["name": "动漫资源", "link": "https://dydytt.net/html/dongman/index.html"],
+                                             ["name": "游戏下载", "link": "https://dydytt.net/html/game/index.html"],
+                                             ["name": "高分经典", "link": "https://dydytt.net/html/gndy/jddy/20160320/50510.html"]]
 
-    let dyttSearchBase = "http://s.ygdy8.com/plus/so.php?keyword="
+    let dyttSearchBase = "http://s.dydytt.net/plus/s01.php?keyword="
 
     var page: Page? = nil
     var collapseDetailViewController: Bool = true
@@ -54,8 +54,8 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
         // Revert back to old UITableView behavior
         tableView.cellLayoutMarginsFollowReadableWidth = false
 
-        let searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(search(_:)))
-        navigationItem.rightBarButtonItem = searchItem
+        // let searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(search(_:)))
+        // navigationItem.rightBarButtonItem = searchItem
     }
 
     override func didReceiveMemoryWarning() {

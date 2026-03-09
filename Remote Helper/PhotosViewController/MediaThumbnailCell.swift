@@ -182,6 +182,7 @@ final class MediaThumbnailCell: UICollectionViewCell {
                 progress = 0
             }
             DispatchQueue.main.async {
+                guard self.loadToken == token else { return }
                 self.progressView.progress = progress
                 self.progressView.isHidden = false
             }

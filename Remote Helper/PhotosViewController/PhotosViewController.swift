@@ -264,6 +264,7 @@ extension PhotosViewController: JXPhotoBrowserDelegate {
                         progress = 0
                     }
                     DispatchQueue.main.async {
+                        guard progressView.accessibilityIdentifier == requestID else { return }
                         progressView.progress = progress
                         progressView.isHidden = false
                     }

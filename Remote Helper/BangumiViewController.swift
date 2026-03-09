@@ -30,6 +30,13 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
         } ?? []
     }
 
+    var canShowMiAction: Bool {
+        let defaults = UserDefaults.standard
+        let username = defaults.string(forKey: MiAccountUsernameKey) ?? ""
+        let password = defaults.string(forKey: MiAccountPasswordKey) ?? ""
+        return !username.isEmpty && !password.isEmpty
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -44,8 +51,13 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
         let selectAllButton = UIBarButtonItem(title: NSLocalizedString("Select All", comment: "Select All"), style: .plain, target: self, action: #selector(selectAllCells(_:)))
         let deSelectAllButton = UIBarButtonItem(title: NSLocalizedString("Deselect All", comment: "Deselect All"), style: .plain, target: self, action: #selector(deSelectAllCells(_:)))
         let spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let miButton = UIBarButtonItem(title: NSLocalizedString("Mi", comment: "Mi"), style: .plain, target: self, action: #selector(miDownloadAll(_:)))
-        toolbarItems = [selectAllButton, deSelectAllButton, spaceButton, miButton]
+        let btButton = UIBarButtonItem(title: "BT", style: .plain, target: self, action: #selector(btDownloadAll(_:)))
+        if canShowMiAction {
+            let miButton = UIBarButtonItem(title: NSLocalizedString("Mi", comment: "Mi"), style: .plain, target: self, action: #selector(miDownloadAll(_:)))
+            toolbarItems = [selectAllButton, deSelectAllButton, spaceButton, btButton, miButton]
+        } else {
+            toolbarItems = [selectAllButton, deSelectAllButton, spaceButton, btButton]
+        }
 
         // Allow edit
         tableView.allowsSelection = true
@@ -80,6 +92,7 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
 
     override func viewWillDisappear(_ animated: Bool) {
         navigationController?.setToolbarHidden(true, animated: true)
+        setTabBarHidden(false, animated: animated)
         super.viewWillDisappear(animated)
     }
 
@@ -111,6 +124,48 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
         Helper.shared.miDownloadForLinks(linksToDownload, fallbackIn: self)
     }
 
+    @objc func btDownloadAll(_ sender: Any?) {
+        guard let links = bangumi?.links, links.count > 0 else { return }
+        guard let selectedRows = tableView.indexPathsForSelectedRows, !selectedRows.isEmpty else { return }
+
+        let magnets = selectedRows
+            .compactMap { links[$0.row].target }
+            .filter { $0.hasPrefix("magnet:") }
+        guard !magnets.isEmpty else {
+            Helper.shared.showNote(withMessage: NSLocalizedString("No downloadable link.", comment: "No downloadable link."), type: .warning)
+            return
+        }
+
+        Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
+
+        let group = DispatchGroup()
+        let counterQueue = DispatchQueue(label: "Bangumi.BTDownload.Counter")
+        var successCount = 0
+        var failureCount = 0
+
+        for magnet in magnets {
+            group.enter()
+            Helper.shared.downloadTorrent(withMagnet: magnet) { fileOrMagnet in
+                Helper.shared.parseSessionAndAddTask(fileOrMagnet, completionHandler: {
+                    counterQueue.sync { successCount += 1 }
+                    group.leave()
+                }, errorHandler: {
+                    counterQueue.sync { failureCount += 1 }
+                    group.leave()
+                })
+            }
+        }
+
+        group.notify(queue: .main) {
+            if failureCount == 0 {
+                Helper.shared.showNote(withMessage: NSLocalizedString("Task added.", comment: "Task added."))
+            } else {
+                let message = "\(NSLocalizedString("Task added.", comment: "Task added.")) \(successCount), Failed \(failureCount)"
+                Helper.shared.showNote(withMessage: message, type: .warning)
+            }
+        }
+    }
+
     @objc func showEdit(_ sender: UIBarButtonItem?) {
         if bangumi == nil || bangumi!.links.count == 0 { return }
         if !tableView.isEditing {
@@ -118,6 +173,7 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
             editButton?.title = NSLocalizedString("Done", comment: "Done")
             infoButton?.isEnabled = false
             imagesButton?.isEnabled = false
+            setTabBarHidden(true, animated: true)
             navigationController?.setToolbarHidden(false, animated: true)
         }
         else {
@@ -127,10 +183,24 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
 
     func exitEdit() {
         navigationController?.setToolbarHidden(true, animated: true)
+        setTabBarHidden(false, animated: true)
         tableView.setEditing(false, animated: true)
         editButton?.title = NSLocalizedString("Select", comment: "Select")
         infoButton?.isEnabled = true
         imagesButton?.isEnabled = true
+    }
+
+    private func setTabBarHidden(_ hidden: Bool, animated: Bool) {
+        guard let tabBar = tabBarController?.tabBar else { return }
+        guard tabBar.isHidden != hidden else { return }
+        if animated {
+            UIView.animate(withDuration: 0.25) {
+                tabBar.isHidden = hidden
+                self.view.layoutIfNeeded()
+            }
+        } else {
+            tabBar.isHidden = hidden
+        }
     }
 
     // MARK: - Table view data source
@@ -165,10 +235,12 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
 
         let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: link.name, preferredStyle: .alert)
 
-        let miAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi"), style: .default) { (action) in
-            Helper.shared.miDownloadForLink(link.target, fallbackIn: self)
+        if canShowMiAction {
+            let miAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi"), style: .default) { (action) in
+                Helper.shared.miDownloadForLink(link.target, fallbackIn: self)
+            }
+            alert.addAction(miAction)
         }
-        alert.addAction(miAction)
 
         if link.isMagnet {
             let transmissionAction = UIAlertAction(title: "Transmission", style: .default) { (action) in
@@ -208,16 +280,20 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
         }
         copyAction.backgroundColor = UIColor(red:0.42, green:0.44, blue:0.87, alpha:1.00)
 
-        let miAction = UIContextualAction(style: .normal, title: NSLocalizedString("Mi", comment: "Mi")) { [weak self] _, _, completion in
-            guard let self = self else {
-                completion(false)
-                return
+        let miAction: UIContextualAction? = {
+            guard canShowMiAction else { return nil }
+            let action = UIContextualAction(style: .normal, title: NSLocalizedString("Mi", comment: "Mi")) { [weak self] _, _, completion in
+                guard let self = self else {
+                    completion(false)
+                    return
+                }
+                if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
+                Helper.shared.miDownloadForLink(link.target, fallbackIn: self)
+                completion(true)
             }
-            if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
-            Helper.shared.miDownloadForLink(link.target, fallbackIn: self)
-            completion(true)
-        }
-        miAction.backgroundColor = UIColor(red:0.34, green:0.86, blue:0.47, alpha:1.00)
+            action.backgroundColor = UIColor(red:0.34, green:0.86, blue:0.47, alpha:1.00)
+            return action
+        }()
 
         if link.isMagnet {
             let downloadAction = UIContextualAction(style: .normal, title: "Transmission") { [weak self] _, _, completion in
@@ -231,12 +307,14 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
             }
             downloadAction.backgroundColor = UIColor(red:1.00, green:0.33, blue:0.24, alpha:1.00)
 
-            let configuration = UISwipeActionsConfiguration(actions: [miAction, downloadAction, copyAction])
+            let actions: [UIContextualAction] = [miAction, downloadAction, copyAction].compactMap { $0 }
+            let configuration = UISwipeActionsConfiguration(actions: actions)
             configuration.performsFirstActionWithFullSwipe = false
             return configuration
         }
 
-        let configuration = UISwipeActionsConfiguration(actions: [miAction, copyAction])
+        let actions: [UIContextualAction] = [miAction, copyAction].compactMap { $0 }
+        let configuration = UISwipeActionsConfiguration(actions: actions)
         configuration.performsFirstActionWithFullSwipe = false
         return configuration
     }

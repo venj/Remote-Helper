@@ -389,7 +389,8 @@ private extension PhotosViewController {
 
     func configureLocalImageCache() {
         ImageCache.default.diskStorage.config.expiration = .never
-        ImageCache.default.diskStorage.config.sizeLimit = 0
+        // Use a very large limit instead of 0 to avoid disabling disk cache.
+        ImageCache.default.diskStorage.config.sizeLimit = UInt.max
         #if KINGFISHER_V6
         ImageCache.default.diskStorage.config.autoExtAfterHashedFileName = true
         #endif

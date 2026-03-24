@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CryptoKit
 
 // via https://github.com/mnbayan/StringHash
 
@@ -27,5 +28,15 @@ extension String {
         result.deallocate()
 
         return hash
+    }
+
+    var sha256: String {
+        if #available(iOS 13.0, macOS 10.15, *) {
+            guard let data = self.data(using: .utf8) else { return "" }
+            let hash = SHA256.hash(data: data)
+            return hash.compactMap { String(format: "%02x", $0) }.joined()
+        } else {
+            return self.md5 // Fallback if needed, but not required since app relies on iOS 13+ SceneDelegate
+        }
     }
 }

@@ -373,4 +373,161 @@ extension Helper {
             }
         }
     }
+
+    func showBatchDownloadAlert(for magnets: [String], sourceSHA256: String, in viewController: UIViewController) {
+        struct MagnetInfo {
+            var magnet: String
+            var infoHash: String
+            var name: String
+            var hasDn: Bool
+        }
+        
+        var magnetInfos: [MagnetInfo] = []
+        for magnet in magnets {
+            let infoHash = Helper.shared.infoHash(fromMagnet: magnet)
+            let decoded = magnet.humanReadableFileName()
+            let hasDn = (decoded != magnet.decodedLink)
+            let name = hasDn ? decoded : infoHash
+            
+            if let index = magnetInfos.firstIndex(where: { $0.infoHash == infoHash }) {
+                if !magnetInfos[index].hasDn && hasDn {
+                    magnetInfos[index].magnet = magnet
+                    magnetInfos[index].name = name
+                    magnetInfos[index].hasDn = true
+                }
+            } else {
+                magnetInfos.append(MagnetInfo(magnet: magnet, infoHash: infoHash, name: name, hasDn: hasDn))
+            }
+        }
+        
+        let finalMagnets = magnetInfos.map { $0.magnet }
+        
+        let title = String(format: "%@ (%d)", NSLocalizedString("Download Magnets", comment: "Download Magnets"), finalMagnets.count)
+        
+        var messageLines: [String] = []
+        for (index, info) in magnetInfos.enumerated() {
+            messageLines.append("\(index + 1). \(info.name)")
+        }
+        let messageText = messageLines.joined(separator: "\n\n")
+        
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        
+        let vc = UIViewController()
+        let textView = UITextView()
+        textView.text = messageText
+        textView.font = UIFont.systemFont(ofSize: 13)
+        textView.backgroundColor = .clear
+        textView.isEditable = false
+        textView.isSelectable = false
+        textView.showsVerticalScrollIndicator = true
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(textView)
+        
+        NSLayoutConstraint.activate([
+            textView.topAnchor.constraint(equalTo: vc.view.topAnchor, constant: 8),
+            textView.bottomAnchor.constraint(equalTo: vc.view.bottomAnchor, constant: -8),
+            textView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 15),
+            textView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -15)
+        ])
+        
+        let expectedHeight = CGFloat(finalMagnets.count * 30 + 20)
+        vc.preferredContentSize = CGSize(width: 270, height: min(expectedHeight, 200.0))
+        alert.setValue(vc, forKey: "contentViewController")
+        
+        if Helper.shared.canStartMiDownload {
+            let miAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi"), style: .default, handler: { (action) in
+                UserDefaults.standard.set(sourceSHA256, forKey: LastCopiedMagnetsSHA256Key)
+                Helper.shared.miDownloadForLinks(finalMagnets, fallbackIn: viewController)
+            })
+            alert.addAction(miAction)
+        }
+        
+        let transmissionAction = UIAlertAction(title: "Transmission", style: .default, handler: { (action) in
+            UserDefaults.standard.set(sourceSHA256, forKey: LastCopiedMagnetsSHA256Key)
+            Helper.shared.transmissionDownload(forLinks: finalMagnets)
+        })
+        alert.addAction(transmissionAction)
+        
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
+        alert.addAction(cancelAction)
+        
+        if let delegate = viewController as? UIPopoverPresentationControllerDelegate {
+            alert.popoverPresentationController?.delegate = delegate
+        }
+        
+        DispatchQueue.main.async {
+            (viewController.presentedViewController ?? viewController.navigationController?.topViewController ?? viewController).present(alert, animated: true) {
+                alert.popoverPresentationController?.passthroughViews = nil
+            }
+        }
+    }
+
+    func transmissionDownload(forLinks links: [String]) {
+        if !Configuration.shared.isIntelligentTorrentDownloadEnabled {
+            self.showProcessingNote(withMessage: NSLocalizedString("Connecting to Transmission...", comment: "Connecting to Transmission..."))
+        }
+        guard let _ = links.first else { return }
+        
+        let params = ["method" : "session-get"]
+        let HTTPHeaders = ["X-Transmission-Session-Id" : sessionHeader]
+        let request = Alamofire.request(Configuration.shared.transmissionRPCAddress(), method: .post, parameters: params, encoding: JSONEncoding(options: []),headers: HTTPHeaders)
+        
+        let handleSessionSuccess = { [weak self] (downloadPath: String) in
+            guard let `self` = self else { return }
+            let group = DispatchGroup()
+            var hasError = false
+            for link in links {
+                group.enter()
+                self.downloadTask(link, toDir: downloadPath, completionHandler: {
+                    group.leave()
+                }, errorHandler: {
+                    hasError = true
+                    group.leave()
+                })
+            }
+            group.notify(queue: .main) {
+                if hasError {
+                    self.showNote(withMessage: NSLocalizedString("Transmission server error.", comment: "Transmission server error."), type: .error)
+                } else {
+                    self.showNote(withMessage: NSLocalizedString("Tasks added.", comment: "Tasks added."))
+                }
+            }
+        }
+        
+        request.authenticate(user: Configuration.shared.transmissionUsername, password: Configuration.shared.transmissionPassword).responseJSON { [weak self] response in
+            guard let `self` = self else { return }
+            if response.result.isSuccess {
+                let responseObject = response.result.value as! [String:Any]
+                if let result = responseObject["result"] as? String, result == "success" {
+                    self.downloadPath = (responseObject["arguments"] as! [String: Any])["download-dir"] as! String
+                    handleSessionSuccess(self.downloadPath)
+                } else {
+                    self.showNote(withMessage: NSLocalizedString("Transmission server error.", comment: "Transmission server error."), type: .error)
+                }
+            } else {
+                if response.response?.statusCode == 409 {
+                    self.sessionHeader = response.response!.allHeaderFields["X-Transmission-Session-Id"] as! String
+                    let params2 = ["method" : "session-get"]
+                    let HTTPHeaders2 = ["X-Transmission-Session-Id" : self.sessionHeader]
+                    let request2 = Alamofire.request(Configuration.shared.transmissionRPCAddress(), method: .post, parameters: params2, encoding: JSONEncoding(options: []),headers: HTTPHeaders2)
+                    request2.authenticate(user: Configuration.shared.transmissionUsername, password: Configuration.shared.transmissionPassword).responseJSON { [weak self] response2 in
+                        guard let `self` = self else { return }
+                        if response2.result.isSuccess {
+                            let responseObject = response2.result.value as! [String:Any]
+                            if let result = responseObject["result"] as? String, result == "success" {
+                                self.downloadPath = (responseObject["arguments"] as! [String: Any])["download-dir"] as! String
+                                handleSessionSuccess(self.downloadPath)
+                            } else {
+                                self.showNote(withMessage: NSLocalizedString("Transmission server error.", comment: "Transmission server error."), type: .error)
+                            }
+                        } else {
+                            self.showNote(withMessage: NSLocalizedString("Transmission server error.", comment: "Transmission server error."), type: .error)
+                        }
+                    }
+                } else {
+                    self.showNote(withMessage: NSLocalizedString("Transmission server error.", comment: "Transmission server error."), type: .error)
+                }
+            }
+        }
+    }
 }

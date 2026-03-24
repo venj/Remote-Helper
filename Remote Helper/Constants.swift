@@ -33,6 +33,7 @@ let IntelligentTorrentDownload = "kIntelligentTorrentDownload"
 let PrefersMagnet = "kPrefersMagnet"
 let TorrentKittenSource = "kTorrentKittenSource"
 let ViewedResources = "ViewedResourcesKey"
+let LastCopiedMagnetsSHA256Key = "kLastCopiedMagnetsSHA256Key"
 
 extension Notification.Name {
     static let viewedTitlesDidChangeNotification = Notification.Name(rawValue: "viewedTitlesDidChangeNotification")

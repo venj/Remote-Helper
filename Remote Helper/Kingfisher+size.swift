@@ -6,6 +6,7 @@
 //  Copyright © 2018 Home. All rights reserved.
 //
 
+import Foundation
 import Kingfisher
 import Atomics
 

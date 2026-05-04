@@ -6,6 +6,8 @@
 //  Copyright © 2015 Home. All rights reserved.
 //
 
+import Foundation
+
 let REQUEST_TIME_OUT = 60.0
 let ServerHostKey = "kServerHostKey"
 let ServerPortKey = "kServerPortKey"

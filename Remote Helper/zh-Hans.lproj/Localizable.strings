@@ -404,3 +404,9 @@
 /* Your device is not in the same LAN with the server. */
 "Your device is not in the same LAN with the server." = "您的设备和服务器不在同一个局域网中。";
 
+
+/* Download from Pasteboard */
+"Download from Pasteboard" = "从剪贴板下载";
+
+/* Tap the button below to paste and download: */
+"Tap the button below to paste and download:" = "点击下方按钮读取剪贴板并下载：";

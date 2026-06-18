@@ -246,6 +246,9 @@ extension PhotosViewController: JXPhotoBrowserDelegate {
             photoCell.imageView.kf.cancelDownloadTask()
 
             var options = localCacheOptions
+            if !Configuration.shared.autoPlayGIFInPreview {
+                options.append(.onlyLoadFirstFrame)
+            }
             if failedThumbnailIndexes.contains(index) {
                 options.append(.forceRefresh)
             }

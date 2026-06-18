@@ -129,6 +129,9 @@ final class MediaThumbnailCell: UICollectionViewCell {
     
     private func options(withReferer referer: String?) -> KingfisherOptionsInfo {
         var options = localCacheOptions
+        if !Configuration.shared.autoPlayGIFInGrid {
+            options.append(.onlyLoadFirstFrame)
+        }
         guard let referer, !referer.isEmpty else { return options }
         options.append(.requestModifier(AnyModifier { request in
             var req = request
@@ -213,7 +216,14 @@ final class MediaThumbnailCell: UICollectionViewCell {
 
     func applyLoadedPreviewImage(_ image: UIImage?) {
         guard let image = image else { return }
-        imageView.image = image
+        if Configuration.shared.autoPlayGIFInGrid {
+            imageView.image = image
+        } else if let firstFrame = image.images?.first {
+            // Prevent preview animated image from leaking into grid playback state.
+            imageView.image = firstFrame
+        } else {
+            imageView.image = image
+        }
         failureOverlay.isHidden = true
         progressView.progress = 1
         progressView.isHidden = true

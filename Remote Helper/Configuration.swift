@@ -22,6 +22,8 @@ open class Configuration {
                                  ServerPathKey: "/",
                                  TransmissionAddressKey: "127.0.0.1:9091",
                                  RequestUseCellularNetwork: true,
+                                 AutoPlayGIFInGridKey: false,
+                                 AutoPlayGIFInPreviewKey: true,
                                  MiAccountUsernameKey: "",
                                  MiAccountPasswordKey: "",
                                  IntelligentTorrentDownload: false,
@@ -184,6 +186,26 @@ open class Configuration {
         }
         set {
             defaults.set(newValue, forKey: CustomRequestUserAgent)
+            defaults.synchronize()
+        }
+    }
+
+    open var autoPlayGIFInGrid: Bool {
+        get {
+            return defaults.bool(forKey: AutoPlayGIFInGridKey)
+        }
+        set {
+            defaults.set(newValue, forKey: AutoPlayGIFInGridKey)
+            defaults.synchronize()
+        }
+    }
+
+    open var autoPlayGIFInPreview: Bool {
+        get {
+            return defaults.bool(forKey: AutoPlayGIFInPreviewKey)
+        }
+        set {
+            defaults.set(newValue, forKey: AutoPlayGIFInPreviewKey)
             defaults.synchronize()
         }
     }

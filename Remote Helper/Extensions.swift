@@ -31,15 +31,31 @@ extension String {
         else if protocal == "magnet" {
             guard let queryString = decodedLink.components(separatedBy: "?").last else { return decodedLink }
             let kvs = queryString.replacingOccurrences(of: "&amp;", with: "&").components(separatedBy: "&")
-            var name = decodedLink
+            var name: String? = nil
             for kv in kvs {
                 let kvPair = kv.components(separatedBy: "=")
-                if (kvPair[0].lowercased() == "dn" || kvPair[0].lowercased() == "btname") && kvPair[1] != "" {
+                if kvPair.count >= 2 && (kvPair[0].lowercased() == "dn" || kvPair[0].lowercased() == "btname") && kvPair[1] != "" {
                     name = kvPair[1].replacingOccurrences(of: "+", with: " ")
                     break
                 }
             }
-            return name
+            if let name = name {
+                return name
+            } else {
+                var xtValue = ""
+                for kv in kvs {
+                    let kvPair = kv.components(separatedBy: "=")
+                    if kvPair.count >= 2 && kvPair[0].lowercased() == "xt" {
+                        xtValue = kvPair[1]
+                        break
+                    }
+                }
+                if !xtValue.isEmpty {
+                    return "magnet:?xt=\(xtValue)"
+                } else {
+                    return decodedLink
+                }
+            }
         }
         else if protocal == "ed2k" {
             let parts = decodedLink.components(separatedBy: "|")

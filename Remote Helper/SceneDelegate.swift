@@ -111,7 +111,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         } else {
             if !isPasscodeLockPresented() {
                 removePrivacyShieldIfNeeded()
-                checkClipboardForMagnets()
             }
         }
     }
@@ -214,7 +213,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         passcodeVC.modalPresentationStyle = .fullScreen
         passcodeVC.dismissCompletionCallback = { [weak self] in
             self?.removePrivacyShieldIfNeeded()
-            self?.checkClipboardForMagnets()
         }
 
         topPresentedController(from: root).present(passcodeVC, animated: false, completion: nil)
@@ -251,25 +249,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         return root
     }
 
-    private func checkClipboardForMagnets() {
-        guard UIPasteboard.general.hasStrings, let pasteString = UIPasteboard.general.string else { return }
-        
-        let defaults = UserDefaults.standard
-        let sha256 = pasteString.sha256
-        if let lastSha256 = defaults.string(forKey: LastCopiedMagnetsSHA256Key), lastSha256 == sha256 {
-            return
-        }
-        
-        let lines = pasteString.components(separatedBy: .newlines)
-        let magnets = lines.filter { $0.hasPrefix("magnet:?") }.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.filter { !$0.isEmpty }
-        
-        guard !magnets.isEmpty else { return }
-        
-        guard let root = window?.rootViewController else { return }
-        let topVC = topPresentedController(from: root)
-        
-        Helper.shared.showBatchDownloadAlert(for: magnets, sourceSHA256: sha256, in: topVC)
-    }
 
     private func isPasscodeLockPresented() -> Bool {
         guard let root = window?.rootViewController else { return false }

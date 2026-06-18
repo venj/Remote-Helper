@@ -11,6 +11,7 @@ import PasscodeLock
 import InAppSettingsKit
 import CoreData
 import Kingfisher
+import UniformTypeIdentifiers
 
 class WebContentTableViewController: UITableViewController, IASKSettingsDelegate, UIPopoverPresentationControllerDelegate {
     fileprivate let CellIdentifier = "WebContentTableViewCell"
@@ -245,11 +246,11 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             self.torrentSearch()
         }
         sheet.addAction(searchKittenAction)
-        let downloadMangetAction = UIAlertAction(title: NSLocalizedString("Download Magnet", comment: "Download Magnet"), style: .default) { [weak self] _ in
+        let downloadFromPasteboardAction = UIAlertAction(title: NSLocalizedString("Download from Pasteboard", comment: "Download from Pasteboard"), style: .default) { [weak self] _ in
             guard let `self` = self else { return }
-            self.addMagnet()
+            self.downloadMagnetFromPasteboard()
         }
-        sheet.addAction(downloadMangetAction)
+        sheet.addAction(downloadFromPasteboardAction)
         let settingsAction = UIAlertAction(title: NSLocalizedString("Settings", comment: "Settings"), style: .default) { [weak self] _ in
             guard let `self` = self else { return }
             self.showSettings()
@@ -334,6 +335,34 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)
     }
+
+    @objc func downloadMagnetFromPasteboard() {
+        if #available(iOS 16.0, *) {
+            let listVC = PasteboardListViewController()
+            let navVC = UINavigationController(rootViewController: listVC)
+            present(navVC, animated: true, completion: nil)
+        } else {
+            let alert = UIAlertController(title: NSLocalizedString("Download magnet", comment: "Download magnet"), message: NSLocalizedString("Please paste in a magnet address:", comment: "Please paste in a magnet address:"), preferredStyle: .alert)
+            alert.addTextField { (textField) in
+                textField.keyboardType = .URL
+                textField.clearButtonMode = .whileEditing
+                if UIPasteboard.general.hasStrings {
+                    textField.text = UIPasteboard.general.string
+                }
+            }
+            let saveAction = UIAlertAction(title: NSLocalizedString("Download", comment:"Download"), style: .default) { _ in
+                let address = alert.textFields![0].text!
+                UIPasteboard.general.string = nil // Clear pasteboard
+                Helper.shared.transmissionDownload(for: address)
+            }
+            alert.addAction(saveAction)
+            let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
+            alert.addAction(cancelAction)
+            present(alert, animated: true, completion: nil)
+        }
+    }
+
+
 
     //MARK: - Helper
     func deleteCell(at indexPath: IndexPath) {
@@ -446,5 +475,172 @@ extension WebContentTableViewController {
                   let webViewController = self.makeWebPreviewController(for: indexPath as IndexPath, peeking: false) else { return }
             self.navigationController?.pushViewController(webViewController, animated: false)
         }
+    }
+}
+
+@available(iOS 16.0, *)
+class PasteboardListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    var magnets: [String] = []
+    var magnetNames: [String] = []
+    var sourceSHA256: String = ""
+    
+    let tableView = UITableView()
+    var pasteControl: UIPasteControl?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        
+        title = NSLocalizedString("Download from Pasteboard", comment: "Download from Pasteboard")
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Close", comment: "Close"), style: .plain, target: self, action: #selector(closeTapped))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("Download", comment: "Download"), style: .done, target: self, action: #selector(downloadTapped))
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        
+        // Paste Control
+        let pasteControl = UIPasteControl(configuration: .init())
+        pasteControl.target = self
+        pasteControl.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(pasteControl)
+        self.pasteControl = pasteControl
+        
+        // Table View
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.allowsSelection = false
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.isHidden = true
+        view.addSubview(tableView)
+        
+        NSLayoutConstraint.activate([
+            pasteControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            pasteControl.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            pasteControl.heightAnchor.constraint(equalToConstant: 40),
+            
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+        
+        self.pasteConfiguration = UIPasteConfiguration(acceptableTypeIdentifiers: [UTType.text.identifier])
+    }
+    
+    @objc func closeTapped() {
+        dismiss(animated: true)
+    }
+    
+    @objc func downloadTapped() {
+        guard !magnets.isEmpty else { return }
+        
+        if Helper.shared.canStartMiDownload {
+            let alert = UIAlertController(title: NSLocalizedString("Please select your operation", comment: ""), message: nil, preferredStyle: .actionSheet)
+            let miAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi"), style: .default, handler: { [weak self] _ in
+                guard let self = self else { return }
+                UserDefaults.standard.set(self.sourceSHA256, forKey: LastCopiedMagnetsSHA256Key)
+                Helper.shared.miDownloadForLinks(self.magnets, fallbackIn: self)
+                self.dismiss(animated: true)
+            })
+            alert.addAction(miAction)
+            
+            let transmissionAction = UIAlertAction(title: "Transmission", style: .default, handler: { [weak self] _ in
+                guard let self = self else { return }
+                UserDefaults.standard.set(self.sourceSHA256, forKey: LastCopiedMagnetsSHA256Key)
+                Helper.shared.transmissionDownload(forLinks: self.magnets)
+                self.dismiss(animated: true)
+            })
+            alert.addAction(transmissionAction)
+            
+            let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
+            alert.addAction(cancelAction)
+            
+            alert.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+            present(alert, animated: true)
+        } else {
+            UserDefaults.standard.set(sourceSHA256, forKey: LastCopiedMagnetsSHA256Key)
+            Helper.shared.transmissionDownload(forLinks: magnets)
+            dismiss(animated: true)
+        }
+    }
+    
+    override func paste(itemProviders: [NSItemProvider]) {
+        for provider in itemProviders {
+            if provider.hasItemConformingToTypeIdentifier(UTType.text.identifier) {
+                _ = provider.loadObject(ofClass: String.self) { [weak self] str, error in
+                    guard let self = self, let pasteString = str else { return }
+                    DispatchQueue.main.async {
+                        self.processMagnetString(pasteString)
+                    }
+                }
+            } else if provider.hasItemConformingToTypeIdentifier("public.text") {
+                _ = provider.loadObject(ofClass: String.self) { [weak self] str, error in
+                    guard let self = self, let pasteString = str else { return }
+                    DispatchQueue.main.async {
+                        self.processMagnetString(pasteString)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func processMagnetString(_ pasteString: String) {
+        let lines = pasteString.components(separatedBy: .newlines)
+        let parsedMagnets = lines.filter { $0.hasPrefix("magnet:?") }.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.filter { !$0.isEmpty }
+        
+        guard !parsedMagnets.isEmpty else {
+            let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: NSLocalizedString("No magnet links found in pasteboard.", comment: ""), preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default))
+            present(alert, animated: true)
+            return
+        }
+        
+        self.sourceSHA256 = pasteString.sha256
+        
+        struct MagnetInfo {
+            var magnet: String
+            var infoHash: String
+            var name: String
+            var hasDn: Bool
+        }
+        
+        var magnetInfos: [MagnetInfo] = []
+        for magnet in parsedMagnets {
+            let infoHash = Helper.shared.infoHash(fromMagnet: magnet)
+            let decoded = magnet.humanReadableFileName()
+            let hasDn = (decoded != magnet.decodedLink)
+            let name = hasDn ? decoded : infoHash
+            
+            if let index = magnetInfos.firstIndex(where: { $0.infoHash == infoHash }) {
+                if !magnetInfos[index].hasDn && hasDn {
+                    magnetInfos[index].magnet = magnet
+                    magnetInfos[index].name = name
+                    magnetInfos[index].hasDn = true
+                }
+            } else {
+                magnetInfos.append(MagnetInfo(magnet: magnet, infoHash: infoHash, name: name, hasDn: hasDn))
+            }
+        }
+        
+        self.magnets = magnetInfos.map { $0.magnet }
+        self.magnetNames = magnetInfos.map { $0.name }
+        
+        // Update UI
+        navigationItem.rightBarButtonItem?.isEnabled = true
+        pasteControl?.isHidden = true
+        tableView.isHidden = false
+        tableView.reloadData()
+    }
+    
+    // MARK: - Table view data source
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return magnetNames.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        cell.textLabel?.text = magnetNames[indexPath.row]
+        cell.textLabel?.numberOfLines = 0
+        return cell
     }
 }

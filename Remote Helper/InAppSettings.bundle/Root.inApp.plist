@@ -260,6 +260,32 @@
 		</dict>
 		<dict>
 			<key>Title</key>
+			<string>GIF Playback</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>DefaultValue</key>
+			<false/>
+			<key>Key</key>
+			<string>kAutoPlayGIFInGridKey</string>
+			<key>Title</key>
+			<string>Auto-Play GIF in Grid</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+		</dict>
+		<dict>
+			<key>DefaultValue</key>
+			<true/>
+			<key>Key</key>
+			<string>kAutoPlayGIFInPreviewKey</string>
+			<key>Title</key>
+			<string>Auto-Play GIF in Preview</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+		</dict>
+		<dict>
+			<key>Title</key>
 			<string>Cache</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>

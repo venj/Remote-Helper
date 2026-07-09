@@ -49,17 +49,10 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.title = siteName
+        title = siteName
 
         // Revert back to old UITableView behavior
         tableView.cellLayoutMarginsFollowReadableWidth = false
-
-        #if targetEnvironment(macCatalyst)
-        navigationItem.leftBarButtonItems = nil
-        navigationItem.rightBarButtonItems = nil
-        navigationItem.leftBarButtonItem = nil
-        navigationItem.rightBarButtonItem = nil
-        #endif
     }
 
     override func didReceiveMemoryWarning() {

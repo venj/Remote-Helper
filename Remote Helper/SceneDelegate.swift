@@ -108,7 +108,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
             
             window?.rootViewController = tripleSplit
-            configureTitlebar(for: windowScene)
         }
         #else
         if let tabBarController {
@@ -253,12 +252,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     private func applyTheme() {
         let navBarAppearance = UINavigationBarAppearance()
+        #if targetEnvironment(macCatalyst)
+        navBarAppearance.configureWithDefaultBackground()
+        UINavigationBar.appearance().standardAppearance = navBarAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
+        UINavigationBar.appearance().tintColor = Helper.shared.mainThemeColor()
+        #else
         navBarAppearance.configureWithOpaqueBackground()
         navBarAppearance.backgroundColor = Helper.shared.mainThemeColor()
         navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         UINavigationBar.appearance().standardAppearance = navBarAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
         UINavigationBar.appearance().tintColor = .white
+        #endif
 
         let searchBarAppearance = UISearchBar.appearance()
         searchBarAppearance.barTintColor = Helper.shared.mainThemeColor()
@@ -412,62 +418,7 @@ extension SceneDelegate: SidebarViewControllerDelegate {
     }
 }
 
-extension SceneDelegate: NSToolbarDelegate {
-    fileprivate func configureTitlebar(for windowScene: UIWindowScene) {
-        if let titlebar = windowScene.titlebar {
-            let toolbar = NSToolbar(identifier: "MainToolbar")
-            toolbar.delegate = self
-            toolbar.allowsUserCustomization = false
-            toolbar.displayMode = .iconOnly
-            titlebar.titleVisibility = .hidden
-            titlebar.toolbar = toolbar
-        }
-    }
 
-    func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
-        if itemIdentifier == .addAddress {
-            let item = NSToolbarItem(itemIdentifier: itemIdentifier)
-            item.image = UIImage(systemName: "plus")
-            item.label = NSLocalizedString("Add", comment: "Add")
-            item.paletteLabel = NSLocalizedString("Add", comment: "Add")
-            item.target = nil
-            item.action = #selector(WebContentTableViewController.addAddress(_:))
-            return item
-        } else if itemIdentifier == .showActions {
-            let item = NSToolbarItem(itemIdentifier: itemIdentifier)
-            item.image = UIImage(systemName: "ellipsis.circle")
-            item.label = NSLocalizedString("Actions", comment: "Actions")
-            item.paletteLabel = NSLocalizedString("Actions", comment: "Actions")
-            item.target = nil
-            item.action = #selector(WebContentTableViewController.showActionSheet(_:))
-            return item
-        } else if itemIdentifier == .showSettings {
-            let item = NSToolbarItem(itemIdentifier: itemIdentifier)
-            item.image = UIImage(systemName: "gearshape")
-            item.label = NSLocalizedString("Settings", comment: "Settings")
-            item.paletteLabel = NSLocalizedString("Settings", comment: "Settings")
-            item.target = nil
-            item.action = #selector(WebContentTableViewController.showSettings)
-            return item
-        }
-
-        return nil
-    }
-
-    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return [NSToolbarItem.Identifier("NSToolbarToggleSidebarItem"), .flexibleSpace, .addAddress, .showActions, .showSettings]
-    }
-
-    func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return toolbarDefaultItemIdentifiers(toolbar)
-    }
-}
-
-extension NSToolbarItem.Identifier {
-    static let addAddress = NSToolbarItem.Identifier("com.remotehelper.addAddress")
-    static let showActions = NSToolbarItem.Identifier("com.remotehelper.showActions")
-    static let showSettings = NSToolbarItem.Identifier("com.remotehelper.showSettings")
-}
 
 protocol SidebarViewControllerDelegate: AnyObject {
     func sidebarViewController(_ sidebar: SidebarViewController, didSelectIndex index: Int)

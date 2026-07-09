@@ -102,18 +102,12 @@ class VPTorrentsListViewController: UITableViewController, UIPopoverPresentation
 
         // Revert back to old UITableView behavior
         tableView.cellLayoutMarginsFollowReadableWidth = false
+        title = NSLocalizedString("Torrents", comment: "Torrents")
 
         // Hide searchbar initially.
         tableView.contentOffset = CGPoint(x: 0.0, y: searchBar.frame.height)
 
         NotificationCenter.default.addObserver(self, selector: #selector(viewedTitlesDidChange(_:)), name: NSNotification.Name.viewedTitlesDidChangeNotification, object: nil)
-         
-        #if targetEnvironment(macCatalyst)
-        navigationItem.leftBarButtonItems = nil
-        navigationItem.rightBarButtonItems = nil
-        navigationItem.leftBarButtonItem = nil
-        navigationItem.rightBarButtonItem = nil
-        #endif
     }
 
     deinit {

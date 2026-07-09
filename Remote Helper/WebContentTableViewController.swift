@@ -46,13 +46,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
         // Revert back to old UITableView behavior
         tableView.cellLayoutMarginsFollowReadableWidth = false
-
-        #if targetEnvironment(macCatalyst)
-        navigationItem.leftBarButtonItems = nil
-        navigationItem.rightBarButtonItems = nil
-        navigationItem.leftBarButtonItem = nil
-        navigationItem.rightBarButtonItem = nil
-        #endif
+        title = NSLocalizedString("Addresses", comment: "Addresses")
     }
 
     override func didReceiveMemoryWarning() {
@@ -236,6 +230,19 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     //MARK: - Action
     @IBAction func addAddress(_ sender: Any?) {
+        #if targetEnvironment(macCatalyst)
+        let alert = SheetAlertViewController(title: NSLocalizedString("Add address", comment: "Add address"), message: NSLocalizedString("Please input an address:", comment: "Please input an address:"), hasTextField: true, textFieldPlaceholder: "http://", textFieldDefaultText: "http://")
+        alert.addAction(SheetAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel))
+        alert.addAction(SheetAlertAction(title: NSLocalizedString("Save", comment:"Save"), style: .default, handler: { [weak self] text in
+            guard let `self` = self, let address = text, let _ = URL(string: address) else { return }
+            let site = NSEntityDescription.insertNewObject(forEntityName: "ResourceSite", into: PersistenceController.shared.viewContext) as! ResourceSite
+            site.link = address
+            self.addresses.append(site)
+            let indexPath = IndexPath(row: self.addresses.count - 1, section: 0)
+            self.tableView.insertRows(at: [indexPath], with: .automatic)
+        }))
+        present(alert, animated: true)
+        #else
         let alertController = UIAlertController(title: NSLocalizedString("Add address", comment: "Add address"), message: NSLocalizedString("Please input an address:", comment: "Please input an address:"), preferredStyle: .alert)
         alertController.addTextField { (textField) in
             textField.keyboardType = .URL
@@ -256,6 +263,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
         present(alertController, animated: true, completion: nil)
+        #endif
     }
 
     @IBAction func showActionSheet(_ sender: Any?) {
@@ -348,6 +356,17 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     }
 
     public func addMagnet() {
+        #if targetEnvironment(macCatalyst)
+        let defaultText = UIPasteboard.general.hasStrings ? UIPasteboard.general.string : nil
+        let alert = SheetAlertViewController(title: NSLocalizedString("Download magnet", comment: "Download magnet"), message: NSLocalizedString("Please paste in a magnet address:", comment: "Please paste in a magnet address:"), hasTextField: true, textFieldPlaceholder: nil, textFieldDefaultText: defaultText)
+        alert.addAction(SheetAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel))
+        alert.addAction(SheetAlertAction(title: NSLocalizedString("Download", comment:"Download"), style: .default, handler: { text in
+            guard let address = text else { return }
+            UIPasteboard.general.string = nil // Clear pasteboard
+            Helper.shared.transmissionDownload(for: address)
+        }))
+        present(alert, animated: true)
+        #else
         let alert = UIAlertController(title: NSLocalizedString("Download magnet", comment: "Download magnet"), message: NSLocalizedString("Please paste in a magnet address:", comment: "Please paste in a magnet address:"), preferredStyle: .alert)
         alert.addTextField { (textField) in
             textField.keyboardType = .URL
@@ -365,6 +384,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
         alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)
+        #endif
     }
 
     @objc func downloadMagnetFromPasteboard() {

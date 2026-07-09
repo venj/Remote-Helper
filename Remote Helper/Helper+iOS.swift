@@ -531,3 +531,156 @@ extension Helper {
         }
     }
 }
+
+class SheetAlertAction {
+    let title: String
+    let style: UIAlertAction.Style
+    let handler: ((String?) -> Void)?
+    
+    init(title: String, style: UIAlertAction.Style = .default, handler: ((String?) -> Void)? = nil) {
+        self.title = title
+        self.style = style
+        self.handler = handler
+    }
+}
+
+class SheetAlertViewController: UIViewController {
+    var alertTitle: String?
+    var alertMessage: String?
+    var hasTextField: Bool = false
+    var textFieldPlaceholder: String?
+    var textFieldDefaultText: String?
+    
+    private var sortedActions: [SheetAlertAction] = []
+    private var textField: UITextField?
+    private var actions: [SheetAlertAction] = []
+    
+    init(title: String?, message: String?, hasTextField: Bool = false, textFieldPlaceholder: String? = nil, textFieldDefaultText: String? = nil) {
+        self.alertTitle = title
+        self.alertMessage = message
+        self.hasTextField = hasTextField
+        self.textFieldPlaceholder = textFieldPlaceholder
+        self.textFieldDefaultText = textFieldDefaultText
+        super.init(nibName: nil, bundle: nil)
+        
+        self.modalPresentationStyle = .formSheet
+        self.preferredContentSize = CGSize(width: 380, height: hasTextField ? 190 : 140)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func addAction(_ action: SheetAlertAction) {
+        actions.append(action)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        
+        // Frosted glass background
+        let blurEffect = UIBlurEffect(style: .systemMaterial)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.frame = view.bounds
+        blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(blurView)
+        
+        setupContent(on: blurView.contentView)
+    }
+    
+    private func setupContent(on container: UIView) {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 12
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -20),
+            stackView.topAnchor.constraint(equalTo: container.topAnchor, constant: 20),
+            stackView.bottomAnchor.constraint(lessThanOrEqualTo: container.bottomAnchor, constant: -20)
+        ])
+        
+        // Title
+        if let titleText = alertTitle, !titleText.isEmpty {
+            let titleLabel = UILabel()
+            titleLabel.text = titleText
+            titleLabel.font = UIFont.systemFont(ofSize: 15, weight: .bold)
+            titleLabel.textColor = .label
+            titleLabel.numberOfLines = 0
+            stackView.addArrangedSubview(titleLabel)
+        }
+        
+        // Message
+        if let messageText = alertMessage, !messageText.isEmpty {
+            let messageLabel = UILabel()
+            if messageText.contains("http://") || messageText.contains("magnet:") {
+                messageLabel.lineBreakMode = .byTruncatingMiddle
+            }
+            messageLabel.text = messageText
+            messageLabel.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+            messageLabel.textColor = .secondaryLabel
+            messageLabel.numberOfLines = 0
+            stackView.addArrangedSubview(messageLabel)
+        }
+        
+        // Text Field
+        if hasTextField {
+            let tf = UITextField()
+            tf.borderStyle = .roundedRect
+            tf.placeholder = textFieldPlaceholder
+            tf.text = textFieldDefaultText
+            tf.font = UIFont.systemFont(ofSize: 13)
+            tf.clearButtonMode = .whileEditing
+            tf.translatesAutoresizingMaskIntoConstraints = false
+            tf.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            stackView.addArrangedSubview(tf)
+            self.textField = tf
+            tf.becomeFirstResponder()
+        }
+        
+        // Buttons
+        let buttonStack = UIStackView()
+        buttonStack.axis = .horizontal
+        buttonStack.spacing = 10
+        buttonStack.distribution = .fillEqually
+        buttonStack.translatesAutoresizingMaskIntoConstraints = false
+        buttonStack.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        stackView.addArrangedSubview(buttonStack)
+        
+        // Cancel first
+        let sorted = actions.sorted { (a, b) -> Bool in
+            return a.style == .cancel
+        }
+        self.sortedActions = sorted
+        
+        for (index, action) in sortedActions.enumerated() {
+            let btn = UIButton(type: .system)
+            btn.tag = index
+            btn.setTitle(action.title, for: .normal)
+            btn.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: action.style == .cancel ? .regular : .semibold)
+            
+            if action.style == .cancel {
+                btn.setTitleColor(.secondaryLabel, for: .normal)
+                btn.backgroundColor = UIColor.systemGray.withAlphaComponent(0.15)
+            } else {
+                btn.setTitleColor(.white, for: .normal)
+                btn.backgroundColor = Helper.shared.mainThemeColor()
+            }
+            
+            btn.layer.cornerRadius = 6
+            btn.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+            buttonStack.addArrangedSubview(btn)
+        }
+    }
+    
+    @objc private func buttonTapped(_ sender: UIButton) {
+        let action = sortedActions[sender.tag]
+        dismiss(animated: true) {
+            action.handler?(self.textField?.text)
+        }
+    }
+}

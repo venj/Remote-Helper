@@ -346,6 +346,16 @@ extension Helper {
             UIPasteboard.general.string = magnet
         }
 
+        #if targetEnvironment(macCatalyst)
+        let options = [NSLocalizedString("Mi", comment: "Mi"), "Transmission", NSLocalizedString("Cancel", comment: "Cancel")]
+        Helper.shared.showMacActionSheet(title: NSLocalizedString("Choose...", comment: "Choose..."), message: NSLocalizedString("Please choose a download method.", comment: "Please choose a download method."), options: options) { index in
+            if index == 0 {
+                Helper.shared.miDownloadForLink(magnet, fallbackIn: viewController)
+            } else if index == 1 {
+                Helper.shared.transmissionDownload(for: torrent)
+            }
+        }
+        #else
         let alert = UIAlertController(title: NSLocalizedString("Choose...", comment: "Choose..."), message: NSLocalizedString("Please choose a download method.", comment: "Please choose a download method."), preferredStyle: .actionSheet)
         let miAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi"), style: .default, handler: { (action) in
             Helper.shared.miDownloadForLink(magnet, fallbackIn: viewController)
@@ -372,6 +382,7 @@ extension Helper {
                 alert.popoverPresentationController?.passthroughViews = nil
             }
         }
+        #endif
     }
 
     func showBatchDownloadAlert(for magnets: [String], sourceSHA256: String, in viewController: UIViewController) {
@@ -532,155 +543,139 @@ extension Helper {
     }
 }
 
-class SheetAlertAction {
-    let title: String
-    let style: UIAlertAction.Style
-    let handler: ((String?) -> Void)?
-    
-    init(title: String, style: UIAlertAction.Style = .default, handler: ((String?) -> Void)? = nil) {
-        self.title = title
-        self.style = style
-        self.handler = handler
+extension Helper {
+    #if targetEnvironment(macCatalyst)
+    @objc func showMacAlert(title: String, message: String, hasTextField: Bool, textFieldDefault: String?, placeholder: String?, okTitle: String, cancelTitle: String, completion: @escaping (Bool, String?) -> Void) {
+        guard let NSAlertClass = NSClassFromString("NSAlert") as? NSObject.Type else {
+            completion(false, nil)
+            return
+        }
+        let alert = NSAlertClass.init()
+        alert.setValue(title, forKey: "messageText")
+        alert.setValue(message, forKey: "informativeText")
+        
+        // Add buttons (Primary/OK is first, Cancel is second)
+        alert.perform(#selector(MacAppKitBridge.addButtonWithTitle(_:)), with: okTitle)
+        alert.perform(#selector(MacAppKitBridge.addButtonWithTitle(_:)), with: cancelTitle)
+        
+        // Optional text field
+        var textStorage: NSObject? = nil
+        if hasTextField, let NSTextFieldClass = NSClassFromString("NSTextField") as? NSObject.Type {
+            let tf = NSTextFieldClass.init()
+            // Set frame (NSRect)
+            tf.setValue(CGRect(x: 0, y: 0, width: 300, height: 24), forKey: "frame")
+            if let defText = textFieldDefault {
+                tf.setValue(defText, forKey: "stringValue")
+            }
+            if let ph = placeholder {
+                tf.setValue(ph, forKey: "placeholderString")
+            }
+            alert.setValue(tf, forKey: "accessoryView")
+            textStorage = tf
+        }
+        
+        // Get host window
+        guard let window = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first?.windows.first else {
+            completion(false, nil)
+            return
+        }
+        
+        var nsWindow: AnyObject? = nil
+        if let nsAppClass = NSClassFromString("NSApplication") as? NSObject.Type,
+           let nsApp = nsAppClass.value(forKeyPath: "sharedApplication") as? NSObject,
+           let nsWindows = nsApp.value(forKey: "windows") as? [NSObject] {
+            for win in nsWindows {
+                if let uiWindows = win.value(forKey: "uiWindows") as? [UIWindow],
+                   uiWindows.contains(window) {
+                    nsWindow = win
+                    break
+                }
+            }
+        }
+        
+        guard let targetWindow = nsWindow else {
+            completion(false, nil)
+            return
+        }
+        
+        // Completion block
+        typealias AlertBlock = @convention(block) (Int) -> Void
+        let completionBlock: AlertBlock = { response in
+            if response == 1000 { // First button (OK)
+                if hasTextField, let tf = textStorage {
+                    let inputVal = tf.value(forKey: "stringValue") as? String
+                    completion(true, inputVal)
+                } else {
+                    completion(true, nil)
+                }
+            } else {
+                completion(false, nil)
+            }
+        }
+        
+        let selector = #selector(MacAppKitBridge.beginSheetModalForWindow(_:completionHandler:))
+        alert.perform(selector, with: targetWindow, with: completionBlock)
     }
+    
+    @objc func showMacActionSheet(title: String, message: String?, options: [String], completion: @escaping (Int) -> Void) {
+        guard let NSAlertClass = NSClassFromString("NSAlert") as? NSObject.Type else {
+            return
+        }
+        let alert = NSAlertClass.init()
+        alert.setValue(title, forKey: "messageText")
+        if let msg = message {
+            alert.setValue(msg, forKey: "informativeText")
+        }
+        
+        for option in options {
+            alert.perform(#selector(MacAppKitBridge.addButtonWithTitle(_:)), with: option)
+        }
+        
+        // Get host window
+        guard let window = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first?.windows.first else {
+            return
+        }
+        
+        var nsWindow: AnyObject? = nil
+        if let nsAppClass = NSClassFromString("NSApplication") as? NSObject.Type,
+           let nsApp = nsAppClass.value(forKeyPath: "sharedApplication") as? NSObject,
+           let nsWindows = nsApp.value(forKey: "windows") as? [NSObject] {
+            for win in nsWindows {
+                if let uiWindows = win.value(forKey: "uiWindows") as? [UIWindow],
+                   uiWindows.contains(window) {
+                    nsWindow = win
+                    break
+                }
+            }
+        }
+        
+        guard let targetWindow = nsWindow else {
+            return
+        }
+        
+        typealias AlertBlock = @convention(block) (Int) -> Void
+        let completionBlock: AlertBlock = { response in
+            // response: 1000 for button 0, 1001 for button 1, etc.
+            completion(response - 1000)
+        }
+        
+        let selector = #selector(MacAppKitBridge.beginSheetModalForWindow(_:completionHandler:))
+        alert.perform(selector, with: targetWindow, with: completionBlock)
+    }
+    #endif
 }
 
-class SheetAlertViewController: UIViewController {
-    var alertTitle: String?
-    var alertMessage: String?
-    var hasTextField: Bool = false
-    var textFieldPlaceholder: String?
-    var textFieldDefaultText: String?
+#if targetEnvironment(macCatalyst)
+@objc protocol MacAppKitBridge {
+    @objc(addButtonWithTitle:)
+    func addButtonWithTitle(_ title: String) -> AnyObject
     
-    private var sortedActions: [SheetAlertAction] = []
-    private var textField: UITextField?
-    private var actions: [SheetAlertAction] = []
-    
-    init(title: String?, message: String?, hasTextField: Bool = false, textFieldPlaceholder: String? = nil, textFieldDefaultText: String? = nil) {
-        self.alertTitle = title
-        self.alertMessage = message
-        self.hasTextField = hasTextField
-        self.textFieldPlaceholder = textFieldPlaceholder
-        self.textFieldDefaultText = textFieldDefaultText
-        super.init(nibName: nil, bundle: nil)
-        
-        self.modalPresentationStyle = .formSheet
-        self.preferredContentSize = CGSize(width: 380, height: hasTextField ? 190 : 140)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func addAction(_ action: SheetAlertAction) {
-        actions.append(action)
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        
-        // Frosted glass background
-        let blurEffect = UIBlurEffect(style: .systemMaterial)
-        let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.frame = view.bounds
-        blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(blurView)
-        
-        setupContent(on: blurView.contentView)
-    }
-    
-    private func setupContent(on container: UIView) {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = 12
-        stackView.alignment = .fill
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        container.addSubview(stackView)
-        
-        NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 20),
-            stackView.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -20),
-            stackView.topAnchor.constraint(equalTo: container.topAnchor, constant: 20),
-            stackView.bottomAnchor.constraint(lessThanOrEqualTo: container.bottomAnchor, constant: -20)
-        ])
-        
-        // Title
-        if let titleText = alertTitle, !titleText.isEmpty {
-            let titleLabel = UILabel()
-            titleLabel.text = titleText
-            titleLabel.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-            titleLabel.textColor = .label
-            titleLabel.numberOfLines = 0
-            stackView.addArrangedSubview(titleLabel)
-        }
-        
-        // Message
-        if let messageText = alertMessage, !messageText.isEmpty {
-            let messageLabel = UILabel()
-            if messageText.contains("http://") || messageText.contains("magnet:") {
-                messageLabel.lineBreakMode = .byTruncatingMiddle
-            }
-            messageLabel.text = messageText
-            messageLabel.font = UIFont.systemFont(ofSize: 12, weight: .regular)
-            messageLabel.textColor = .secondaryLabel
-            messageLabel.numberOfLines = 0
-            stackView.addArrangedSubview(messageLabel)
-        }
-        
-        // Text Field
-        if hasTextField {
-            let tf = UITextField()
-            tf.borderStyle = .roundedRect
-            tf.placeholder = textFieldPlaceholder
-            tf.text = textFieldDefaultText
-            tf.font = UIFont.systemFont(ofSize: 13)
-            tf.clearButtonMode = .whileEditing
-            tf.translatesAutoresizingMaskIntoConstraints = false
-            tf.heightAnchor.constraint(equalToConstant: 30).isActive = true
-            stackView.addArrangedSubview(tf)
-            self.textField = tf
-            tf.becomeFirstResponder()
-        }
-        
-        // Buttons
-        let buttonStack = UIStackView()
-        buttonStack.axis = .horizontal
-        buttonStack.spacing = 10
-        buttonStack.distribution = .fillEqually
-        buttonStack.translatesAutoresizingMaskIntoConstraints = false
-        buttonStack.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        stackView.addArrangedSubview(buttonStack)
-        
-        // Cancel first
-        let sorted = actions.sorted { (a, b) -> Bool in
-            return a.style == .cancel
-        }
-        self.sortedActions = sorted
-        
-        for (index, action) in sortedActions.enumerated() {
-            let btn = UIButton(type: .system)
-            btn.tag = index
-            btn.setTitle(action.title, for: .normal)
-            btn.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: action.style == .cancel ? .regular : .semibold)
-            
-            if action.style == .cancel {
-                btn.setTitleColor(.secondaryLabel, for: .normal)
-                btn.backgroundColor = UIColor.systemGray.withAlphaComponent(0.15)
-            } else {
-                btn.setTitleColor(.white, for: .normal)
-                btn.backgroundColor = Helper.shared.mainThemeColor()
-            }
-            
-            btn.layer.cornerRadius = 6
-            btn.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
-            buttonStack.addArrangedSubview(btn)
-        }
-    }
-    
-    @objc private func buttonTapped(_ sender: UIButton) {
-        let action = sortedActions[sender.tag]
-        dismiss(animated: true) {
-            action.handler?(self.textField?.text)
-        }
-    }
+    @objc(beginSheetModalForWindow:completionHandler:)
+    func beginSheetModalForWindow(_ window: AnyObject, completionHandler: Any)
 }
+#endif
+

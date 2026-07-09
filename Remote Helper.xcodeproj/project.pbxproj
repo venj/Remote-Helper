@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D3ADF11E55E01D11B1B1E124 /* SidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ADF11E55E01D11B1B1E123 /* SidebarViewController.swift */; };
+		D3ADF11E55E01D11B1B1E126 /* MacSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ADF11E55E01D11B1B1E125 /* MacSettingsViewController.swift */; };
 		2502ABDB1BE6F761004882FE /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2502ABDA1BE6F761004882FE /* Helper.swift */; };
 		2502ABDD1BE6F84B004882FE /* String+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2502ABDC1BE6F84B004882FE /* String+JSON.swift */; };
 		2502ABDF1BE6FBEC004882FE /* String+Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2502ABDE1BE6FBEC004882FE /* String+Base64.swift */; };
@@ -100,6 +102,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D3ADF11E55E01D11B1B1E123 /* SidebarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarViewController.swift; sourceTree = "<group>"; };
+		D3ADF11E55E01D11B1B1E125 /* MacSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MacSettingsViewController.swift; sourceTree = "<group>"; };
 		2502ABDA1BE6F761004882FE /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		2502ABDC1BE6F84B004882FE /* String+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+JSON.swift"; sourceTree = "<group>"; };
 		2502ABDE1BE6FBEC004882FE /* String+Base64.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Base64.swift"; sourceTree = "<group>"; };
@@ -357,6 +361,8 @@
 		25B09BF31FEB66EB00AE514E /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				D3ADF11E55E01D11B1B1E123 /* SidebarViewController.swift */,
+				D3ADF11E55E01D11B1B1E125 /* MacSettingsViewController.swift */,
 				251F89962341D1DE008020E9 /* WebViewController.swift */,
 				25B91D0323752A48005AF0E8 /* ResourceWebViewController.swift */,
 				25B91D0523752D75005AF0E8 /* TransmissionWebViewController.swift */,
@@ -508,6 +514,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3ADF11E55E01D11B1B1E124 /* SidebarViewController.swift in Sources */,
+				D3ADF11E55E01D11B1B1E126 /* MacSettingsViewController.swift in Sources */,
 				250354D51BE9BEC900E9F93A /* AppDelegate.swift in Sources */,
 				25E4E0012F4B111100A1B2C3 /* PersistenceController.swift in Sources */,
 				2502ABE71BE723A2004882FE /* String+URLEncode.swift in Sources */,

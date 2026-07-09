@@ -47,6 +47,24 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         // Revert back to old UITableView behavior
         tableView.cellLayoutMarginsFollowReadableWidth = false
         title = NSLocalizedString("Addresses", comment: "Addresses")
+        
+        if let leftItem = navigationItem.leftBarButtonItem {
+            leftItem.target = nil
+            leftItem.action = nil
+            let transmissionAction = UIAction(title: NSLocalizedString("Transmission", comment: "Transmission"), image: UIImage(systemName: "arrow.down.circle")) { [weak self] _ in
+                self?.showTransmission()
+            }
+            let searchKittenAction = UIAction(title: NSLocalizedString("Kitten Search", comment: "Kitten Search"), image: UIImage(systemName: "magnifyingglass")) { [weak self] _ in
+                self?.torrentSearch()
+            }
+            let downloadFromPasteboardAction = UIAction(title: NSLocalizedString("Download from Pasteboard", comment: "Download from Pasteboard"), image: UIImage(systemName: "doc.on.clipboard")) { [weak self] _ in
+                self?.downloadMagnetFromPasteboard()
+            }
+            let settingsAction = UIAction(title: NSLocalizedString("Settings", comment: "Settings"), image: UIImage(systemName: "gearshape")) { [weak self] _ in
+                self?.showSettings()
+            }
+            leftItem.menu = UIMenu(title: "", children: [transmissionAction, searchKittenAction, downloadFromPasteboardAction, settingsAction])
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -101,15 +119,22 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier, for: indexPath)
         let address = self.addresses[indexPath.row]
         
-        var content = cell.defaultContentConfiguration()
-        content.text = address.link
-        #if targetEnvironment(macCatalyst)
-        content.textProperties.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-        #else
-        content.textProperties.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-        #endif
-        content.textProperties.color = .label
-        cell.contentConfiguration = content
+        cell.configurationUpdateHandler = { cell, state in
+            var content = cell.defaultContentConfiguration()
+            content.text = address.link
+            #if targetEnvironment(macCatalyst)
+            content.textProperties.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+            #else
+            content.textProperties.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+            #endif
+            
+            if state.isSelected || state.isHighlighted {
+                content.textProperties.color = .white
+            } else {
+                content.textProperties.color = .label
+            }
+            cell.contentConfiguration = content
+        }
         
         return cell
     }
@@ -231,17 +256,14 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     //MARK: - Action
     @IBAction func addAddress(_ sender: Any?) {
         #if targetEnvironment(macCatalyst)
-        let alert = SheetAlertViewController(title: NSLocalizedString("Add address", comment: "Add address"), message: NSLocalizedString("Please input an address:", comment: "Please input an address:"), hasTextField: true, textFieldPlaceholder: "http://", textFieldDefaultText: "http://")
-        alert.addAction(SheetAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel))
-        alert.addAction(SheetAlertAction(title: NSLocalizedString("Save", comment:"Save"), style: .default, handler: { [weak self] text in
-            guard let `self` = self, let address = text, let _ = URL(string: address) else { return }
+        Helper.shared.showMacAlert(title: NSLocalizedString("Add address", comment: "Add address"), message: NSLocalizedString("Please input an address:", comment: "Please input an address:"), hasTextField: true, textFieldDefault: "http://", placeholder: "http://", okTitle: NSLocalizedString("Save", comment:"Save"), cancelTitle: NSLocalizedString("Cancel", comment: "Cancel")) { [weak self] (success, text) in
+            guard let `self` = self, success, let address = text, let _ = URL(string: address) else { return }
             let site = NSEntityDescription.insertNewObject(forEntityName: "ResourceSite", into: PersistenceController.shared.viewContext) as! ResourceSite
             site.link = address
             self.addresses.append(site)
             let indexPath = IndexPath(row: self.addresses.count - 1, section: 0)
             self.tableView.insertRows(at: [indexPath], with: .automatic)
-        }))
-        present(alert, animated: true)
+        }
         #else
         let alertController = UIAlertController(title: NSLocalizedString("Add address", comment: "Add address"), message: NSLocalizedString("Please input an address:", comment: "Please input an address:"), preferredStyle: .alert)
         alertController.addTextField { (textField) in
@@ -267,6 +289,30 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     }
 
     @IBAction func showActionSheet(_ sender: Any?) {
+        #if targetEnvironment(macCatalyst)
+        let options = [
+            NSLocalizedString("Transmission", comment: "Transmission"),
+            NSLocalizedString("Kitten Search", comment: "Kitten Search"),
+            NSLocalizedString("Download from Pasteboard", comment: "Download from Pasteboard"),
+            NSLocalizedString("Settings", comment: "Settings"),
+            NSLocalizedString("Cancel", comment: "Cancel")
+        ]
+        Helper.shared.showMacActionSheet(title: NSLocalizedString("Please select your operation", comment: "Please select your operation"), message: nil, options: options) { [weak self] index in
+            guard let `self` = self else { return }
+            switch index {
+            case 0:
+                self.showTransmission()
+            case 1:
+                self.torrentSearch()
+            case 2:
+                self.downloadMagnetFromPasteboard()
+            case 3:
+                self.showSettings()
+            default:
+                break
+            }
+        }
+        #else
         let sheet = UIAlertController(title: NSLocalizedString("Please select your operation", comment: "Please select your operation"), message: nil, preferredStyle: .actionSheet)
         let transmissionAction = UIAlertAction(title: NSLocalizedString("Transmission", comment: "Transmission"), style: .default) { [weak self] _ in
             guard let `self` = self else { return }
@@ -301,6 +347,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         present(sheet, animated: true) {
             sheet.popoverPresentationController?.passthroughViews = nil
         }
+        #endif
     }
 
     @objc func showSettings() {
@@ -320,7 +367,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                 let appVersion = Helper.shared.appVersionString()
 
                 DispatchQueue.main.async {
-                    guard let self else { return }
+                    guard let self = self else { return }
                     UserDefaults.standard.set(cacheSize, forKey: ImageCacheSizeKey)
                     UserDefaults.standard.set(status, forKey: PasscodeLockStatus)
                     UserDefaults.standard.set(localFileSize, forKey: LocalFileSize)
@@ -328,6 +375,12 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                     UserDefaults.standard.set(appVersion, forKey: CurrentVersionKey)
                     UserDefaults.standard.synchronize()
 
+                    #if targetEnvironment(macCatalyst)
+                    let macSettingsVC = MacSettingsViewController()
+                    let settingsNavigationController = UINavigationController(rootViewController: macSettingsVC)
+                    settingsNavigationController.modalPresentationStyle = .formSheet
+                    self.present(settingsNavigationController, animated: true, completion: nil)
+                    #else
                     self.settingsViewController = IASKAppSettingsViewController(style: .grouped)
                     self.settingsViewController.delegate = self
                     self.settingsViewController.showCreditsFooter = false
@@ -337,6 +390,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
                         settingsNavigationController.modalPresentationStyle = .pageSheet
                     }
                     self.present(settingsNavigationController, animated: true, completion: nil)
+                    #endif
                 }
             }
         }
@@ -358,14 +412,11 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     public func addMagnet() {
         #if targetEnvironment(macCatalyst)
         let defaultText = UIPasteboard.general.hasStrings ? UIPasteboard.general.string : nil
-        let alert = SheetAlertViewController(title: NSLocalizedString("Download magnet", comment: "Download magnet"), message: NSLocalizedString("Please paste in a magnet address:", comment: "Please paste in a magnet address:"), hasTextField: true, textFieldPlaceholder: nil, textFieldDefaultText: defaultText)
-        alert.addAction(SheetAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel))
-        alert.addAction(SheetAlertAction(title: NSLocalizedString("Download", comment:"Download"), style: .default, handler: { text in
-            guard let address = text else { return }
+        Helper.shared.showMacAlert(title: NSLocalizedString("Download magnet", comment: "Download magnet"), message: NSLocalizedString("Please paste in a magnet address:", comment: "Please paste in a magnet address:"), hasTextField: true, textFieldDefault: defaultText, placeholder: nil, okTitle: NSLocalizedString("Download", comment:"Download"), cancelTitle: NSLocalizedString("Cancel", comment: "Cancel")) { (success, text) in
+            guard success, let address = text else { return }
             UIPasteboard.general.string = nil // Clear pasteboard
             Helper.shared.transmissionDownload(for: address)
-        }))
-        present(alert, animated: true)
+        }
         #else
         let alert = UIAlertController(title: NSLocalizedString("Download magnet", comment: "Download magnet"), message: NSLocalizedString("Please paste in a magnet address:", comment: "Please paste in a magnet address:"), preferredStyle: .alert)
         alert.addTextField { (textField) in
@@ -695,3 +746,4 @@ class PasteboardListViewController: UIViewController, UITableViewDataSource, UIT
         return cell
     }
 }
+

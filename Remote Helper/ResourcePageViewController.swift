@@ -64,23 +64,29 @@ class ResourcePageViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier, for: indexPath)
         let index = indexPath.row
         let bangumi = bangumiLinks[index]
-        
-        var content = cell.defaultContentConfiguration()
-        content.text = bangumi["title"]
-        #if targetEnvironment(macCatalyst)
-        content.textProperties.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-        #else
-        content.textProperties.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-        #endif
-        
         let link = fullLink(withHref: bangumi["link"]!)
-        if Configuration.shared.viewedResources.contains(link.md5) {
-            content.textProperties.color = .secondaryLabel
+        
+        cell.configurationUpdateHandler = { cell, state in
+            var content = cell.defaultContentConfiguration()
+            content.text = bangumi["title"]
+            #if targetEnvironment(macCatalyst)
+            content.textProperties.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+            #else
+            content.textProperties.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+            #endif
+            
+            if state.isSelected || state.isHighlighted {
+                content.textProperties.color = .white
+            } else {
+                if Configuration.shared.viewedResources.contains(link.md5) {
+                    content.textProperties.color = .secondaryLabel
+                } else {
+                    content.textProperties.color = .label
+                }
+            }
+            cell.contentConfiguration = content
         }
-        else {
-            content.textProperties.color = .label
-        }
-        cell.contentConfiguration = content
+        
         return cell
     }
 

@@ -85,18 +85,52 @@ class VPTorrentsListViewController: UITableViewController, UIPopoverPresentation
         super.viewWillAppear(animated)
         attachedProgressView.removeFromSuperview()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        #if targetEnvironment(macCatalyst)
+        self.becomeFirstResponder()
+        #endif
+    }
+    
+    #if targetEnvironment(macCatalyst)
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    #endif
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         definesPresentationContext = true
         searchController.searchResultsUpdater = self
+        #if targetEnvironment(macCatalyst)
+        searchController.delegate = self
+        #endif
         searchController.obscuresBackgroundDuringPresentation = false
         let searchBar = searchController.searchBar
+        #if targetEnvironment(macCatalyst)
+        searchBar.tintColor = Helper.shared.mainThemeColor()
+        #else
         searchBar.tintColor = .white
+        #endif
         searchBar.keyboardType = .numbersAndPunctuation
         searchBar.sizeToFit()
+        
+        #if targetEnvironment(macCatalyst)
+        navigationItem.searchController = nil // Hidden by default
+        navigationItem.hidesSearchBarWhenScrolling = true
+        searchController.hidesNavigationBarDuringPresentation = false
+        
+        let searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(triggerSearch))
+        var items = navigationItem.rightBarButtonItems ?? []
+        items.append(searchItem)
+        navigationItem.rightBarButtonItems = items
+        
+        searchController.searchBar.setValue(NSLocalizedString("Done", comment: ""), forKey: "cancelButtonText")
+        #else
         tableView.tableHeaderView = searchBar
+        #endif
 
         loadTorrentList(nil)
 
@@ -104,8 +138,10 @@ class VPTorrentsListViewController: UITableViewController, UIPopoverPresentation
         tableView.cellLayoutMarginsFollowReadableWidth = false
         title = NSLocalizedString("Torrents", comment: "Torrents")
 
+        #if !targetEnvironment(macCatalyst)
         // Hide searchbar initially.
         tableView.contentOffset = CGPoint(x: 0.0, y: searchBar.frame.height)
+        #endif
 
         NotificationCenter.default.addObserver(self, selector: #selector(viewedTitlesDidChange(_:)), name: NSNotification.Name.viewedTitlesDidChangeNotification, object: nil)
     }
@@ -149,22 +185,26 @@ class VPTorrentsListViewController: UITableViewController, UIPopoverPresentation
         let currentTitles = !searchController.isActive ? titles : filteredTitles
         let title = currentTitles[indexPath.row]
         
-        var content = cell.defaultContentConfiguration()
-        content.text = title
-        
-        #if targetEnvironment(macCatalyst)
-        content.textProperties.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-        #else
-        content.textProperties.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-        #endif
-        
-        if viewedTitles.contains(title) {
-            content.textProperties.color = .secondaryLabel
+        cell.configurationUpdateHandler = { cell, state in
+            var content = cell.defaultContentConfiguration()
+            content.text = title
+            #if targetEnvironment(macCatalyst)
+            content.textProperties.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+            #else
+            content.textProperties.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+            #endif
+            
+            if state.isSelected || state.isHighlighted {
+                content.textProperties.color = .white
+            } else {
+                if self.viewedTitles.contains(title) {
+                    content.textProperties.color = .secondaryLabel
+                } else {
+                    content.textProperties.color = .label
+                }
+            }
+            cell.contentConfiguration = content
         }
-        else {
-            content.textProperties.color = .label
-        }
-        cell.contentConfiguration = content
 
         return cell
     }
@@ -197,11 +237,11 @@ class VPTorrentsListViewController: UITableViewController, UIPopoverPresentation
                 let list = !searchController.isActive ? dateList : filteredDateList
                 currentSelectedTitle = list[indexPath.row]
                 if Helper.shared.showCellularHUD() { return }
-                if let cell = tableView.cellForRow(at: indexPath), let title = cell.textLabel?.text {
-                    cell.textLabel?.textColor = UIColor.gray
-                    viewedTitles.insert(title)
-                    pb.title = title
-                }
+                let currentTitles = !self.searchController.isActive ? self.titles : self.filteredTitles
+                let title = currentTitles[indexPath.row]
+                self.viewedTitles.insert(title)
+                pb.title = title
+                self.tableView.reloadRows(at: [indexPath], with: .none)
                 pb.items = remotePhotos
                 pb.overlayActionButtons = [
                     .init(
@@ -328,6 +368,22 @@ class VPTorrentsListViewController: UITableViewController, UIPopoverPresentation
             self.tableView.reloadData()
         }
     }
+
+    #if targetEnvironment(macCatalyst)
+    override var keyCommands: [UIKeyCommand]? {
+        return [
+            UIKeyCommand(title: NSLocalizedString("Search", comment: ""), action: #selector(triggerSearch), input: "f", modifierFlags: .command)
+        ]
+    }
+    
+    @objc func triggerSearch() {
+        navigationItem.searchController = searchController
+        searchController.isActive = true
+        DispatchQueue.main.async {
+            self.searchController.searchBar.becomeFirstResponder()
+        }
+    }
+    #endif
 }
 
 extension VPTorrentsListViewController : UISearchResultsUpdating {
@@ -347,3 +403,11 @@ extension VPTorrentsListViewController : UISearchResultsUpdating {
     }
     
 }
+
+#if targetEnvironment(macCatalyst)
+extension VPTorrentsListViewController : UISearchControllerDelegate {
+    func didDismissSearchController(_ searchController: UISearchController) {
+        navigationItem.searchController = nil
+    }
+}
+#endif

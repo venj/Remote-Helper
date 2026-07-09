@@ -218,22 +218,28 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
         let index = indexPath.row
         let link = bangumi?.links[index]
         
-        var content = cell.defaultContentConfiguration()
-        content.text = link?.name
-        content.secondaryText = link?.target
-        
-        #if targetEnvironment(macCatalyst)
-        content.textProperties.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-        content.secondaryTextProperties.font = UIFont.systemFont(ofSize: 12, weight: .regular)
-        #else
-        content.textProperties.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-        content.secondaryTextProperties.font = UIFont.systemFont(ofSize: 11, weight: .regular)
-        #endif
-        
-        content.textProperties.color = .label
-        content.secondaryTextProperties.color = .secondaryLabel
-        
-        cell.contentConfiguration = content
+        cell.configurationUpdateHandler = { cell, state in
+            var content = cell.defaultContentConfiguration()
+            content.text = link?.name
+            content.secondaryText = link?.target
+            
+            #if targetEnvironment(macCatalyst)
+            content.textProperties.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+            content.secondaryTextProperties.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+            #else
+            content.textProperties.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+            content.secondaryTextProperties.font = UIFont.systemFont(ofSize: 11, weight: .regular)
+            #endif
+            
+            if state.isSelected || state.isHighlighted {
+                content.textProperties.color = .white
+                content.secondaryTextProperties.color = UIColor.white.withAlphaComponent(0.7)
+            } else {
+                content.textProperties.color = .label
+                content.secondaryTextProperties.color = .secondaryLabel
+            }
+            cell.contentConfiguration = content
+        }
         return cell
     }
 

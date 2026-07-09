@@ -30,6 +30,8 @@ Key files and directories in `Remote Helper/`:
   * [MiDownloader.swift](file:///Users/venj/Developer/Github/Remote%20Helper/Remote%20Helper/MiDownloader.swift): Deals with the authentication and remote download actions on Xiaomi Router API.
 
 * **Key View Controllers**:
+  * [SidebarViewController.swift](file:///Users/venj/Developer/Github/Remote%20Helper/Remote%20Helper/SidebarViewController.swift): Multi-column navigation sidebar controller.
+  * [MacSettingsViewController.swift](file:///Users/venj/Developer/Github/Remote%20Helper/Remote%20Helper/MacSettingsViewController.swift): Split-pane preferences settings controller.
   * [WebContentTableViewController.swift](file:///Users/venj/Developer/Github/Remote%20Helper/Remote%20Helper/WebContentTableViewController.swift): Table-based rendering of links, files, and resources. Includes entry for opening `PasteboardListViewController`.
   * [VPTorrentsListViewController.swift](file:///Users/venj/Developer/Github/Remote%20Helper/Remote%20Helper/VPTorrentsListViewController.swift): Renders downloaded torrent lists.
   * [VPSearchResultController.swift](file:///Users/venj/Developer/Github/Remote%20Helper/Remote%20Helper/VPSearchResultController.swift): Handles torrent search and results visualization.
@@ -61,3 +63,15 @@ Key files and directories in `Remote Helper/`:
 * **Code Style**: Maintain clean Swift style. Follow standard Swift naming conventions and preserve existing architecture guidelines.
 * **Localization**: Keep translations aligned in localization files (`zh-Hans.lproj` and `en.lproj`).
 * **Catalyst Support**: Always verify conditional builds `#if targetEnvironment(macCatalyst)` when working with UI updates or system integrations.
+* **File Creation / Xcode Project Integrity**: Never use regex, Python, or Ruby scripts to modify `project.pbxproj` directly to add new files. When a new file needs to be added to the target, output a message to the user asking them to create the empty file inside Xcode, then wait. Once the user creates the file and compiles, proceed to write code to it. This keeps the Xcode project structure completely safe.
+
+---
+
+## 6. Catalyst UI Refactoring Summary (Catalyst UI 重构历史)
+The application has undergone a substantial Catalyst refactoring to align with native macOS standards:
+* **Triple-Column Split View**: Enabled split screen navigation using `SidebarViewController` (primary), list views (supplementary), and detail views (secondary).
+* **Native Context Menus**: Replaced sheet popups with native pull-down `UIMenu` and `UIAction` button bindings.
+* **AppKit NSAlert Integration**: Wrapped AppKit alerts dynamically using type-safe `#selector` bindings for seamless mac sheets on Catalyst.
+* **Split Preferences Panel**: Designed a native two-column preferences panel (`MacSettingsViewController`) writing updates back to `UserDefaults`. Added settings button style overrides (`.custom` with white text adaptation).
+* **Text Selection Inversion**: Used cell `configurationUpdateHandler` to dynamically invert text label colors to white when selected, avoiding hardcoded colors clashing with the macOS accent color.
+* **Mac-style Search Integration**: Migrated the search controller to `navigationItem.searchController` in `VPTorrentsListViewController`. Added a `Cmd-F` keyboard shortcut to dynamically display/focus the search bar, and conformed to `UISearchControllerDelegate` to fully dismiss and hide the search bar when finished (Done).

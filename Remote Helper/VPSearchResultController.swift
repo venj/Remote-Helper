@@ -97,22 +97,28 @@ class VPSearchResultController: UITableViewController {
         // Configure the cell...
         let torrent = torrents[indexPath.row]
         
-        var content = cell.defaultContentConfiguration()
-        content.text = torrent.title
-        content.secondaryText = String(format: NSLocalizedString("Tr size: %@, Up date: %@", comment: "Tr size: %@, Up date: %@"), torrent.size, torrent.date)
-        
-        #if targetEnvironment(macCatalyst)
-        content.textProperties.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-        content.secondaryTextProperties.font = UIFont.systemFont(ofSize: 12, weight: .regular)
-        #else
-        content.textProperties.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-        content.secondaryTextProperties.font = UIFont.systemFont(ofSize: 11, weight: .regular)
-        #endif
-        
-        content.textProperties.color = .label
-        content.secondaryTextProperties.color = .secondaryLabel
-        
-        cell.contentConfiguration = content
+        cell.configurationUpdateHandler = { cell, state in
+            var content = cell.defaultContentConfiguration()
+            content.text = torrent.title
+            content.secondaryText = String(format: NSLocalizedString("Tr size: %@, Up date: %@", comment: "Tr size: %@, Up date: %@"), torrent.size, torrent.date)
+            
+            #if targetEnvironment(macCatalyst)
+            content.textProperties.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+            content.secondaryTextProperties.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+            #else
+            content.textProperties.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+            content.secondaryTextProperties.font = UIFont.systemFont(ofSize: 11, weight: .regular)
+            #endif
+            
+            if state.isSelected || state.isHighlighted {
+                content.textProperties.color = .white
+                content.secondaryTextProperties.color = UIColor.white.withAlphaComponent(0.7)
+            } else {
+                content.textProperties.color = .label
+                content.secondaryTextProperties.color = .secondaryLabel
+            }
+            cell.contentConfiguration = content
+        }
         cell.accessoryType = .detailDisclosureButton
 
         return cell

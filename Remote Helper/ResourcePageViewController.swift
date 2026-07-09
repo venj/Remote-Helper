@@ -64,15 +64,32 @@ class ResourcePageViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier, for: indexPath)
         let index = indexPath.row
         let bangumi = bangumiLinks[index]
-        cell.textLabel?.text = bangumi["title"]
+        
+        var content = cell.defaultContentConfiguration()
+        content.text = bangumi["title"]
+        #if targetEnvironment(macCatalyst)
+        content.textProperties.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        #else
+        content.textProperties.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        #endif
+        
         let link = fullLink(withHref: bangumi["link"]!)
         if Configuration.shared.viewedResources.contains(link.md5) {
-            cell.textLabel?.textColor = .secondaryLabel
+            content.textProperties.color = .secondaryLabel
         }
         else {
-            cell.textLabel?.textColor = .label
+            content.textProperties.color = .label
         }
+        cell.contentConfiguration = content
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        #if targetEnvironment(macCatalyst)
+        return 50.0
+        #else
+        return 44.0
+        #endif
     }
 
     func fullLink(withHref href: String) -> String {

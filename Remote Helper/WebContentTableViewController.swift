@@ -47,6 +47,12 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         // Revert back to old UITableView behavior
         tableView.cellLayoutMarginsFollowReadableWidth = false
 
+        #if targetEnvironment(macCatalyst)
+        navigationItem.leftBarButtonItems = nil
+        navigationItem.rightBarButtonItems = nil
+        navigationItem.leftBarButtonItem = nil
+        navigationItem.rightBarButtonItem = nil
+        #endif
     }
 
     override func didReceiveMemoryWarning() {
@@ -100,8 +106,26 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier, for: indexPath)
         let address = self.addresses[indexPath.row]
-        cell.textLabel?.text = address.link
+        
+        var content = cell.defaultContentConfiguration()
+        content.text = address.link
+        #if targetEnvironment(macCatalyst)
+        content.textProperties.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        #else
+        content.textProperties.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        #endif
+        content.textProperties.color = .label
+        cell.contentConfiguration = content
+        
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        #if targetEnvironment(macCatalyst)
+        return 50.0
+        #else
+        return 44.0
+        #endif
     }
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -258,13 +282,20 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         sheet.addAction(settingsAction)
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil)
         sheet.addAction(cancelAction)
-        sheet.popoverPresentationController?.delegate = self
+        if let popover = sheet.popoverPresentationController {
+            popover.delegate = self
+            if let item = sender as? UIPopoverPresentationControllerSourceItem {
+                popover.sourceItem = item
+            } else {
+                popover.barButtonItem = navigationItem.leftBarButtonItem
+            }
+        }
         present(sheet, animated: true) {
             sheet.popoverPresentationController?.passthroughViews = nil
         }
     }
 
-    func showSettings() {
+    @objc func showSettings() {
         let passcodeRepo = UserDefaultsPasscodeRepository()
         let status = passcodeRepo.hasPasscode ? NSLocalizedString("On", comment: "打开") : NSLocalizedString("Off", comment: "关闭")
 

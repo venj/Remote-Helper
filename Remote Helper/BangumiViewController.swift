@@ -217,9 +217,32 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
         let cell: UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: CellIdentifier, for: indexPath)
         let index = indexPath.row
         let link = bangumi?.links[index]
-        cell.textLabel?.text = link?.name
-        cell.detailTextLabel?.text = link?.target
+        
+        var content = cell.defaultContentConfiguration()
+        content.text = link?.name
+        content.secondaryText = link?.target
+        
+        #if targetEnvironment(macCatalyst)
+        content.textProperties.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        content.secondaryTextProperties.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        #else
+        content.textProperties.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        content.secondaryTextProperties.font = UIFont.systemFont(ofSize: 11, weight: .regular)
+        #endif
+        
+        content.textProperties.color = .label
+        content.secondaryTextProperties.color = .secondaryLabel
+        
+        cell.contentConfiguration = content
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        #if targetEnvironment(macCatalyst)
+        return 50.0
+        #else
+        return 44.0
+        #endif
     }
 
     // MARK: - Tableview delegate

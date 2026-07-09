@@ -107,6 +107,13 @@ class VPTorrentsListViewController: UITableViewController, UIPopoverPresentation
         tableView.contentOffset = CGPoint(x: 0.0, y: searchBar.frame.height)
 
         NotificationCenter.default.addObserver(self, selector: #selector(viewedTitlesDidChange(_:)), name: NSNotification.Name.viewedTitlesDidChangeNotification, object: nil)
+         
+        #if targetEnvironment(macCatalyst)
+        navigationItem.leftBarButtonItems = nil
+        navigationItem.rightBarButtonItems = nil
+        navigationItem.leftBarButtonItem = nil
+        navigationItem.rightBarButtonItem = nil
+        #endif
     }
 
     deinit {
@@ -147,15 +154,33 @@ class VPTorrentsListViewController: UITableViewController, UIPopoverPresentation
         cell.accessoryType = .detailDisclosureButton
         let currentTitles = !searchController.isActive ? titles : filteredTitles
         let title = currentTitles[indexPath.row]
-        cell.textLabel?.text = title
+        
+        var content = cell.defaultContentConfiguration()
+        content.text = title
+        
+        #if targetEnvironment(macCatalyst)
+        content.textProperties.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        #else
+        content.textProperties.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        #endif
+        
         if viewedTitles.contains(title) {
-            cell.textLabel?.textColor = .secondaryLabel
+            content.textProperties.color = .secondaryLabel
         }
         else {
-            cell.textLabel?.textColor = .label
+            content.textProperties.color = .label
         }
+        cell.contentConfiguration = content
 
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        #if targetEnvironment(macCatalyst)
+        return 50.0
+        #else
+        return 44.0
+        #endif
     }
 
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {

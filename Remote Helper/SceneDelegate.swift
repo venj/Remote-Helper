@@ -8,8 +8,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private var shouldPresentPasscodeWhenActive = false
     private var privacyShieldView: UIView?
 
+    #if targetEnvironment(macCatalyst)
+    var tripleSplitViewController: UISplitViewController? {
+        return window?.rootViewController as? UISplitViewController
+    }
+    
+    var addressesNavController: UINavigationController?
+    var addressesDetailController: UIViewController?
+    
+    var torrentsNavController: UINavigationController?
+    var torrentsDetailController: UIViewController?
+    
+    var dyttNavController: UINavigationController?
+    var dyttDetailController: UIViewController?
+    #endif
+
     var tabBarController: UITabBarController? {
+        #if targetEnvironment(macCatalyst)
+        return nil
+        #else
         return window?.rootViewController as? UITabBarController
+        #endif
     }
 
     var addressesSplitViewController: UISplitViewController? {
@@ -25,7 +44,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     var fileListViewController: WebContentTableViewController? {
+        #if targetEnvironment(macCatalyst)
+        return findViewController(ofType: WebContentTableViewController.self, from: addressesNavController)
+        #else
         return findViewController(ofType: WebContentTableViewController.self, from: addressesSplitViewController)
+        #endif
     }
 
     let bundleIdentifier = Bundle.main.bundleIdentifier!
@@ -53,6 +76,41 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         applyTheme()
         window?.tintColor = Helper.shared.mainThemeColor()
 
+        #if targetEnvironment(macCatalyst)
+        if let tabVC = window?.rootViewController as? UITabBarController,
+           let controllers = tabVC.viewControllers {
+            
+            if controllers.count > 0, let split = controllers[0] as? UISplitViewController {
+                addressesNavController = split.viewControllers.first as? UINavigationController
+                addressesDetailController = split.viewControllers.count > 1 ? split.viewControllers[1] : nil
+            }
+            if controllers.count > 1, let split = controllers[1] as? UISplitViewController {
+                torrentsNavController = split.viewControllers.first as? UINavigationController
+                torrentsDetailController = split.viewControllers.count > 1 ? split.viewControllers[1] : nil
+            }
+            if controllers.count > 2, let split = controllers[2] as? UISplitViewController {
+                dyttNavController = split.viewControllers.first as? UINavigationController
+                dyttDetailController = split.viewControllers.count > 1 ? split.viewControllers[1] : nil
+            }
+            
+            let sidebarVC = SidebarViewController()
+            sidebarVC.delegate = self
+            
+            let tripleSplit = UISplitViewController(style: .tripleColumn)
+            tripleSplit.preferredDisplayMode = .twoBesideSecondary
+            tripleSplit.setViewController(sidebarVC, for: .primary)
+            
+            if let nav = addressesNavController {
+                tripleSplit.setViewController(nav, for: .supplementary)
+            }
+            if let detail = addressesDetailController {
+                tripleSplit.setViewController(detail, for: .secondary)
+            }
+            
+            window?.rootViewController = tripleSplit
+            configureTitlebar(for: windowScene)
+        }
+        #else
         if let tabBarController {
             tabBarController.viewControllers?.forEach { controller in
                 if let splitController = controller as? MySplitViewController {
@@ -60,10 +118,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 }
             }
         }
-
-        #if targetEnvironment(macCatalyst)
-        configureTitlebar(for: windowScene)
-        tabBarController?.tabBar.isHidden = true
         #endif
 
         createActionMenus()
@@ -139,6 +193,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     @discardableResult
     func performShortcutAction(_ shortcutItem: UIApplicationShortcutItem) -> Bool {
+        #if targetEnvironment(macCatalyst)
+        guard let sidebarVC = tripleSplitViewController?.viewController(for: .primary) as? SidebarViewController else { return false }
+        if shortcutItem.type == "\(bundleIdentifier).openaddresses" {
+            sidebarVC.selectedIndex = 0
+            selectSidebarIndex(0)
+            return true
+        }
+        if shortcutItem.type == "\(bundleIdentifier).opentorrents" {
+            sidebarVC.selectedIndex = 1
+            selectSidebarIndex(1)
+            return true
+        }
+        if shortcutItem.type == "\(bundleIdentifier).opendytt" {
+            sidebarVC.selectedIndex = 2
+            selectSidebarIndex(2)
+            return true
+        }
+        if shortcutItem.type == "\(bundleIdentifier).kittensearch" {
+            Helper.shared.showTorrentSearchAlertInViewController(window?.rootViewController)
+            return true
+        }
+        #else
         if shortcutItem.type == "\(bundleIdentifier).openaddresses" {
             tabBarController?.selectedIndex = 0
             return true
@@ -155,15 +231,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             Helper.shared.showTorrentSearchAlertInViewController(window?.rootViewController)
             return true
         }
+        #endif
         return false
     }
 
     func openAddMagnetAlert() {
+        #if targetEnvironment(macCatalyst)
+        guard let sidebarVC = tripleSplitViewController?.viewController(for: .primary) as? SidebarViewController else { return }
+        sidebarVC.selectedIndex = 0
+        selectSidebarIndex(0)
+        let navController = addressesNavController
+        (navController?.topViewController as? WebContentTableViewController)?.addMagnet()
+        #else
         tabBarController?.selectedIndex = 0
         let splitController = tabBarController?.viewControllers?.first as? MySplitViewController
         splitController?.show(.primary)
         let navController = splitController?.viewControllers.first as? UINavigationController
         (navController?.topViewController as? WebContentTableViewController)?.addMagnet()
+        #endif
     }
 
     private func applyTheme() {
@@ -290,47 +375,182 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 
 #if targetEnvironment(macCatalyst)
+extension SceneDelegate: SidebarViewControllerDelegate {
+    func sidebarViewController(_ sidebar: SidebarViewController, didSelectIndex index: Int) {
+        selectSidebarIndex(index)
+    }
+    
+    func selectSidebarIndex(_ index: Int) {
+        guard let splitVC = tripleSplitViewController else { return }
+        let nav: UIViewController?
+        let detail: UIViewController?
+        
+        switch index {
+        case 0:
+            nav = addressesNavController
+            detail = addressesDetailController
+        case 1:
+            nav = torrentsNavController
+            detail = torrentsDetailController
+        case 2:
+            nav = dyttNavController
+            detail = dyttDetailController
+        default:
+            return
+        }
+        
+        if let nav = nav {
+            splitVC.setViewController(nav, for: .supplementary)
+        }
+        if let detail = detail {
+            splitVC.setViewController(detail, for: .secondary)
+        } else {
+            let placeholder = UIViewController()
+            placeholder.view.backgroundColor = .systemBackground
+            splitVC.setViewController(placeholder, for: .secondary)
+        }
+    }
+}
+
 extension SceneDelegate: NSToolbarDelegate {
     fileprivate func configureTitlebar(for windowScene: UIWindowScene) {
         if let titlebar = windowScene.titlebar {
             let toolbar = NSToolbar(identifier: "MainToolbar")
             toolbar.delegate = self
             toolbar.allowsUserCustomization = false
-            toolbar.centeredItemIdentifier = NSToolbarItem.Identifier(rawValue: "TabItemsGroup")
+            toolbar.displayMode = .iconOnly
             titlebar.titleVisibility = .hidden
             titlebar.toolbar = toolbar
         }
     }
 
     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
-        if itemIdentifier == NSToolbarItem.Identifier(rawValue: "TabItemsGroup") {
-            let group = NSToolbarItemGroup(
-                itemIdentifier: NSToolbarItem.Identifier(rawValue: "TabItemsGroup"),
-                titles: [NSLocalizedString("Addresses", comment: "Addresses"), NSLocalizedString("Torrents", comment: "Torrents"), NSLocalizedString("DYTT", comment: "DYTT")],
-                selectionMode: .selectOne,
-                labels: ["addresses", "torrents", "dytt"],
-                target: self,
-                action: #selector(toolbarGroupSelectionChanged)
-            )
-
-            group.setSelected(true, at: 0)
-            return group
+        if itemIdentifier == .addAddress {
+            let item = NSToolbarItem(itemIdentifier: itemIdentifier)
+            item.image = UIImage(systemName: "plus")
+            item.label = NSLocalizedString("Add", comment: "Add")
+            item.paletteLabel = NSLocalizedString("Add", comment: "Add")
+            item.target = nil
+            item.action = #selector(WebContentTableViewController.addAddress(_:))
+            return item
+        } else if itemIdentifier == .showActions {
+            let item = NSToolbarItem(itemIdentifier: itemIdentifier)
+            item.image = UIImage(systemName: "ellipsis.circle")
+            item.label = NSLocalizedString("Actions", comment: "Actions")
+            item.paletteLabel = NSLocalizedString("Actions", comment: "Actions")
+            item.target = nil
+            item.action = #selector(WebContentTableViewController.showActionSheet(_:))
+            return item
+        } else if itemIdentifier == .showSettings {
+            let item = NSToolbarItem(itemIdentifier: itemIdentifier)
+            item.image = UIImage(systemName: "gearshape")
+            item.label = NSLocalizedString("Settings", comment: "Settings")
+            item.paletteLabel = NSLocalizedString("Settings", comment: "Settings")
+            item.target = nil
+            item.action = #selector(WebContentTableViewController.showSettings)
+            return item
         }
 
         return nil
     }
 
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return [.primarySidebarTrackingSeparatorItemIdentifier, NSToolbarItem.Identifier(rawValue: "TabItemsGroup")]
+        return [NSToolbarItem.Identifier("NSToolbarToggleSidebarItem"), .flexibleSpace, .addAddress, .showActions, .showSettings]
     }
 
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
         return toolbarDefaultItemIdentifiers(toolbar)
     }
+}
 
-    @objc
-    func toolbarGroupSelectionChanged(sender: NSToolbarItemGroup) {
-        tabBarController?.selectedIndex = sender.selectedIndex
+extension NSToolbarItem.Identifier {
+    static let addAddress = NSToolbarItem.Identifier("com.remotehelper.addAddress")
+    static let showActions = NSToolbarItem.Identifier("com.remotehelper.showActions")
+    static let showSettings = NSToolbarItem.Identifier("com.remotehelper.showSettings")
+}
+
+protocol SidebarViewControllerDelegate: AnyObject {
+    func sidebarViewController(_ sidebar: SidebarViewController, didSelectIndex index: Int)
+}
+
+class SidebarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    weak var delegate: SidebarViewControllerDelegate?
+    private var tableView: UITableView!
+    
+    let items = [
+        (title: NSLocalizedString("Addresses", comment: "Addresses"), image: "link"),
+        (title: NSLocalizedString("Torrents", comment: "Torrents"), image: "arrow.down.circle"),
+        (title: NSLocalizedString("DYTT", comment: "DYTT"), image: "film")
+    ]
+    
+    var selectedIndex: Int = 0 {
+        didSet {
+            if isViewLoaded {
+                tableView.selectRow(at: IndexPath(row: selectedIndex, section: 0), animated: false, scrollPosition: .none)
+            }
+        }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        title = NSLocalizedString("Remote Helper", comment: "App Name")
+        
+        setupTableView()
+    }
+    
+    private func setupTableView() {
+        tableView = UITableView(frame: view.bounds, style: .insetGrouped)
+        tableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "SidebarCell")
+        tableView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 0, right: 0)
+        view.addSubview(tableView)
+        
+        // Select the default item
+        tableView.selectRow(at: IndexPath(row: selectedIndex, section: 0), animated: false, scrollPosition: .none)
+    }
+    
+    // MARK: - UITableViewDataSource
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return items.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SidebarCell", for: indexPath)
+        let item = items[indexPath.row]
+        
+        let selectedBGView = UIView()
+        selectedBGView.backgroundColor = UIColor.systemGray.withAlphaComponent(0.18)
+        selectedBGView.layer.cornerRadius = 8
+        cell.selectedBackgroundView = selectedBGView
+        
+        cell.configurationUpdateHandler = { cell, state in
+            var content = cell.defaultContentConfiguration()
+            content.text = item.title
+            content.image = UIImage(systemName: item.image)
+            
+            if state.isSelected {
+                content.textProperties.color = Helper.shared.mainThemeColor()
+                content.imageProperties.tintColor = Helper.shared.mainThemeColor()
+            } else {
+                content.textProperties.color = .label
+                content.imageProperties.tintColor = .secondaryLabel
+            }
+            cell.contentConfiguration = content
+        }
+        
+        return cell
+    }
+    
+    // MARK: - UITableViewDelegate
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedIndex = indexPath.row
+        delegate?.sidebarViewController(self, didSelectIndex: indexPath.row)
     }
 }
 #endif

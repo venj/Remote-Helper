@@ -54,8 +54,12 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
         // Revert back to old UITableView behavior
         tableView.cellLayoutMarginsFollowReadableWidth = false
 
-        // let searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(search(_:)))
-        // navigationItem.rightBarButtonItem = searchItem
+        #if targetEnvironment(macCatalyst)
+        navigationItem.leftBarButtonItems = nil
+        navigationItem.rightBarButtonItems = nil
+        navigationItem.leftBarButtonItem = nil
+        navigationItem.rightBarButtonItem = nil
+        #endif
     }
 
     override func didReceiveMemoryWarning() {
@@ -87,8 +91,26 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
 
         let index = indexPath.row
         let catagory = catagoryLinks[index]
-        cell.textLabel?.text = catagory["name"]
+        
+        var content = cell.defaultContentConfiguration()
+        content.text = catagory["name"]
+        #if targetEnvironment(macCatalyst)
+        content.textProperties.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        #else
+        content.textProperties.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        #endif
+        content.textProperties.color = .label
+        cell.contentConfiguration = content
+        
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        #if targetEnvironment(macCatalyst)
+        return 50.0
+        #else
+        return 44.0
+        #endif
     }
 
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {

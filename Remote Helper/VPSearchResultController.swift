@@ -96,11 +96,34 @@ class VPSearchResultController: UITableViewController {
 
         // Configure the cell...
         let torrent = torrents[indexPath.row]
-        cell.textLabel?.text = torrent.title
+        
+        var content = cell.defaultContentConfiguration()
+        content.text = torrent.title
+        content.secondaryText = String(format: NSLocalizedString("Tr size: %@, Up date: %@", comment: "Tr size: %@, Up date: %@"), torrent.size, torrent.date)
+        
+        #if targetEnvironment(macCatalyst)
+        content.textProperties.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        content.secondaryTextProperties.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        #else
+        content.textProperties.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        content.secondaryTextProperties.font = UIFont.systemFont(ofSize: 11, weight: .regular)
+        #endif
+        
+        content.textProperties.color = .label
+        content.secondaryTextProperties.color = .secondaryLabel
+        
+        cell.contentConfiguration = content
         cell.accessoryType = .detailDisclosureButton
-        cell.detailTextLabel?.text = String(format: NSLocalizedString("Tr size: %@, Up date: %@", comment: "Tr size: %@, Up date: %@"), torrent.size, torrent.date)
 
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        #if targetEnvironment(macCatalyst)
+        return 50.0
+        #else
+        return 44.0
+        #endif
     }
 
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {

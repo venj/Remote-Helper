@@ -106,8 +106,8 @@ class VPSearchResultController: UITableViewController {
             content.textProperties.font = UIFont.systemFont(ofSize: 16, weight: .regular)
             content.secondaryTextProperties.font = UIFont.systemFont(ofSize: 12, weight: .regular)
             #else
-            content.textProperties.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-            content.secondaryTextProperties.font = UIFont.systemFont(ofSize: 11, weight: .regular)
+            content.textProperties.font = UIFont.preferredFont(forTextStyle: .body)
+            content.secondaryTextProperties.font = UIFont.preferredFont(forTextStyle: .footnote)
             #endif
             
             if state.isSelected || state.isHighlighted {
@@ -128,7 +128,7 @@ class VPSearchResultController: UITableViewController {
         #if targetEnvironment(macCatalyst)
         return 50.0
         #else
-        return 44.0
+        return UITableView.automaticDimension
         #endif
     }
 

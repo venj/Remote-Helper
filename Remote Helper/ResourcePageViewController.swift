@@ -72,7 +72,7 @@ class ResourcePageViewController: UITableViewController {
             #if targetEnvironment(macCatalyst)
             content.textProperties.font = UIFont.systemFont(ofSize: 16, weight: .regular)
             #else
-            content.textProperties.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+            content.textProperties.font = UIFont.preferredFont(forTextStyle: .body)
             #endif
             
             if state.isSelected || state.isHighlighted {
@@ -94,7 +94,7 @@ class ResourcePageViewController: UITableViewController {
         #if targetEnvironment(macCatalyst)
         return 50.0
         #else
-        return 44.0
+        return UITableView.automaticDimension
         #endif
     }
 

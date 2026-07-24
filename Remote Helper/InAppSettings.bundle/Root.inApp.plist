@@ -239,7 +239,7 @@
 			<string>PSTextFieldSpecifier</string>
 		</dict>
 		<dict>
-			<key>Default Value</key>
+			<key>DefaultValue</key>
 			<true/>
 			<key>Title</key>
 			<string>Use SSL</string>
@@ -249,7 +249,7 @@
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
 		<dict>
-			<key>Default Value</key>
+			<key>DefaultValue</key>
 			<true/>
 			<key>Title</key>
 			<string>Use Cellular Network</string>
@@ -291,7 +291,7 @@
 			<string>PSGroupSpecifier</string>
 		</dict>
 		<dict>
-			<key>Default Value</key>
+			<key>DefaultValue</key>
 			<string>0.0 KB</string>
 			<key>Title</key>
 			<string>Cache Size</string>
@@ -301,7 +301,7 @@
 			<string>PSTitleValueSpecifier</string>
 		</dict>
 		<dict>
-			<key>Default Value</key>
+			<key>DefaultValue</key>
 			<false/>
 			<key>Title</key>
 			<string>Clear Cache On Exit</string>
@@ -327,7 +327,7 @@
 			<string>PSGroupSpecifier</string>
 		</dict>
 		<dict>
-			<key>Default Value</key>
+			<key>DefaultValue</key>
 			<string>0MB</string>
 			<key>Title</key>
 			<string>Local File Size</string>
@@ -337,7 +337,7 @@
 			<string>PSTitleValueSpecifier</string>
 		</dict>
 		<dict>
-			<key>Default Value</key>
+			<key>DefaultValue</key>
 			<string>0MB</string>
 			<key>Title</key>
 			<string>Device Free Space</string>
@@ -353,7 +353,7 @@
 			<string>PSGroupSpecifier</string>
 		</dict>
 		<dict>
-			<key>Default Value</key>
+			<key>DefaultValue</key>
 			<string>Off</string>
 			<key>Title</key>
 			<string>Passcode Lock</string>
@@ -379,7 +379,7 @@
 			<string>PSGroupSpecifier</string>
 		</dict>
 		<dict>
-			<key>Default Value</key>
+			<key>DefaultValue</key>
 			<string>1.0</string>
 			<key>Title</key>
 			<string>Version</string>

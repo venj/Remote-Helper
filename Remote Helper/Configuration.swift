@@ -258,12 +258,12 @@ open class Configuration {
         return baseLink + "/torrents"
     }
     
-    lazy var headers: HTTPHeaders = {
+    var headers: HTTPHeaders {
         return [
-            "User-Agent": Configuration.shared.customUserAgent ?? "iOS Example/1.0 (com.alamofire.iOS-Example; build:1; iOS 13.0.0) Alamofire/5.0.0",
+            "User-Agent": customUserAgent ?? "iOS Example/1.0 (com.alamofire.iOS-Example; build:1; iOS 13.0.0) Alamofire/5.0.0",
             "Accept": "application/json"
         ]
-    }()
+    }
 
     func torrentPath(withInfoHash infoHash: String) -> String {
         return baseLink + "/torrent/\(infoHash)"

@@ -184,11 +184,10 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     //MARK: - InAppSettingsKit Delegates
     func settingsViewControllerDidEnd(_ sender: IASKAppSettingsViewController) {
-        navigationController?.dismiss(animated: true) {
-            let defaults = UserDefaults.standard
-            defaults.set(true, forKey: ServerSetupDone)
-            sender.synchronizeSettings()
-        }
+        sender.view.endEditing(true)
+        sender.synchronizeSettings()
+        UserDefaults.standard.set(true, forKey: ServerSetupDone)
+        navigationController?.dismiss(animated: true)
     }
 
     func settingsViewController(_ sender: IASKAppSettingsViewController, buttonTappedFor specifier: IASKSpecifier) {
@@ -749,4 +748,3 @@ class PasteboardListViewController: UIViewController, UITableViewDataSource, UIT
         return cell
     }
 }
-

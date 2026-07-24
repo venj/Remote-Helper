@@ -59,7 +59,7 @@ class VPTorrentsListViewController: UITableViewController, UIPopoverPresentation
         let item = UIBarButtonItem(title: "🐱", style: .plain, target: self, action: #selector(showKitten))
         return item
     }()
-    var headers: HTTPHeaders = Configuration.shared.headers
+    var headers: HTTPHeaders { Configuration.shared.headers }
     var currentSelectedTitle: String = ""
     var previewingIndexPath: IndexPath?
 

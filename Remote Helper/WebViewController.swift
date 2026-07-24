@@ -123,6 +123,9 @@ class WebViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        #if targetEnvironment(macCatalyst)
+        navigationItem.style = .editor
+        #endif
         // Do any additional setup after loading the view.
         if let urlRequest = urlRequest {
             if title == nil || title! == "" {

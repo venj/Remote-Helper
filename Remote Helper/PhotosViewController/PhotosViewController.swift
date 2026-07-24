@@ -57,6 +57,9 @@ class PhotosViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        #if targetEnvironment(macCatalyst)
+        navigationItem.style = .editor
+        #endif
         configureLocalImageCache()
 //        setupDefaultDataIfNeeded()
         setupNetworkMonitoring()

@@ -101,6 +101,9 @@ class VPTorrentsListViewController: UITableViewController, UIPopoverPresentation
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        #if targetEnvironment(macCatalyst)
+        navigationItem.style = .navigator
+        #endif
 
         definesPresentationContext = true
         searchController.searchResultsUpdater = self

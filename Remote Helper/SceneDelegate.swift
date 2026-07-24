@@ -93,10 +93,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             
             let sidebarVC = SidebarViewController()
             sidebarVC.delegate = self
+            let sidebarNav = UINavigationController(rootViewController: sidebarVC)
             
             let tripleSplit = UISplitViewController(style: .tripleColumn)
             tripleSplit.preferredDisplayMode = .twoBesideSecondary
-            tripleSplit.setViewController(sidebarVC, for: .primary)
+            tripleSplit.setViewController(sidebarNav, for: .primary)
             
             if let nav = addressesNavController {
                 tripleSplit.setViewController(nav, for: .supplementary)
@@ -191,7 +192,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @discardableResult
     func performShortcutAction(_ shortcutItem: UIApplicationShortcutItem) -> Bool {
         #if targetEnvironment(macCatalyst)
-        guard let sidebarVC = tripleSplitViewController?.viewController(for: .primary) as? SidebarViewController else { return false }
+        guard let primaryVC = tripleSplitViewController?.viewController(for: .primary),
+              let sidebarVC = (primaryVC as? UINavigationController)?.topViewController as? SidebarViewController ?? primaryVC as? SidebarViewController else { return false }
         if shortcutItem.type == "\(bundleIdentifier).openaddresses" {
             sidebarVC.selectedIndex = 0
             selectSidebarIndex(0)
@@ -234,7 +236,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func openAddMagnetAlert() {
         #if targetEnvironment(macCatalyst)
-        guard let sidebarVC = tripleSplitViewController?.viewController(for: .primary) as? SidebarViewController else { return }
+        guard let primaryVC = tripleSplitViewController?.viewController(for: .primary),
+              let sidebarVC = (primaryVC as? UINavigationController)?.topViewController as? SidebarViewController ?? primaryVC as? SidebarViewController else { return }
         sidebarVC.selectedIndex = 0
         selectSidebarIndex(0)
         let navController = addressesNavController
@@ -411,7 +414,10 @@ extension SceneDelegate: SidebarViewControllerDelegate {
         } else {
             let placeholder = UIViewController()
             placeholder.view.backgroundColor = .systemBackground
-            splitVC.setViewController(placeholder, for: .secondary)
+            placeholder.title = NSLocalizedString("Remote Helper", comment: "App Name")
+            placeholder.navigationItem.style = .editor
+            let placeholderNav = UINavigationController(rootViewController: placeholder)
+            splitVC.setViewController(placeholderNav, for: .secondary)
         }
     }
 }

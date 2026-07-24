@@ -35,6 +35,9 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         super.viewDidLoad()
         readAddresses()
         migrateOldStorageIfNecessary()
+        #if targetEnvironment(macCatalyst)
+        navigationItem.style = .navigator
+        #endif
 
         let defaults = UserDefaults.standard
         if !defaults.bool(forKey: ServerSetupDone) {

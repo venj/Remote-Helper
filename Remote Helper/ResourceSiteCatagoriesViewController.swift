@@ -49,6 +49,9 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        #if targetEnvironment(macCatalyst)
+        navigationItem.style = .navigator
+        #endif
         title = siteName
 
         // Revert back to old UITableView behavior

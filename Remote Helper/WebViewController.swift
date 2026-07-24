@@ -35,6 +35,9 @@ class WebViewController: UIViewController {
     var reloadStopBarButtonItem: UIBarButtonItem!
     var navBackBarButtonItem: UIBarButtonItem!
     var navForwardBarButtonItem: UIBarButtonItem!
+    #if targetEnvironment(macCatalyst)
+    private var catalystTitleLabel: UILabel?
+    #endif
 
     override init(nibName: String?, bundle: Bundle?) {
         super.init(nibName: nibName, bundle: bundle)
@@ -63,6 +66,10 @@ class WebViewController: UIViewController {
         containerView.backgroundColor = .systemBackground
 
         let webConfiguration = WKWebViewConfiguration()
+        #if targetEnvironment(macCatalyst)
+        webConfiguration.preferences.minimumFontSize = 14.0
+        webConfiguration.defaultWebpagePreferences.preferredContentMode = .desktop
+        #endif
         webView = WKWebView(frame: .zero, configuration: webConfiguration)
         webView.uiDelegate = self
         webView.navigationDelegate = self
@@ -125,11 +132,12 @@ class WebViewController: UIViewController {
         super.viewDidLoad()
         #if targetEnvironment(macCatalyst)
         navigationItem.style = .editor
+        installCatalystTitleItem(title: title ?? "")
         #endif
         // Do any additional setup after loading the view.
         if let urlRequest = urlRequest {
             if title == nil || title! == "" {
-                title = urlRequest.url?.host ?? ""
+                setDisplayedTitle(urlRequest.url?.host ?? "")
             }
             webView.load(urlRequest)
         }
@@ -185,6 +193,46 @@ class WebViewController: UIViewController {
         navForwardBarButtonItem.isEnabled = false
         updateCompactToolbarButtonStates()
     }
+
+    private func setDisplayedTitle(_ title: String) {
+        #if targetEnvironment(macCatalyst)
+        catalystTitleLabel?.text = title
+        catalystTitleLabel?.accessibilityLabel = title
+        #else
+        self.title = title
+        #endif
+    }
+
+    #if targetEnvironment(macCatalyst)
+    private func installCatalystTitleItem(title: String) {
+        let titleLabel = UILabel()
+        titleLabel.text = title
+        titleLabel.font = UIFont.systemFont(ofSize: 13.0, weight: .semibold)
+        titleLabel.textColor = .label
+        titleLabel.lineBreakMode = .byTruncatingTail
+        titleLabel.accessibilityLabel = title
+        titleLabel.accessibilityTraits = .header
+        titleLabel.isUserInteractionEnabled = false
+        titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        titleLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 360.0).isActive = true
+
+        let titleItem = UIBarButtonItem(customView: titleLabel)
+        titleItem.style = .plain
+        if #available(macCatalyst 26.0, *) {
+            titleItem.hidesSharedBackground = true
+            titleItem.sharesBackground = false
+        }
+        navigationItem.centerItemGroups = [
+            UIBarButtonItemGroup.fixedGroup(
+                representativeItem: nil,
+                items: [titleItem]
+            )
+        ]
+
+        catalystTitleLabel = titleLabel
+        navigationItem.title = nil
+    }
+    #endif
 
     private func navigationBarSymbol(named name: String) -> UIImage? {
         let configuration = UIImage.SymbolConfiguration(pointSize: 17.0, weight: .semibold, scale: .medium)
@@ -255,7 +303,7 @@ extension WebViewController : WKNavigationDelegate {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             if (self.webView.title?.count ?? 0) > 0 {
-                self.title = self.webView.title
+                self.setDisplayedTitle(self.webView.title ?? "")
             }
             self.reloadStopBarButtonItem.image = self.navigationBarSymbol(named: "arrow.clockwise")
             self.navBackBarButtonItem.isEnabled = webView.canGoBack

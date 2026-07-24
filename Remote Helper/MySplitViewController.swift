@@ -8,6 +8,30 @@
 
 import UIKit
 
+#if targetEnvironment(macCatalyst)
+/// Pins navigation-bar content to the middle column of the Catalyst window toolbar.
+final class SupplementaryNavigationController: UINavigationController {
+    func navigationBarNSToolbarSection(
+        _ navigationBar: UINavigationBar
+    ) -> UINavigationBar.NSToolbarSection {
+        return .supplementary
+    }
+}
+
+/// Pins navigation-bar content to the detail column of the Catalyst window toolbar.
+final class ContentNavigationController: UINavigationController {
+    func navigationBarNSToolbarSection(
+        _ navigationBar: UINavigationBar
+    ) -> UINavigationBar.NSToolbarSection {
+        return .content
+    }
+}
+#else
+// Keep the storyboard classes available on iOS without changing navigation behavior.
+final class SupplementaryNavigationController: UINavigationController {}
+final class ContentNavigationController: UINavigationController {}
+#endif
+
 class MySplitViewController: UISplitViewController, UISplitViewControllerDelegate {
 
     override func viewDidLoad() {

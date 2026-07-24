@@ -112,7 +112,7 @@
         <!--Navigation Controller-->
         <scene sceneID="BVd-GC-aaK">
             <objects>
-                <navigationController hidesBottomBarWhenPushed="YES" id="TDL-qg-ySQ" sceneMemberID="viewController">
+                <navigationController hidesBottomBarWhenPushed="YES" id="TDL-qg-ySQ" customClass="SupplementaryNavigationController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="fdd-iw-2mg">
                         <rect key="frame" x="0.0" y="74" width="303.5" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -180,7 +180,7 @@
         <!--Navigation Controller-->
         <scene sceneID="xkJ-b6-L7K">
             <objects>
-                <navigationController hidesBottomBarWhenPushed="YES" id="QJ3-BQ-XxV" sceneMemberID="viewController">
+                <navigationController hidesBottomBarWhenPushed="YES" id="QJ3-BQ-XxV" customClass="SupplementaryNavigationController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="r80-0g-pZA">
                         <rect key="frame" x="0.0" y="74" width="303.5" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -272,7 +272,7 @@
         <!--Navigation Controller-->
         <scene sceneID="d7U-Ao-HY5">
             <objects>
-                <navigationController hidesBottomBarWhenPushed="YES" id="VcP-dH-YOt" sceneMemberID="viewController">
+                <navigationController hidesBottomBarWhenPushed="YES" id="VcP-dH-YOt" customClass="SupplementaryNavigationController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="EWo-7W-Trj">
                         <rect key="frame" x="0.0" y="74" width="303.5" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -302,7 +302,7 @@
         <!--Navigation Controller-->
         <scene sceneID="q8T-iZ-TMO">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="88J-Pz-mLq" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="88J-Pz-mLq" customClass="ContentNavigationController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="25C-Cc-aWq">
                         <rect key="frame" x="0.0" y="10" width="540" height="54"/>
@@ -320,7 +320,7 @@
         <!--Navigation Controller-->
         <scene sceneID="ziX-75-ufQ">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="50f-KZ-TAy" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="50f-KZ-TAy" customClass="ContentNavigationController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="CjB-I4-w4Y">
                         <rect key="frame" x="0.0" y="74" width="464" height="54"/>
@@ -338,7 +338,7 @@
         <!--Navigation Controller-->
         <scene sceneID="8EB-5Z-4Ap">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="3KM-dZ-VCU" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="3KM-dZ-VCU" customClass="ContentNavigationController" customModule="Remote_Helper" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="weJ-YS-jtV">
                         <rect key="frame" x="0.0" y="74" width="464" height="54"/>

@@ -87,6 +87,12 @@ extension Helper {
     }
 
     func showCellularHUD() -> Bool {
+        // Mac Catalyst does not have cellular-data state.  The old iOS-only
+        // reachability check can report a non-Wi-Fi connection on macOS and
+        // incorrectly block all external requests.
+        #if targetEnvironment(macCatalyst)
+        return false
+        #else
         guard let reachability = self.reachability else { return false }
         if !Configuration.shared.userCellularNetwork && reachability.connection != .wifi {
             DispatchQueue.main.async(execute: { [weak self] in
@@ -96,6 +102,7 @@ extension Helper {
             return true
         }
         return false
+        #endif
     }
 
     @objc func dismissMe(_ sender: Any?) {
@@ -231,6 +238,51 @@ extension Helper {
         })
     }
 
+    func canStartXunleiDownload() -> Bool {
+        return XunleiDownloader().isConfigured
+    }
+
+    func xunleiDownload(for link: String, fallbackIn viewController: UIViewController) {
+        guard !showCellularHUD() else { return }
+        let downloader = XunleiDownloader()
+        guard downloader.isConfigured else {
+            self.showNote(withMessage: "请先在设置中配置迅雷 NAS。", type: .warning)
+            return
+        }
+
+        self.showProcessingNote(withMessage: "正在读取迅雷文件列表…")
+        downloader.fetchResource(for: link) { [weak self, weak viewController] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                SwiftEntryKit.dismiss()
+                switch result {
+                case .failure(let error):
+                    self.showNote(withMessage: error.localizedDescription, type: .error)
+                case .success(let resource):
+                    let selectionViewController = XunleiFileSelectionViewController(
+                        resource: resource,
+                        magnet: link,
+                        downloader: downloader
+                    ) { [weak self, weak viewController] result in
+                        guard let self = self else { return }
+                        switch result {
+                        case .success:
+                            self.showNote(withMessage: "迅雷任务已添加。")
+                        case .failure(let error):
+                            self.showNote(withMessage: error.localizedDescription, type: .error)
+                        }
+                    }
+                    let navigationController = UINavigationController(rootViewController: selectionViewController)
+                    navigationController.modalPresentationStyle = .formSheet
+                    let presenter = viewController?.presentedViewController
+                        ?? viewController?.navigationController?.topViewController
+                        ?? viewController
+                    presenter?.present(navigationController, animated: true)
+                }
+            }
+        }
+    }
+
     var canStartMiDownload: Bool {
         return !(Configuration.shared.miAccountUsername.isEmpty || Configuration.shared.miAccountPassword.isEmpty)
     }
@@ -347,11 +399,13 @@ extension Helper {
         }
 
         #if targetEnvironment(macCatalyst)
-        let options = [NSLocalizedString("Mi", comment: "Mi"), "Transmission", NSLocalizedString("Cancel", comment: "Cancel")]
+        let options = [NSLocalizedString("Mi", comment: "Mi"), "迅雷 NAS", "Transmission", NSLocalizedString("Cancel", comment: "Cancel")]
         Helper.shared.showMacActionSheet(title: NSLocalizedString("Choose...", comment: "Choose..."), message: NSLocalizedString("Please choose a download method.", comment: "Please choose a download method."), options: options) { index in
             if index == 0 {
                 Helper.shared.miDownloadForLink(magnet, fallbackIn: viewController)
             } else if index == 1 {
+                Helper.shared.xunleiDownload(for: magnet, fallbackIn: viewController)
+            } else if index == 2 {
                 Helper.shared.transmissionDownload(for: torrent)
             }
         }
@@ -361,6 +415,11 @@ extension Helper {
             Helper.shared.miDownloadForLink(magnet, fallbackIn: viewController)
         })
         alert.addAction(miAction)
+
+        let xunleiAction = UIAlertAction(title: "迅雷 NAS", style: .default, handler: { _ in
+            Helper.shared.xunleiDownload(for: magnet, fallbackIn: viewController)
+        })
+        alert.addAction(xunleiAction)
 
         let transmissionAction = UIAlertAction(title: "Transmission", style: .default, handler: { (action) in
             Helper.shared.transmissionDownload(for: torrent)
@@ -678,4 +737,3 @@ extension Helper {
     func beginSheetModalForWindow(_ window: AnyObject, completionHandler: Any)
 }
 #endif
-

@@ -52,7 +52,7 @@ class VPTorrentsListViewController: UITableViewController, UIPopoverPresentation
     lazy var searchController: UISearchController = UISearchController(searchResultsController: nil)
     var cloudItem: UIBarButtonItem!
     lazy var hashItem: UIBarButtonItem = {
-        let item = UIBarButtonItem(image: UIImage(named:"magnet"), style: .plain, target: self, action: #selector(hashTorrent))
+        let item = UIBarButtonItem(image: UIImage(named:"magnet"), style: .plain, target: self, action: #selector(hashCurrentTorrent))
         return item
     }()
     lazy var kittenItem: UIBarButtonItem = {
@@ -250,8 +250,8 @@ class VPTorrentsListViewController: UITableViewController, UIPopoverPresentation
                     .init(
                         title: "🧲",
                         style: .default,
-                        onTap: { [weak self] _ in
-                            self?.hashTorrent()
+                        onTap: { [weak self] overlay in
+                            self?.hashTorrent(at: overlay.currentItemIndex)
                         }
                     ),
                     .init(
@@ -274,8 +274,13 @@ class VPTorrentsListViewController: UITableViewController, UIPopoverPresentation
         Helper.shared.showTorrentSearchAlertInViewController(self.navigationController!)
     }
 
-    @objc func hashTorrent() {
-        guard let base64FileName = photos[currentPhotoIndex].base64String() else { return }
+    @objc func hashCurrentTorrent() {
+        hashTorrent(at: currentPhotoIndex)
+    }
+
+    func hashTorrent(at index: Int) {
+        guard photos.indices.contains(index),
+              let base64FileName = photos[index].base64String() else { return }
         Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Loading...", comment: "Loading..."))
         let request = Alamofire.request(Configuration.shared.hashTorrent(withName: base64FileName), headers: headers)
         request.responseJSON { [weak self] response in

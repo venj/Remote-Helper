@@ -9,6 +9,7 @@
 import UIKit
 import Kingfisher
 import PasscodeLock
+import SwiftEntryKit
 
 class MacSettingsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
@@ -19,6 +20,7 @@ class MacSettingsViewController: UIViewController, UITableViewDataSource, UITabl
     private let categories = [
         NSLocalizedString("Server Settings", comment: ""),
         NSLocalizedString("Transmission Settings", comment: ""),
+        NSLocalizedString("Xunlei NAS Settings", comment: ""),
         NSLocalizedString("Magnet Search Settings", comment: ""),
         NSLocalizedString("Mi Remote Settings", comment: ""),
         NSLocalizedString("Network & Playback", comment: ""),
@@ -29,6 +31,7 @@ class MacSettingsViewController: UIViewController, UITableViewDataSource, UITabl
     private let categoryIcons = [
         "desktopcomputer",
         "tray.and.arrow.down",
+        "externaldrive.connected.to.line.below",
         "magnifyingglass",
         "wifi",
         "network",
@@ -153,16 +156,33 @@ class MacSettingsViewController: UIViewController, UITableViewDataSource, UITabl
             addSwitchRow(label: NSLocalizedString("Intelligent Torrent Download", comment: ""), key: IntelligentTorrentDownload, defaultValue: false)
             addSwitchRow(label: NSLocalizedString("Prefers Magnet", comment: ""), key: PrefersMagnet, defaultValue: true)
             
-        case 2: // Magnet Search Settings
+        case 2: // Xunlei NAS Settings
+            migrateLegacyXunleiFieldsForSettings()
+            addSectionHeader(title: NSLocalizedString("Xunlei NAS Settings", comment: ""))
+            addTextFieldRow(label: NSLocalizedString("Domain/IP", comment: ""), key: XunleiAddressKey, placeholder: "example.com", defaultValue: "127.0.0.1")
+            addTextFieldRow(label: NSLocalizedString("Port", comment: ""), key: XunleiPortKey, placeholder: "port", defaultValue: "")
+            addSwitchRow(label: NSLocalizedString("Use SSL", comment: ""), key: XunleiUseSSLKey, defaultValue: false)
+            addTextFieldRow(label: NSLocalizedString("Download Directory (optional)", comment: ""), key: XunleiDownloadDirectoryKey, placeholder: "first available folder", defaultValue: "")
+            addNoteRow(text: NSLocalizedString("The app adds the Xunlei panel path automatically.", comment: ""))
+            addNoteRow(text: NSLocalizedString("Phone/SMS login is completed in the Xunlei panel.", comment: ""))
+
+            addButtonRow(label: NSLocalizedString("Login", comment: ""), title: NSLocalizedString("Open Xunlei Panel", comment: "")) { [weak self] in
+                self?.openXunleiPanel()
+            }
+            addButtonRow(label: NSLocalizedString("Connection Test", comment: ""), title: NSLocalizedString("Verify Connection", comment: "")) { [weak self] in
+                self?.verifyXunleiConnection()
+            }
+
+        case 3: // Magnet Search Settings
             addSectionHeader(title: NSLocalizedString("Magnet Search Settings", comment: ""))
             addSegmentedControlRow(label: NSLocalizedString("Magnet Source", comment: ""), key: TorrentKittenSource, items: ["NYN", "NYS"], values: ["0", "1"])
             
-        case 3: // Mi Remote Settings
+        case 4: // Mi Remote Settings
             addSectionHeader(title: NSLocalizedString("Mi Remote Settings", comment: ""))
             addTextFieldRow(label: NSLocalizedString("Username", comment: ""), key: MiAccountUsernameKey, placeholder: "username", defaultValue: "username")
             addTextFieldRow(label: NSLocalizedString("Password", comment: ""), key: MiAccountPasswordKey, placeholder: "password", defaultValue: "password", isSecure: true)
             
-        case 4: // Network & Playback
+        case 5: // Network & Playback
             addSectionHeader(title: NSLocalizedString("Request Settings", comment: ""))
             addTextFieldRow(label: NSLocalizedString("Custom UA", comment: ""), key: CustomRequestUserAgent, placeholder: "video-player", defaultValue: "video-player")
             addSwitchRow(label: NSLocalizedString("Use SSL", comment: ""), key: RequestUseSSL, defaultValue: true)
@@ -172,7 +192,7 @@ class MacSettingsViewController: UIViewController, UITableViewDataSource, UITabl
             addSwitchRow(label: NSLocalizedString("Auto-Play GIF in Grid", comment: ""), key: AutoPlayGIFInGridKey, defaultValue: false)
             addSwitchRow(label: NSLocalizedString("Auto-Play GIF in Preview", comment: ""), key: AutoPlayGIFInPreviewKey, defaultValue: true)
             
-        case 5: // Cache & Storage
+        case 6: // Cache & Storage
             addSectionHeader(title: NSLocalizedString("Cache", comment: ""))
             let cacheLabel = addReadOnlyRow(label: NSLocalizedString("Cache Size", comment: ""), key: ImageCacheSizeKey)
             addSwitchRow(label: NSLocalizedString("Clear Cache On Exit", comment: ""), key: ClearCacheOnExitKey, defaultValue: false)
@@ -201,7 +221,7 @@ class MacSettingsViewController: UIViewController, UITableViewDataSource, UITabl
             _ = addReadOnlyRow(label: NSLocalizedString("Local File Size", comment: ""), key: LocalFileSize)
             _ = addReadOnlyRow(label: NSLocalizedString("Device Free Space", comment: ""), key: DeviceFreeSpace)
             
-        case 6: // Security & Info
+        case 7: // Security & Info
             addSectionHeader(title: NSLocalizedString("Security", comment: ""))
             let passcodeLabel = addReadOnlyRow(label: NSLocalizedString("Passcode Lock", comment: ""), key: PasscodeLockStatus)
             
@@ -258,6 +278,87 @@ class MacSettingsViewController: UIViewController, UITableViewDataSource, UITabl
         label.font = UIFont.systemFont(ofSize: 13, weight: .bold)
         label.textColor = Helper.shared.mainThemeColor()
         rightStack.addArrangedSubview(label)
+    }
+
+    private func addNoteRow(text: String) {
+        let label = UILabel()
+        label.text = text
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.textColor = .secondaryLabel
+        label.numberOfLines = 0
+        rightStack.addArrangedSubview(label)
+    }
+
+    private func migrateLegacyXunleiFieldsForSettings() {
+        let address = UserDefaults.standard.string(forKey: XunleiAddressKey)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        guard !address.contains("://"),
+              let separator = address.lastIndex(of: ":") else {
+            return
+        }
+
+        let host = String(address[..<separator])
+        let port = String(address[address.index(after: separator)...])
+        guard !host.isEmpty, !port.isEmpty, Int(port) != nil else { return }
+
+        UserDefaults.standard.set(host, forKey: XunleiAddressKey)
+        UserDefaults.standard.set(port, forKey: XunleiPortKey)
+        UserDefaults.standard.synchronize()
+    }
+
+    private func openXunleiPanel() {
+        guard Configuration.shared.hasXunleiServer else {
+            Helper.shared.showNote(withMessage: "请先填写迅雷 NAS 地址。", type: .warning)
+            return
+        }
+
+        var link = Configuration.shared.xunleiPanelAddress(withUserNameAndPassword: false)
+        if !link.hasSuffix("/") && !link.contains("#") {
+            link += "/"
+        }
+        let webViewController = XunleiWebViewController(urlString: link)
+        webViewController.urlRequest?.cachePolicy = .reloadIgnoringLocalCacheData
+        webViewController.title = "迅雷 NAS"
+        let navigationController = UINavigationController(rootViewController: webViewController)
+        present(navigationController, animated: true)
+    }
+
+    private func verifyXunleiConnection() {
+        guard Configuration.shared.hasXunleiServer else {
+            Helper.shared.showNote(withMessage: "请先填写迅雷 NAS 地址。", type: .warning)
+            return
+        }
+
+        Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Verifying Xunlei NAS...", comment: ""))
+        XunleiDownloader().testConnection { [weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                SwiftEntryKit.dismiss()
+                switch result {
+                case .success(let folderName):
+                    let suffix = folderName.isEmpty ? "" : "，下载目录：\(folderName)"
+                    Helper.shared.showNote(withMessage: NSLocalizedString("Xunlei NAS connection succeeded.", comment: "") + suffix)
+                case .failure(let error):
+                    if case .authentication = error {
+                        self.showXunleiAuthenticationFallback(message: error.localizedDescription)
+                    } else {
+                        Helper.shared.showNote(withMessage: error.localizedDescription, type: .error)
+                    }
+                }
+            }
+        }
+    }
+
+    private func showXunleiAuthenticationFallback(message: String) {
+        let alert = UIAlertController(
+            title: NSLocalizedString("Xunlei login required", comment: ""),
+            message: message + "\n\n" + NSLocalizedString("Open the panel, finish the phone/SMS login manually, close it, then verify again.", comment: ""),
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Open Xunlei Panel", comment: ""), style: .default) { [weak self] _ in
+            self?.openXunleiPanel()
+        })
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel))
+        present(alert, animated: true)
     }
     
     private func addTextFieldRow(label: String, key: String, placeholder: String?, defaultValue: String, isSecure: Bool = false) {

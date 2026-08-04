@@ -8,17 +8,16 @@
 
 import Foundation
 import Kingfisher
-import Atomics
 
 extension ImageCache {
     var usedSize: UInt {
-        let result = ManagedAtomic<UInt>(0)
+        var result: UInt = 0
         let sema = DispatchSemaphore(value: 0)
         calculateDiskStorageSize { r in
-            result.store((try? r.get()) ?? 0, ordering: .relaxed)
+            result = (try? r.get()) ?? 0
             sema.signal()
         }
         _ = sema.wait(timeout: DispatchTime.distantFuture)
-        return result.load(ordering: .relaxed)
+        return result
     }
 }

@@ -272,6 +272,11 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
         }
 
         if link.isMagnet {
+            let xunleiAction = UIAlertAction(title: "迅雷 NAS", style: .default) { _ in
+                Helper.shared.xunleiDownload(for: link.target, fallbackIn: self)
+            }
+            alert.addAction(xunleiAction)
+
             let transmissionAction = UIAlertAction(title: "Transmission", style: .default) { (action) in
                 Helper.shared.transmissionDownload(for: link.target)
             }
@@ -325,6 +330,17 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
         }()
 
         if link.isMagnet {
+            let xunleiAction = UIContextualAction(style: .normal, title: "迅雷 NAS") { [weak self] _, _, completion in
+                guard let self = self else {
+                    completion(false)
+                    return
+                }
+                if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
+                Helper.shared.xunleiDownload(for: link.target, fallbackIn: self)
+                completion(true)
+            }
+            xunleiAction.backgroundColor = UIColor(red:0.18, green:0.52, blue:0.82, alpha:1.00)
+
             let downloadAction = UIContextualAction(style: .normal, title: "Transmission") { [weak self] _, _, completion in
                 guard let self = self else {
                     completion(false)
@@ -336,7 +352,7 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
             }
             downloadAction.backgroundColor = UIColor(red:1.00, green:0.33, blue:0.24, alpha:1.00)
 
-            let actions: [UIContextualAction] = [miAction, downloadAction, copyAction].compactMap { $0 }
+            let actions: [UIContextualAction] = [miAction, xunleiAction, downloadAction, copyAction].compactMap { $0 }
             let configuration = UISwipeActionsConfiguration(actions: actions)
             configuration.performsFirstActionWithFullSwipe = false
             return configuration

@@ -46,6 +46,10 @@ final class PageNumberActionOverlay: UIView, JXPhotoBrowserOverlay, UIGestureRec
         }
     }
 
+    #if targetEnvironment(macCatalyst)
+    var onBack: ((PageNumberActionOverlay) -> Void)?
+    #endif
+
     private weak var browser: JXPhotoBrowserViewController?
     private var isOverlayContentHidden = false
     private lazy var overlayTapGesture: UITapGestureRecognizer = {
@@ -59,6 +63,10 @@ final class PageNumberActionOverlay: UIView, JXPhotoBrowserOverlay, UIGestureRec
     private(set) var currentPage: Int = 0
     private(set) var totalPages: Int = 0
     private var currentIndex: Int = 0
+
+    var currentItemIndex: Int {
+        return currentIndex
+    }
 
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -90,6 +98,24 @@ final class PageNumberActionOverlay: UIView, JXPhotoBrowserOverlay, UIGestureRec
         stack.spacing = 8
         return stack
     }()
+
+    #if targetEnvironment(macCatalyst)
+    private let backButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = UIColor.black.withAlphaComponent(0.45)
+        button.layer.cornerRadius = 8
+
+        var configuration = UIButton.Configuration.plain()
+        configuration.image = UIImage(systemName: "chevron.left")
+        configuration.baseForegroundColor = .white
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 10, bottom: 6, trailing: 10)
+        button.configuration = configuration
+        button.accessibilityLabel = NSLocalizedString("Back", comment: "Back")
+        button.accessibilityIdentifier = "preview.back"
+        return button
+    }()
+    #endif
 
     private var actionUIButtons: [UIButton] = []
     private weak var installedContainer: UIView?
@@ -165,6 +191,11 @@ final class PageNumberActionOverlay: UIView, JXPhotoBrowserOverlay, UIGestureRec
         addSubview(pageLabel)
         addSubview(buttonStack)
 
+        #if targetEnvironment(macCatalyst)
+        addSubview(backButton)
+        backButton.addTarget(self, action: #selector(handleBackButtonTap), for: .touchUpInside)
+        #endif
+
         NSLayoutConstraint.activate([
             buttonStack.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -12),
             buttonStack.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 12),
@@ -179,6 +210,15 @@ final class PageNumberActionOverlay: UIView, JXPhotoBrowserOverlay, UIGestureRec
             pageLabel.heightAnchor.constraint(equalToConstant: 24),
             pageLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 56)
         ])
+
+        #if targetEnvironment(macCatalyst)
+        NSLayoutConstraint.activate([
+            backButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 12),
+            backButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 12),
+            backButton.widthAnchor.constraint(equalToConstant: 36),
+            backButton.heightAnchor.constraint(equalToConstant: 32)
+        ])
+        #endif
 
         renderActionButtons()
         updateLabel()
@@ -240,6 +280,13 @@ final class PageNumberActionOverlay: UIView, JXPhotoBrowserOverlay, UIGestureRec
         actionButtons[sender.tag].onTap?(self)
     }
 
+    #if targetEnvironment(macCatalyst)
+    @objc
+    private func handleBackButtonTap() {
+        onBack?(self)
+    }
+    #endif
+
     @objc
     private func handleOverlayTap() {
         setOverlayContentHidden(!isOverlayContentHidden, animated: true)
@@ -252,6 +299,9 @@ final class PageNumberActionOverlay: UIView, JXPhotoBrowserOverlay, UIGestureRec
             self.titleLabel.alpha = hidden ? 0 : 1
             self.pageLabel.alpha = hidden ? 0 : 1
             self.actionUIButtons.forEach { $0.alpha = hidden ? 0 : 1 }
+            #if targetEnvironment(macCatalyst)
+            self.backButton.alpha = hidden ? 0 : 1
+            #endif
         }
 
         if animated {
@@ -263,6 +313,9 @@ final class PageNumberActionOverlay: UIView, JXPhotoBrowserOverlay, UIGestureRec
         titleLabel.isUserInteractionEnabled = !hidden
         pageLabel.isUserInteractionEnabled = !hidden
         actionUIButtons.forEach { $0.isUserInteractionEnabled = !hidden }
+        #if targetEnvironment(macCatalyst)
+        backButton.isUserInteractionEnabled = !hidden
+        #endif
     }
 
     private func disableVisibleCellSingleTap() {
@@ -285,7 +338,12 @@ final class PageNumberActionOverlay: UIView, JXPhotoBrowserOverlay, UIGestureRec
         guard gestureRecognizer === overlayTapGesture else { return true }
 
         let location = touch.location(in: self)
-        for button in actionUIButtons where button.isUserInteractionEnabled && button.alpha > 0.01 {
+        #if targetEnvironment(macCatalyst)
+        let interactiveButtons = actionUIButtons + [backButton]
+        #else
+        let interactiveButtons = actionUIButtons
+        #endif
+        for button in interactiveButtons where button.isUserInteractionEnabled && button.alpha > 0.01 {
             let frame = convert(button.bounds, from: button)
             if frame.contains(location) {
                 return false
@@ -295,7 +353,12 @@ final class PageNumberActionOverlay: UIView, JXPhotoBrowserOverlay, UIGestureRec
     }
 
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        for button in actionUIButtons where button.isUserInteractionEnabled && button.alpha > 0.01 {
+        #if targetEnvironment(macCatalyst)
+        let interactiveButtons = actionUIButtons + [backButton]
+        #else
+        let interactiveButtons = actionUIButtons
+        #endif
+        for button in interactiveButtons where button.isUserInteractionEnabled && button.alpha > 0.01 {
             let localPoint = convert(point, to: button)
             if button.point(inside: localPoint, with: event) {
                 return true

@@ -59,6 +59,15 @@ class PhotosViewController: UIViewController, UICollectionViewDataSource, UIColl
         super.viewDidLoad()
         #if targetEnvironment(macCatalyst)
         navigationItem.style = .editor
+        let backItem = UIBarButtonItem(
+            image: UIImage(systemName: "chevron.left"),
+            style: .plain,
+            target: self,
+            action: #selector(returnToPreviousScreen)
+        )
+        backItem.accessibilityLabel = NSLocalizedString("Back", comment: "Back")
+        backItem.accessibilityIdentifier = "photos.back"
+        navigationItem.leftBarButtonItem = backItem
         #endif
         configureLocalImageCache()
 //        setupDefaultDataIfNeeded()
@@ -68,10 +77,16 @@ class PhotosViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        #if targetEnvironment(macCatalyst)
+        // On Mac, keep the thumbnail grid visible first.  The user can open
+        // the full-screen browser by selecting a thumbnail.
+        return
+        #else
         guard !hasAutoPresentedBrowser else { return }
         guard !items.isEmpty else { return }
         hasAutoPresentedBrowser = true
         presentPhotoBrowser(at: 0)
+        #endif
     }
     
     private func setupDefaultDataIfNeeded() {
@@ -189,6 +204,11 @@ class PhotosViewController: UIViewController, UICollectionViewDataSource, UIColl
         let overlay = makeBrowserOverlay()
         
         if let overlay = overlay as? PageNumberActionOverlay {
+            #if targetEnvironment(macCatalyst)
+            overlay.onBack = { [weak self] _ in
+                self?.returnFromPhotoBrowser()
+            }
+            #endif
             overlay.actionButtons = overlayActionButtons ?? []
             overlay.pageTitleProvider = { [weak self] index in
                 guard let self = self, items.indices.contains(index) else { return nil }
@@ -204,6 +224,43 @@ class PhotosViewController: UIViewController, UICollectionViewDataSource, UIColl
         
         browser.addOverlay(overlay)
         browser.present(from: self)
+    }
+
+    private func returnFromPhotoBrowser() {
+        guard let browser = photoBrowser else { return }
+        browser.dismiss(animated: true) { [weak self] in
+            self?.photoBrowser = nil
+        }
+    }
+
+    @objc private func returnToPreviousScreen() {
+        if photoBrowser != nil {
+            returnFromPhotoBrowser()
+            return
+        }
+
+        if let navigationController = navigationController {
+            if navigationController.presentingViewController != nil {
+                navigationController.dismiss(animated: true)
+                return
+            }
+            if navigationController.viewControllers.count > 1 {
+                navigationController.popViewController(animated: true)
+                return
+            }
+            #if targetEnvironment(macCatalyst)
+            let placeholder = UIViewController()
+            placeholder.view.backgroundColor = .systemBackground
+            placeholder.title = NSLocalizedString("Remote Helper", comment: "App Name")
+            placeholder.navigationItem.style = .editor
+            navigationController.setViewControllers([placeholder], animated: true)
+            return
+            #endif
+        }
+
+        if presentingViewController != nil {
+            dismiss(animated: true)
+        }
     }
     
     private func presentPlayer(with url: URL) {

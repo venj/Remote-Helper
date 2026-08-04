@@ -25,6 +25,9 @@
 /* Addresses */
 "Addresses" = "网址";
 
+/* Back */
+"Back" = "返回";
+
 /* Are you sure to delete \"%@\". */
 "Are you sure to delete \"%@\"." = "确认删除文件\"%@\"？";
 
@@ -410,3 +413,53 @@
 
 /* Tap the button below to paste and download: */
 "Tap the button below to paste and download:" = "点击下方按钮读取剪贴板并下载：";
+
+/* Mac Catalyst settings */
+"Server Settings" = "服务器设置";
+"Transmission Settings" = "Transmission 设置";
+"Xunlei NAS Settings" = "迅雷 NAS 设置";
+"Magnet Search Settings" = "磁力搜索设置";
+"Mi Remote Settings" = "小米远程设置";
+"Network & Playback" = "网络与播放";
+"Cache & Storage" = "缓存与存储";
+"Security & Info" = "安全与信息";
+"Host" = "地址";
+"Domain/IP" = "域名/ip";
+"Port" = "端口";
+"Username" = "用户名";
+"Password" = "密码";
+"Intelligent Torrent Download" = "智能种子下载";
+"Prefers Magnet" = "优先使用磁力链接";
+"Use SSL" = "使用 SSL";
+"Download Directory (optional)" = "下载目录（可选）";
+"Magnet Source" = "磁力来源";
+"Request Settings" = "请求设置";
+"Custom UA" = "自定义 UA";
+"Use Cellular Network" = "使用蜂窝网络";
+"GIF Playback" = "GIF 播放";
+"Auto-Play GIF in Grid" = "网格中自动播放 GIF";
+"Auto-Play GIF in Preview" = "预览中自动播放 GIF";
+"Cache" = "缓存";
+"Cache Size" = "缓存大小";
+"Clear Cache On Exit" = "退出时清除缓存";
+"Clear Cache Now" = "立即清除缓存";
+"Disk Storage" = "磁盘存储";
+"Local File Size" = "本地文件大小";
+"Device Free Space" = "设备剩余空间";
+"Security" = "安全";
+"Passcode Lock" = "密码锁";
+"Configure Passcode" = "配置密码";
+"App Version" = "应用版本";
+"Version" = "版本";
+
+/* Xunlei in-app login and verification */
+"Login" = "登录";
+"Connection Test" = "连接测试";
+"Open Xunlei Panel" = "打开迅雷面板";
+"Verify Connection" = "验证连接";
+"Phone/SMS login is completed in the Xunlei panel." = "手机号/验证码请在迅雷面板内完成。";
+"Verifying Xunlei NAS..." = "正在验证迅雷 NAS…";
+"Xunlei NAS connection succeeded." = "迅雷 NAS 连接成功。";
+"The app adds the Xunlei panel path automatically." = "软件会自动补全迅雷面板路径。";
+"Xunlei login required" = "需要登录迅雷 NAS";
+"Open the panel, finish the phone/SMS login manually, close it, then verify again." = "请打开迅雷面板，手动完成手机号/验证码登录，关闭面板后再点击验证连接。";

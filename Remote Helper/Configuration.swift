@@ -21,6 +21,10 @@ open class Configuration {
                                  ServerPortKey: "80",
                                  ServerPathKey: "/",
                                  TransmissionAddressKey: "127.0.0.1:9091",
+                                 XunleiAddressKey: "127.0.0.1",
+                                 XunleiPortKey: "",
+                                 XunleiUseSSLKey: false,
+                                 XunleiDownloadDirectoryKey: "",
                                  RequestUseCellularNetwork: true,
                                  AutoPlayGIFInGridKey: false,
                                  AutoPlayGIFInPreviewKey: true,
@@ -32,7 +36,33 @@ open class Configuration {
                                  ]
     private init() {
         defaults.register(defaults: defaultValues)
+        migrateLegacyXunleiAddress()
         defaults.synchronize()
+    }
+
+    private func splitXunleiAddress(_ address: String) -> (host: String, port: String)? {
+        let value = address.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !value.isEmpty, !value.contains("://"),
+              let separator = value.lastIndex(of: ":") else {
+            return nil
+        }
+
+        let host = String(value[..<separator])
+        let port = String(value[value.index(after: separator)...])
+        guard !host.isEmpty, !port.isEmpty, Int(port) != nil else {
+            return nil
+        }
+        return (host, port)
+    }
+
+    private func migrateLegacyXunleiAddress() {
+        let address = defaults.string(forKey: XunleiAddressKey)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        guard let parts = splitXunleiAddress(address) else {
+            return
+        }
+
+        defaults.set(parts.host, forKey: XunleiAddressKey)
+        defaults.set(parts.port, forKey: XunleiPortKey)
     }
 
     open var hasTorrentServer: Bool {
@@ -127,6 +157,50 @@ open class Configuration {
             defaults.set(newValue, forKey: TransmissionAddressKey)
             defaults.synchronize()
         }
+    }
+
+    open var xunleiAddress: String {
+        get {
+            return defaults.string(forKey: XunleiAddressKey) ?? defaultValues[XunleiAddressKey] as! String
+        }
+        set {
+            defaults.set(newValue, forKey: XunleiAddressKey)
+            defaults.synchronize()
+        }
+    }
+
+    open var xunleiPort: String {
+        get {
+            return defaults.string(forKey: XunleiPortKey) ?? defaultValues[XunleiPortKey] as! String
+        }
+        set {
+            defaults.set(newValue, forKey: XunleiPortKey)
+            defaults.synchronize()
+        }
+    }
+
+    open var xunleiUsesSSL: Bool {
+        get {
+            return defaults.bool(forKey: XunleiUseSSLKey)
+        }
+        set {
+            defaults.set(newValue, forKey: XunleiUseSSLKey)
+            defaults.synchronize()
+        }
+    }
+
+    open var xunleiDownloadDirectory: String {
+        get {
+            return defaults.string(forKey: XunleiDownloadDirectoryKey) ?? defaultValues[XunleiDownloadDirectoryKey] as! String
+        }
+        set {
+            defaults.set(newValue, forKey: XunleiDownloadDirectoryKey)
+            defaults.synchronize()
+        }
+    }
+
+    open var hasXunleiServer: Bool {
+        return !xunleiAddress.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     open var userCellularNetwork: Bool {
@@ -292,5 +366,27 @@ open class Configuration {
 
     func transmissionRPCAddress() -> String {
         return transmissionServerAddress(withUserNameAndPassword: false).vc_stringByAppendingPathComponents(["transmission", "rpc"])
+    }
+
+    func xunleiServerAddress(withUserNameAndPassword _: Bool = false) -> String {
+        var address = xunleiAddress.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !address.contains("://") {
+            let hasPort = splitXunleiAddress(address) != nil
+            if !hasPort {
+                let port = xunleiPort.trimmingCharacters(in: .whitespacesAndNewlines)
+                if !port.isEmpty {
+                    address += ":\(port)"
+                }
+            }
+            address = "\(xunleiUsesSSL ? "https" : "http")://\(address)"
+        }
+
+        return address
+    }
+
+    func xunleiPanelAddress(withUserNameAndPassword withUnP: Bool = false) -> String {
+        return xunleiServerAddress(withUserNameAndPassword: withUnP).vc_stringByAppendingPathComponents([
+            "webman", "3rdparty", "pan-xunlei-com", "index.cgi"
+        ])
     }
 }

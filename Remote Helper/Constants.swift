@@ -40,6 +40,7 @@ let ViewedTitlesKey = "kViewedTitles"
 let IntelligentTorrentDownload = "kIntelligentTorrentDownload"
 let PrefersMagnet = "kPrefersMagnet"
 let TorrentKittenSource = "kTorrentKittenSource"
+let DyttBaseAddress = "DyttBaseAddress"
 let ViewedResources = "ViewedResourcesKey"
 let LastCopiedMagnetsSHA256Key = "kLastCopiedMagnetsSHA256Key"
 

@@ -433,6 +433,7 @@
 "Use SSL" = "使用 SSL";
 "Download Directory (optional)" = "下载目录（可选）";
 "Magnet Source" = "磁力来源";
+"Resource Site Address" = "资源站地址";
 "Request Settings" = "请求设置";
 "Custom UA" = "自定义 UA";
 "Use Cellular Network" = "使用蜂窝网络";
@@ -463,3 +464,32 @@
 "The app adds the Xunlei panel path automatically." = "软件会自动补全迅雷面板路径。";
 "Xunlei login required" = "需要登录迅雷 NAS";
 "Open the panel, finish the phone/SMS login manually, close it, then verify again." = "请打开迅雷面板，手动完成手机号/验证码登录，关闭面板后再点击验证连接。";
+
+/* Xunlei download */
+"Xunlei NAS" = "迅雷 NAS";
+"Please configure Xunlei NAS in Settings first." = "请先在设置中配置迅雷 NAS。";
+"Please enter the Xunlei NAS address first." = "请先填写迅雷 NAS 地址。";
+"Please enter the Xunlei NAS address in Settings first." = "请先在设置中填写迅雷 NAS 地址。";
+"Loading the Xunlei file list..." = "正在读取迅雷文件列表…";
+"Xunlei task added." = "迅雷任务已添加。";
+"Only the largest video file is selected by default. You can change the selection." = "默认只选最大视频文件，可手动勾选或取消。";
+"Select at least one file." = "至少选择一个文件。";
+"Creating the Xunlei task..." = "正在创建迅雷任务…";
+"Selected %ld of %ld files" = "已选 %ld/%ld 个文件";
+", download directory: %@" = "，下载目录：%@";
+"port" = "端口";
+"first available folder" = "第一个可用目录";
+
+/* Xunlei errors and fallback names */
+"Xunlei NAS file selection currently requires a magnet link." = "迅雷 NAS 文件筛选目前需要磁力链接。";
+"Could not obtain an authentication token from the Xunlei NAS panel." = "没有从迅雷 NAS 面板获取到认证令牌。";
+"Could not obtain the Xunlei NAS device ID." = "没有获取到迅雷 NAS 设备 ID。";
+"Xunlei NAS has no available download directory." = "迅雷 NAS 没有可用的下载目录。";
+"Could not find Xunlei download directory \"%@\". Available directories: %@" = "找不到迅雷下载目录“%@”。可用目录：%@";
+"Xunlei NAS returned no downloadable files." = "迅雷 NAS 没有返回可下载文件。";
+"Xunlei Task" = "迅雷任务";
+"Untitled File" = "未命名文件";
+"Xunlei NAS returned error (%ld)." = "迅雷 NAS 返回错误（%ld）。";
+"Xunlei NAS returned an unrecognized response." = "迅雷 NAS 返回了无法识别的响应。";
+"Xunlei NAS authentication failed. Open the panel in the app to log in." = "迅雷 NAS 认证失败，请在软件内打开面板完成登录。";
+"Could not connect to Xunlei NAS." = "无法连接迅雷 NAS。";

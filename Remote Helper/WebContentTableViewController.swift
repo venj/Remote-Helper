@@ -57,9 +57,6 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             let transmissionAction = UIAction(title: NSLocalizedString("Transmission", comment: "Transmission"), image: UIImage(systemName: "arrow.down.circle")) { [weak self] _ in
                 self?.showTransmission()
             }
-            let xunleiAction = UIAction(title: "迅雷 NAS", image: UIImage(systemName: "externaldrive")) { [weak self] _ in
-                self?.showXunlei()
-            }
             let searchKittenAction = UIAction(title: NSLocalizedString("Kitten Search", comment: "Kitten Search"), image: UIImage(systemName: "magnifyingglass")) { [weak self] _ in
                 self?.torrentSearch()
             }
@@ -69,7 +66,15 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             let settingsAction = UIAction(title: NSLocalizedString("Settings", comment: "Settings"), image: UIImage(systemName: "gearshape")) { [weak self] _ in
                 self?.showSettings()
             }
-            leftItem.menu = UIMenu(title: "", children: [transmissionAction, xunleiAction, searchKittenAction, downloadFromPasteboardAction, settingsAction])
+            var menuActions = [transmissionAction]
+            if Helper.shared.canStartXunleiDownload() {
+                let xunleiAction = UIAction(title: NSLocalizedString("Xunlei NAS", comment: "Download service name"), image: UIImage(systemName: "externaldrive")) { [weak self] _ in
+                    self?.showXunlei()
+                }
+                menuActions.append(xunleiAction)
+            }
+            menuActions.append(contentsOf: [searchKittenAction, downloadFromPasteboardAction, settingsAction])
+            leftItem.menu = UIMenu(title: "", children: menuActions)
         }
     }
 
@@ -295,29 +300,23 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
 
     @IBAction func showActionSheet(_ sender: Any?) {
         #if targetEnvironment(macCatalyst)
-        let options = [
-            NSLocalizedString("Transmission", comment: "Transmission"),
-            "迅雷 NAS",
-            NSLocalizedString("Kitten Search", comment: "Kitten Search"),
-            NSLocalizedString("Download from Pasteboard", comment: "Download from Pasteboard"),
-            NSLocalizedString("Settings", comment: "Settings"),
-            NSLocalizedString("Cancel", comment: "Cancel")
-        ]
-        Helper.shared.showMacActionSheet(title: NSLocalizedString("Please select your operation", comment: "Please select your operation"), message: nil, options: options) { [weak self] index in
-            guard let `self` = self else { return }
-            switch index {
-            case 0:
-                self.showTransmission()
-            case 1:
-                self.showXunlei()
-            case 2:
-                self.torrentSearch()
-            case 3:
-                self.downloadMagnetFromPasteboard()
-            case 4:
-                self.showSettings()
-            default:
-                break
+        var options = [NSLocalizedString("Transmission", comment: "Transmission")]
+        var handlers: [() -> Void] = [{ [weak self] in self?.showTransmission() }]
+        if Helper.shared.canStartXunleiDownload() {
+            options.append(NSLocalizedString("Xunlei NAS", comment: "Download service name"))
+            handlers.append { [weak self] in self?.showXunlei() }
+        }
+        options.append(NSLocalizedString("Kitten Search", comment: "Kitten Search"))
+        handlers.append { [weak self] in self?.torrentSearch() }
+        options.append(NSLocalizedString("Download from Pasteboard", comment: "Download from Pasteboard"))
+        handlers.append { [weak self] in self?.downloadMagnetFromPasteboard() }
+        options.append(NSLocalizedString("Settings", comment: "Settings"))
+        handlers.append { [weak self] in self?.showSettings() }
+        options.append(NSLocalizedString("Cancel", comment: "Cancel"))
+
+        Helper.shared.showMacActionSheet(title: NSLocalizedString("Please select your operation", comment: "Please select your operation"), message: nil, options: options) { index in
+            if handlers.indices.contains(index) {
+                handlers[index]()
             }
         }
         #else
@@ -327,11 +326,12 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
             self.showTransmission()
         }
         sheet.addAction(transmissionAction)
-        let xunleiAction = UIAlertAction(title: "迅雷 NAS", style: .default) { [weak self] _ in
-            guard let `self` = self else { return }
-            self.showXunlei()
+        if Helper.shared.canStartXunleiDownload() {
+            let xunleiAction = UIAlertAction(title: NSLocalizedString("Xunlei NAS", comment: "Download service name"), style: .default) { [weak self] _ in
+                self?.showXunlei()
+            }
+            sheet.addAction(xunleiAction)
         }
-        sheet.addAction(xunleiAction)
         let searchKittenAction = UIAlertAction(title: NSLocalizedString("Kitten Search", comment: "Kitten Search"), style: .default) { [weak self] _ in
             guard let `self` = self else { return }
             self.torrentSearch()
@@ -425,7 +425,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
     func showXunlei() {
         if Helper.shared.showCellularHUD() { return }
         guard Configuration.shared.hasXunleiServer else {
-            Helper.shared.showNote(withMessage: "请先在设置中配置迅雷 NAS。", type: .warning)
+            Helper.shared.showNote(withMessage: NSLocalizedString("Please configure Xunlei NAS in Settings first.", comment: "Missing Xunlei configuration"), type: .warning)
             return
         }
 
@@ -438,7 +438,7 @@ class WebContentTableViewController: UITableViewController, IASKSettingsDelegate
         }
         let xunleiWebViewController = XunleiWebViewController(urlString: link)
         xunleiWebViewController.urlRequest?.cachePolicy = .reloadIgnoringLocalCacheData
-        xunleiWebViewController.title = "迅雷 NAS"
+        xunleiWebViewController.title = NSLocalizedString("Xunlei NAS", comment: "Download service name")
         let navigationController = UINavigationController(rootViewController: xunleiWebViewController)
         DispatchQueue.main.async { [weak self] in
             self?.present(navigationController, animated: true)

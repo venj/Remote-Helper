@@ -246,11 +246,11 @@ extension Helper {
         guard !showCellularHUD() else { return }
         let downloader = XunleiDownloader()
         guard downloader.isConfigured else {
-            self.showNote(withMessage: "请先在设置中配置迅雷 NAS。", type: .warning)
+            self.showNote(withMessage: NSLocalizedString("Please configure Xunlei NAS in Settings first.", comment: "Missing Xunlei configuration"), type: .warning)
             return
         }
 
-        self.showProcessingNote(withMessage: "正在读取迅雷文件列表…")
+        self.showProcessingNote(withMessage: NSLocalizedString("Loading the Xunlei file list...", comment: "Xunlei progress"))
         downloader.fetchResource(for: link) { [weak self, weak viewController] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
@@ -267,7 +267,7 @@ extension Helper {
                         guard let self = self else { return }
                         switch result {
                         case .success:
-                            self.showNote(withMessage: "迅雷任务已添加。")
+                            self.showNote(withMessage: NSLocalizedString("Xunlei task added.", comment: "Xunlei success"))
                         case .failure(let error):
                             self.showNote(withMessage: error.localizedDescription, type: .error)
                         }
@@ -398,28 +398,54 @@ extension Helper {
             UIPasteboard.general.string = magnet
         }
 
+        let canUseMi = canStartMiDownload
+        let canUseXunlei = canStartXunleiDownload()
+        guard canUseMi || canUseXunlei else {
+            transmissionDownload(for: torrent)
+            return
+        }
+
         #if targetEnvironment(macCatalyst)
-        let options = [NSLocalizedString("Mi", comment: "Mi"), "迅雷 NAS", "Transmission", NSLocalizedString("Cancel", comment: "Cancel")]
-        Helper.shared.showMacActionSheet(title: NSLocalizedString("Choose...", comment: "Choose..."), message: NSLocalizedString("Please choose a download method.", comment: "Please choose a download method."), options: options) { index in
-            if index == 0 {
+        var options: [String] = []
+        var handlers: [() -> Void] = []
+        if canUseMi {
+            options.append(NSLocalizedString("Mi", comment: "Mi"))
+            handlers.append {
                 Helper.shared.miDownloadForLink(magnet, fallbackIn: viewController)
-            } else if index == 1 {
+            }
+        }
+        if canUseXunlei {
+            options.append(NSLocalizedString("Xunlei NAS", comment: "Download service name"))
+            handlers.append {
                 Helper.shared.xunleiDownload(for: magnet, fallbackIn: viewController)
-            } else if index == 2 {
-                Helper.shared.transmissionDownload(for: torrent)
+            }
+        }
+        options.append("Transmission")
+        handlers.append {
+            Helper.shared.transmissionDownload(for: torrent)
+        }
+        options.append(NSLocalizedString("Cancel", comment: "Cancel"))
+
+        Helper.shared.showMacActionSheet(title: NSLocalizedString("Choose...", comment: "Choose..."), message: NSLocalizedString("Please choose a download method.", comment: "Please choose a download method."), options: options) { index in
+            if handlers.indices.contains(index) {
+                handlers[index]()
             }
         }
         #else
         let alert = UIAlertController(title: NSLocalizedString("Choose...", comment: "Choose..."), message: NSLocalizedString("Please choose a download method.", comment: "Please choose a download method."), preferredStyle: .actionSheet)
-        let miAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi"), style: .default, handler: { (action) in
-            Helper.shared.miDownloadForLink(magnet, fallbackIn: viewController)
-        })
-        alert.addAction(miAction)
+        if canUseMi {
+            let miAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi"), style: .default) { _ in
+                Helper.shared.miDownloadForLink(magnet, fallbackIn: viewController)
+            }
+            alert.addAction(miAction)
+        }
 
-        let xunleiAction = UIAlertAction(title: "迅雷 NAS", style: .default, handler: { _ in
-            Helper.shared.xunleiDownload(for: magnet, fallbackIn: viewController)
-        })
-        alert.addAction(xunleiAction)
+        if canUseXunlei {
+            let xunleiAction = UIAlertAction(title: NSLocalizedString("Xunlei NAS", comment: "Download service name"), style: .default) { _ in
+                Helper.shared.xunleiDownload(for: magnet, fallbackIn: viewController)
+            }
+            alert.addAction(xunleiAction)
+        }
 
         let transmissionAction = UIAlertAction(title: "Transmission", style: .default, handler: { (action) in
             Helper.shared.transmissionDownload(for: torrent)

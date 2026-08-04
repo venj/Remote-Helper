@@ -38,7 +38,7 @@ enum XunleiDownloaderError: LocalizedError {
              .invalidResource(let message):
             return message
         case .noFilesSelected:
-            return "至少选择一个文件。"
+            return NSLocalizedString("Select at least one file.", comment: "No Xunlei files selected")
         }
     }
 }
@@ -75,13 +75,13 @@ final class XunleiDownloader {
 
     func fetchResource(for magnet: String, completion: @escaping (Swift.Result<XunleiResource, XunleiDownloaderError>) -> Void) {
         guard isConfigured else {
-            completion(.failure(.configuration("请先在设置中填写迅雷 NAS 地址。")))
+            completion(.failure(.configuration(NSLocalizedString("Please enter the Xunlei NAS address in Settings first.", comment: "Missing Xunlei address"))))
             return
         }
 
         let trimmedMagnet = magnet.trimmingCharacters(in: .whitespacesAndNewlines)
         guard trimmedMagnet.lowercased().hasPrefix("magnet:") else {
-            completion(.failure(.invalidResource("迅雷 NAS 文件筛选目前需要磁力链接。")))
+            completion(.failure(.invalidResource(NSLocalizedString("Xunlei NAS file selection currently requires a magnet link.", comment: "Unsupported Xunlei resource"))))
             return
         }
 
@@ -166,7 +166,7 @@ final class XunleiDownloader {
 
     private func ensureReady(completion: @escaping (Swift.Result<Void, XunleiDownloaderError>) -> Void) {
         guard isConfigured else {
-            completion(.failure(.configuration("请先在设置中填写迅雷 NAS 地址。")))
+            completion(.failure(.configuration(NSLocalizedString("Please enter the Xunlei NAS address in Settings first.", comment: "Missing Xunlei address"))))
             return
         }
 
@@ -206,7 +206,7 @@ final class XunleiDownloader {
             guard let regex = try? NSRegularExpression(pattern: pattern),
                   let match = regex.firstMatch(in: html, range: NSRange(html.startIndex..., in: html)),
                   let tokenRange = Range(match.range(at: 1), in: html) else {
-                completion(.failure(.authentication("没有从迅雷 NAS 面板获取到认证令牌。")))
+                completion(.failure(.authentication(NSLocalizedString("Could not obtain an authentication token from the Xunlei NAS panel.", comment: "Xunlei authentication error"))))
                 return
             }
 
@@ -237,7 +237,7 @@ final class XunleiDownloader {
 
     private func fetchDownloadFolder(completion: @escaping (Swift.Result<Void, XunleiDownloaderError>) -> Void) {
         guard let deviceID = deviceID else {
-            completion(.failure(.authentication("没有获取到迅雷 NAS 设备 ID。")))
+            completion(.failure(.authentication(NSLocalizedString("Could not obtain the Xunlei NAS device ID.", comment: "Xunlei authentication error"))))
             return
         }
 
@@ -260,7 +260,7 @@ final class XunleiDownloader {
             }
 
             guard let files = object["files"] as? [[String: Any]], !files.isEmpty else {
-                completion(.failure(.response("迅雷 NAS 没有可用的下载目录。")))
+                completion(.failure(.response(NSLocalizedString("Xunlei NAS has no available download directory.", comment: "Xunlei folder error"))))
                 return
             }
 
@@ -272,7 +272,12 @@ final class XunleiDownloader {
             guard let selected,
                   let folderID = self.stringValue(selected["id"]), !folderID.isEmpty else {
                 let names = files.compactMap { self.stringValue($0["name"]) }.joined(separator: ", ")
-                completion(.failure(.configuration("找不到迅雷下载目录“\(requestedName)”。可用目录：\(names)")))
+                let message = String(
+                    format: NSLocalizedString("Could not find Xunlei download directory \"%@\". Available directories: %@", comment: "Xunlei folder error"),
+                    requestedName,
+                    names
+                )
+                completion(.failure(.configuration(message)))
                 return
             }
 
@@ -298,11 +303,11 @@ final class XunleiDownloader {
         }
 
         guard !files.isEmpty else {
-            throw XunleiDownloaderError.invalidResource("迅雷 NAS 没有返回可下载文件。")
+            throw XunleiDownloaderError.invalidResource(NSLocalizedString("Xunlei NAS returned no downloadable files.", comment: "Invalid Xunlei resource"))
         }
 
         let root = roots[0]
-        let name = stringValue(root["name"]) ?? "迅雷任务"
+        let name = stringValue(root["name"]) ?? NSLocalizedString("Xunlei Task", comment: "Default Xunlei task name")
         let fileCount = intValue(root["file_count"]) ?? files.count
         return XunleiResource(name: name, fileCount: max(fileCount, files.count), files: files)
     }
@@ -311,7 +316,7 @@ final class XunleiDownloader {
                              prefix: String,
                              fallbackIndex: inout Int,
                              files: inout [XunleiTaskFile]) {
-        let name = stringValue(resource["name"]) ?? "未命名文件"
+        let name = stringValue(resource["name"]) ?? NSLocalizedString("Untitled File", comment: "Fallback file name")
         let currentPath = prefix.isEmpty ? name : "\(prefix)/\(name)"
         let isDirectory = (resource["is_dir"] as? Bool == true) || resource["dir"] is [String: Any]
 
@@ -343,23 +348,27 @@ final class XunleiDownloader {
     private func serverMessage(from object: [String: Any]) -> String {
         if let message = stringValue(object["error"]), !message.isEmpty { return message }
         if let message = stringValue(object["message"]), !message.isEmpty { return message }
-        if let code = intValue(object["error_code"]) { return "迅雷 NAS 返回错误（\(code)）。" }
-        if let code = intValue(object["HttpStatus"]), code != 0 { return "迅雷 NAS 返回错误（\(code)）。" }
-        return "迅雷 NAS 返回了无法识别的响应。"
+        if let code = intValue(object["error_code"]) {
+            return String(format: NSLocalizedString("Xunlei NAS returned error (%ld).", comment: "Xunlei server error"), code)
+        }
+        if let code = intValue(object["HttpStatus"]), code != 0 {
+            return String(format: NSLocalizedString("Xunlei NAS returned error (%ld).", comment: "Xunlei server error"), code)
+        }
+        return NSLocalizedString("Xunlei NAS returned an unrecognized response.", comment: "Xunlei server error")
     }
 
     private func connectionError(from response: DataResponse<Any>) -> XunleiDownloaderError {
         if let statusCode = response.response?.statusCode, statusCode == 401 || statusCode == 403 {
-            return .authentication("迅雷 NAS 认证失败，请在软件内打开面板完成登录。")
+            return .authentication(NSLocalizedString("Xunlei NAS authentication failed. Open the panel in the app to log in.", comment: "Xunlei authentication error"))
         }
-        return .connection(response.result.error?.localizedDescription ?? "无法连接迅雷 NAS。")
+        return .connection(response.result.error?.localizedDescription ?? NSLocalizedString("Could not connect to Xunlei NAS.", comment: "Xunlei connection error"))
     }
 
     private func connectionError(from response: DataResponse<String>) -> XunleiDownloaderError {
         if let statusCode = response.response?.statusCode, statusCode == 401 || statusCode == 403 {
-            return .authentication("迅雷 NAS 认证失败，请在软件内打开面板完成登录。")
+            return .authentication(NSLocalizedString("Xunlei NAS authentication failed. Open the panel in the app to log in.", comment: "Xunlei authentication error"))
         }
-        return .connection(response.result.error?.localizedDescription ?? "无法连接迅雷 NAS。")
+        return .connection(response.result.error?.localizedDescription ?? NSLocalizedString("Could not connect to Xunlei NAS.", comment: "Xunlei connection error"))
     }
 
     // MARK: - HTTP helpers

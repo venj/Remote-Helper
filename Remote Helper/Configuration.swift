@@ -21,7 +21,7 @@ open class Configuration {
                                  ServerPortKey: "80",
                                  ServerPathKey: "/",
                                  TransmissionAddressKey: "127.0.0.1:9091",
-                                 XunleiAddressKey: "127.0.0.1",
+                                 XunleiAddressKey: "",
                                  XunleiPortKey: "",
                                  XunleiUseSSLKey: false,
                                  XunleiDownloadDirectoryKey: "",
@@ -33,6 +33,7 @@ open class Configuration {
                                  IntelligentTorrentDownload: false,
                                  PrefersMagnet: true,
                                  TorrentKittenSource: KittenSource.main.rawValue,
+                                 DyttBaseAddress: "https://www.dytt8899.com",
                                  ]
     private init() {
         defaults.register(defaults: defaultValues)
@@ -201,6 +202,16 @@ open class Configuration {
 
     open var hasXunleiServer: Bool {
         return !xunleiAddress.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    open var dyttBaseAddress: String {
+        get {
+            return defaults.string(forKey: DyttBaseAddress) ?? defaultValues[DyttBaseAddress] as! String
+        }
+        set {
+            defaults.set(newValue, forKey: DyttBaseAddress)
+            defaults.synchronize()
+        }
     }
 
     open var userCellularNetwork: Bool {

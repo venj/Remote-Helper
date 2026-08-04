@@ -35,12 +35,12 @@ final class XunleiFileSelectionViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "迅雷 NAS"
-        navigationItem.prompt = "默认只选最大视频文件，可手动勾选或取消"
+        title = NSLocalizedString("Xunlei NAS", comment: "Download service name")
+        navigationItem.prompt = NSLocalizedString("Only the largest video file is selected by default. You can change the selection.", comment: "Xunlei file selection instructions")
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
         navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(title: "全选", style: .plain, target: self, action: #selector(selectAllTapped)),
-            UIBarButtonItem(title: "下载", style: .done, target: self, action: #selector(downloadTapped))
+            UIBarButtonItem(title: NSLocalizedString("Select All", comment: "Select all files"), style: .plain, target: self, action: #selector(selectAllTapped)),
+            UIBarButtonItem(title: NSLocalizedString("Download", comment: "Start download"), style: .done, target: self, action: #selector(downloadTapped))
         ]
         tableView.allowsSelection = true
         tableView.rowHeight = UITableView.automaticDimension
@@ -89,12 +89,12 @@ final class XunleiFileSelectionViewController: UITableViewController {
             .filter { selectedRows.contains($0.offset) }
             .map { $0.element }
         guard !selectedFiles.isEmpty else {
-            Helper.shared.showNote(withMessage: "至少选择一个文件。", type: .warning)
+            Helper.shared.showNote(withMessage: NSLocalizedString("Select at least one file.", comment: "No Xunlei files selected"), type: .warning)
             return
         }
 
         navigationItem.rightBarButtonItems?.forEach { $0.isEnabled = false }
-        Helper.shared.showProcessingNote(withMessage: "正在创建迅雷任务…")
+        Helper.shared.showProcessingNote(withMessage: NSLocalizedString("Creating the Xunlei task...", comment: "Xunlei progress"))
         downloader.addTask(for: magnet, resource: resource, selectedFiles: selectedFiles) { [weak self] result in
             DispatchQueue.main.async {
                 guard let self = self else { return }
@@ -117,7 +117,7 @@ final class XunleiFileSelectionViewController: UITableViewController {
     }
 
     private func updatePrompt() {
-        navigationItem.prompt = "已选 \(selectedRows.count)/\(resource.files.count) 个文件"
+        navigationItem.prompt = String(format: NSLocalizedString("Selected %ld of %ld files", comment: "Xunlei file selection count"), selectedRows.count, resource.files.count)
     }
 
     private static func defaultSelection(for files: [XunleiTaskFile]) -> Set<Int> {

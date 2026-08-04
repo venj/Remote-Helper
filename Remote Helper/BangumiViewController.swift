@@ -30,13 +30,6 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
         } ?? []
     }
 
-    var canShowMiAction: Bool {
-        let defaults = UserDefaults.standard
-        let username = defaults.string(forKey: MiAccountUsernameKey) ?? ""
-        let password = defaults.string(forKey: MiAccountPasswordKey) ?? ""
-        return !username.isEmpty && !password.isEmpty
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -52,7 +45,7 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
         let deSelectAllButton = UIBarButtonItem(title: NSLocalizedString("Deselect All", comment: "Deselect All"), style: .plain, target: self, action: #selector(deSelectAllCells(_:)))
         let spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let btButton = UIBarButtonItem(title: "BT", style: .plain, target: self, action: #selector(btDownloadAll(_:)))
-        if canShowMiAction {
+        if Helper.shared.canStartMiDownload {
             let miButton = UIBarButtonItem(title: NSLocalizedString("Mi", comment: "Mi"), style: .plain, target: self, action: #selector(miDownloadAll(_:)))
             toolbarItems = [selectAllButton, deSelectAllButton, spaceButton, btButton, miButton]
         } else {
@@ -264,7 +257,7 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
 
         let alert = UIAlertController(title: NSLocalizedString("Info", comment: "Info"), message: link.name, preferredStyle: .alert)
 
-        if canShowMiAction {
+        if Helper.shared.canStartMiDownload {
             let miAction = UIAlertAction(title: NSLocalizedString("Mi", comment: "Mi"), style: .default) { (action) in
                 Helper.shared.miDownloadForLink(link.target, fallbackIn: self)
             }
@@ -272,10 +265,12 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
         }
 
         if link.isMagnet {
-            let xunleiAction = UIAlertAction(title: "迅雷 NAS", style: .default) { _ in
-                Helper.shared.xunleiDownload(for: link.target, fallbackIn: self)
+            if Helper.shared.canStartXunleiDownload() {
+                let xunleiAction = UIAlertAction(title: NSLocalizedString("Xunlei NAS", comment: "Download service name"), style: .default) { _ in
+                    Helper.shared.xunleiDownload(for: link.target, fallbackIn: self)
+                }
+                alert.addAction(xunleiAction)
             }
-            alert.addAction(xunleiAction)
 
             let transmissionAction = UIAlertAction(title: "Transmission", style: .default) { (action) in
                 Helper.shared.transmissionDownload(for: link.target)
@@ -315,7 +310,7 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
         copyAction.backgroundColor = UIColor(red:0.42, green:0.44, blue:0.87, alpha:1.00)
 
         let miAction: UIContextualAction? = {
-            guard canShowMiAction else { return nil }
+            guard Helper.shared.canStartMiDownload else { return nil }
             let action = UIContextualAction(style: .normal, title: NSLocalizedString("Mi", comment: "Mi")) { [weak self] _, _, completion in
                 guard let self = self else {
                     completion(false)
@@ -330,16 +325,20 @@ class BangumiViewController: UITableViewController, UIPopoverPresentationControl
         }()
 
         if link.isMagnet {
-            let xunleiAction = UIContextualAction(style: .normal, title: "迅雷 NAS") { [weak self] _, _, completion in
-                guard let self = self else {
-                    completion(false)
-                    return
+            let xunleiAction: UIContextualAction? = {
+                guard Helper.shared.canStartXunleiDownload() else { return nil }
+                let action = UIContextualAction(style: .normal, title: NSLocalizedString("Xunlei NAS", comment: "Download service name")) { [weak self] _, _, completion in
+                    guard let self = self else {
+                        completion(false)
+                        return
+                    }
+                    if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
+                    Helper.shared.xunleiDownload(for: link.target, fallbackIn: self)
+                    completion(true)
                 }
-                if self.tableView.isEditing { self.tableView.setEditing(false, animated: true) }
-                Helper.shared.xunleiDownload(for: link.target, fallbackIn: self)
-                completion(true)
-            }
-            xunleiAction.backgroundColor = UIColor(red:0.18, green:0.52, blue:0.82, alpha:1.00)
+                action.backgroundColor = UIColor(red:0.18, green:0.52, blue:0.82, alpha:1.00)
+                return action
+            }()
 
             let downloadAction = UIContextualAction(style: .normal, title: "Transmission") { [weak self] _, _, completion in
                 guard let self = self else {

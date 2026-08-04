@@ -14,33 +14,19 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
     let CellIdentifier = "ResourceSiteCatagoriesTableCell"
 
     var siteName: String = "电影天堂"
-    /*
-    var catagoryLinks: [[String: String]] = [["name": "国内电影", "link": "https://www.dygod.net/html/gndy/china/index.html"],
-                                             ["name": "欧美电影", "link": "https://www.dygod.net/html/gndy/oumei/index.html"],
-                                             ["name": "日韩电影", "link": "https://www.dygod.net/html/gndy/rihan/index.html"],
-                                             ["name": "华语电视", "link": "https://www.dygod.net/html/tv/hytv/index.html"],
-                                             ["name": "日韩电视", "link": "https://www.dygod.net/html/tv/rihantv/index.html"],
-                                             ["name": "欧美电视", "link": "https://www.dygod.net/html/tv/oumeitv/index.html"],
-                                             ["name": "最新综艺", "link": "https://www.dygod.net/html/zongyi2013/index.html"],
-                                             //["name": "旧版综艺", "link": "https://www.dygod.net/html/zongyijiemu2009/index.html"],
-                                             ["name": "动漫资源", "link": "https://www.dygod.net/html/dongman/index.html"],
-                                             ["name": "游戏下载", "link": "https://www.dygod.net/html/game/index.html"],
-                                             ["name": "手机电影", "link": "https://www.dygod.net/html/3gp/3gpmovie/index.html"]]
- */
-
-    var catagoryLinks: [[String: String]] = [["name": "最新电影", "link": "http://dytt8.net/html/gndy/dyzz/index.html"],
-                                             ["name": "国内电影", "link": "http://dytt8.net/html/gndy/china/index.html"],
-                                             ["name": "欧美电影", "link": "http://dytt8.net/html/gndy/oumei/index.html"],
-                                             ["name": "日韩电影", "link": "http://dytt8.net/html/gndy/rihan/index.html"],
-                                             ["name": "综合电影", "link": "http://dytt8.net/html/gndy/jddy/index.html"],
-                                             ["name": "华语电视", "link": "http://dytt8.net/html/tv/hytv/index.html"],
-                                             ["name": "日韩电视", "link": "http://dytt8.net/html/tv/rihantv/index.html"],
-                                             ["name": "欧美电视", "link": "http://dytt8.net/html/tv/oumeitv/index.html"],
-                                             ["name": "最新综艺", "link": "http://dytt8.net/html/zongyi2013/index.html"],
-                                             ["name": "旧版综艺", "link": "http://dytt8.net/html/2009zongyi/index.html"],
-                                             ["name": "动漫资源", "link": "http://dytt8.net/html/dongman/index.html"],
-                                             ["name": "游戏下载", "link": "http://dytt8.net/html/game/index.html"],
-                                             ["name": "高分经典", "link": "http://dytt8.net/html/gndy/jddy/20160320/50510.html"]]
+    var catagoryLinks: [[String: String]] = [["name": "必看热片", "link": "/html/bikan/"],
+                                             ["name": "经典大片", "link": "/html/gndy/jddyy/"],
+                                             ["name": "国内电影", "link": "/html/gndy/china/index.html"],
+                                             ["name": "欧美电影", "link": "/html/gndy/oumei/index.html"],
+                                             ["name": "日韩电影", "link": "/html/gndy/rihan/index.html"],
+                                             ["name": "综合电影", "link": "/html/gndy/jddy/index.html"],
+                                             ["name": "华语电视", "link": "/html/tv/hytv/index.html"],
+                                             ["name": "日韩电视", "link": "/html/tv/rihantv/index.html"],
+                                             ["name": "欧美电视", "link": "/html/tv/oumeitv/index.html"],
+                                             ["name": "最新综艺", "link": "/html/zongyi2013/index.html"],
+                                             ["name": "旧版综艺", "link": "/html/2009zongyi/index.html"],
+                                             ["name": "动漫资源", "link": "/html/dongman/index.html"],
+                                             ["name": "游戏下载", "link": "/html/game/index.html"]]
 
     let dyttSearchBase = "http://s.dytt8.net/plus/s01.php?keyword="
 
@@ -114,8 +100,10 @@ class ResourceSiteCatagoriesViewController: UITableViewController {
             if let index = tableView.indexPathForSelectedRow?.row {
                 let catagory = catagoryLinks[index]
                 var link = catagory["link"]!
-                if !link.contains("http://") {
-                    link = "http://www.dygod.net" + link
+                if !["http://", "https://"].allSatisfy({ str in
+                    link.hasPrefix(str)
+                }) {
+                    link = Configuration.shared.dyttBaseAddress + link
                 }
                 process(link)
                 return false

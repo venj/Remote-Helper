@@ -41,6 +41,54 @@ class ResourcePageViewController: UITableViewController {
         tableView.cellLayoutMarginsFollowReadableWidth = false
     }
 
+    #if targetEnvironment(macCatalyst)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        DispatchQueue.main.async { [weak self] in
+            self?.installCatalystTitleInVisibleToolbar()
+        }
+    }
+
+    private func installCatalystTitleInVisibleToolbar() {
+        let displayedTitle = title ?? ""
+        guard let detailController = splitViewController?.viewController(for: .secondary) else { return }
+        if let detailNavigationController = detailController as? UINavigationController,
+           let topItem = detailNavigationController.navigationBar.topItem {
+            installCatalystTitleItem(title: displayedTitle, on: topItem)
+        } else {
+            installCatalystTitleItem(title: displayedTitle, on: detailController.navigationItem)
+        }
+    }
+
+    private func installCatalystTitleItem(title: String, on navigationItem: UINavigationItem) {
+        navigationItem.style = .editor
+        let titleLabel = UILabel()
+        titleLabel.text = title
+        titleLabel.font = UIFont.systemFont(ofSize: 13.0, weight: .semibold)
+        titleLabel.textColor = .label
+        titleLabel.lineBreakMode = .byTruncatingTail
+        titleLabel.accessibilityLabel = title
+        titleLabel.accessibilityTraits = .header
+        titleLabel.isUserInteractionEnabled = false
+        titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        titleLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 360.0).isActive = true
+
+        let titleItem = UIBarButtonItem(customView: titleLabel)
+        titleItem.style = .plain
+        if #available(macCatalyst 26.0, *) {
+            titleItem.hidesSharedBackground = true
+            titleItem.sharesBackground = false
+        }
+        navigationItem.centerItemGroups = [
+            UIBarButtonItemGroup.fixedGroup(
+                representativeItem: nil,
+                items: [titleItem]
+            )
+        ]
+        navigationItem.title = nil
+    }
+    #endif
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

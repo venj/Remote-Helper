@@ -243,6 +243,24 @@
 			<false/>
 		</dict>
 		<dict>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+			<key>DefaultValue</key>
+			<string>https://www.dytt8899.com</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>Key</key>
+			<string>DyttBaseAddress</string>
+			<key>KeyboardType</key>
+			<string>URL</string>
+			<key>Title</key>
+			<string>Resource Site Address</string>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+		</dict>
+		<dict>
 			<key>Title</key>
 			<string>Mi Remote Settings</string>
 			<key>Type</key>

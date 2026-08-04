@@ -28,7 +28,8 @@ struct Link {
         let loLink = link.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).lowercased()
         if (loLink.hasPrefix("qqdl://")
             || loLink.lowercased().hasPrefix("thunder://")
-            || loLink.lowercased().hasPrefix("flashget://"))
+            || loLink.lowercased().hasPrefix("flashget://")
+            || loLink.lowercased().hasPrefix("ftp://"))
             && loLink.decodedLink?.hasPrefix("magnet:") == true {
             return link.decodedLink!
         }

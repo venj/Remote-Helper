@@ -159,10 +159,10 @@ class MacSettingsViewController: UIViewController, UITableViewDataSource, UITabl
         case 2: // Xunlei NAS Settings
             migrateLegacyXunleiFieldsForSettings()
             addSectionHeader(title: NSLocalizedString("Xunlei NAS Settings", comment: ""))
-            addTextFieldRow(label: NSLocalizedString("Domain/IP", comment: ""), key: XunleiAddressKey, placeholder: "example.com", defaultValue: "127.0.0.1")
-            addTextFieldRow(label: NSLocalizedString("Port", comment: ""), key: XunleiPortKey, placeholder: "port", defaultValue: "")
+            addTextFieldRow(label: NSLocalizedString("Domain/IP", comment: ""), key: XunleiAddressKey, placeholder: "example.com", defaultValue: "")
+            addTextFieldRow(label: NSLocalizedString("Port", comment: ""), key: XunleiPortKey, placeholder: NSLocalizedString("port", comment: "Port field placeholder"), defaultValue: "")
             addSwitchRow(label: NSLocalizedString("Use SSL", comment: ""), key: XunleiUseSSLKey, defaultValue: false)
-            addTextFieldRow(label: NSLocalizedString("Download Directory (optional)", comment: ""), key: XunleiDownloadDirectoryKey, placeholder: "first available folder", defaultValue: "")
+            addTextFieldRow(label: NSLocalizedString("Download Directory (optional)", comment: ""), key: XunleiDownloadDirectoryKey, placeholder: NSLocalizedString("first available folder", comment: "Download directory placeholder"), defaultValue: "")
             addNoteRow(text: NSLocalizedString("The app adds the Xunlei panel path automatically.", comment: ""))
             addNoteRow(text: NSLocalizedString("Phone/SMS login is completed in the Xunlei panel.", comment: ""))
 
@@ -176,6 +176,7 @@ class MacSettingsViewController: UIViewController, UITableViewDataSource, UITabl
         case 3: // Magnet Search Settings
             addSectionHeader(title: NSLocalizedString("Magnet Search Settings", comment: ""))
             addSegmentedControlRow(label: NSLocalizedString("Magnet Source", comment: ""), key: TorrentKittenSource, items: ["NYN", "NYS"], values: ["0", "1"])
+            addTextFieldRow(label: NSLocalizedString("Resource Site Address", comment: ""), key: DyttBaseAddress, placeholder: "https://www.dytt8899.com", defaultValue: "https://www.dytt8899.com")
             
         case 4: // Mi Remote Settings
             addSectionHeader(title: NSLocalizedString("Mi Remote Settings", comment: ""))
@@ -307,7 +308,7 @@ class MacSettingsViewController: UIViewController, UITableViewDataSource, UITabl
 
     private func openXunleiPanel() {
         guard Configuration.shared.hasXunleiServer else {
-            Helper.shared.showNote(withMessage: "请先填写迅雷 NAS 地址。", type: .warning)
+            Helper.shared.showNote(withMessage: NSLocalizedString("Please enter the Xunlei NAS address first.", comment: "Missing Xunlei address"), type: .warning)
             return
         }
 
@@ -317,14 +318,14 @@ class MacSettingsViewController: UIViewController, UITableViewDataSource, UITabl
         }
         let webViewController = XunleiWebViewController(urlString: link)
         webViewController.urlRequest?.cachePolicy = .reloadIgnoringLocalCacheData
-        webViewController.title = "迅雷 NAS"
+        webViewController.title = NSLocalizedString("Xunlei NAS", comment: "Download service name")
         let navigationController = UINavigationController(rootViewController: webViewController)
         present(navigationController, animated: true)
     }
 
     private func verifyXunleiConnection() {
         guard Configuration.shared.hasXunleiServer else {
-            Helper.shared.showNote(withMessage: "请先填写迅雷 NAS 地址。", type: .warning)
+            Helper.shared.showNote(withMessage: NSLocalizedString("Please enter the Xunlei NAS address first.", comment: "Missing Xunlei address"), type: .warning)
             return
         }
 
@@ -335,7 +336,7 @@ class MacSettingsViewController: UIViewController, UITableViewDataSource, UITabl
                 SwiftEntryKit.dismiss()
                 switch result {
                 case .success(let folderName):
-                    let suffix = folderName.isEmpty ? "" : "，下载目录：\(folderName)"
+                    let suffix = folderName.isEmpty ? "" : String(format: NSLocalizedString(", download directory: %@", comment: "Xunlei connection result directory suffix"), folderName)
                     Helper.shared.showNote(withMessage: NSLocalizedString("Xunlei NAS connection succeeded.", comment: "") + suffix)
                 case .failure(let error):
                     if case .authentication = error {
